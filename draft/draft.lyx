@@ -1,0 +1,2828 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Draft
+\end_layout
+
+\begin_layout Part
+Introduction 
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+%% TODO incorporate preposal introduction, heavily revise and sumerize
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+%% why dependent types
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+Programming is an error-filled process.
+ While different formal methods approaches can make some error rare or impossibl
+e, they burden programers with complex additional syntax and semantics that
+ can make them hard to work with.
+ Dependent type systems offer a simpler approach.
+ In a dependent type system, proofs and invariants can borrow from the syntax
+ and semantics already familiar to functional programmers.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+%% why full spectrum (only here because of the now poor title choice)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+sloppy
+\end_layout
+
+\end_inset
+
+ This promise of dependent types in a practical programming language has
+ inspired research projects for decades.
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+%%  
+\backslash
+cite{DependentMLAnapproachtopracticalprogrammingwithdependenttypes}.
+ %% TODO add more refferencesto stratified systems
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+Several approaches have now been explored.
+ The 
+\series bold
+full-spectrum
+\series default
+ approach is a popular and parsimonious approach that allow computation
+ to behave the same at the term and type level 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "10.1145/289423.289451,norell2007towards,brady2013idris,sjoberg2012irrelevance"
+literal "false"
+
+\end_inset
+
+.
+ While this approach offers tradeoffs, it seems to be the most predictable
+ from the programmer's perspective.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+%% example of dependent types
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+For instance, dependent types can prevent an out-of-bounds error when indexing
+ into a length indexed list.
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% will people know what length index means
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+The following type checks in virtually all full-spectrum dependent type
+ systems
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\mathtt{Bool} & :*,\\
+\mathtt{Nat} & :*,\\
+\mathtt{Vec} & :*\rightarrow\mathtt{Nat}\rightarrow*,\\
+\mathtt{add} & :\mathtt{Nat}\rightarrow\mathtt{Nat}\rightarrow\mathtt{Nat},\\
+\mathtt{rep} & :\left(A:*\right)\rightarrow A\rightarrow\left(x:\mathtt{Nat}\right)\rightarrow\mathtt{Vec\,}A\,x,\\
+\mathtt{head} & :\left(A:*\right)\rightarrow\left(x:\mathtt{Nat}\right)\rightarrow\mathtt{Vec}\,A\,\left(\mathtt{add}\,1\,x\right)\rightarrow A
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\vdash\lambda x.\mathtt{head}\,\mathtt{Bool}\,x\,\left(\mathtt{rep}\,\mathtt{Bool}\,\mathtt{true}\,\left(\mathtt{add}\,1\,x\right)\right)\,:\,\mathtt{Nat}\rightarrow\mathtt{Bool}
+\]
+
+\end_inset
+
+
+\begin_inset VSpace smallskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We are sure 
+\begin_inset Formula $\mathtt{head}$
+\end_inset
+
+ never inspects an empty list because the 
+\begin_inset Formula $\mathtt{rep}$
+\end_inset
+
+ function will always return a list of length 
+\begin_inset Formula $1+x$
+\end_inset
+
+.
+ In a more polished implementation many arguments would be implicit and
+ the above could be written as 
+\begin_inset Formula $\lambda x.\mathtt{head}\,\left(\mathtt{rep}\,\mathtt{true}\,\left(1+x\right)\right)\,:\,\mathtt{Nat}\rightarrow\mathtt{Bool}$
+\end_inset
+
+.
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+%% Or hidden under nice syntactic sugar, 
+\backslash
+
+\backslash
+$
+\backslash
+lambda x.
+\backslash
+left(
+\backslash
+mathtt{rep}
+\backslash
+,
+\backslash
+mathtt{true}
+\backslash
+,
+\backslash
+left(1+x
+\backslash
+right)
+\backslash
+right)
+\backslash
+left[0
+\backslash
+right]
+\backslash
+,:
+\backslash
+,
+\backslash
+mathtt{Nat}
+\backslash
+rightarrow
+\backslash
+mathtt{Bool}$.
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+%% problem
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+Unfortunately, dependent types have yet to see widespread industrial use.
+ Programmers often find dependent type systems difficult to learn and use.
+ One of the reasons for this difficulty is that conservative assumptions
+ about equality create subtle issues for users, and lead to some of the
+ confusing error messages these languages are known to produce 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "eremondi2019framework"
+literal "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+%% example of problem
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+The following will not type check in any conventional system with user defined
+ addition,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\cancel{\vdash}\lambda x.\mathtt{head}\,\mathtt{Bool}\,x\,\left(\mathtt{rep}\,\mathtt{Bool}\,\mathtt{true}\,\left(\mathtt{add}\,x\,1\right)\right)\,:\,\mathtt{Nat}\rightarrow\mathtt{Bool}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+%% explanation of example
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+sloppy
+\end_layout
+
+\end_inset
+
+ Obviously 
+\begin_inset Formula $1+x=x+1$
+\end_inset
+
+.
+ However in the majority of dependently typed programming languages, 
+\begin_inset Formula $\mathtt{add}\,1\,x\equiv\mathtt{add}\,x\,1$
+\end_inset
+
+ is not a definitional equality.
+ This means a term of type 
+\begin_inset Formula $\mathtt{Vec}\left(\mathtt{add}\,1\,x\right)$
+\end_inset
+
+ cannot be used where a term of type 
+\begin_inset Formula $\mathtt{Vec}\left(\mathtt{add}\,x\,1\right)$
+\end_inset
+
+ is expected.
+ Usually when dependent type systems encounter situations like this, they
+ will give a type error and prevent evaluation.
+ If the programmer made a mistake in the definition of addition such that
+ 
+\begin_inset Formula $\mathtt{add}\,1\,x\,\cancel{=}\,\mathtt{add}\,x\,1$
+\end_inset
+
+, no hints are given to correct the mistake.
+ This increase of friction and lack of communication are key reasons that
+ dependent types systems are not more widely used.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+%% solution
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+Instead why not sidestep static equality? We could assume the equalities
+ hold and discover a concrete witness of inequality as a runtime error.
+ Assuming there was a mistake in the implementation of 
+\begin_inset Formula $\mathtt{add}$
+\end_inset
+
+, we could instead provide a runtime error that gives an exact counter example.
+ For instance, if the 
+\begin_inset Formula $\mathtt{add}$
+\end_inset
+
+ function incorrectly computes 
+\begin_inset Formula $\mathtt{add}\,8\,1=0$
+\end_inset
+
+ the above function will 
+\begin_inset Quotes eld
+\end_inset
+
+get stuck
+\begin_inset Quotes erd
+\end_inset
+
+ on the input 
+\begin_inset Formula $8$
+\end_inset
+
+.
+ If that application is encountered at runtime we can give the error 
+\begin_inset Formula $\mathtt{add}\,1\,8=9\cancel{=}0=\mathtt{add}\,8\,1$
+\end_inset
+
+.
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+%%, a message that would have been the perfect type error.
+\end_layout
+
+\end_inset
+
+ There is some evidence that specific examples like this can help clarify
+ the type error messages in OCaml 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "10.1145/2951913.2951915"
+literal "false"
+
+\end_inset
+
+ and there has been an effort to make refinement type error messages more
+ concrete in other systems like Liquid Haskell 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "10.1145/3314221.3314618"
+literal "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+% %% more about equality
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+% Difficulties in dependently typed equality have motivated many research
+ projects.
+ %% (to name a few 
+\backslash
+cite{HoTTbook,sjoberg2015programming,cockx2021taming}).
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+% However, it is unlikely those impressive efforts are suitable for non-experts.
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+% None of these projects makes the underlying equality less complicated.
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+%% why is the solution good, for users
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+Runtime type checking leads to a different workflow than traditional type
+ systems.
+ Instead of type checking first and only then executing the program, execution
+ and type checking can both inform the programmer.
+ Users can still be warned about uncertain equalities, but the warning need
+ not block the flow of programming.
+ Since the user can gradually correct their program as errors surface, we
+ call this workflow 
+\series bold
+gradual correctness
+\series default
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+%% why is the solution good, for implementers
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+Additionally, our approach avoids fundamental issues of definitional equality.
+ No system will be able to statically verify every 
+\begin_inset Quotes eld
+\end_inset
+
+obvious
+\begin_inset Quotes erd
+\end_inset
+
+ equality for arbitrary user defined data types and functions, since general
+ program equivalence is famously undecidable.
+ By weakening the assumption that all equalities be decided statically,
+ we can experiment with other advanced features without arbitrarily committing
+ to which equalities are acceptable.
+ Finally, we expect this approach to equality is a prerequisite for other
+ desirable features such as a foreign function interface, runtime proof
+ search, and a lightweight ability to test dependent type specifications.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+%% why is the solution hard
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+Though gradual correctness is an apparently simple idea, there are several
+ subtle issues that must be dealt with.
+ While it is easy to check ground natural numbers for equality, even simply
+ typed functions have undecidable equality.
+ This means that we cannot just check types for equality at applications
+ of higher order functions.
+ Dependent functions mean that equality checks may propagate into the type
+ level.
+ Simply removing all type annotations will mean there is not enough information
+ to construct good error messages.
+ We are unaware of research that directly handles all of these concerns.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+%% outline of the solution
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+We solve these problems with a system of 2 dependently typed languages connected
+ by an elaboration procedure.
+ 
+\end_layout
+
+\begin_layout Itemize
+The surface language, a conventional full-spectrum dependently typed language
+ (section 2) 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+the untyped syntax is used directly by the programer 
+\end_layout
+
+\begin_layout Itemize
+the type theory is introduced to make formal comparisons 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+The cast language, a dependently typed language with embedded runtime checks
+ (section 3) 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+will actually be run 
+\end_layout
+
+\begin_layout Itemize
+intended to be invisible to the programer 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+An elaboration procedure that transforms untyped surface syntax into checked
+ cast language terms (section 4) 
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+%% from the programmer perspective
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+The programmer uses the untyped syntax of the surface language to write
+ programs that they intend to typecheck in the conventional dependently
+ typed surface language.
+ Programs that fail to typecheck under the conservative type theory of the
+ surface language, are elaborated into the cast language.
+ These cast language terms act exactly as typed surface language terms would,
+ unless the programmer assumed an incorrect equality.
+ If an incorrect equality is encountered, a clear runtime error message
+ is presented against the static location of the error, with a counter example.
+\end_layout
+
+\begin_layout Part
+Surface language
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+%% TODO incorporate preposal, appendix, and notes
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% overview, why
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+In an ideal world programmers would write perfect code with perfectly proven
+ equalities.
+ The surface language models this ideal, but difficult, system.
+ The surface language enforces definitional equality, and is a standard
+ well behaved core calculus.
+ Programmers should 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+"
+\end_layout
+
+\end_inset
+
+think
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+"
+\end_layout
+
+\end_inset
+
+ in the surface language, and the machinery of later sections should reinforce
+ an understanding of the surface type system, while being transparent to
+ the programmer.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% overview, What
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+The surface language presented here is a minimal intensional dependent type
+ theory.
+ The surface language allows some programmatic features at the expense of
+ logical soundness.
+ The language allows general recursion, since general recursion is useful
+ for general purpose functional programming.
+ It also supports type-in-type, since it simplifies the system for programmers
+ and makes the metatheory slightly easier.
+\end_layout
+
+\begin_layout Standard
+Though similar systems have been studied over the last few decades this
+ chapter gives a self contained presentation of important meta-theoretic
+ results sometimes simplified and with modern notation, in addition to many
+ examples.
+ The surface language has been an excellent platform to conduct research
+ into 
+\begin_inset Quotes eld
+\end_inset
+
+full spectrum
+\begin_inset Quotes erd
+\end_inset
+
+ dependent type theory, and hopefully this exposition will be helpful for
+ future researchers.
+\end_layout
+
+\begin_layout Section
+Formal Surface Language
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% What syntax
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+The pre-syntax can be seen in figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:surface-pre-syntax"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ Location data 
+\begin_inset Formula $\ensuremath{\ell}$
+\end_inset
+
+ is marked at every position in syntax where a type error might occur.
+ When unnecessary the location information 
+\begin_inset Formula $\ensuremath{\ell}$
+\end_inset
+
+ will be left implicit.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% TODO: boiler plate on standard abreviations, perhaps as a table.
+ conventions Capital 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Tabular
+<lyxtabular version="3" rows="15" columns="4">
+<features tabularvalignment="middle">
+<column alignment="left" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="left" valignment="top">
+<column alignment="left" valignment="top">
+<row>
+<cell multicolumn="1" alignment="none" valignment="top" usebox="none" special="l">
+\begin_inset Text
+
+\begin_layout Plain Layout
+source labels,
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\ensuremath{\ell}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="none" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell multicolumn="1" alignment="none" valignment="top" usebox="none" special="l">
+\begin_inset Text
+
+\begin_layout Plain Layout
+variable contexts,
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\Gamma$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\Coloneqq$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\lozenge$
+\end_inset
+
+ | 
+\begin_inset Formula $\Gamma,x:M$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="none" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell multicolumn="1" alignment="none" valignment="top" usebox="none" special="l">
+\begin_inset Text
+
+\begin_layout Plain Layout
+expressions,
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $m,n,h,M,N,H$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\Coloneqq$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $x$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+variable
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+|
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $m::_{\ensuremath{\ell}}M$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+annotation
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+|
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\star$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+type universe
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+|
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\left(x:M_{\ensuremath{\ell}}\right)\rightarrow N_{\ensuremath{\ell'}}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+function type
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+|
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathsf{fun}\,f\,x\Rightarrow m$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+function
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+|
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $m_{\ensuremath{\ell}}\,n$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+application
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell multicolumn="1" alignment="none" valignment="top" usebox="none" special="l">
+\begin_inset Text
+
+\begin_layout Plain Layout
+values,
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+v
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\Coloneqq$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $x$
+\end_inset
+
+ | 
+\begin_inset Formula $\star$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="none" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+|
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\left(x:M_{\ensuremath{\ell}}\right)\rightarrow N_{\ensuremath{\ell'}}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="none" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+|
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathsf{fun}\,f\,x\Rightarrow m$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="none" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Surface Language Pre-Syntax
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:surface-pre-syntax"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+\frac{\,}{x\Rrightarrow x}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{m\Rrightarrow m'}{m::_{\ensuremath{\ell}}M\Rrightarrow m'}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{m\Rrightarrow m'\quad M\Rrightarrow M'}{m::_{\ensuremath{\ell}}M\Rrightarrow m'::_{\ensuremath{\ell}}M'}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+\frac{M\Rrightarrow M'\quad N\Rrightarrow N'}{\left(x:M_{\ell}\right)\rightarrow N_{\ell'}\Rrightarrow\left(x:M'_{\ell}\right)\rightarrow N'_{\ell'}}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{m\Rrightarrow m'\quad n\Rrightarrow n'}{\left(\mathsf{fun}\,f\,x\Rightarrow m\right)_{\ell}n\Rrightarrow m'\left[f\coloneqq\mathsf{fun}\,f\,x\Rightarrow m',x\coloneqq n'\right]}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+\frac{m\Rrightarrow m'}{\mathsf{fun}\,f\,x\Rightarrow m\,\Rrightarrow\,\mathsf{fun}\,f\,x\Rightarrow m'}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+\frac{m\Rrightarrow m'\quad n\Rrightarrow n'}{m_{\ell}\,n\Rrightarrow m'_{\ell}\,n'}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% TODO: Note the location data makes this dangerous
+\end_layout
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Surface Language Parallel Reductions
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:surface-reduction"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% TODO: This is almost a pure type system
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Examples
+\end_layout
+
+\begin_layout Standard
+The surface system is extremely expressive.
+ Church encodings are expressible.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% TODO: what is a church encoding?
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% TODO: better example formatting
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Church Booleans
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\mathbb{B}_{c}\coloneqq\left(A:\star\right)\rightarrow A\rightarrow A\rightarrow A$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $true_{c}\coloneqq\lambda A.\lambda then.\lambda else.then$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $false_{c}\coloneqq\lambda A.\lambda then.\lambda else.else$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Church 
+\begin_inset Formula $\mathbb{N}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\mathbb{N}_{c}\coloneqq\left(A:\star\right)\rightarrow(A\rightarrow A)\rightarrow A\rightarrow A$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $0_{c}\coloneqq\lambda A.\lambda s.\lambda z.z$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $1_{c}\coloneqq\lambda A.\lambda s.\lambda z.s\,z$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $2_{c}\coloneqq\lambda A.\lambda s.\lambda z.s\,\left(s\,z\right)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $n_{c}\coloneqq\lambda A.\lambda s.\lambda z.s^{n}\,z$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $suc_{c}\,x\coloneqq\lambda A.\lambda s.\lambda z.s\left(x\,A\,s\,z\right)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $x+_{c}y\coloneqq\lambda A.\lambda s.\lambda z.x\,A\,s\,\left(y\,A\,s\,z\right)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% TODO: nats+recursion make this as powerful as PCF
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Unit
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $Unit\coloneqq\left(A:\star\right)\rightarrow A\rightarrow A$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $tt\coloneqq\lambda A.\lambda a.a$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Void
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\perp\coloneqq\varPi x:\star.x$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Calculus of Constructions constructions encodings are expressible,
+\end_layout
+
+\begin_layout Subsection
+Negation
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\lnot A\coloneqq A\rightarrow\perp$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Leibniz equality
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% TODO: fancy eq
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $a_{1}=_{A}a_{2}\coloneqq\varPi C:\left(A\rightarrow\star\right).C\,a_{1}\rightarrow C\,a_{2}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $refl_{a:A}\coloneqq\lambda C:\left(A\rightarrow\star\right).\lambda x:C\,a.x\qquad:a=_{A}a$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\lnot A\coloneqq A\rightarrow\perp$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Large Elimination
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% TODO: doulbe check large elimination def (write it here)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Quotes eld
+\end_inset
+
+Large eliminations
+\begin_inset Quotes erd
+\end_inset
+
+ are possible with type-in-type.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\lambda b.b\,\star\,Unit\,\perp\quad:\mathbb{B}_{c}\rightarrow\star$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\lambda n.n\,\star\,(\lambda-.Unit)\,\perp\quad:\mathbb{N}_{c}\rightarrow\star$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that such a function is not possible in the Calculus of Constructions
+ (CC).
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% TODO: not posiible in the calculus of constructions, and motivates the
+ CIC
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+large eliminations can prove standard inequalities that can be hard or impossibl
+e to express in other dependent type theories
+\end_layout
+
+\begin_layout Subsection
+\begin_inset Formula $\lnot\star=_{\star}\perp$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\lambda pr.pr\,\left(\lambda x.x\right)\,\perp\qquad:\lnot\star=_{\star}\perp$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% TODO: not sensible in CC
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+\begin_inset Formula $\lnot Unit=_{\star}\perp$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\lambda pr.pr\,\left(\lambda x.x\right)tt\qquad:\lnot Unit=_{\star}\perp$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% TODO: possible in CC?
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+\begin_inset Formula $\lnot true_{c}=_{\mathbb{B}_{c}}false_{c}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\lambda pr.pr\,\left(\lambda b.b\,\star\,Unit\,\perp\right)\,tt\qquad:\lnot true_{c}=_{\mathbb{B}_{c}}false_{c}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+\begin_inset Formula $\lnot1_{c}=_{\mathbb{N}_{c}}0_{c}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\lambda pr.pr\,\left(\lambda n.n\,\star\,(\lambda-.Unit)\,\perp\right)\,tt\qquad:\lnot1_{c}=_{\mathbb{N}_{c}}0_{c}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Such a proof is impossible in CC
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% TODO: cite origional and cleaned up in M.
+ Hoffman
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+\begin_inset Formula $\left(x:\mathbb{N}_{c}\right)\rightarrow0_{c}\,+_{c}\,x=_{\mathbb{N}_{c}}x\,+_{c}\,0_{c}$
+\end_inset
+
+ (by recursion)
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\mathsf{fun}\,f\,x\Rightarrow x\,\left(0_{c}\,+_{c}\,x=_{\mathbb{N}_{c}}x\,+_{c}\,0_{c}\right)\,f\,\left(refl_{0_{c}:\mathbb{N}_{c}}\right)\qquad:\left(x:\mathbb{N}_{c}\right)\rightarrow0_{c}\,+_{c}\,x=_{\mathbb{N}_{c}}x\,+_{c}\,0_{c}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+TODO: check and discuss
+\end_layout
+
+\begin_layout Subsection
+Every type is inhabited (by recursion)
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\mathsf{fun}\,f\,x\Rightarrow f\,x\qquad:\perp$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This shows that the surface language is 
+\begin_inset Quotes eld
+\end_inset
+
+logically unsound
+\begin_inset Quotes erd
+\end_inset
+
+, every type is inhabited.
+ while the surface language supports proofs, not every term typed in the
+ surface language is a proof.
+\end_layout
+
+\begin_layout Subsection
+Every type is inhabited (by Type-in-type)
+\end_layout
+
+\begin_layout Standard
+It is possible to encode Gerard's paradox, producing another source of logical
+ unsoundness.
+ Though a subtle form of recursive behavior can be built out of Gerard's
+ paradox, direct inclusion of recursion is much easier to work with.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% TODO: cite stuff
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+...
+\end_layout
+
+\begin_layout Standard
+There are more examples in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "cardelli1986polymorphic"
+literal "false"
+
+\end_inset
+
+ where Cardelli has studied a similar system.
+\end_layout
+
+\begin_layout Section
+TAS Surface language 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+\frac{x:M\in\Gamma}{\Gamma\vdash x\,:\,M}var-ty
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+\frac{\Gamma\vdash m\,:\,M\quad\Gamma\vdash M\,:\,\star}{\Gamma\vdash m::_{\ell}M\,:\,M}::-ty
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+\frac{\,}{\Gamma\vdash\star\,:\,\star}\star-ty
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+\frac{\Gamma\vdash M\,:\,\star\quad\Gamma,x:M\vdash N\,:\,\star}{\Gamma\vdash\left(x:M\right)\rightarrow N\,:\,\star}\Pi-ty
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+\frac{\Gamma\vdash m\,:\,\left(x:N\right)\rightarrow M\quad\Gamma\vdash n\,:\,N}{\Gamma\vdash m\,n\,:\,M\left[x\coloneqq n\right]}\Pi-app-ty
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+\frac{\Gamma\vdash m\,:\,M\quad\Gamma\vdash M\equiv M':\star}{\Gamma\vdash m\,:\,M'}conv
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+\frac{\Gamma,f:\left(x:N\right)\rightarrow M,x:N\vdash m\,:\,M}{\Gamma\vdash\mathsf{fun}\,f\,x\Rightarrow m\,:\,\left(x:N\right)\rightarrow M}\Pi-\mathsf{fun}-ty
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% TODO: Note the location data makes this dangerous
+\end_layout
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Surface Language Type Assignment System
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:surface-reduction-TAS"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% meta-theory type soundness
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+ The type assignment system can be shown sound using a progress and preservation
+ style proof.
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+% cite mattias?
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+The key is to show that computation is confluent and use that computation
+ to generate the definitional equality relation.
+ This allows definitional equality to distinguish constructors while still
+ being easy to prove an equivalence.
+ Computation can be shown confluent using parallel-reductions 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "TAKAHASHI1995120"
+literal "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+Preservation
+\end_layout
+
+\begin_layout Subsection
+Progress
+\end_layout
+
+\begin_layout Subsection
+type soundness
+\end_layout
+
+\begin_layout Standard
+The language has type soundness, well typed terms will never 
+\begin_inset Quotes eld
+\end_inset
+
+get stuck
+\begin_inset Quotes erd
+\end_inset
+
+ in the surface language.
+\end_layout
+
+\begin_layout Subsection
+Type checking is undecidable
+\end_layout
+
+\begin_layout Standard
+Given a thunk 
+\begin_inset Formula $f:Unit$
+\end_inset
+
+ defined in pcf, it can be encoded into the surface system as a thunk 
+\begin_inset Formula $f':Unit$
+\end_inset
+
+ , such that if f reduces to the canonical unit then 
+\begin_inset Formula $f'\Rrightarrow^{*}\lambda A.\lambda a.a$
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\vdash\star:f'\,\star\,\star$
+\end_inset
+
+ type-checks by conversion exactly when 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $f$
+\end_inset
+
+ halts
+\end_layout
+
+\begin_layout Standard
+If there is a procedure to decide type checking we can decide exactly when
+ any pcf function halts
+\end_layout
+
+\begin_layout Section
+Bi-directional Surface Language
+\end_layout
+
+\begin_layout Subsection
+the basic surface language is impractical as a programming language
+\end_layout
+
+\begin_layout Standard
+typing is not unique up to conversion
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\lambda x.x$
+\end_inset
+
+ has many types
+\end_layout
+
+\begin_layout Standard
+TODO 
+\end_layout
+
+\begin_layout Subsection
+...
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% TODO
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+\frac{x:M\in\Gamma}{\Gamma\vdash x\overrightarrow{\,:\,}M}\operatorname{var-ty}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{\Gamma\vdash}{\Gamma\vdash\star\overrightarrow{\,:\,}\star}\operatorname{\star-ty}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{\Gamma\vdash m\overleftarrow{\,:\,}M\quad\Gamma\vdash M\overleftarrow{\,:\,}\star}{\Gamma\vdash m::_{\ell}M\overrightarrow{\,:\,}M}\operatorname{::-ty}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{\Gamma\vdash M\overleftarrow{\,:\,}\star\quad\Gamma,x:M\vdash N\overleftarrow{\,:\,}\star}{\Gamma\vdash\left(x:M\right)\rightarrow N\overrightarrow{\,:\,}\star}\operatorname{\Pi-ty}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{\Gamma\vdash m\overrightarrow{\,:\,}\left(x:N\right)\rightarrow M\quad\Gamma\vdash n\overleftarrow{\,:\,}N}{\Gamma\vdash m\,n\overrightarrow{\,:\,}M\left[x\coloneqq n\right]}\operatorname{\Pi-app-ty}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{\Gamma\vdash m\overrightarrow{\,:\,}M\quad\Gamma\vdash M\equiv M':\star}{\Gamma\vdash m\overleftarrow{\,:\,}M'}\operatorname{conv}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{\Gamma,f:\left(x:N\right)\rightarrow M,x:N\vdash m\overleftarrow{\,:\,}M}{\Gamma\vdash\mathsf{fun}\,f\,x\Rightarrow m\overleftarrow{\,:\,}\left(x:N\right)\rightarrow M}\operatorname{\Pi-\mathsf{fun}-ty}
+\]
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+% also include context rules?
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Surface Language Bidirectional Typing Rules
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:surface-bityping-rules"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+% review the typing rule % a little muddled to talk about bidirectional
+ type-checking and our rules
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+The surface language supports bidirectional type-checking over the pre-syntax
+ with the rules in figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:surface-bityping-rules"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ Bidirectional type-checking is a form of lightweight type inference, and
+ strikes a good compromise between the needed type annotations and the simplicit
+y of the theory.
+ This is accomplished by breaking typing judgments into 2 forms: 
+\end_layout
+
+\begin_layout Itemize
+Inference judgments where type information propagates out of a term, 
+\begin_inset Formula $\overrightarrow{\,:\,}$
+\end_inset
+
+ in our notation.
+ 
+\end_layout
+
+\begin_layout Itemize
+And Checking judgments where a type is checked against a term, 
+\begin_inset Formula $\overleftarrow{\,:\,}$
+\end_inset
+
+ in our notation.
+ 
+\end_layout
+
+\begin_layout Standard
+Unfortunately, the system is logically unsound (every type is trivially
+ inhabited with recursion), since our language attempts to be more oriented
+ to programs than proofs.
+ We expect this is acceptable.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+% but no data
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+It might seem restrictive that the surface language only supports dependent
+ recursive functions.
+ However, this is extremely expressive: church style data can be encoded,
+ as can calculus of construction style predicates, recursion can simulate
+ induction, and type-in-type allows large elimination (see 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "cardelli1986polymorphic"
+literal "false"
+
+\end_inset
+
+ for examples).
+ This is still inconvenient, so we have implemented dependent data in our
+ prototype.
+ We suggest ways dependent data could be added to the theory in Section
+ 4.
+\end_layout
+
+\begin_layout Subsection
+If it types in the bidirectional system then it types in the TAS system
+\end_layout
+
+\begin_layout Standard
+...
+\end_layout
+
+\begin_layout Subsection
+If it types in the TAS system annotations can be added such that an equivalent
+ term types in the bidirectional system
+\end_layout
+
+\begin_layout Standard
+...
+\end_layout
+
+\begin_layout Subsection
+Type-checking in the Bi-directional system is still undecidable
+\end_layout
+
+\begin_layout Standard
+Type checking remains undecidable because of our addition of general recursion
+ and type-in-type.
+ However, since the user is not expected to type-check their program directly
+ this should not cause any issues in practice.
+\end_layout
+
+\begin_layout Subsection
+Bi-directional errors are localizable
+\end_layout
+
+\begin_layout Standard
+...
+\end_layout
+
+\begin_layout Section
+Implementation
+\end_layout
+
+\begin_layout Standard
+Implemented in Haskell.
+ We have mechanized the type soundness of the type assignment system (without
+ location data) in Coq.
+ 
+\end_layout
+
+\begin_layout Section
+Related work
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+% History
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+It should be noted that similar systems have been studied going back to
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Martin-Lof-1972"
+literal "false"
+
+\end_inset
+
+ before type-in-type was known to be unsound.
+ The semantics was further explored in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "cardelli1986polymorphic"
+literal "false"
+
+\end_inset
+
+ and an early bidirectional type-checking algorithm for a similar language
+ is specified in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "COQUAND1996167"
+literal "false"
+
+\end_inset
+
+.
+ Cayenne 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "10.1145/289423.289451"
+literal "false"
+
+\end_inset
+
+, a Haskell-like language, combined dependent types with type-in-type and
+ non-termination.
+ It was more recently explored in the context of call by value evaluation
+ in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "jia2010dependent"
+literal "false"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "sjoberg2012irrelevance"
+literal "false"
+
+\end_inset
+
+.
+ Though not novel, we believe our Coq proof to be the clearest formal exposition
+ to date.
+ 
+\end_layout
+
+\begin_layout Standard
+A similar proof of type soundness appears in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "sjoberg2012irrelevance"
+literal "false"
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+btprint "btPrintCited"
+bibfiles "/Users/stephaniesavir/dtest/extended-abstract/dtest"
+options "plain"
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

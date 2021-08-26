@@ -18,8 +18,10 @@ all work related to my thesis document, will probly eventually become public
   * Defend
 
 ## TODO
-* department paperwork
+* department paperwork?
+* formatting
 * join one of the writing groups/workshops?
+* submodule out the bib file
 * CI
 
 ## Related
