@@ -1,8 +1,9 @@
-* introduction
-* Surface lang
-* Cast lang
-* Elaboration
+* Introduction
+* Surface lang (Technical Introduction)
+* Fixing definitional equality
+  * Cast lang
+  * Elaboration
 * data
-* symbolic exicion
+* symbolic execution
 * runtime proof search
 * conclusion
