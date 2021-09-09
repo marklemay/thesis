@@ -1,6 +1,8 @@
-# thesis
+# A Full-Spectrum Dependently Typed Language for Programming with Dynamic Equality, Testing, and Runtime Proof Search
 all work related to my thesis document, will probly eventually become public
 
+## Complete
+* 6/16/2021 thesis proposal
 ## Plan
 * August
   * Turn the workshop submission into thesis chapters (Surface Language, Cast Language)
