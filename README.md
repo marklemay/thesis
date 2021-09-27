@@ -1,24 +1,33 @@
 # thesis
-all work related to my thesis document, will probly eventually become public
+all work related to my thesis document, will eventually become public
 
 ## Plan
-* August
-  * Turn the workshop submission into thesis chapters (Surface Language, Cast Language)
-  * Begin a submission to [CPP](https://popl22.sigplan.org/home/CPP-2022)
-* September
-  * Submit to [CPP](https://popl22.sigplan.org/home/CPP-2022)
-  * Rework symbolic execution to work in the cast language
-  * Write up the relevant chapter
-* October
-  * Rework runtime proof search to work in the cast language
-  * Write up the relevant chapter
-* November - December
-  * Produce some larger examples
-  * Clean up thesis document
-  * Defend
+- [x] June
+  - [x] Propose
+  - [x] extendecd abstract submission
+- [x] July
+  - [x] reworked data
+- [x] August
+  - [x] Begin a submission to [CPP](https://popl22.sigplan.org/home/CPP-2022)
+- [ ] September
+  - [x] Submit to [CPP](https://popl22.sigplan.org/home/CPP-2022)
+  - [x] Produce some larger examples
+  - [ ] draft Surface Language chapter
+  - [ ] draft Cast Language chapter
+  - [ ] draft Data chapter
+- [ ] October
+  - [ ] Rework symbolic execution to work in the cast language
+  - [ ] draft testing chapter
+- [ ] November
+  - [ ] draft runtime proof search chapter
+  - [ ] draft introduction
+  - [ ] draft conclusion
+- [ ] December
+  - [ ] finalize thesis
+  - [ ] Send to commitee (at least 2 weeks before defense)
+  - [ ] Defend
 
 ## TODO
-* department paperwork?
 * formatting
 * join one of the writing groups/workshops?
 * submodule out the bib file
