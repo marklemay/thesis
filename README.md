@@ -1,6 +1,8 @@
 # thesis
 all work related to my thesis document, will eventually become public
 
+## Complete
+* 6/16/2021 thesis proposal
 ## Plan
 - [x] June
   - [x] Propose
