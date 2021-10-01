@@ -122,9 +122,13 @@ status open
 \end_layout
 
 \begin_layout Standard
-In an ideal world programmers would write perfect code with perfectly proven
- equalities.
- The surface language models this ideal, but difficult, system.
+In an ideal world programmers would write perfect code whose correctness
+ is perfectly proven.
+ The 
+\series bold
+Surface Language
+\series default
+ models this ideal, but difficult, system.
  Programmers should 
 \begin_inset ERT
 status collapsed
@@ -169,22 +173,21 @@ status open
 \begin_layout Standard
 The surface language presented in this chapter is a minimal dependent type
  system.
- It will serve both as foundation for further chapters, and as a self contained
- fully presented intoduction to dependnet type theory.
- As musch as possible, the syntax use's standard modern notation 
+ It will serve both as foundation for further chapters.
+ As much as possible, the syntax use's standard modern notation 
 \begin_inset Foot
 status open
 
 \begin_layout Plain Layout
-several alternative syntax exist in the literatiure, (TODO weird french
- bracket notation) , Martin hoffmen (TODO PI notation) 
+several alternative syntax exist in the literature, (TODO weird french bracket
+ notation) , Martin hoffmen (TODO PI notation) 
 \end_layout
 
 \end_inset
 
 .
  The semantics are intended to be as simple as possible and compatible with
- other well studiesd intentional dependent type theories 
+ other well studied intentional dependent type theories 
 \begin_inset Foot
 status open
 
@@ -216,11 +219,13 @@ status open
 
 \begin_layout Standard
 I deviate from a standard dependent type theory to include features to ease
- programming at the expense of logical soundness.
+ programming at the expense of correctness.
  Specifically the language allows general recursion, since general recursion
  is useful for general purpose functional programming.
  type-in-type is also supported since it simplifies the system for programmers,
  and makes the meta-theory easier when logical soundness has been abandoned.
+ Despite this, type soundness is a achievable and a practical type checking
+ algorithm is given.
 \end_layout
 
 \begin_layout Standard
@@ -228,7 +233,7 @@ Though similar systems have been studied over the last few decades this
  chapter aims to give a self contained presentation, along with many examples.
  The surface language has been an excellent platform to conduct research
  into full spectrum dependent type theory, and hopefully this exposition
- will be helpful introduction for future researchers.
+ will be helpful introduction for other researchers.
 \end_layout
 
 \begin_layout Standard
@@ -1461,77 +1466,6 @@ Examples
 
 \begin_layout Standard
 The surface system is extremely expressive.
- Church encodings are expressible.
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-% TODO: what is a church encoding?
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-% TODO: why church encoding?
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-% TODO: better example formatting, perhaps just a table?
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-% TODO: church list
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-% TODO: vector?
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Standard
@@ -3321,7 +3255,7 @@ status open
 
 \begin_layout Plain Layout
 
-% TODO: pred as an example of an unpleasant encoding, also citation
+% TODO: suc, pred as an example of an unpleasant encoding, also citation
 \end_layout
 
 \end_inset
@@ -3336,6 +3270,20 @@ status open
 \begin_layout Plain Layout
 
 % TODO: symetry, trans
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% TODO: list, vec, singleton
 \end_layout
 
 \end_inset
@@ -3364,6 +3312,20 @@ status open
 \begin_layout Plain Layout
 
 % TODO: 3 eq assignment?
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% TODO: TODo footnote on Leibniz equality for alt encoding 
 \end_layout
 
 \end_inset
@@ -3407,13 +3369,55 @@ name "fig:surface-constructions"
 
 \end_layout
 
+\begin_layout Subsection
+Church encodings
+\end_layout
+
+\begin_layout Standard
+Data types are expressible using Church encodings, (in the style of System
+ F).
+ Church encodings embed the elimination principle of data into continuations.
+ So for instance Booleans data is eliminated against true and false, 2 tags
+ with no additional data.
+ This is more recognizable as an if-then-else construct.
+ So 
+\begin_inset Formula $\mathbb{B}_{c}$
+\end_inset
+
+ encodes the possibility of choices, 
+\begin_inset Formula $true_{c}$
+\end_inset
+
+ picks the first branch, and 
+\begin_inset Formula $false_{c}$
+\end_inset
+
+ picks the false branch.
+\end_layout
+
+\begin_layout Standard
+Natural numbers are encodable against 2 tags, 0 and s, where s also contains
+ one smaller number.
+ So 
+\begin_inset Formula $\mathbb{N}_{c}$
+\end_inset
+
+ encodes the possibility of choices, 
+\begin_inset Formula $(A\rightarrow A)$
+\end_inset
+
+ decides how to recursively handle the prior number in the s case, and the
+ 2nd argument specifies how to handle the false branch.
+ This can be viewed as a simple looping construct with temporary storage.
+\end_layout
+
 \begin_layout Standard
 \begin_inset ERT
 status open
 
 \begin_layout Plain Layout
 
-% TODO: nats+recursion make this as powerful as PCF
+% TODO: church encoding citation
 \end_layout
 
 \end_inset
@@ -3422,10 +3426,57 @@ status open
 \end_layout
 
 \begin_layout Standard
-Calculus of Constructions constructions encodings are expressible,
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% TODO: why church encoding?
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% TODO: not necisarily convineint
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
+Predicate encodings
+\end_layout
+
+\begin_layout Standard
+With dependent types, logical predicates can be encoded (in the style of
+ Calculus of Constructions).
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% TODO: ...
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
 Leibniz equality
 \end_layout
 
@@ -3453,7 +3504,7 @@ Leibniz asserted the identity of indiscernibles: two objects are equal if
 \end_layout
 
 \begin_layout Subsection
-Large Elimination
+Large Eliminations
 \end_layout
 
 \begin_layout Standard
@@ -3463,6 +3514,17 @@ status open
 \begin_layout Plain Layout
 
 % TODO: doulbe check large elimination def (write it here)
+\end_layout
+
+\begin_layout Plain Layout
+
+% consistent with the notes here: https://github.com/RobertHarper/hott-notes/blob
+/5339576f55a4b7f5d04734370a5117491c44b1fe/notes_week5.tex#L155
+\end_layout
+
+\begin_layout Plain Layout
+
+% would like better explanaition
 \end_layout
 
 \end_inset
@@ -3478,26 +3540,116 @@ Large eliminations
 \begin_inset Quotes erd
 \end_inset
 
- are possible with type-in-type.
+ can be simulated with type-in-type.
 \end_layout
 
 \begin_layout Standard
-\begin_inset Formula $\lambda b.b\,\star\,Unit\,\perp\quad:\mathbb{B}_{c}\rightarrow\star$
+\begin_inset Tabular
+<lyxtabular version="3" rows="2" columns="3">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\begin_inset Formula $\lambda b\Rightarrow b\,\star\,Unit_{c}\,\perp_{c}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $:$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbb{B}_{c}\rightarrow\star$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\lambda n\Rightarrow n\,\star\,(\lambda-\Rightarrow Unit_{c})\,\perp_{c}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $:$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbb{N}_{c}\rightarrow\star$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
 \end_inset
 
 
 \end_layout
 
 \begin_layout Standard
-\begin_inset Formula $\lambda n.n\,\star\,(\lambda-.Unit)\,\perp\quad:\mathbb{N}_{c}\rightarrow\star$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Note that such a function is not possible in the Calculus of Constructions
- (CC).
+Note that such functions are not possible in the Calculus of Constructions,
+ and is used to motivate the extension to the Calculus of Inductive Construction
+s.
 \end_layout
 
 \begin_layout Standard
@@ -3506,8 +3658,7 @@ status open
 
 \begin_layout Plain Layout
 
-% TODO: not posiible in the calculus of constructions, and motivates the
- CIC
+% TODO: citation for CIC?
 \end_layout
 
 \end_inset
@@ -3515,21 +3666,228 @@ status open
 
 \end_layout
 
-\begin_layout Standard
-large eliminations can prove standard inequalities that can be hard or impossibl
-e to express in other minimal dependent type theories such as the calculus
- of constructions.
+\begin_layout Subsubsection
+Inequalities
 \end_layout
 
-\begin_layout Subsection
-\begin_inset Formula $\lnot\star=_{\star}\perp$
+\begin_layout Standard
+Large eliminations can be used to prove inequalities that can be hard or
+ impossible to express in other minimal dependent type theories such as
+ the calculus of constructions.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="4" columns="4">
+<features tabularvalignment="middle">
+<column alignment="left" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="left" valignment="top">
+<column alignment="left" valignment="top">
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\begin_inset Formula $\lambda pr\Rightarrow pr\,\left(\lambda x\Rightarrow x\right)\,\perp_{c}$
 \end_inset
 
 
 \end_layout
 
-\begin_layout Standard
-\begin_inset Formula $\lambda pr.pr\,\left(\lambda x.x\right)\,\perp\qquad:\lnot\star=_{\star}\perp$
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+:
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\lnot_{c}\star\doteq_{\star}\perp_{c}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+the type universe is distinct from Logical False
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\begin_inset Formula $\lambda pr\Rightarrow pr\,\left(\lambda x\Rightarrow x\right)\,tt_{c}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+:
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\lnot_{c}Unit_{c}\doteq_{\star}\perp_{c}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Logical True is distinct from Logical False
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\lambda pr\Rightarrow pr\,\left(\lambda b\Rightarrow b\,\star\,Unit_{c}\,\perp_{c}\right)\,tt_{c}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+:
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\lnot true_{c}\doteq_{\mathbb{B}_{c}}false_{c}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\lambda pr\Rightarrow pr\,\left(\lambda n\Rightarrow n\,\star\,(\lambda-\Rightarrow Unit_{c})\,\perp_{c}\right)\,tt_{c}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+:
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\lnot1_{c}\doteq_{\mathbb{N}_{c}}0_{c}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
 \end_inset
 
 
@@ -3541,23 +3899,9 @@ status open
 
 \begin_layout Plain Layout
 
-% TODO: not sensible in CC
+% TODO: 1st not sensible in CC
 \end_layout
 
-\end_inset
-
-
-\end_layout
-
-\begin_layout Subsection
-\begin_inset Formula $\lnot Unit=_{\star}\perp$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula $\lambda pr.pr\,\left(\lambda x.x\right)tt\qquad:\lnot Unit=_{\star}\perp$
 \end_inset
 
 
@@ -3569,44 +3913,62 @@ status open
 
 \begin_layout Plain Layout
 
-% TODO: possible in CC?
+% TODO: 2 possiblely in CC?
 \end_layout
 
-\end_inset
-
-
-\end_layout
-
-\begin_layout Subsection
-\begin_inset Formula $\lnot true_{c}=_{\mathbb{B}_{c}}false_{c}$
 \end_inset
 
 
 \end_layout
 
 \begin_layout Standard
-\begin_inset Formula $\lambda pr.pr\,\left(\lambda b.b\,\star\,Unit\,\perp\right)\,tt\qquad:\lnot true_{c}=_{\mathbb{B}_{c}}false_{c}$
+Note that a proof of 
+\begin_inset Formula $\lnot1_{c}\doteq_{\mathbb{N}_{c}}0_{c}$
+\end_inset
+
+ is not possible in the Calculus of Constructions
+\begin_inset CommandInset citation
+LatexCommand cite
+key "10.2307/2274575"
+literal "false"
+
 \end_inset
 
 
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Martin Hofmann gives a more semantic proof in ...
+ and excellently motivates the reasoning in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "hofmann1997syntax"
+literal "false"
+
+\end_inset
+
+(incorrect citation) Exercises 2.5, 2.6, 3.7, 3.25, 3.26, 3.43, 3.44
 \end_layout
 
-\begin_layout Subsection
-\begin_inset Formula $\lnot1_{c}=_{\mathbb{N}_{c}}0_{c}$
 \end_inset
 
-
+.
+ 
 \end_layout
 
 \begin_layout Standard
-\begin_inset Formula $\lambda pr.pr\,\left(\lambda n.n\,\star\,(\lambda-.Unit)\,\perp\right)\,tt\qquad:\lnot1_{c}=_{\mathbb{N}_{c}}0_{c}$
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% TODO: citation is actually for an MLTT, bleh
+\end_layout
+
 \end_inset
 
 
-\end_layout
-
-\begin_layout Standard
-Such a proof is impossible in CC
 \end_layout
 
 \begin_layout Standard
@@ -3625,6 +3987,24 @@ status open
 \end_layout
 
 \begin_layout Subsection
+Recursion
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% TODO: GCD, recursive types
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
 \begin_inset Formula $\left(x:\mathbb{N}_{c}\right)\rightarrow0_{c}\,+_{c}\,x=_{\mathbb{N}_{c}}x\,+_{c}\,0_{c}$
 \end_inset
 
@@ -3639,23 +4019,24 @@ status open
 \end_layout
 
 \begin_layout Standard
-TODO: check and discuss
+TODO: check and discuss, structural recursion
 \end_layout
 
 \begin_layout Subsection
-Further examples
+logical unsoundness and Nontermination
 \end_layout
 
 \begin_layout Standard
-There are more examples in 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "cardelli1986polymorphic"
-literal "false"
-
+The surface language is 
+\begin_inset Quotes eld
 \end_inset
 
- where Cardelli has studied a similar system.
+logically unsound
+\begin_inset Quotes erd
+\end_inset
+
+, every type is inhabited.
+ 
 \end_layout
 
 \begin_layout Standard
@@ -3664,7 +4045,7 @@ status open
 
 \begin_layout Plain Layout
 
-% TODO: other sources of examples
+% TODO: proper example formatting
 \end_layout
 
 \end_inset
@@ -3672,7 +4053,7 @@ status open
 
 \end_layout
 
-\begin_layout Subsection
+\begin_layout Subsubsection
 Every type is inhabited (by recursion)
 \end_layout
 
@@ -3683,17 +4064,46 @@ Every type is inhabited (by recursion)
 
 \end_layout
 
+\begin_layout Subsubsection
+Every type is inhabited (by Type-in-type)
+\end_layout
+
 \begin_layout Standard
-This shows that the surface language is 
-\begin_inset Quotes eld
+It is possible to encode Gerard's paradox, producing another source of logical
+ unsoundness.
+ A subtle form of recursive behavior can be built out of Gerard's paradox
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Reinhold89typecheckingis"
+literal "false"
+
 \end_inset
 
-logically unsound
-\begin_inset Quotes erd
+, but this behavior is no worse then the unrestricted recursion already
+ allowed.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% TODO: cite stuff (see https://stackoverflow.com/questions/18178999/do-agda-prog
+rams-necessarily-terminate)
+\end_layout
+
 \end_inset
 
-, every type is inhabited.
- While the surface language supports proofs, not every term typed in the
+
+\end_layout
+
+\begin_layout Subsubsection
+logical unsoundness
+\end_layout
+
+\begin_layout Standard
+While the surface language supports proofs, not every term typed in the
  surface language is a proof.
 \end_layout
 
@@ -3712,31 +4122,12 @@ Logical soundness seems not to matter in programming practice.
  to detect and fix when it occurs.
  In mainstream languages, types help to communicate the intent of termination,
  even though termination is not guaranteed by the type system.
- Therefore, logical unsoundness seems suitable for a dependently typed programmi
-ng language since proofs can still be encoded and logical unsoundness can
- be discovered through traditional testing, or warned about in a non-blocking
- way.
- 
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-% TODO: could still preform checks
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Importantly, no desirable computation is prevented in order to preserve
+ Importantly, no desirable computation is prevented in order to preserve
  logical soundness.
- 
+ By the haling problem there will never be a way to include all the terminating
+ computations and exclude all the nonterminating computations.
+ Therefore, logical unsoundness seems suitable for a dependently typed programmi
+ng language.
 \end_layout
 
 \begin_layout Standard
@@ -3754,15 +4145,9 @@ status open
 
 \end_layout
 
-\begin_layout Subsection
-Every type is inhabited (by Type-in-type)
-\end_layout
-
 \begin_layout Standard
-It is possible to encode Gerard's paradox, producing another source of logical
- unsoundness.
- Though a subtle form of recursive behavior can be built out of Gerard's
- paradox, direct inclusion of recursion is much easier to work with.
+The most popular ....
+ Forcing logical soundness incurs a real cost...
 \end_layout
 
 \begin_layout Standard
@@ -3771,7 +4156,7 @@ status open
 
 \begin_layout Plain Layout
 
-% TODO: cite stuff
+% TODO: could still preform checks
 \end_layout
 
 \end_inset
@@ -3780,11 +4165,90 @@ status open
 \end_layout
 
 \begin_layout Standard
-...
+Terms can still be called proofs as long as the safety of recursion and
+ type-in-type are monitored externally.
+ In this sense the inequalities listed are proofs, they make no use of general
+ recursion and match implementations from CIC such that universe hierarchies
+ could be assigned.
+ External means can still verify the desired properties, an automated process
+ could supply warnings when unsafe constructs are used, traditional software
+ testing can be used to discover proof bugs.
+ Even though the system is not logically sound, neither are informal paper
+ and pencil proofs.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% TODO: add ref to inequalities
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This architecture is resilient to change.
+ Where a change in the termination checking code of Coq might cause a proof
+ script to no longer run, here the code will always behave in the same way.
+\end_layout
+
+\begin_layout Subsection
+Further examples
+\end_layout
+
+\begin_layout Standard
+There are more examples in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "cardelli1986polymorphic"
+literal "false"
+
+\end_inset
+
+ where Cardelli has studied a similar system.
+ All Pure Type Systems
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+previously called 
+\begin_inset Quotes eld
+\end_inset
+
+Generalized type systems
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+ can translate into the Surface Language by accumulating their type universes
+ into the surface type universe.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% TODO: other sources of examples
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
-TAS Surface language 
+Surface Language Type Assignment System
 \end_layout
 
 \begin_layout Standard
@@ -5270,11 +5734,11 @@ If there is a procedure to decide type checking we can decide exactly when
 \end_layout
 
 \begin_layout Subsection
-the surface language is impractical as a programming language
+typing is non-local
 \end_layout
 
 \begin_layout Standard
-typing is not unique up to conversion
+TODO refer to the specific judgment
 \end_layout
 
 \begin_layout Standard
@@ -5285,16 +5749,63 @@ typing is not unique up to conversion
 \end_layout
 
 \begin_layout Standard
-TODO 
+TODO and therefore untenable
 \end_layout
 
 \begin_layout Section
 Bi-directional Surface Language
 \end_layout
 
+\begin_layout Subsection
+Annotate all the vars
+\end_layout
+
 \begin_layout Standard
-The surface language uses bidirectional type checking to minimize the number
- of annotations required (
+There are many possible way to localize the type checking process.
+ We could ask that all variable be annotated at binders.
+ This is ideal from a theoretical perspective this is good since it will
+ be easy to put variables on context.
+\end_layout
+
+\begin_layout Standard
+However note that, our proof of 
+\begin_inset Formula $\lnot1_{c}\doteq_{\mathbb{N}_{c}}0_{c}$
+\end_inset
+
+ will look like
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\lambda pr:1_{c}\doteq_{\mathbb{N}_{c}}0_{c}\Rightarrow pr\,\left(\lambda n:\left(C:\left(\mathbb{N}_{c}\rightarrow\star\right)\right)\rightarrow C\,1_{c}\rightarrow C\,0_{c}\Rightarrow n\,\star\,(\lambda-:\star\Rightarrow Unit_{c})\,\perp_{c}\right)\,tt_{c}:\lnot1_{c}\doteq_{\mathbb{N}_{c}}0_{c}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This strategy requires a lot of redundant annotations.
+ Luckily there's a better way, Bi-directional type checking.
+\end_layout
+
+\begin_layout Subsection
+Bi-directional
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% TODO also site teh clearer tutorial paper
+\end_layout
+
+\end_inset
+
+ Bidirectional type-checking is a popular technique for implementing dependently
+ typed programming languages because it not as complicated as more sophisticated
+ unification strategies, while still minimizing the annotations needed and
+ localizing errors (
 \begin_inset CommandInset citation
 LatexCommand cite
 key "10.1145/3450952"
@@ -5302,10 +5813,7 @@ literal "false"
 
 \end_inset
 
- is a good survey of the technique).
- Bidirectional type-checking is a popular technique for implementing dependently
- typed programming languages because it not as complicated as more sophisticated
- unification strategies, while still minimizing the annotations needed.
+ is a good survey).
  This style of type checking usually only needs top level functions to be
  annotated
 \begin_inset Foot
@@ -5319,8 +5827,13 @@ Even in Haskell, with full Hindley-Milner type inference, top level type
 \end_inset
 
 .
- Bidirectional type-checking splits the typing judgment into 2 separate
- judgments: the 
+ In fact, every example in this chapter has enough annotations to type-check
+ under a bidirectional system.
+\end_layout
+
+\begin_layout Standard
+Bidirectional type-checking splits the typing judgment into 2 separate judgments
+: the 
 \begin_inset Quotes eld
 \end_inset
 
@@ -5339,6 +5852,21 @@ check
  judgment for when term will be checked against a type.
  Inferences can be turned into checked judgments with an explicit equality
  check.
+ This precisely limits the use of the problematic conv rule.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% TODO convert one to the other, emphasize locality
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
@@ -5606,6 +6134,10 @@ Implemented in Haskell.
 Related work
 \end_layout
 
+\begin_layout Subsection
+Bad logics, ok programming languages?
+\end_layout
+
 \begin_layout Standard
 Unsound logical systems that are acceptable programming languages go back
  to at least Church's lambda calculus which was originally intended to be
@@ -5664,10 +6196,6 @@ status open
 \begin_layout Plain Layout
 
 %, though the annotation burden seems high in retrospect
-\end_layout
-
-\begin_layout Plain Layout
-
 \end_layout
 
 \end_inset
@@ -5782,6 +6310,42 @@ literal "false"
 .
 \end_layout
 
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% TODO:  revise above
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+relation to other formal systems
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% TODO: nats+recursion make this as powerful as PCF, same issues about semantics
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+relation to other implementations
+\end_layout
+
 \begin_layout Section
 TODO
 \end_layout
@@ -5842,7 +6406,7 @@ talk about non terminaiton
 \begin_inset CommandInset bibtex
 LatexCommand bibtex
 btprint "btPrintCited"
-bibfiles "/Users/stephaniesavir/dtest/papers/2022-cpp/dtest"
+bibfiles "/Users/stephaniesavir/thesis/bibliography/dtest"
 options "alpha"
 
 \end_inset

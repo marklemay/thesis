@@ -3,7 +3,6 @@ all work related to my thesis document, will eventually become public
 
 ## Complete
 * 6/16/2021 thesis proposal
-## Plan
 - [x] June
   - [x] Propose
   - [x] extendecd abstract submission
@@ -11,13 +10,14 @@ all work related to my thesis document, will eventually become public
   - [x] reworked data
 - [x] August
   - [x] Begin a submission to [CPP](https://popl22.sigplan.org/home/CPP-2022)
-- [ ] September
+- [x] September
   - [x] Submit to [CPP](https://popl22.sigplan.org/home/CPP-2022)
   - [x] Produce some larger examples
+## Plan
+- [ ] October
   - [ ] draft Surface Language chapter
   - [ ] draft Cast Language chapter
   - [ ] draft Data chapter
-- [ ] October
   - [ ] Rework symbolic execution to work in the cast language
   - [ ] draft testing chapter
 - [ ] November
@@ -28,6 +28,12 @@ all work related to my thesis document, will eventually become public
   - [ ] finalize thesis
   - [ ] Send to commitee (at least 2 weeks before defense)
   - [ ] Defend
+
+## Submodules
+need to pull with
+```
+git submodule foreach git pull origin master
+```
 
 ## TODO
 * formatting
