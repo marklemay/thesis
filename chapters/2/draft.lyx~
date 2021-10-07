@@ -5,6 +5,22 @@
 \save_transient_properties true
 \origin unavailable
 \textclass article
+\begin_preamble
+\usepackage{xcolor}
+\usepackage{tikz-cd}
+\tikzcdset{%
+    triple line/.code={\tikzset{%
+        double equal sign distance, % replace by double distance = 'measure' 
+        double=\pgfkeysvalueof{/tikz/commutative diagrams/background color}}},
+    quadruple line/.code={\tikzset{%
+        double equal sign distance, % replace by double distance = 'measure'
+        double=\pgfkeysvalueof{/tikz/commutative diagrams/background color}}},
+    Rrightarrow/.code={\tikzcdset{triple line}\pgfsetarrows{tikzcd implies cap-tikzcd implies}},
+    RRightarrow/.code={\tikzcdset{quadruple line}\pgfsetarrows{tikzcd implies cap-tikzcd implies}}
+}    
+\newcommand*{\tarrow}[2][]{\arrow[Rrightarrow, #1]{#2}\arrow[dash, shorten >= 0.5pt, #1]{#2}}
+\newcommand*{\qarrow}[2][]{\arrow[RRightarrow, #1]{#2}\arrow[equal, double distance = 0.25pt, shorten >= 1.28pt, #1]{#2}}
+\end_preamble
 \use_default_options true
 \maintain_unincluded_children false
 \language english
@@ -85,7 +101,7 @@
 \begin_body
 
 \begin_layout Title
-Chapter 1 (draft)
+Chapter 2 (draft)
 \end_layout
 
 \begin_layout Part
@@ -341,7 +357,7 @@ status open
 
 \begin_layout Plain Layout
 \begin_inset Tabular
-<lyxtabular version="3" rows="15" columns="4">
+<lyxtabular version="3" rows="16" columns="4">
 <features tabularvalignment="middle">
 <column alignment="left" valignment="top">
 <column alignment="center" valignment="top">
@@ -402,6 +418,9 @@ source labels,
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\Coloneqq$
+\end_inset
+
 
 \end_layout
 
@@ -411,7 +430,7 @@ source labels,
 \begin_inset Text
 
 \begin_layout Plain Layout
-
+...
 \end_layout
 
 \end_inset
@@ -427,11 +446,52 @@ source labels,
 </cell>
 </row>
 <row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+|
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $.$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+no source label
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
 <cell multicolumn="1" alignment="none" valignment="top" usebox="none" special="l">
 \begin_inset Text
 
 \begin_layout Plain Layout
-variable contexts,
+type contexts,
 \end_layout
 
 \end_inset
@@ -3494,6 +3554,40 @@ Leibniz equality
 \end_layout
 
 \begin_layout Standard
+One of the most potent and interesting propositions is the proposition of
+ equality.
+ Phrased as here, it is often called Leibniz equality since 2 terms are
+ equal when they behave the same on all propositions and this identification
+ of indiscernibles is called 
+\begin_inset Quotes eld
+\end_inset
+
+Leibniz law
+\begin_inset Quotes erd
+\end_inset
+
+ in philosophy
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Leibniz assumed a metaphysical notion of identification of 
+\begin_inset Quotes eld
+\end_inset
+
+substance
+\begin_inset Quotes erd
+\end_inset
+
+s, not a mathematical notion of equality.
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
 \begin_inset ERT
 status open
 
@@ -3509,6 +3603,11 @@ Leibniz asserted the identity of indiscernibles: two objects are equal if
 \end_inset
 
  https://homepages.inf.ed.ac.uk/wadler/papers/leibniz/leibniz.pdf
+\end_layout
+
+\begin_layout Plain Layout
+
+% section 9 ish, sort of asmed tobe true 
 \end_layout
 
 \end_inset
@@ -4273,7 +4372,7 @@ status open
 \begin_layout Plain Layout
 \begin_inset Formula 
 \[
-\frac{x:M\in\Gamma}{\Gamma\vdash x\,:\,M}var-ty
+\frac{\Gamma\vdash\quad x:M\in\Gamma}{\Gamma\vdash x\,:\,M}\,\textrm{ty-var}
 \]
 
 \end_inset
@@ -4284,7 +4383,7 @@ status open
 \begin_layout Plain Layout
 \begin_inset Formula 
 \[
-\frac{\Gamma\vdash m\,:\,M\quad\Gamma\vdash M\,:\,\star}{\Gamma\vdash m::_{\ell}M\,:\,M}::-ty
+\frac{\Gamma\vdash m\,:\,M\quad\Gamma\vdash M\,:\,\star}{\Gamma\vdash m::_{\ell}M\,:\,M}\,\textrm{ty-::}
 \]
 
 \end_inset
@@ -4295,7 +4394,7 @@ status open
 \begin_layout Plain Layout
 \begin_inset Formula 
 \[
-\frac{\,}{\Gamma\vdash\star\,:\,\star}\star-ty
+\frac{\Gamma\vdash}{\Gamma\vdash\star\,:\,\star}\,\textrm{ty-}\star
 \]
 
 \end_inset
@@ -4306,7 +4405,7 @@ status open
 \begin_layout Plain Layout
 \begin_inset Formula 
 \[
-\frac{\Gamma\vdash M\,:\,\star\quad\Gamma,x:M\vdash N\,:\,\star}{\Gamma\vdash\left(x:M\right)\rightarrow N\,:\,\star}\Pi-ty
+\frac{\Gamma\vdash M\,:\,\star\quad\Gamma,x:M\vdash N\,:\,\star}{\Gamma\vdash\left(x:M\right)\rightarrow N\,:\,\star}\,\textrm{ty-fun-ty}
 \]
 
 \end_inset
@@ -4317,7 +4416,7 @@ status open
 \begin_layout Plain Layout
 \begin_inset Formula 
 \[
-\frac{\Gamma\vdash m\,:\,\left(x:N\right)\rightarrow M\quad\Gamma\vdash n\,:\,N}{\Gamma\vdash m\,n\,:\,M\left[x\coloneqq n\right]}\Pi-app-ty
+\frac{\Gamma\vdash m\,:\,\left(x:N\right)\rightarrow M\quad\Gamma\vdash n\,:\,N}{\Gamma\vdash m\,n\,:\,M\left[x\coloneqq n\right]}\,\textrm{ty-fun-app}
 \]
 
 \end_inset
@@ -4328,7 +4427,7 @@ status open
 \begin_layout Plain Layout
 \begin_inset Formula 
 \[
-\frac{\Gamma\vdash m\,:\,M\quad\Gamma\vdash M\equiv M':\star}{\Gamma\vdash m\,:\,M'}conv
+\frac{\Gamma,f:\left(x:N\right)\rightarrow M,x:N\vdash m\,:\,M}{\Gamma\vdash\mathsf{fun}\,f\,x\Rightarrow m\,:\,\left(x:N\right)\rightarrow M}\,\textrm{ty-fun}
 \]
 
 \end_inset
@@ -4339,7 +4438,7 @@ status open
 \begin_layout Plain Layout
 \begin_inset Formula 
 \[
-\frac{\Gamma,f:\left(x:N\right)\rightarrow M,x:N\vdash m\,:\,M}{\Gamma\vdash\mathsf{fun}\,f\,x\Rightarrow m\,:\,\left(x:N\right)\rightarrow M}\Pi-\mathsf{fun}-ty
+\frac{\Gamma\vdash m\,:\,M\quad M\equiv M'}{\Gamma\vdash m\,:\,M'}\,\textrm{ty-conv}
 \]
 
 \end_inset
@@ -4353,7 +4452,21 @@ status open
 
 \begin_layout Plain Layout
 
-% TODO: Note the location data makes this dangerous
+% TODO: Note the location needs explanation
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% TODO: make names match red names, write up style guide
 \end_layout
 
 \end_inset
@@ -4518,11 +4631,7 @@ status open
 \end_layout
 
 \begin_layout Itemize
-reflexive if 
-\begin_inset Formula $\Rrightarrow_{\ast}$
-\end_inset
-
- is reflexive
+reflexive by defintion
 \end_layout
 
 \begin_layout Itemize
@@ -4577,7 +4686,7 @@ status open
 \begin_layout Plain Layout
 \begin_inset Formula 
 \[
-\frac{\,}{x\Rrightarrow x}
+\frac{\,}{x\Rrightarrow x}\,\textrm{\Rrightarrow-var}
 \]
 
 \end_inset
@@ -4585,7 +4694,7 @@ status open
 
 \begin_inset Formula 
 \[
-\frac{m\Rrightarrow m'}{m::_{\ensuremath{\ell}}M\Rrightarrow m'}
+\frac{m\Rrightarrow m'}{m::_{\ensuremath{\ell}}M\Rrightarrow m'}\,\textrm{\Rrightarrow-::-red}
 \]
 
 \end_inset
@@ -4593,18 +4702,7 @@ status open
 
 \begin_inset Formula 
 \[
-\frac{m\Rrightarrow m'\quad M\Rrightarrow M'}{m::_{\ensuremath{\ell}}M\Rrightarrow m'::_{\ensuremath{\ell}}M'}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Formula 
-\[
-\frac{\,}{\star\Rrightarrow\star}
+\frac{m\Rrightarrow m'\quad M\Rrightarrow M'}{m::_{\ensuremath{\ell}}M\Rrightarrow m'::_{\ensuremath{\ensuremath{\ell}'}}M'}\,\textrm{\Rrightarrow-::}
 \]
 
 \end_inset
@@ -4615,15 +4713,7 @@ status open
 \begin_layout Plain Layout
 \begin_inset Formula 
 \[
-\frac{M\Rrightarrow M'\quad N\Rrightarrow N'}{\left(x:M_{\ell}\right)\rightarrow N_{\ell'}\Rrightarrow\left(x:M'_{\ell}\right)\rightarrow N'_{\ell'}}
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-\frac{m\Rrightarrow m'\quad n\Rrightarrow n'}{\left(\mathsf{fun}\,f\,x\Rightarrow m\right)_{\ell}n\Rrightarrow m'\left[f\coloneqq\mathsf{fun}\,f\,x\Rightarrow m',x\coloneqq n'\right]}
+\frac{\,}{\star\Rrightarrow\star}\,\textrm{\Rrightarrow-}\star
 \]
 
 \end_inset
@@ -4634,7 +4724,15 @@ status open
 \begin_layout Plain Layout
 \begin_inset Formula 
 \[
-\frac{m\Rrightarrow m'}{\mathsf{fun}\,f\,x\Rightarrow m\,\Rrightarrow\,\mathsf{fun}\,f\,x\Rightarrow m'}
+\frac{M\Rrightarrow M'\quad N\Rrightarrow N'}{\left(x:M_{\ell}\right)\rightarrow N_{\ell'}\Rrightarrow\left(x:M'_{\ensuremath{\ell}''}\right)\rightarrow N'_{\ensuremath{\ell}'''}}\,\textrm{\Rrightarrow-fun-ty}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{m\Rrightarrow m'\quad n\Rrightarrow n'}{\left(\mathsf{fun}\,f\,x\Rightarrow m\right)_{\ell}n\Rrightarrow m'\left[f\coloneqq\mathsf{fun}\,f\,x\Rightarrow m',x\coloneqq n'\right]}\,\textrm{\Rrightarrow-fun-app-red}
 \]
 
 \end_inset
@@ -4645,7 +4743,18 @@ status open
 \begin_layout Plain Layout
 \begin_inset Formula 
 \[
-\frac{m\Rrightarrow m'\quad n\Rrightarrow n'}{m_{\ell}\,n\Rrightarrow m'_{\ell}\,n'}
+\frac{m\Rrightarrow m'}{\mathsf{fun}\,f\,x\Rightarrow m\,\Rrightarrow\,\mathsf{fun}\,f\,x\Rightarrow m'}\,\textrm{\Rrightarrow-fun}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+\frac{m\Rrightarrow m'\quad n\Rrightarrow n'}{m_{\ell}\,n\Rrightarrow m'_{\ell'}\,n'}\,\textrm{\Rrightarrow-fun-app}
 \]
 
 \end_inset
@@ -4677,6 +4786,52 @@ Surface Language Parallel Reductions
 \begin_inset CommandInset label
 LatexCommand label
 name "fig:surface-reduction"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+\frac{\,}{m\Rrightarrow_{\ast}m}\,\textrm{\Rrightarrow_{\ast}-refl}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{m\Rrightarrow_{\ast}m'\;m'\Rrightarrow m''}{m\Rrightarrow_{\ast}m''}\,\textrm{\Rrightarrow_{\ast}-trans}
+\]
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Transitive-Reflexive-Closure
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:surface-reduction-1"
 
 \end_inset
 
@@ -4743,7 +4898,7 @@ Equality
 \begin_inset Formula $\equiv$
 \end_inset
 
- is reflexive
+ are reflexive
 \end_layout
 
 \begin_layout Standard
@@ -4762,27 +4917,19 @@ The following rule is admissible,
 \end_layout
 
 \begin_layout Standard
-by induction
-\end_layout
-
-\begin_layout Standard
-it follows that,
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{m}{m\Rrightarrow_{\ast}\,m}\,\textrm{\Rrightarrow-refl}
-\]
-
+by induction on the syntax of 
+\begin_inset Formula $m$
 \end_inset
 
 
 \end_layout
 
 \begin_layout Standard
-is admissible.
- And follows that 
+Recall that 
+\begin_inset Formula $\Rrightarrow_{\ast}$
+\end_inset
+
+ is reflexive by definition so
 \end_layout
 
 \begin_layout Standard
@@ -4812,7 +4959,72 @@ is admissible.
 \begin_inset Formula $\equiv$
 \end_inset
 
- is closed under substitutions
+ are closed under substitutions.
+\end_layout
+
+\begin_layout Standard
+The following rule is admissible for every substitution 
+\begin_inset Formula $\sigma$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% TODO define substitutions, what properties are needed over substitutions?
+ 
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% TODO is this lemma needed or is it jsut to accomodate stupid binding stuff
+ in coq 
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{m\Rrightarrow m'}{m\left[\sigma\right]\Rrightarrow m'\left[\sigma\right]}\,\textrm{\Rrightarrow-sub-\sigma}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+by induction on the 
+\begin_inset Formula $\Rrightarrow$
+\end_inset
+
+ relation, using 
+\begin_inset Formula $\textrm{\Rrightarrow-refl}$
+\end_inset
+
+ in the 
+\begin_inset Formula $\textrm{\Rrightarrow-var}$
+\end_inset
+
+ case.
 \end_layout
 
 \begin_layout Standard
@@ -4832,6 +5044,10 @@ The following rule is admissible where
 \begin_inset Formula $\sigma\left(x\right)\Rrightarrow\tau\left(x\right)$
 \end_inset
 
+, written 
+\begin_inset Formula $\sigma\Rrightarrow\tau$
+\end_inset
+
 
 \end_layout
 
@@ -4847,7 +5063,11 @@ The following rule is admissible where
 \end_layout
 
 \begin_layout Standard
-by induction
+by induction on the 
+\begin_inset Formula $\Rrightarrow$
+\end_inset
+
+ relation.
 \end_layout
 
 \begin_layout Standard
@@ -4862,7 +5082,11 @@ by induction
 \end_layout
 
 \begin_layout Standard
-is admissible.
+is admissible by induction on the 
+\begin_inset Formula $\Rrightarrow_{\ast}$
+\end_inset
+
+ relation.
  And follows that 
 \end_layout
 
@@ -4897,6 +5121,28 @@ is admissible.
 \end_layout
 
 \begin_layout Standard
+Confluent
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+also 
+\begin_inset Quotes eld
+\end_inset
+
+Church-Rosser
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 By defining normalization with parallel reductions we can show confluence
  using the methods shown in 
 \begin_inset CommandInset citation
@@ -4906,16 +5152,34 @@ literal "false"
 
 \end_inset
 
+
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+also well presented in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "KOKKE2020102440"
+literal "false"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
 .
- First define an auxiliary function 
+ First define a function 
 \begin_inset Formula $max$
 \end_inset
 
- takes the maximum possible par step, such that if 
+ that takes the maximum possible parallel step, such that if 
 \begin_inset Formula $m\Rrightarrow\,m'$
 \end_inset
 
-, 
+ then 
 \begin_inset Formula $m'\Rrightarrow\,max\left(m\right)$
 \end_inset
 
@@ -4936,7 +5200,7 @@ literal "false"
 <column alignment="center" valignment="top">
 <column alignment="center" valignment="top">
 <row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -4961,7 +5225,7 @@ literal "false"
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -4973,7 +5237,7 @@ literal "false"
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -4985,7 +5249,7 @@ literal "false"
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -4997,7 +5261,7 @@ literal "false"
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -5008,7 +5272,7 @@ otherwise
 </cell>
 </row>
 <row>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -5033,7 +5297,7 @@ otherwise
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -5045,7 +5309,7 @@ otherwise
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -5057,7 +5321,7 @@ otherwise
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -5069,7 +5333,7 @@ otherwise
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -5080,7 +5344,7 @@ otherwise
 </cell>
 </row>
 <row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -5105,7 +5369,7 @@ otherwise
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -5117,7 +5381,7 @@ otherwise
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -5129,7 +5393,7 @@ otherwise
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -5141,7 +5405,7 @@ otherwise
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -5152,7 +5416,7 @@ otherwise
 </cell>
 </row>
 <row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -5177,7 +5441,7 @@ otherwise
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -5189,7 +5453,7 @@ otherwise
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -5201,7 +5465,7 @@ otherwise
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -5213,7 +5477,7 @@ otherwise
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -5224,7 +5488,7 @@ otherwise
 </cell>
 </row>
 <row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -5249,7 +5513,7 @@ otherwise
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -5261,7 +5525,7 @@ otherwise
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -5273,7 +5537,7 @@ otherwise
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -5285,7 +5549,7 @@ otherwise
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -5296,7 +5560,7 @@ otherwise
 </cell>
 </row>
 <row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -5321,7 +5585,7 @@ otherwise
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -5333,7 +5597,7 @@ otherwise
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -5345,7 +5609,7 @@ otherwise
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -5357,7 +5621,7 @@ otherwise
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -5368,7 +5632,7 @@ otherwise
 </cell>
 </row>
 <row>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -5393,7 +5657,7 @@ otherwise
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -5405,7 +5669,7 @@ otherwise
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -5417,7 +5681,7 @@ otherwise
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -5429,7 +5693,7 @@ otherwise
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -5461,6 +5725,265 @@ status open
 \end_layout
 
 \begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+Triangle Property
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula $\ensuremath{\forall{\color{red}m},{\color{red}m'}.\:{\color{red}m\Rrightarrow m'}\:\rightarrow\:{\color{red}m'}{\color{blue}\Rrightarrow max\left(m\right)}}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{tikzcd}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+mathbin{
+\backslash
+color{red}m} 
+\backslash
+tarrow[red]{r} 
+\backslash
+arrow[lightgray]{d} & 
+\backslash
+mathbin{
+\backslash
+color{red}m'} 
+\backslash
+tarrow[blue]{ld} 
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+mathbin{
+\backslash
+color{blue}max(m)}                  &              
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{tikzcd}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+Diamond Property
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula $\forall{\color{red}m},{\color{red}m'},{\color{red}m''}.\:{\color{red}m\Rrightarrow m'}\:\wedge\:{\color{red}m\Rrightarrow m''}\:\rightarrow\:{\color{red}m'}{\color{blue}\Rrightarrow max\left(m\right)}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{tikzcd}
+\end_layout
+
+\begin_layout Plain Layout
+
+               & {
+\backslash
+color{red}m} 
+\backslash
+tarrow[red]{rd} 
+\backslash
+tarrow[red]{ld} 
+\backslash
+arrow[lightgray]{dd} &                
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Plain Layout
+
+{
+\backslash
+color{red}m'} 
+\backslash
+tarrow[blue]{rd} &                                       & {
+\backslash
+color{red}m''} 
+\backslash
+tarrow[blue]{ld} 
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Plain Layout
+
+               & {
+\backslash
+color{blue}max(m)}                                &               
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{tikzcd}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+Confluence
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula $\forall{\color{red}m},{\color{red}n},{\color{red}n'}.\:{\color{red}m\Rrightarrow_{\ast}n}\:\wedge\:{\color{red}m\Rrightarrow_{\ast}n'}\:\rightarrow\:\exists{\color{blue}n'''}.\:{\color{red}n}{\color{blue}\Rrightarrow_{\ast}{\color{blue}n'''}}\:\wedge\:{\color{red}n'}{\color{blue}\Rrightarrow{\color{blue}n'''}}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{tikzcd}
+\end_layout
+
+\begin_layout Plain Layout
+
+% TODO look into proper subscripting of arrow heads
+\end_layout
+
+\begin_layout Plain Layout
+
+              & {
+\backslash
+color{red}m} 
+\backslash
+tarrow[red]{rd}[label={[pos=1,inner sep=0,outer sep=0]0:${
+\backslash
+ast}$}]{} 
+\backslash
+tarrow[red]{ld}[label={[pos=1,inner sep=0,outer sep=0]0:${
+\backslash
+ast}$}]{} &              
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Plain Layout
+
+{
+\backslash
+color{red}n'}  
+\backslash
+tarrow[blue]{rd}[label={[pos=1,inner sep=0,outer sep=0]0:${
+\backslash
+ast}$}]{} &                         & {
+\backslash
+color{red}n''} 
+\backslash
+tarrow[blue]{ld}[label={[pos=1,inner sep=0,outer sep=0]0:${
+\backslash
+ast}$}]{} 
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Plain Layout
+
+              & {
+\backslash
+color{blue}{
+\backslash
+color{blue}n'''}}                      &                              
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{tikzcd}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Rewriting Diagrams
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:shape-diagrams"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 \begin_inset Formula $m\Rrightarrow\,max\left(m\right)$
 \end_inset
 
@@ -5468,22 +5991,77 @@ status open
 \end_layout
 
 \begin_layout Standard
-by TODO
+by induction on the cases of 
+\begin_inset Formula $max$
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
-\begin_inset Formula $m\Rrightarrow\,m'$
-\end_inset
+\begin_inset ERT
+status open
 
-, 
-\begin_inset Formula $m'\Rrightarrow\,max\left(m\right)$
+\begin_layout Plain Layout
+
+% TODO not needed?
+\end_layout
+
 \end_inset
 
  
 \end_layout
 
 \begin_layout Standard
-by TODO
+if 
+\begin_inset Formula $m\Rrightarrow\,m'$
+\end_inset
+
+ then 
+\begin_inset Formula $m'\Rrightarrow max\left(m\right)$
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+by induction on the derivation 
+\begin_inset Formula $m\Rrightarrow\,m'$
+\end_inset
+
+ , with the only interesting cases are where a reduction is not taken
+\end_layout
+
+\begin_layout Itemize
+in the case of 
+\begin_inset Formula $\textrm{\Rrightarrow-::}$
+\end_inset
+
+ , 
+\begin_inset Formula $m'\Rrightarrow max\left(m\right)$
+\end_inset
+
+ by 
+\begin_inset Formula $\textrm{\Rrightarrow-::-red}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+in the case of 
+\begin_inset Formula $\textrm{\Rrightarrow-fun-app}$
+\end_inset
+
+ , 
+\begin_inset Formula $m'\Rrightarrow max\left(m\right)$
+\end_inset
+
+ by 
+\begin_inset Formula $\textrm{\Rrightarrow-fun-app-red}$
+\end_inset
+
+ 
 \end_layout
 
 \begin_layout Standard
@@ -5491,6 +6069,7 @@ it follows that
 \end_layout
 
 \begin_layout Standard
+if 
 \begin_inset Formula $m\Rrightarrow\,m'$
 \end_inset
 
@@ -5506,33 +6085,32 @@ it follows that
 \begin_inset Formula $m''\Rrightarrow\,max\left(m\right)$
 \end_inset
 
- , referred to as the diamond property, 
-\begin_inset Formula $\Rrightarrow$
+ , referred to as the diamond property
+\end_layout
+
+\begin_layout Standard
+since the function 
+\begin_inset Formula $max$
 \end_inset
 
- is confluent.
+ will pick a unique term.
+ 
 \end_layout
 
 \begin_layout Standard
-it follows that 
-\end_layout
-
-\begin_layout Standard
+the diamond property implies the confluence of 
 \begin_inset Formula $\Rrightarrow_{\ast}$
 \end_inset
 
- is confluent
+ 
 \end_layout
 
 \begin_layout Standard
-by TODO
+by repeated application of the diamond property
 \end_layout
 
 \begin_layout Standard
 it follows that 
-\end_layout
-
-\begin_layout Standard
 \begin_inset Formula $\equiv$
 \end_inset
 
@@ -5540,11 +6118,595 @@ it follows that
 \end_layout
 
 \begin_layout Subsection
-Context
+Context Lemmas
 \end_layout
 
 \begin_layout Subsection
 Preservation
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% TODO is typed conv, the easiest presentation?
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+preservation for 
+\begin_inset Formula $\Rrightarrow$
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\Gamma\vdash m:M\quad m\Rrightarrow m'}{\Gamma\vdash m':M}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+can now be proven by induction on the typing derivation 
+\begin_inset Formula $\Gamma\vdash m:M$
+\end_inset
+
+, the non trivial cases are
+\end_layout
+
+\begin_layout Itemize
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% TODO remove forall
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $\textrm{ty-::}$
+\end_inset
+
+, from induction 
+\begin_inset Formula $\forall m,m'.$
+\end_inset
+
+ 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $m\Rrightarrow m'$
+\end_inset
+
+ implies 
+\begin_inset Formula $\Gamma\vdash m'\,:\,M$
+\end_inset
+
+, and 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+
+\begin_inset Formula $\forall M,M'.$
+\end_inset
+
+ 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $M\Rrightarrow M'$
+\end_inset
+
+ implies 
+\begin_inset Formula $\Gamma\vdash M'\,:\,\star$
+\end_inset
+
+, there are two possible 
+\begin_inset Formula $\Rrightarrow$
+\end_inset
+
+ reductions
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\begin_inset Formula $\textrm{\Rrightarrow-::}$
+\end_inset
+
+, where 
+\begin_inset Formula $m\Rrightarrow m'$
+\end_inset
+
+ and 
+\begin_inset Formula $M\Rrightarrow M'$
+\end_inset
+
+, the derivation 
+\begin_inset Formula $\Gamma\vdash m'::_{\ell'}M'$
+\end_inset
+
+ follows by 
+\begin_inset Formula $\Gamma\vdash m'\,:\,M'$
+\end_inset
+
+ 
+\begin_inset Formula $\textrm{ty-conv}$
+\end_inset
+
+ on the inductive hypothesis 
+\begin_inset Formula $\Gamma\vdash m'\,:\,M$
+\end_inset
+
+ and 
+\begin_inset Formula $M'\,:\,\star$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\begin_inset Formula $\textrm{\Rrightarrow-::-red}$
+\end_inset
+
+, where 
+\begin_inset Formula $m\Rrightarrow m'$
+\end_inset
+
+, the derivation 
+\begin_inset Formula $\Gamma\vdash m'\,:\,M$
+\end_inset
+
+ follows directly from the inductive hypothesis
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+\begin_inset Formula $\textrm{ty-fun-ty}$
+\end_inset
+
+, from induction 
+\begin_inset Formula $\forall M,M'.$
+\end_inset
+
+ 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $M\Rrightarrow M'$
+\end_inset
+
+ implies 
+\begin_inset Formula $\Gamma\vdash M'\,:\,\star$
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+, and 
+\begin_inset Formula $\forall N,N'.$
+\end_inset
+
+ 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $N\Rrightarrow N'$
+\end_inset
+
+ implies 
+\begin_inset Formula $\Gamma,x:M\vdash N'\,:\,\star$
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+, there is only one possible 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $\Rrightarrow$
+\end_inset
+
+ reduction
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+\begin_inset Formula $\Rrightarrow\textrm{-fun-ty}$
+\end_inset
+
+, where 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $M\Rrightarrow M'$
+\end_inset
+
+, 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+
+\begin_inset Formula $N\Rrightarrow N'$
+\end_inset
+
+ and we must show 
+\begin_inset Formula $\Gamma\vdash\left(x:M'\right)\rightarrow N'\,:\,\star$
+\end_inset
+
+.
+ using the ...
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% TODO just subst by parstep in ctx
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+\begin_inset Formula $\textrm{ty-fun-app}$
+\end_inset
+
+, from induction 
+\begin_inset Formula $\forall m,m'.$
+\end_inset
+
+ 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $m\Rrightarrow m'$
+\end_inset
+
+ implies 
+\begin_inset Formula $\Gamma\vdash m'\,:\,\left(x:N\right)\rightarrow M$
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+, and 
+\begin_inset Formula $\forall n,n'.$
+\end_inset
+
+ 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $n\Rrightarrow n'$
+\end_inset
+
+ implies 
+\begin_inset Formula $\Gamma,x:M\vdash N'\,:\,\star$
+\end_inset
+
+, there are two possible 
+\begin_inset Formula $\Rrightarrow$
+\end_inset
+
+ reductions
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+\begin_inset Formula $\Rrightarrow\textrm{-fun-ty}$
+\end_inset
+
+, where 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $M\Rrightarrow M'$
+\end_inset
+
+, 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+
+\begin_inset Formula $N\Rrightarrow N'$
+\end_inset
+
+ and we must show 
+\begin_inset Formula $\Gamma\vdash\left(x:M'\right)\rightarrow N'\,:\,\star$
+\end_inset
+
+.
+ using the ...
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% TODO just subst by parstep
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+\begin_inset Formula $\textrm{ty-conv}$
+\end_inset
+
+...
+\end_layout
+
+\begin_layout Standard
+...
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\Gamma\vdash m\,:\,M\quad\Gamma\vdash M\,:\,\star}{\Gamma\vdash m::_{\ell}M\,:\,M}\,\textrm{ty-::}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\Gamma\vdash M\,:\,\star\quad\Gamma,x:M\vdash N\,:\,\star}{\Gamma\vdash\left(x:M\right)\rightarrow N\,:\,\star}\,\textrm{ty-fun-ty}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\Gamma\vdash m\,:\,\left(x:N\right)\rightarrow M\quad\Gamma\vdash n\,:\,N}{\Gamma\vdash m\,n\,:\,M\left[x\coloneqq n\right]}\,\textrm{ty-fun-app}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\Gamma\vdash m\,:\,M\quad M\equiv M'}{\Gamma\vdash m\,:\,M'}\,\textrm{ty-conv}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\Gamma,f:\left(x:N\right)\rightarrow M,x:N\vdash m\,:\,M}{\Gamma\vdash\mathsf{fun}\,f\,x\Rightarrow m\,:\,\left(x:N\right)\rightarrow M}\,\textrm{ty-fun}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+...
+\end_layout
+
+\begin_layout Standard
+We can prove the property of Preservation
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\Gamma\vdash m:M\quad m\Rrightarrow_{\ast}m'}{\Gamma\vdash m':M}
+\]
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
@@ -6358,6 +7520,158 @@ make usre implementation is smooth around this
 
 \begin_layout Standard
 talk about non terminaiton
+\end_layout
+
+\begin_layout Standard
+Strip Lemma
+\end_layout
+
+\begin_layout Section
+unuesd
+\end_layout
+
+\begin_layout Standard
+Triangle Property
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\ensuremath{\forall{\color{red}m},{\color{red}m'}.\:{\color{red}m\Rrightarrow m'}\:\rightarrow\:{\color{red}m}{\color{blue}\Rrightarrow max\left(m\right)}\:\wedge\:{\color{red}m'}{\color{blue}\Rrightarrow max\left(m\right)}}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{tikzcd}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+mathbin{
+\backslash
+color{red}m} 
+\backslash
+tarrow[red]{r} 
+\backslash
+tarrow[blue]{d} & 
+\backslash
+mathbin{
+\backslash
+color{red}m'} 
+\backslash
+tarrow[blue]{ld} 
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+mathbin{
+\backslash
+color{blue}max(m)}                  &              
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{tikzcd}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\forall{\color{red}m},{\color{red}m'},{\color{red}n}.\:{\color{red}m\Rrightarrow m'}\:\wedge\:{\color{red}m\Rrightarrow_{\ast}n}\:\rightarrow\:\exists{\color{blue}n'}.\:{\color{red}m'}{\color{blue}\Rrightarrow_{\ast}n'}\:\wedge\:{\color{red}n}{\color{blue}\Rrightarrow n'}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{tikzcd}
+\end_layout
+
+\begin_layout Plain Layout
+
+% TODO look into proper subscripting of arrow heads
+\end_layout
+
+\begin_layout Plain Layout
+
+              & {
+\backslash
+color{red}m} 
+\backslash
+tarrow[red]{rd}[label={[pos=1,inner sep=0,outer sep=0]0:${
+\backslash
+ast}$}]{} 
+\backslash
+tarrow[red]{ld} &              
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Plain Layout
+
+{
+\backslash
+color{red}m'}  
+\backslash
+tarrow[blue]{rd}[label={[pos=1,inner sep=0,outer sep=0]0:${
+\backslash
+ast}$}]{} &                         & {
+\backslash
+color{red}m} 
+\backslash
+tarrow[blue]{ld} 
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Plain Layout
+
+              & {
+\backslash
+color{blue}m'}                      &                              
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{tikzcd}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
