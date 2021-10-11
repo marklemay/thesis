@@ -290,7 +290,7 @@ ctxstep-== : {n : ℕ} {Γ Γ' : Ctx n} {a a' aTy : _}
   
 ctxstep-ty : {n : ℕ} {Γ Γ' : Ctx n} {a aTy : _}
   -> Γ ~>pctx Γ' -> Γ |- a :: aTy ->  Γ' |- a :: aTy
-ctxstep-ty {_} {Γ} {Γ'} Γ-Γ' (Var v) = Conv (Var v) (joinV {!!} ? par-refl (par-step par-refl (Γ-Γ' v))) -- TODO need the ctx ok, so needs to be mutial with SR
+ctxstep-ty {_} {Γ} {Γ'} Γ-Γ' (Var v) = Conv (Var v) (joinV {!!} {!!} par-refl (par-step par-refl (Γ-Γ' v))) -- TODO need the ctx ok, so needs to be mutial with SR
   where
     lk : lookup Γ v ~>p lookup Γ' v
     lk = Γ-Γ' v

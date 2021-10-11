@@ -151,13 +151,13 @@ status open
 \end_layout
 
 \begin_layout Standard
-In an ideal world programmers would write perfect code whose correctness
- is perfectly proven.
+In an ideal world programmers would write perfect programs whose correctness
+ is fully proven.
  The 
 \series bold
 Surface Language
 \series default
- models this ideal, but difficult, system.
+ presented in this chapter allows for this ideal, but difficult, workflow.
  Programmers should 
 \begin_inset ERT
 status collapsed
@@ -6476,7 +6476,41 @@ status open
 \end_inset
 
 .
- using the ...
+ we have 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $\Gamma\vdash M'\,:\,\star$
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+ and 
+\begin_inset Formula $\Gamma,x:M\vdash N'\,:\,\star$
+\end_inset
+
+ ...
 \begin_inset ERT
 status open
 
@@ -7421,60 +7455,60 @@ relation to other implementations
 TODO
 \end_layout
 
-\begin_layout Standard
+\begin_layout Itemize
+include references from https://www.lix.polytechnique.fr/~vsiles/papers/PTSATR.pdf
+\end_layout
+
+\begin_layout Itemize
 discuss 
 \end_layout
 
-\begin_layout Standard
+\begin_deeper
+\begin_layout Itemize
 g : (f : nat -> bool) -> (fpr : (x :Nat -> IsEven x -> f x = Bool) -> Bool
 \end_layout
 
-\begin_layout Standard
+\begin_layout Itemize
 g f _ = f 2
 \end_layout
 
-\begin_layout Standard
+\end_deeper
+\begin_layout Itemize
 in the presence of non terminating proof functions
 \end_layout
 
-\begin_layout Standard
+\begin_deeper
+\begin_layout Itemize
 g : (n : Nat) -> (fpn : (x : IsEven n) -> Bool
 \end_layout
 
-\begin_layout Standard
+\begin_layout Itemize
 g f _ = f 2
 \end_layout
 
-\begin_layout Standard
+\end_deeper
+\begin_layout Itemize
 example of non-terminating functions being equal
 \end_layout
 
-\begin_layout Standard
+\begin_layout Itemize
 what is the deal with bidirecitonal type checking?!?!
 \end_layout
 
-\begin_layout Standard
-contact guy about presentations.
-\end_layout
-
-\begin_layout Standard
+\begin_layout Itemize
 caveat about unsupported features
 \end_layout
 
-\begin_layout Standard
+\begin_layout Itemize
 go through prevous stack overflow questions to remindmyself about past confusion.
 \end_layout
 
-\begin_layout Standard
+\begin_layout Itemize
 make usre implementation is smooth around this
 \end_layout
 
-\begin_layout Standard
-talk about non terminaiton
-\end_layout
-
-\begin_layout Standard
-Strip Lemma
+\begin_layout Itemize
+talk about non-terminaiton
 \end_layout
 
 \begin_layout Section

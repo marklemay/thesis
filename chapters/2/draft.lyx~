@@ -151,13 +151,13 @@ status open
 \end_layout
 
 \begin_layout Standard
-In an ideal world programmers would write perfect code whose correctness
- is perfectly proven.
+In an ideal world programmers would write perfect programs whose correctness
+ is fully proven.
  The 
 \series bold
 Surface Language
 \series default
- models this ideal, but difficult, system.
+ presented in this chapter allows for this ideal, but difficult, workflow.
  Programmers should 
 \begin_inset ERT
 status collapsed
@@ -6476,7 +6476,41 @@ status open
 \end_inset
 
 .
- using the ...
+ we have 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $\Gamma\vdash M'\,:\,\star$
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+ and 
+\begin_inset Formula $\Gamma,x:M\vdash N'\,:\,\star$
+\end_inset
+
+ ...
 \begin_inset ERT
 status open
 
@@ -6555,7 +6589,7 @@ status open
 \end_inset
 
  implies 
-\begin_inset Formula $\Gamma,x:M\vdash N'\,:\,\star$
+\begin_inset Formula $\Gamma\vdash n'\,:\,N$
 \end_inset
 
 , there are two possible 
@@ -6567,55 +6601,17 @@ status open
 
 \begin_deeper
 \begin_layout Itemize
-\begin_inset Formula $\Rrightarrow\textrm{-fun-ty}$
-\end_inset
+...
+\end_layout
 
-, where 
-\family roman
-\series medium
-\shape up
-\size normal
-\emph off
-\bar no
-\strikeout off
-\xout off
-\uuline off
-\uwave off
-\noun off
-\color none
-
-\begin_inset Formula $M\Rrightarrow M'$
-\end_inset
-
-, 
-\family default
-\series default
-\shape default
-\size default
-\emph default
-\bar default
-\strikeout default
-\xout default
-\uuline default
-\uwave default
-\noun default
-\color inherit
-
-\begin_inset Formula $N\Rrightarrow N'$
-\end_inset
-
- and we must show 
-\begin_inset Formula $\Gamma\vdash\left(x:M'\right)\rightarrow N'\,:\,\star$
-\end_inset
-
-.
- using the ...
+\begin_layout Itemize
+...
 \begin_inset ERT
 status open
 
 \begin_layout Plain Layout
 
-% TODO just subst by parstep
+% TODO need subst by parstep
 \end_layout
 
 \end_inset
@@ -6628,7 +6624,7 @@ status open
 \begin_inset Formula $\textrm{ty-conv}$
 \end_inset
 
-...
+, directly
 \end_layout
 
 \begin_layout Standard
@@ -6672,17 +6668,6 @@ status open
 \begin_inset Formula 
 \[
 \frac{\Gamma\vdash m\,:\,M\quad M\equiv M'}{\Gamma\vdash m\,:\,M'}\,\textrm{ty-conv}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{\Gamma,f:\left(x:N\right)\rightarrow M,x:N\vdash m\,:\,M}{\Gamma\vdash\mathsf{fun}\,f\,x\Rightarrow m\,:\,\left(x:N\right)\rightarrow M}\,\textrm{ty-fun}
 \]
 
 \end_inset
