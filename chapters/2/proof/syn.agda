@@ -37,6 +37,9 @@ data Ctx where
 postulate
   o : {n : ℕ} {a aTy ty : PreSyntax {n}} {Γ : Ctx} -> Γ |- a :: aTy -> {Ty : Γ |- ty :: pTyU}
     -> Ext Γ Ty |- po a :: po aTy
+    
+  o-== : {n : ℕ} {a a' aTy ty : PreSyntax {n}} {Γ : Ctx} -> Γ |- a == a' :: aTy -> {Ty : Γ |- ty :: pTyU}
+    -> Ext Γ Ty |- po a == po a' :: po aTy
   In : {n : ℕ} {ty : PreSyntax {n}} -> (Γ : Ctx) -> (v : Fin n) -> Γ |- ty :: pTyU -> Set 
 
 

@@ -42,37 +42,25 @@ subst-ty = {!!}
 
 
 
-_==ctx_ : {n : ℕ} -> (Γ Γ' : Ctx {n}) -> Set -- TODO should be over prectx
+_==ctx_ : {n : ℕ} -> (Γ Γ' : Ctx {n}) -> Set
 Γ ==ctx Γ' = {ty : _} -> {Ty : _}
   -> (v : Fin _)
   -> In {_} {ty} Γ v Ty -> Σ _ \ ty' -> Σ _ \ Ty' ->  Σ (In {_} {ty'} Γ' v Ty') \ _ ->  Γ |- ty == ty' :: pTyU
   
 
 
-
-
-
-
-
-
-
-
-_~>pctx_ : {n : ℕ} -> (Γ Γ' : Ctx {n}) -> Set -- TODO should be over prectx
-Γ ~>pctx Γ' = {ty : _} ->  {Ty : _}
-  -> (v : Fin _)
-  -> In {_} {ty} Γ v Ty -> Σ _ \ ty' -> Σ _ \ Ty' ->  Σ (In {_} {ty'} Γ' v Ty') \ _ ->  ty ~>p ty'
-
 postulate
-  ~>pctx-ext : {n : ℕ} {Γ Γ' : Ctx {n}} 
-    -> Γ ~>pctx Γ'
-    -> {a a' : _} -> a ~>p a'
+
+  ==ctx-ext : {n : ℕ} {Γ Γ' : Ctx {n}} 
+    -> Γ ==ctx Γ'
+    -> {a a' : _} ->  Γ |- a == a' :: pTyU
     -> {A :  Γ |- a :: pTyU} {A' :  Γ' |- a' :: pTyU}
-    -> Ext Γ A ~>pctx Ext Γ' A'
+    -> Ext Γ A ==ctx Ext Γ' A'
+
+  ==ctx-refl : {n : ℕ} {Γ : Ctx {n}} 
+    -> Γ ==ctx Γ
     
-  ~>pctxr-ext : {n : ℕ} {Γ : Ctx {n}} 
-    -> {a a' : _} -> a ~>p a'
-    -> {A :  Γ |- a :: pTyU} {A' :  Γ |- a' :: pTyU}
-    -> Ext Γ A ~>pctx Ext Γ A'
+
   ==-trans :  {n : ℕ} {Γ : Ctx {n}} {a a' a'' aty : _}
     -> Γ |- a == a' :: aty ->  Γ |- a' == a'' :: aty
     -> Γ |- a == a'' :: aty
@@ -82,39 +70,33 @@ postulate
     -> Γ |- a' == a :: aty
 
 
+==-refl : {n : ℕ} {Γ : Ctx {n}}
+    -> {a  aty : _ } 
+    -> (A :  Γ |- a :: aty)
+    -> Γ |- a == a :: aty
+==-refl {n} {Γ} {a} {aty} A = joinV A A par-refl par-refl
 
 preservation-ctx== :  {n : ℕ} {Γ Γ' : Ctx {n}} {a aTy : _}
-  -> Γ |- a :: aTy -> Γ ~>pctx Γ' 
+  -> Γ |- a :: aTy -> Γ ==ctx Γ' 
   -> Γ' |- a :: aTy
-preservation-ctx== = {!!}
 
 
-
-preservation-ctx~>p :  {n : ℕ} {Γ Γ' : Ctx {n}} {a aTy : _}
-  -> Γ |- a :: aTy -> Γ ~>pctx Γ' 
-  -> Γ' |- a :: aTy
-  
-preservation-ctx-==~>p :  {n : ℕ} {Γ Γ' : Ctx {n}} {a a' aTy : _}
-  -> Γ |- a == a' :: aTy -> Γ ~>pctx Γ' 
+preservation-ctx==-== :  {n : ℕ} {Γ Γ' : Ctx {n}} {a a' aTy : _}
+  -> Γ |- a == a' :: aTy -> Γ ==ctx Γ' 
   -> Γ' |- a  == a' :: aTy
-preservation-ctx-==~>p (joinV aTy a'Ty a~> a'~>) pctx = joinV (preservation-ctx~>p aTy pctx) (preservation-ctx~>p a'Ty pctx) a~> a'~>
+preservation-ctx==-== (joinV aTy a'Ty a~> a'~>) pctx = joinV (preservation-ctx== aTy pctx) (preservation-ctx== a'Ty pctx) a~> a'~>
 
-preservation-ctx~>p (Var v {_} {aTY} x) pctx with pctx v x
-... | aty' , aTY' , IN , aty~aty' =  Conv (Var v IN) (joinV aTY' (preservation-ctx~>p aTY pctx) par-refl (par-step par-refl aty~aty')) 
-preservation-ctx~>p (Pi aty bty) pctx = Pi (preservation-ctx~>p aty pctx) (preservation-ctx~>p bty (~>pctx-ext pctx (par-refll _)))
-preservation-ctx~>p (Fun ATy BTy bTy) pctx =
-  Fun (preservation-ctx~>p ATy pctx)
-    (preservation-ctx~>p BTy (~>pctx-ext pctx (par-refll _)))
-    (preservation-ctx~>p bTy (~>pctx-ext (~>pctx-ext pctx (par-refll _)) (par-refll _)))
-preservation-ctx~>p (Conv aty x) pctx = Conv (preservation-ctx~>p aty pctx) (preservation-ctx-==~>p x pctx)
-preservation-ctx~>p (App aty aty₁) pctx = App (preservation-ctx~>p aty pctx) (preservation-ctx~>p aty₁ pctx)
-preservation-ctx~>p (Cast aty aty₁) pctx = Cast (preservation-ctx~>p aty pctx) (preservation-ctx~>p aty₁ pctx)
-preservation-ctx~>p TyU pctx = TyU
-
-
-
-
-
+preservation-ctx== (Var v {_} {aTY} x) pctx with pctx v x
+... | aty' , aTY' , IN , joinV _ _  y z = Conv (Var v IN) (joinV aTY' (preservation-ctx== aTY pctx) z y)
+preservation-ctx== (Pi aty bty) pctx = Pi (preservation-ctx== aty pctx) (preservation-ctx== bty (==ctx-ext pctx (==-refl aty)))
+preservation-ctx==  (Fun ATy BTy bTy) pctx =
+  Fun (preservation-ctx== ATy pctx)
+    (preservation-ctx== BTy (==ctx-ext pctx (==-refl ATy)))
+    (preservation-ctx== bTy (==ctx-ext (==ctx-ext pctx (==-refl ATy)) (==-refl (o (Pi ATy BTy)))))
+preservation-ctx== (Conv aty eq) pctx = Conv (preservation-ctx== aty pctx) (preservation-ctx==-== eq pctx)
+preservation-ctx== (App ty ty₁) pctx = App (preservation-ctx== ty pctx) (preservation-ctx== ty₁ pctx)
+preservation-ctx== (Cast ty ty₁) pctx = Cast (preservation-ctx== ty pctx) (preservation-ctx== ty₁ pctx)
+preservation-ctx== TyU pctx = TyU
 
 
 
@@ -151,59 +133,55 @@ regularity (Conv Ty (joinV _ x _ _)) = x
 
  
 
-
-{-
-inv-Pi' :  {n : ℕ} {Γ : Ctx {n}} {aty aty' : _} {b : _} {bty  bty' : _}
-  -> Γ |- pFun b :: pPi aty' bty' -> Γ |-  pPi aty' bty'  == pPi aty bty :: pTyU
-  -> Σ (Γ |- aty :: pTyU) \ aTy -> Σ (Ext Γ aTy |- bty :: pTyU) \ bTy -> Ext (Ext Γ aTy)  (o (Pi aTy bTy)) |- b :: po bty
-inv-Pi' (Fun ty ty₁ ty₂) eq = {!!} , {!!}
-inv-Pi' (Conv ty x) eq = {!!} -- inv-Pi' ? (==-trans x eq)
-
-
-
-
-inv-Pi' :  {n : ℕ} {Γ : Ctx {n}} {ty : _} {b : _} 
-  -> Γ |- pFun b :: ty
-  -> Σ _ \ aty -> Σ _ \ bty
-  -> Σ (Γ |- aty :: pTyU) \ aTy -> Σ (Ext Γ aTy |- bty :: pTyU) \ bTy
-  -> Σ (Γ |- ty == (pPi aty bty) :: pTyU) \ _
-  -> Ext (Ext Γ aTy) (o (Pi aTy bTy)) |- b :: po bty
-inv-Pi' = {!!}
-
-
-inv-Pi :  {n : ℕ} {Γ : Ctx {n}} {a aty pity : _} {b : _} {bty : _}
-  -> Γ |- pFun b :: pity -> Γ |- pity == pPi aty bty :: pTyU
-  -> Σ (Γ |- aty :: pTyU) \ aTy -> Σ (Ext Γ aTy |- bty :: pTyU) \ bTy -> Ext (Ext Γ aTy)  (o (Pi aTy bTy)) |- b :: po bty
-inv-Pi (Fun ty ty₁ ty₂) eq = {!!}
-inv-Pi (Conv ty x) eq = {!!}
--}
-
-{-
-inv-Pi'' :  {n : ℕ} {Γ : Ctx {n}} {aty ty : _} {b : _} {bty  : _}
-  -> Γ |- pFun b :: ty
-  -> Γ |-  ty == pPi aty bty :: pTyU -> (aTy : Γ |- aty :: pTyU) -> (bTy : Ext Γ aTy |- bty :: pTyU)
-  -> Ext (Ext Γ aTy)  (o (Pi aTy bTy)) |- b :: po bty
-inv-Pi'' (Fun ty ty₁ ty₂) (joinV x piTy x₂ x₃) = {!!}
-  where
-    
-    xx = inv-funTy' piTy (joinV TyU TyU par-refl par-refl)
-    
-    
-inv-Pi'' (Conv ty x) eq = {!!}
--}
-
-
-
+postulate
+  stable-==-Pi1 : {n : ℕ} {Γ : Ctx {n}} {aty aty' : _}  {bty bty' : _} 
+    -> Γ |-  pPi aty bty == pPi aty' bty' :: pTyU
+    -> Γ |- aty == aty' :: pTyU
+  
+  stable-==-Pi2 : {n : ℕ} {Γ : Ctx {n}}  {aty aty' : _}  {bty bty' : _} 
+    -> Γ |-  pPi aty bty == pPi aty' bty' :: pTyU
+    -> {aTy' : Γ |- aty' :: pTyU}
+    -> (Ext Γ aTy') |- bty ==  bty' :: pTyU
 
 inv-Pi'' :  {n : ℕ} {Γ : Ctx {n}} {aty ty : _} {b : _} {bty  : _}
   -> Γ |- pFun b :: ty
-  -> Γ |-  ty == pPi aty bty :: pTyU -> (aTy : Γ |- aty :: pTyU) -> (bTy : Ext Γ aTy |- bty :: pTyU)
-  -> Ext (Ext Γ aTy)  (o (Pi aTy bTy)) |- b :: po bty
-inv-Pi'' (Fun ty ty₁ ty₂) e = {!!}
+  -> Γ |-  ty == pPi aty bty :: pTyU  -- {aTy : Γ |- aty :: pTyU} {bTy : Ext Γ aTy |- bty :: pTyU}
+ -- -> Ext (Ext Γ aTy)  (o (Pi aTy bTy)) |- b :: po bty
+  -> Σ (Γ |- aty :: pTyU) \ aTy -> Σ (Ext Γ aTy |- bty :: pTyU) \ bTy -> Ext (Ext Γ aTy)  (o (Pi aTy bTy)) |- b :: po bty
+inv-Pi'' {_} {Γ} {aty'} {_} {b} {bty'} (Fun {aty} {bty} {_} ATy BTy bTy) e@(joinV piTy pi'Ty _ _) = aTy' , BTy' , final
   where
+    xx : Σ (Γ |- aty' :: pTyU) (λ z → Ext Γ z |- bty' :: pTyU)
+    xx = inv-funTy' pi'Ty (==-refl TyU)
     
+    aTy' : Γ |- aty' :: pTyU
+    aTy' = proj₁ xx
     
-inv-Pi'' (Conv ty x) eq = {!!}
+    BTy' :  Ext Γ aTy' |- bty' :: pTyU
+    BTy' = proj₂ xx
+
+    
+    almost : Ext (Ext Γ aTy') (o (Pi aTy' BTy')) |- b :: po bty
+    almost = preservation-ctx== bTy (==ctx-ext (==ctx-ext ==ctx-refl (stable-==-Pi1 e) ) (o-== e))
+
+    final : Ext (Ext Γ aTy') (o (Pi aTy' BTy')) |- b :: po bty'
+    final = Conv almost (o-== ( stable-==-Pi2 e {_}))
+    
+inv-Pi'' (Conv ty x) eq = inv-Pi'' ty (==-trans x eq)
+
+inv-Pi :  {n : ℕ} {Γ : Ctx {n}} {aty : _} {b : _} {bty  : _}
+  -> Γ |- pFun b :: pPi aty bty 
+  -> Σ (Γ |- aty :: pTyU)
+           (λ aTy →
+              Σ (Ext Γ aTy |- bty :: pTyU)
+              (λ bTy →
+                 Ext (Ext Γ aTy) (o (Pi aTy bTy)) |- b :: po bty))
+inv-Pi {n} {Γ} {aty} {b} {bty} ty  = inv-Pi'' ty (==-refl ty-cond)
+  where
+    xx : Σ (Γ |- aty :: pTyU) (λ z → Ext Γ z |- bty :: pTyU)
+    xx = inv-funTy ty
+
+    ty-cond :  Γ |- pPi aty bty :: pTyU
+    ty-cond = Pi (proj₁ xx) (proj₂ xx)
 
 
 
@@ -214,7 +192,8 @@ preservation~>p :  {n : ℕ} {Γ : Ctx {n}} {a a' aTy : _}
 
 
 preservation~>p (Pi ATy BTy) (par-Pi aty~> bty~>) =
-  Pi (preservation~>p ATy aty~>) (preservation~>p (preservation-ctx~>p BTy (~>pctxr-ext aty~>)) bty~>)
+  Pi (preservation~>p ATy aty~>)
+    (preservation~>p (preservation-ctx== BTy (==ctx-ext ==ctx-refl (joinV ATy (preservation~>p ATy aty~>)  (par-step par-refl  aty~>) par-refl ))) bty~>)
 preservation~>p (Fun ATy BTy bTy) (par-Fun b~>) =
   Fun ATy BTy (preservation~>p bTy b~>)
 preservation~>p  {_} {Γ} (App {_} {a} {aty} {bty} fTy aTy) (par-red {_} {a'} {b} {b'} a~> b~>) = {!!}
@@ -229,7 +208,7 @@ preservation~>p  {_} {Γ} (App {_} {a} {aty} {bty} fTy aTy) (par-red {_} {a'} {b
     -- subst, Γ, |- b'[a',f'] :: bty[a'] (f unbound in bty)
     -- subst-conv, Γ, |- b'[a',f'] :: bty[a]
 preservation~>p  {_} {Γ} (App {_} {a} {aty} {bty} fTy aTy) (par-App {f} {f'} {a} {a'} f~> a~>)= final
-  where
+  where 
     a'Ty : Γ |- a' :: aty
     a'Ty = preservation~>p aTy a~>
     
@@ -243,10 +222,10 @@ preservation~>p  {_} {Γ} (App {_} {a} {aty} {bty} fTy aTy) (par-App {f} {f'} {a
     
     final : Γ |- pApp f' a' :: (bty [ a ])
     final = Conv f'a'Ty (joinV (subst-ty Fwf a'Ty) (subst-ty Fwf aTy) par-refl (par-step par-refl (sub-par (par-refll bty) a~>)))
-
+    
 preservation~>p (Cast aTy ATy) (par-cast-red par) = preservation~>p aTy par
 preservation~>p {_} {Γ} {pAnn a A} (Cast aty Aty) (par-cast {_} {a'} {_} {A'} a-a' A-A') = final
-  where 
+  where
     a'ty : Γ |- a' :: A
     a'ty = preservation~>p aty a-a'
     
@@ -261,32 +240,7 @@ preservation~>p {_} {Γ} {pAnn a A} (Cast aty Aty) (par-cast {_} {a'} {_} {A'} a
     final : Γ |- pAnn a' A' :: A
     final = Conv almost (joinV A'ty Aty par-refl (par-step par-refl A-A'))
   
+  
 preservation~>p (Conv Ty x) par = Conv (preservation~>p Ty par) x
 preservation~>p (Var v x) par-Var = Var v x
 preservation~>p TyU par-TyU = TyU
-
-{-
-preservation~>p {_} {Γ} {Γ'} (App {_} {a} {aty} {bty} fTy aTy) pctx (par-red {_} {a'} {b} {b'} a~> b~>) = {!!}
-  where
-    a'ty : Γ' |- a' :: aty 
-    a'ty = preservation~>p aTy pctx a~>
-
-    aTyTy : Γ |- aty :: pTyU
-    aTyTy = proj₁ (inv-Pi fTy)
-    xxx : Ext Γ aTyTy |- bty :: pTyU
-    xxx = proj₁ (proj₂ (inv-Pi fTy))
-    yyy : Ext (Ext Γ aTyTy) (o (Pi aTyTy xxx)) |- b :: po bty
-    yyy = proj₂  (proj₂ (inv-Pi fTy))
-    
-    aTyTy' : Γ' |- aty :: pTyU 
-    aTyTy' = preservation~>p aTyTy pctx (par-refll _)
-
-    BTy : Ext Γ' aTyTy' |- bty :: pTyU
-    BTy = preservation~>p xxx (~>pctx-ext pctx (par-refll _)) (par-refll _)
-    
-    zzz : Ext (Ext Γ' aTyTy') (o (Pi aTyTy' BTy)) |- b' :: po bty
-    zzz = preservation~>p yyy (~>pctx-ext (~>pctx-ext pctx (par-refll _)) (par-refll _)) b~>
-
-    -- subst-ty Γ' |- (b' [ o (pFun b') ]) [ a' ] :: (bodTy [ a' ])
-    -- conv-sbst  Γ' |- (b' [ o (pFun b') ]) [ a' ] :: (bodTy [ a ])
--}
