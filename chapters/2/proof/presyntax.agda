@@ -42,6 +42,7 @@ postulate
 
 
 _[_] :{n : ℕ} -> PreSyntax {suc n} -> PreSyntax {n} -> PreSyntax {n}
+_[_] {n} pTyU withThis = pTyU
 _[_] {n} inthis withThis = substPreSyntax {suc n} {n} σ inthis
   where
     σ : Fin (suc n) → PreSyntax {n}
