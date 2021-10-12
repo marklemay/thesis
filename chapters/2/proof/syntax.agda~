@@ -1,0 +1,67 @@
+module syntax where
+
+import presyntax
+
+open import Data.Nat
+open import Data.Fin hiding (_+_)
+-- open import Data.Vec   hiding (lookup ; [_])
+open import Data.Sum  hiding (map)
+open import Data.Product hiding (map)
+open import Relation.Nullary -- using (¬_)
+open import Data.Empty
+open import Relation.Binary.PropositionalEquality hiding ([_])
+
+
+
+
+postulate
+  Ctx  : ℕ -> Set -- assume ctxs were well formed by consnstruction
+  Emp : Ctx 0
+  extCtx : {n : ℕ} -> Ctx n -> PreSyntax {n} -> Ctx (suc n)
+  lookup : {n : ℕ} (Γ : Ctx n) -> (i : Fin n)  -> PreSyntax {n}
+  _[_::=_] :{n : ℕ} -> PreSyntax {suc n} -> (i : Fin n) -> PreSyntax {n} -> PreSyntax {n}
+
+data _|-_::_ {n : ℕ} (Γ : Ctx n) : PreSyntax {n}  -> PreSyntax {n} -> Set
+
+
+-- definitional eq
+data  _|-_==_::_ {n : ℕ} (Γ : Ctx n) : PreSyntax {n} -> PreSyntax {n} -> PreSyntax {n} -> Set  where
+  joinV : {n m m' ty : _}
+    -> Γ |- m :: ty
+    -> Γ |- m' :: ty
+    -> m ~>p* n
+    -> m' ~>p* n
+    -> Γ |- m == m' :: ty
+
+
+
+data _|-_::_ {n} Γ  where
+  Var :  (v : Fin n) -> Γ |- pVar v :: lookup Γ v
+  TyU : Γ |- pTyU :: pTyU
+  Pi : { aTy : PreSyntax } -> {bodTy : PreSyntax }
+    -> Γ |- aTy :: pTyU ->  extCtx Γ aTy  |- bodTy :: pTyU
+    -> Γ |-  pPi aTy bodTy :: pTyU
+  Fun : { aTy : PreSyntax } -> {bodTy : PreSyntax }
+    -> {bod : PreSyntax }
+    ->  Γ  |- aTy :: pTyU
+    -> extCtx Γ  aTy |- bodTy :: pTyU
+    -> extCtx (extCtx Γ aTy)  (o (pPi aTy bodTy)) |-  bod  :: o bodTy
+     -> Γ |-  pFun bod  :: pPi aTy bodTy
+  App : {f a aTy : PreSyntax } -> {bodTy : PreSyntax }
+    -> Γ |-  f  :: pPi aTy bodTy -> Γ  |- a :: aTy 
+    -> Γ |-  pApp f a  :: (bodTy [ a ])
+  Cast : {e : PreSyntax } -> {ty : PreSyntax }
+    -> Γ |-  e :: ty
+    -> Γ |-  ty :: pTyU
+    -> Γ |-  pAnn e ty  :: ty
+    
+  Conv : {a m m' : PreSyntax }
+    -> Γ |-  a  :: m
+    -> Γ |- m == m' :: pTyU
+    -> Γ |-  a  :: m'
+
+
+postulate
+  ctx-wf :{n : ℕ} {Γ : Ctx n} {v : _} -> Γ |- lookup Γ v :: pTyU
+  lookUp : {n : ℕ} (Γ : Ctx n) -> (i : Fin n)  ->  Σ _ \ a -> Γ |- a :: pTyU
+-- preservation
