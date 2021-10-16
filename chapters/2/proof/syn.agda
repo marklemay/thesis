@@ -63,7 +63,7 @@ data _|-_::_ {n} Γ  where
     -> Γ |-  pApp f a  :: (bodTy [ a ])
   Cast : {e : PreSyntax } -> {ty : PreSyntax }
     -> Γ |-  e :: ty
-    -> Γ |-  ty :: pTyU
+    -- -> Γ |-  ty :: pTyU
     -> Γ |-  pAnn e ty  :: ty
     
 

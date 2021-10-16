@@ -80,7 +80,6 @@ preservation-ctx== :  {n : ℕ} {Γ Γ' : Ctx {n}} {a aTy : _}
   -> Γ |- a :: aTy -> Γ ==ctx Γ' 
   -> Γ' |- a :: aTy
 
-
 preservation-ctx==-== :  {n : ℕ} {Γ Γ' : Ctx {n}} {a a' aTy : _}
   -> Γ |- a == a' :: aTy -> Γ ==ctx Γ' 
   -> Γ' |- a  == a' :: aTy
@@ -95,7 +94,7 @@ preservation-ctx==  (Fun ATy BTy bTy) pctx =
     (preservation-ctx== bTy (==ctx-ext (==ctx-ext pctx (==-refl ATy)) (==-refl (o (Pi ATy BTy)))))
 preservation-ctx== (Conv aty eq) pctx = Conv (preservation-ctx== aty pctx) (preservation-ctx==-== eq pctx)
 preservation-ctx== (App ty ty₁) pctx = App (preservation-ctx== ty pctx) (preservation-ctx== ty₁ pctx)
-preservation-ctx== (Cast ty ty₁) pctx = Cast (preservation-ctx== ty pctx) (preservation-ctx== ty₁ pctx)
+preservation-ctx== (Cast ty) pctx = Cast (preservation-ctx== ty pctx) -- (preservation-ctx== ty₁ pctx)
 preservation-ctx== TyU pctx = TyU
 
 
@@ -128,7 +127,7 @@ regularity {_} {Γ} (App {f} {a} {aty} {bodty} fTy aTy) = subst-ty yy aTy
     aTy1 = proj₁ xxx
     yy : Ext Γ aTy1 |- bodty :: pTyU
     yy = proj₂ xxx
-regularity (Cast Ty Ty₁) = Ty₁
+regularity (Cast Ty ) = regularity Ty
 regularity (Conv Ty (joinV _ x _ _)) = x
 
  
@@ -145,8 +144,7 @@ postulate
 
 inv-Pi'' :  {n : ℕ} {Γ : Ctx {n}} {aty ty : _} {b : _} {bty  : _}
   -> Γ |- pFun b :: ty
-  -> Γ |-  ty == pPi aty bty :: pTyU  -- {aTy : Γ |- aty :: pTyU} {bTy : Ext Γ aTy |- bty :: pTyU}
- -- -> Ext (Ext Γ aTy)  (o (Pi aTy bTy)) |- b :: po bty
+  -> Γ |-  ty == pPi aty bty :: pTyU 
   -> Σ (Γ |- aty :: pTyU) \ aTy -> Σ (Ext Γ aTy |- bty :: pTyU) \ bTy -> Ext (Ext Γ aTy)  (o (Pi aTy bTy)) |- b :: po bty
 inv-Pi'' {_} {Γ} {aty'} {_} {b} {bty'} (Fun {aty} {bty} {_} ATy BTy bTy) e@(joinV piTy pi'Ty _ _) = aTy' , BTy' , final
   where
@@ -188,9 +186,6 @@ inv-Pi {n} {Γ} {aty} {b} {bty} ty  = inv-Pi'' ty (==-refl ty-cond)
 preservation~>p :  {n : ℕ} {Γ : Ctx {n}} {a a' aTy : _}
   -> Γ |- a :: aTy  -> a ~>p a'
   -> Γ |- a' :: aTy
-
-
-
 preservation~>p (Pi ATy BTy) (par-Pi aty~> bty~>) =
   Pi (preservation~>p ATy aty~>)
     (preservation~>p (preservation-ctx== BTy (==ctx-ext ==ctx-refl (joinV ATy (preservation~>p ATy aty~>)  (par-step par-refl  aty~>) par-refl ))) bty~>)
@@ -207,14 +202,14 @@ preservation~>p  {_} {Γ} (App {_} {a} {aty} {bty} fTy aTy) (par-red {_} {a'} {b
     -- inversion,  Γ, aty ,  pPi aty bty |- b' :: bty
     -- subst, Γ, |- b'[a',f'] :: bty[a'] (f unbound in bty)
     -- subst-conv, Γ, |- b'[a',f'] :: bty[a]
-preservation~>p  {_} {Γ} (App {_} {a} {aty} {bty} fTy aTy) (par-App {f} {f'} {a} {a'} f~> a~>)= final
+preservation~>p  {_} {Γ} (App {_} {a} {aty} {bty} fTy aTy) (par-App {f} {f'} {a} {a'} f~> a~>)= {!!} -- final
   where 
     a'Ty : Γ |- a' :: aty
     a'Ty = preservation~>p aTy a~>
     
     f'a'Ty : Γ |- pApp f' a' :: (bty [ a' ])
     f'a'Ty = App (preservation~>p fTy f~>) a'Ty
-
+    {-
     ATyTY : Γ |- aty :: pTyU
     ATyTY = proj₁ (inv-funTy fTy)
     Fwf : (Ext Γ ATyTY) |- bty :: pTyU
@@ -222,21 +217,28 @@ preservation~>p  {_} {Γ} (App {_} {a} {aty} {bty} fTy aTy) (par-App {f} {f'} {a
     
     final : Γ |- pApp f' a' :: (bty [ a ])
     final = Conv f'a'Ty (joinV (subst-ty Fwf a'Ty) (subst-ty Fwf aTy) par-refl (par-step par-refl (sub-par (par-refll bty) a~>)))
+    -}
     
-preservation~>p (Cast aTy ATy) (par-cast-red par) = preservation~>p aTy par
-preservation~>p {_} {Γ} {pAnn a A} (Cast aty Aty) (par-cast {_} {a'} {_} {A'} a-a' A-A') = final
+preservation~>p (Cast aTy) (par-cast-red par) = preservation~>p aTy par
+preservation~>p {_} {Γ} {pAnn a A} (Cast aty) (par-cast {_} {a'} {_} {A'} a-a' A-A') = final
   where
     a'ty : Γ |- a' :: A
     a'ty = preservation~>p aty a-a'
-    
+
+    -- get there with jsut regularity
+
+    Aty = regularity aty
     A'ty : Γ |- A' :: pTyU
-    A'ty = preservation~>p Aty  A-A'
+    A'ty = preservation~>p Aty A-A' -- why is this well founded?
+
+   -- A'ty : Γ |- A' :: pTyU
+   -- A'ty = preservation~>p Aty  A-A'
 
     a'ty' : Γ |- a' :: A'
     a'ty' = Conv a'ty (joinV Aty A'ty (par-step par-refl A-A') par-refl) 
     
     almost : Γ |- pAnn a' A' :: A'
-    almost = Cast a'ty' A'ty
+    almost = Cast a'ty' --  A'ty
     final : Γ |- pAnn a' A' :: A
     final = Conv almost (joinV A'ty Aty par-refl (par-step par-refl A-A'))
   
@@ -244,3 +246,4 @@ preservation~>p {_} {Γ} {pAnn a A} (Cast aty Aty) (par-cast {_} {a'} {_} {A'} a
 preservation~>p (Conv Ty x) par = Conv (preservation~>p Ty par) x
 preservation~>p (Var v x) par-Var = Var v x
 preservation~>p TyU par-TyU = TyU
+
