@@ -12,8 +12,6 @@ open import Data.Product hiding (map)
 open import Relation.Nullary -- using (¬_)
 open import Data.Empty
 open import Relation.Binary.PropositionalEquality hiding ([_])
-open import presyntax
-
 
 
 {-

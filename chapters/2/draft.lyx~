@@ -7812,22 +7812,163 @@ reflexive corollary
 \end_layout
 
 \begin_layout Subsubsection
-Substitution by Conversion
+Substitution by steps
 \end_layout
 
 \begin_layout Standard
-For any 
-\begin_inset Formula ${\color{gray}\Gamma\vdash}n\equiv n'{\color{gray}:N}$
-\end_inset
-
-, the following rule is admissible
+The following rule is admissible
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
 \[
-\frac{\Gamma\vdash m:M\left[x\coloneqq n\right]}{\Gamma\vdash m:M\left[x\coloneqq n'\right]}
+\frac{n\Rrightarrow_{\ast}n'\quad{\color{gray}\Gamma\vdash m\left[x\coloneqq n\right]:M}}{{\color{gray}\Gamma\vdash}m\left[x\coloneqq n\right]\equiv m\left[x\coloneqq n'\right]{\color{gray}:M}}
 \]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+since
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="5" columns="2">
+<features tabularvalignment="middle">
+<column alignment="left" valignment="top">
+<column alignment="left" valignment="top">
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $n\Rrightarrow_{\ast}n'$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+by assumption
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $m\Rrightarrow_{\ast}m$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+by refl
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $m\left[x\coloneqq n\right]\Rrightarrow_{\ast}m\left[x\coloneqq n'\right]$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+by sub by steps
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+unproven
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $m\left[x\coloneqq n'\right]\Rrightarrow_{\ast}m\left[x\coloneqq n'\right]$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+by refl
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula ${\color{gray}\Gamma\vdash}m\left[x\coloneqq n\right]\equiv m\left[x\coloneqq n'\right]{\color{gray}:M}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\equiv\textrm{-Def}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
 
 \end_inset
 
@@ -9245,7 +9386,6 @@ by mutual induction
 \begin_inset Text
 
 \begin_layout Plain Layout
-by 
 \begin_inset Formula $\equiv\textrm{-Def}$
 \end_inset
 
@@ -9706,7 +9846,7 @@ by fun-ty inversion
 status open
 
 \begin_layout Plain Layout
-not proven
+fwd 
 \end_layout
 
 \end_inset
@@ -9743,7 +9883,7 @@ by fun-ty inversion
 status open
 
 \begin_layout Plain Layout
-not proven
+fwd 
 \end_layout
 
 \end_inset
@@ -9822,16 +9962,6 @@ by context refl, extended
 
 \begin_layout Plain Layout
 by the preservation of ctx.
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-not proven
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \end_inset
@@ -9987,7 +10117,7 @@ by assumption
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula ${\color{gray}\Gamma\vdash}N'\equiv N{\color{gray}:\star}\quad{\color{gray}\Gamma,x:N\vdash}M'\equiv M{\color{gray}:\star}$
+\begin_inset Formula ${\color{gray}\Gamma\vdash}N'\equiv N{\color{gray}:\star},\quad{\color{gray}\Gamma,x:N\vdash}M'\equiv M{\color{gray}:\star}$
 \end_inset
 
 
@@ -10317,7 +10447,11 @@ impossible
 \begin_inset Text
 
 \begin_layout Plain Layout
-by the term syntax
+the term position has the form 
+\begin_inset Formula $\mathsf{fun}\,f\,x\Rightarrow m$
+\end_inset
+
+
 \end_layout
 
 \end_inset
@@ -10407,7 +10541,7 @@ can now be proven by induction on the typing derivation
 
 \begin_layout Standard
 \begin_inset Tabular
-<lyxtabular version="3" rows="41" columns="4">
+<lyxtabular version="3" rows="43" columns="4">
 <features tabularvalignment="middle">
 <column alignment="left" valignment="top">
 <column alignment="left" valignment="top">
@@ -10685,20 +10819,10 @@ by assumption
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\textrm{ty-conv}$
+\end_inset
 
-\family roman
-\series medium
-\shape up
-\size normal
-\emph off
-\bar no
-\strikeout off
-\xout off
-\uuline off
-\uwave off
-\noun off
-\color none
-ty-conv
+
 \end_layout
 
 \end_inset
@@ -11107,20 +11231,10 @@ by promoting
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\textrm{ty-conv}$
+\end_inset
 
-\family roman
-\series medium
-\shape up
-\size normal
-\emph off
-\bar no
-\strikeout off
-\xout off
-\uuline off
-\uwave off
-\noun off
-\color none
-ty-conv
+
 \end_layout
 
 \end_inset
@@ -11842,16 +11956,6 @@ by substitutions (
 \end_inset
 
 )
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-not proven
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \end_inset
@@ -11921,7 +12025,7 @@ by assumption
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula ${\color{gray}\Gamma\vdash}n'\equiv n{\color{gray}:N}$
+\begin_inset Formula ${\color{gray}\Gamma\vdash}M\left[x\coloneqq n\right]\equiv M\left[x\coloneqq n'\right]{\color{gray}:\star}$
 \end_inset
 
 
@@ -11933,11 +12037,52 @@ by assumption
 \begin_inset Text
 
 \begin_layout Plain Layout
-by promoting 
-\begin_inset Formula $n\Rrightarrow n'$
+by substitution by steps
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula ${\color{gray}\Gamma\vdash}M\left[x\coloneqq n'\right]\equiv M\left[x\coloneqq n\right]{\color{gray}:\star}$
 \end_inset
 
-, symmetry
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+by 
+\begin_inset Formula $\equiv$
+\end_inset
+
+ symmetry
 \end_layout
 
 \end_inset
@@ -11978,14 +12123,7 @@ by promoting
 \begin_inset Text
 
 \begin_layout Plain Layout
-by conv-subst
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-not proven
-\end_layout
-
+\begin_inset Formula $\textrm{ty-conv}$
 \end_inset
 
 
@@ -12232,7 +12370,7 @@ by assumption
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula ${\color{gray}\Gamma\vdash}n'\equiv n{\color{gray}:N}$
+\begin_inset Formula ${\color{gray}\Gamma\vdash}M\left[x\coloneqq n\right]\equiv M\left[x\coloneqq n'\right]{\color{gray}:\star}$
 \end_inset
 
 
@@ -12244,11 +12382,52 @@ by assumption
 \begin_inset Text
 
 \begin_layout Plain Layout
-by promoting 
-\begin_inset Formula $n\Rrightarrow n'$
+by substitution by steps
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula ${\color{gray}\Gamma\vdash}M\left[x\coloneqq n'\right]\equiv M\left[x\coloneqq n\right]{\color{gray}:\star}$
 \end_inset
 
-, symmetry
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+by 
+\begin_inset Formula $\equiv$
+\end_inset
+
+ symmetry
 \end_layout
 
 \end_inset
@@ -12289,14 +12468,7 @@ by promoting
 \begin_inset Text
 
 \begin_layout Plain Layout
-by conv-subst
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-not proven
-\end_layout
-
+\begin_inset Formula $\textrm{ty-conv}$
 \end_inset
 
 
@@ -12314,6 +12486,228 @@ not proven
 
 \begin_layout Subsection
 Progress
+\end_layout
+
+\begin_layout Standard
+The 2nd key lemma in a progress and preservation proof is to show that,
+ computation is 
+\begin_inset Quotes eld
+\end_inset
+
+complete
+\begin_inset Quotes erd
+\end_inset
+
+ or that a further computation be taken.
+ For non dependently typed programming languages, these steps are easy to
+ characterize, but for dependent types there are issues.
+ If we characterize the parstep relation as the computation used in progress,
+ the lemma holds in a meaningless way since we can always take a reflexive
+ step.
+ Thus we need a non-reflexive stepping relation, ideally one that is determinist
+ic and that is a sub relation of 
+\begin_inset Formula $\Rrightarrow_{*}$
+\end_inset
+
+.
+ We can choose Call-by-value relation since this meets all the properties
+ required, and is a standard execution strategy.
+ A deterministic reflexive evaluation strategy exists.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Tabular
+<lyxtabular version="3" rows="4" columns="3">
+<features tabularvalignment="middle">
+<column alignment="left" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="left" valignment="top">
+<row>
+<cell multicolumn="1" alignment="none" valignment="top" usebox="none" special="l">
+\begin_inset Text
+
+\begin_layout Plain Layout
+values,
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+v
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\Coloneqq$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\star$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+|
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\left(x:M_{\ensuremath{\ell}}\right)\rightarrow N_{\ensuremath{\ell'}}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+|
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathsf{fun}\,f\,x\Rightarrow m$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Surface Language Value Syntax
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:surface-value-syntax"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Values are characterized by the sub-grammar in 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:surface-value-syntax"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ As usual, functions with any body are values.
+ Additionally the Type universe is a value, and function types 
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+evaluated to whnf
+\end_layout
+
+\end_inset
+
+ are values.
 \end_layout
 
 \begin_layout Standard
@@ -12413,6 +12807,36 @@ name "fig:surface-reduction-step"
 \end_layout
 
 \begin_layout Standard
+A call-by-values relation is defined in 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:surface-reduction-step"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ The reductions are standard for a call-by-value lambda calculus, except
+ that type annotations are removed from values.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% TODO explicitly define stuck, transition from scare quats
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 the following rules are admissible
 \end_layout
 
@@ -12428,7 +12852,7 @@ the following rules are admissible
 \end_layout
 
 \begin_layout Standard
-Thus it is is preservation preserving and we can use the 
+Thus it is is preservation preserving.
 \end_layout
 
 \begin_layout Subsection
@@ -12445,21 +12869,7 @@ get stuck
 \end_inset
 
  in the surface language.
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-% TODO: motivate this, earlier then this section on exactly what terms should
- never be reached
-\end_layout
-
-\end_inset
-
-
+ This follows by iterating the progress and preservation lemmas
 \end_layout
 
 \begin_layout Subsection
@@ -13069,6 +13479,18 @@ status open
 relation to other implementations
 \end_layout
 
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+btprint "btPrintCited"
+bibfiles "/Users/stephaniesavir/thesis/bibliography/dtest"
+options "alpha"
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Section
 TODO
 \end_layout
@@ -13276,18 +13698,6 @@ color{blue}m'}                      &
 \backslash
 end{tikzcd}
 \end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset CommandInset bibtex
-LatexCommand bibtex
-btprint "btPrintCited"
-bibfiles "/Users/stephaniesavir/thesis/bibliography/dtest"
-options "alpha"
 
 \end_inset
 
