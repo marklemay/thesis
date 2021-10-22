@@ -251,8 +251,7 @@ status open
 
 \begin_layout Plain Layout
 most terms in this chapter could be translated into the calculus of construction
-s, or other pure type systems, (TODO actually test that these could all
- be plugged into agda with approrite flags)
+s, or other pure type systems.
 \end_layout
 
 \end_inset
