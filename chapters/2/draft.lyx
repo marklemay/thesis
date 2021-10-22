@@ -208,8 +208,26 @@ The surface language presented in this chapter is a minimal dependent type
 status open
 
 \begin_layout Plain Layout
-several alternative syntax exist in the literature, (TODO weird french bracket
- notation) , Martin hoffmen (TODO PI notation) 
+several alternative syntax exist in the literature.
+ In this document the typed polymorphic identity function be written as
+ 
+\begin_inset Formula $\lambda-\,x\Rightarrow x\ :\,\left(X:\star\right)\rightarrow X\rightarrow X$
+\end_inset
+
+.
+ In 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "10.1016/0890-5401(88)90005-3"
+literal "false"
+
+\end_inset
+
+ it might be written 
+\begin_inset Formula $\left(\lambda X:\star\right)\left(\lambda x:X\right)x\ :\,\left[X:\star\right]\left[x:X\right]X$
+\end_inset
+
+, Martin Loff/Hoff (TODO PI notation) 
 \end_layout
 
 \end_inset
@@ -280,7 +298,7 @@ status open
 \end_layout
 
 \begin_layout Section
-Formal Surface Language
+Surface Language Syntax
 \end_layout
 
 \begin_layout Standard
@@ -298,7 +316,7 @@ status open
 \end_layout
 
 \begin_layout Standard
-The syntax is in figure 
+The syntax for the Surface Language is in figure 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:surface-pre-syntax"
@@ -309,16 +327,39 @@ noprefix "false"
 \end_inset
 
 .
- There is no syntactic destination between types and terms, as is common
- in full-spectrum systems.
- However, I will follow the convention that capital letters are used in
- positions that are intended as types, and lowercase letters are used when
- the expression may be a term.
+ The syntax supports: variables, type annotations, a single type universe,
+ dependent function types, dependent recursive functions, and function applicati
+ons.
+ Type annotations are written with two colons to differentiate it from the
+ formal typing judgments that will appear more frequently in this text,
+ in the implemented language a user of the programming language would use
+ a single colon.
  Location data 
 \begin_inset Formula $\ensuremath{\ell}$
 \end_inset
 
  is marked at every position where a type error might occur.
+ 
+\end_layout
+
+\begin_layout Standard
+There is no destination between types and terms in the syntax
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+terms and types are usually separated, except in the syntax of full-spectrum
+ dependent type systems where separating them would require many redundant
+ rules
+\end_layout
+
+\end_inset
+
+, both are referred to as expressions.
+ However, capital metavariables are used in positions that are intended
+ as types, and lowercase metavariables are used when an expression is intended
+ to be a term, for instance in annotation syntax.
+ 
 \end_layout
 
 \begin_layout Standard
@@ -327,7 +368,22 @@ status open
 
 \begin_layout Plain Layout
 
-% TODO: examples?need to say about the relative association of m and M?
+% Metavariables that intend to quantify equivalent terms will be noted with
+ primes or subsripts, 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% Metavariables that type other metavairbles will often use the same letter
 \end_layout
 
 \end_inset
@@ -357,7 +413,7 @@ status open
 
 \begin_layout Plain Layout
 \begin_inset Tabular
-<lyxtabular version="3" rows="16" columns="4">
+<lyxtabular version="3" rows="12" columns="4">
 <features tabularvalignment="middle">
 <column alignment="left" valignment="top">
 <column alignment="center" valignment="top">
@@ -865,174 +921,6 @@ application
 \end_inset
 </cell>
 </row>
-<row>
-<cell multicolumn="1" alignment="none" valignment="top" usebox="none" special="l">
-\begin_inset Text
-
-\begin_layout Plain Layout
-values,
-\end_layout
-
-\end_inset
-</cell>
-<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-v
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\Coloneqq$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $x$
-\end_inset
-
- | 
-\begin_inset Formula $\star$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="none" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-|
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\left(x:M_{\ensuremath{\ell}}\right)\rightarrow N_{\ensuremath{\ell'}}$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="none" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-|
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\mathsf{fun}\,f\,x\Rightarrow m$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="none" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-</row>
 </lyxtabular>
 
 \end_inset
@@ -1041,7 +929,7 @@ v
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-Surface Language Pre-Syntax
+Surface Language Syntax
 \end_layout
 
 \end_inset
@@ -1069,6 +957,21 @@ status open
 
 % TODO: This is almost a pure type system
 \end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Several abbreviations are convenient when dealing with a language like this.
+ These are listed in 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:surface-pre-syntax-abrev"
+plural "false"
+caps "false"
+noprefix "false"
 
 \end_inset
 
@@ -1207,7 +1110,7 @@ when
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\lambda x\Rightarrow\lambda y\Rightarrow m$
+\begin_inset Formula $...\,x\Rightarrow\lambda y\Rightarrow m$
 \end_inset
 
 
@@ -1228,7 +1131,7 @@ written
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\lambda x\,y\Rightarrow m$
+\begin_inset Formula $...\,x\,y\Rightarrow m$
 \end_inset
 
 
@@ -1499,17 +1402,11 @@ when
 \end_layout
 
 \begin_layout Plain Layout
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-% TODO: proper underscoring
-\end_layout
-
+where 
+\begin_inset Formula $fv$
 \end_inset
 
-
+ is a function that returns the set of free variables in an expression
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
@@ -1539,6 +1436,76 @@ Examples
 
 \begin_layout Standard
 The surface system is extremely expressive.
+ Several example surface language constructions can be found in 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:surface-exemples"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ I abuse turnstile notion slightly so that examples can be indexed by other
+ expressions that obey type rules.
+ For instance, we can say 
+\begin_inset Formula $refl_{2_{c}:\mathbb{N}_{c}}\ :\ 2_{c}\doteq_{\mathbb{N}_{c}}2_{c}$
+\end_inset
+
+ since 
+\begin_inset Formula $\mathbb{N}_{c}:\star$
+\end_inset
+
+ and 
+\begin_inset Formula $2_{c}:\mathbb{N}_{c}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+The surface language subsumes or encodes many classic typed lambda calculi.
+ For instance all pure type systems
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+previously called 
+\begin_inset Quotes eld
+\end_inset
+
+Generalized Type Systems
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+ such as System F and the Calculus of Constructions can represent their
+ terms into the Surface Language 
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+by renaming their type universes into the Surface type universe
+\end_layout
+
+\end_inset
+
+.
+ Additionally the examples from 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "cardelli1986polymorphic"
+literal "false"
+
+\end_inset
+
+ where Cardelli has studied a similar system, can be expressed here.
+ 
 \end_layout
 
 \begin_layout Standard
@@ -1549,12 +1516,9 @@ status open
 
 \begin_layout Plain Layout
 \begin_inset Tabular
-<lyxtabular version="3" rows="18" columns="8">
+<lyxtabular version="3" rows="23" columns="5">
 <features tabularvalignment="middle">
 <column alignment="left" valignment="top">
-<column alignment="center" valignment="top">
-<column alignment="left" valignment="top">
-<column alignment="left" valignment="top">
 <column alignment="left" valignment="top">
 <column alignment="left" valignment="top">
 <column alignment="left" valignment="top">
@@ -1569,35 +1533,11 @@ status open
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\vdash$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
 <cell alignment="left" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\perp_{c}$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="none" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\coloneqq$
+\begin_inset Formula $\vdash\perp_{c}$
 \end_inset
 
 
@@ -1609,7 +1549,7 @@ status open
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\left(x:\star\right)\rightarrow x$
+\begin_inset Formula $\coloneqq\left(X:\star\right)\rightarrow X$
 \end_inset
 
 
@@ -1621,7 +1561,7 @@ status open
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $:$
+\begin_inset Formula $:\star$
 \end_inset
 
 
@@ -1633,19 +1573,15 @@ status open
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\star$
+Void, 
+\begin_inset Quotes eld
 \end_inset
 
-
-\end_layout
-
+empty
+\begin_inset Quotes erd
 \end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
 
-\begin_layout Plain Layout
-Void, empty type, logical False
+ type, logical false
 \end_layout
 
 \end_inset
@@ -1665,7 +1601,7 @@ Void, empty type, logical False
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\vdash$
+\begin_inset Formula $\vdash Unit_{c}$
 \end_inset
 
 
@@ -1677,7 +1613,7 @@ Void, empty type, logical False
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $Unit_{c}$
+\begin_inset Formula $\coloneqq\left(X:\star\right)\rightarrow X\rightarrow X$
 \end_inset
 
 
@@ -1689,7 +1625,7 @@ Void, empty type, logical False
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\coloneqq$
+\begin_inset Formula $:\star$
 \end_inset
 
 
@@ -1701,43 +1637,7 @@ Void, empty type, logical False
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\left(A:\star\right)\rightarrow A\rightarrow A$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $:$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\star$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-Unit, logical True
+Unit, logical true
 \end_layout
 
 \end_inset
@@ -1757,31 +1657,7 @@ Unit, logical True
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\vdash$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $tt_{c}$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\coloneqq$
+\begin_inset Formula $\vdash tt_{c}$
 \end_inset
 
 
@@ -1806,7 +1682,7 @@ Unit, logical True
 \uwave off
 \noun off
 \color none
-\begin_inset Formula $\lambda-\,a\Rightarrow a$
+\begin_inset Formula $\coloneqq\lambda-\,x\Rightarrow x$
 \end_inset
 
 
@@ -1818,19 +1694,7 @@ Unit, logical True
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $:$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $Unit_{c}$
+\begin_inset Formula $:Unit_{c}$
 \end_inset
 
 
@@ -1862,31 +1726,7 @@ trivial proposition, polymorphic identity
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\vdash$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\mathbb{B}_{c}$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\coloneqq$
+\begin_inset Formula $\vdash\mathbb{B}_{c}$
 \end_inset
 
 
@@ -1911,7 +1751,7 @@ trivial proposition, polymorphic identity
 \uwave off
 \noun off
 \color none
-\begin_inset Formula $\left(A:\star\right)\rightarrow A\rightarrow A\rightarrow A$
+\begin_inset Formula $\coloneqq\left(X:\star\right)\rightarrow X\rightarrow X\rightarrow X$
 \end_inset
 
 
@@ -1923,21 +1763,6 @@ trivial proposition, polymorphic identity
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $:$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\star$
-\end_inset
-
 
 \end_layout
 
@@ -1967,31 +1792,7 @@ booleans
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\vdash$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $true_{c}$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\coloneqq$
+\begin_inset Formula $\vdash true_{c}$
 \end_inset
 
 
@@ -2016,7 +1817,7 @@ booleans
 \uwave off
 \noun off
 \color none
-\begin_inset Formula $\lambda-\,then\,-\Rightarrow then$
+\begin_inset Formula $\coloneqq\lambda-\,then\,-\Rightarrow then$
 \end_inset
 
 
@@ -2028,19 +1829,7 @@ booleans
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $:$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\mathbb{B}_{c}$
+\begin_inset Formula $:\mathbb{B}_{c}$
 \end_inset
 
 
@@ -2072,31 +1861,7 @@ boolean true
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\vdash$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $false_{c}$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\coloneqq$
+\begin_inset Formula $\vdash false_{c}$
 \end_inset
 
 
@@ -2121,7 +1886,7 @@ boolean true
 \uwave off
 \noun off
 \color none
-\begin_inset Formula $\lambda-\,-\,else\Rightarrow else$
+\begin_inset Formula $\coloneqq\lambda-\,-\,else\Rightarrow else$
 \end_inset
 
 
@@ -2133,19 +1898,7 @@ boolean true
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $:$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\mathbb{B}_{c}$
+\begin_inset Formula $:\mathbb{B}_{c}$
 \end_inset
 
 
@@ -2168,7 +1921,7 @@ boolean false
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $x:\mathbb{B}_{c},y:\mathbb{B}_{c}$
+\begin_inset Formula $x:\mathbb{B}_{c}$
 \end_inset
 
 
@@ -2180,31 +1933,7 @@ boolean false
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\vdash$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $x\,\&_{c}\,y$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\coloneqq$
+\begin_inset Formula $\vdash\lnot_{c}x$
 \end_inset
 
 
@@ -2229,7 +1958,7 @@ boolean false
 \uwave off
 \noun off
 \color none
-\begin_inset Formula $\lambda A\Rightarrow x\,A\,\left(y\,A\right)\,\left(false_{c}\,A\right)$
+\begin_inset Formula $\coloneqq x\,\mathbb{B}_{c}\,false_{c}\,true_{c}$
 \end_inset
 
 
@@ -2241,7 +1970,7 @@ boolean false
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $:$
+\begin_inset Formula $:\mathbb{B}_{c}$
 \end_inset
 
 
@@ -2253,7 +1982,67 @@ boolean false
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\mathbb{B}_{c}$
+boolean not
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $x:\mathbb{B}_{c},y:\mathbb{B}_{c}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\vdash x\,\&_{c}\,y$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\begin_inset Formula $\coloneqq x\,\mathbb{B}_{c}\,y\,false_{c}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $:\mathbb{B}_{c}$
 \end_inset
 
 
@@ -2276,7 +2065,16 @@ boolean and
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $x:\mathbb{B}_{c},y:\mathbb{B}_{c}$
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\vdash\mathbb{N}_{c}$
 \end_inset
 
 
@@ -2288,7 +2086,7 @@ boolean and
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\vdash$
+\begin_inset Formula $\coloneqq\left(X:\star\right)\rightarrow(X\rightarrow X)\rightarrow X\rightarrow X$
 \end_inset
 
 
@@ -2300,154 +2098,7 @@ boolean and
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $x\,\&_{c}\,y$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\coloneqq$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\family roman
-\series medium
-\shape up
-\size normal
-\emph off
-\bar no
-\strikeout off
-\xout off
-\uuline off
-\uwave off
-\noun off
-\color none
-\begin_inset Formula $\lambda A\,then\,else\Rightarrow x\,\mathbb{B}_{c}\,y\,else$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-BAD boolean and
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\vdash$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\mathbb{N}_{c}$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\coloneqq$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\left(A:\star\right)\rightarrow(A\rightarrow A)\rightarrow A\rightarrow A$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $:$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\star$
+\begin_inset Formula $:\star$
 \end_inset
 
 
@@ -2479,7 +2130,7 @@ natural numbers
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\vdash$
+\begin_inset Formula $\vdash0_{c}$
 \end_inset
 
 
@@ -2491,7 +2142,7 @@ natural numbers
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $0_{c}$
+\begin_inset Formula $\coloneqq\lambda-\,-\,z\Rightarrow z$
 \end_inset
 
 
@@ -2503,43 +2154,7 @@ natural numbers
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\coloneqq$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\lambda-\,-\,z\Rightarrow z$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $:$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\mathbb{N}_{c}$
+\begin_inset Formula $:\mathbb{N}_{c}$
 \end_inset
 
 
@@ -2571,7 +2186,7 @@ natural numbers
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\vdash$
+\begin_inset Formula $\vdash1_{c}$
 \end_inset
 
 
@@ -2583,7 +2198,7 @@ natural numbers
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $1_{c}$
+\begin_inset Formula $\coloneqq\lambda-\,s\,z\Rightarrow s\,z$
 \end_inset
 
 
@@ -2595,43 +2210,7 @@ natural numbers
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\coloneqq$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\lambda-\,s\,z\Rightarrow s\,z$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $:$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\mathbb{N}_{c}$
+\begin_inset Formula $:\mathbb{N}_{c}$
 \end_inset
 
 
@@ -2663,7 +2242,7 @@ natural numbers
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\vdash$
+\begin_inset Formula $\vdash2_{c}$
 \end_inset
 
 
@@ -2675,7 +2254,7 @@ natural numbers
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $2_{c}$
+\begin_inset Formula $\coloneqq\lambda-\,s\,z\Rightarrow s\left(s\,z\right)$
 \end_inset
 
 
@@ -2687,43 +2266,7 @@ natural numbers
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\coloneqq$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\lambda-\,s\,z\Rightarrow s\left(s\,z\right)$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $:$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\mathbb{N}_{c}$
+\begin_inset Formula $:\mathbb{N}_{c}$
 \end_inset
 
 
@@ -2755,7 +2298,7 @@ natural numbers
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\vdash$
+\begin_inset Formula $\vdash n_{c}$
 \end_inset
 
 
@@ -2767,7 +2310,7 @@ natural numbers
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $n_{c}$
+\begin_inset Formula $\coloneqq\lambda-\,s\,z\Rightarrow s^{n}\,z$
 \end_inset
 
 
@@ -2779,43 +2322,7 @@ natural numbers
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\coloneqq$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\lambda-\,s\,z\Rightarrow s^{n}\,z$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $:$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\mathbb{N}_{c}$
+\begin_inset Formula $:\mathbb{N}_{c}$
 \end_inset
 
 
@@ -2850,7 +2357,7 @@ natural numbers
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\vdash$
+\begin_inset Formula $\vdash x+_{c}y$
 \end_inset
 
 
@@ -2862,7 +2369,7 @@ natural numbers
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $x+_{c}y$
+\begin_inset Formula $\coloneqq\lambda X\,s\,z\Rightarrow x\,X\,s\,\left(y\,X\,s\,z\right)$
 \end_inset
 
 
@@ -2874,7 +2381,7 @@ natural numbers
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\coloneqq$
+\begin_inset Formula $:\mathbb{N}_{c}$
 \end_inset
 
 
@@ -2886,7 +2393,18 @@ natural numbers
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\lambda A\,s\,z\Rightarrow x\,A\,s\,\left(y\,A\,s\,z\right)$
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $X:\star,Y:\star$
 \end_inset
 
 
@@ -2898,7 +2416,7 @@ natural numbers
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $:$
+\begin_inset Formula $\vdash X\times_{c}Y$
 \end_inset
 
 
@@ -2910,9 +2428,127 @@ natural numbers
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\mathbb{N}_{c}$
+\begin_inset Formula $\coloneqq\left(Z:\star\right)\rightarrow(X\rightarrow Y\rightarrow Z)\rightarrow Z$
 \end_inset
 
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $:\star$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+pair, logical and
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $X:\star,Y:\star$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\vdash Either_{c}\,X\,Y$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\coloneqq\left(Z:\star\right)\rightarrow(X\rightarrow Z)\rightarrow(Y\rightarrow Z)\rightarrow Z$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $:\star$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+either, logical or
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
 
 \end_layout
 
@@ -2945,7 +2581,7 @@ natural numbers
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\vdash$
+\begin_inset Formula $\vdash\lnot_{c}X$
 \end_inset
 
 
@@ -2957,7 +2593,7 @@ natural numbers
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\lnot_{c}X$
+\begin_inset Formula $\coloneqq X\rightarrow\perp_{c}$
 \end_inset
 
 
@@ -2969,43 +2605,7 @@ natural numbers
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\coloneqq$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $x\rightarrow\perp_{c}$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $:$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\star$
+\begin_inset Formula $:\star$
 \end_inset
 
 
@@ -3028,6 +2628,127 @@ logical negation
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $x:\mathbb{N}_{c}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\vdash Even_{c}\,x$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\coloneqq\mathbb{N}_{c}\,\star\,\left(\lambda x\Rightarrow\lnot_{c}x\right)\,Unit_{c}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $:\star$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $x$
+\end_inset
+
+ is an even number
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $X:\star,Y:X\rightarrow\star$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\vdash\exists_{c}x:X.Y\,x$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\coloneqq\left(C:\star\right)\rightarrow\left((x:X)\rightarrow Y\,x\rightarrow C\right)\rightarrow C$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $:\star$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+dependent pair, logical exists
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
 \begin_inset Formula $X:\star,x_{1}:X,x_{2}:X$
 \end_inset
 
@@ -3040,7 +2761,7 @@ logical negation
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\vdash$
+\begin_inset Formula $\vdash x_{1}\doteq_{X}x_{2}$
 \end_inset
 
 
@@ -3052,7 +2773,7 @@ logical negation
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $x_{1}\doteq_{X}x_{2}$
+\begin_inset Formula $\coloneqq\left(C:\left(X\rightarrow\star\right)\right)\rightarrow C\,x_{1}\rightarrow C\,x_{2}$
 \end_inset
 
 
@@ -3064,43 +2785,7 @@ logical negation
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\coloneqq$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\left(C:\left(X\rightarrow\star\right)\right)\rightarrow C\,x_{1}\rightarrow C\,x_{2}$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $:$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\star$
+\begin_inset Formula $:\star$
 \end_inset
 
 
@@ -3135,7 +2820,7 @@ Leibniz equality
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\vdash$
+\begin_inset Formula $\vdash refl_{x:X}$
 \end_inset
 
 
@@ -3147,7 +2832,7 @@ Leibniz equality
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $refl_{x:X}$
+\begin_inset Formula $\coloneqq\lambda-\,cx\Rightarrow cx$
 \end_inset
 
 
@@ -3159,7 +2844,7 @@ Leibniz equality
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\coloneqq$
+\begin_inset Formula $:x\doteq_{X}x$
 \end_inset
 
 
@@ -3171,43 +2856,7 @@ Leibniz equality
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\lambda-\,cx\Rightarrow cx$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $:$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $x\doteq_{X}x$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
+reflexivity
 \end_layout
 
 \end_inset
@@ -3218,6 +2867,9 @@ Leibniz equality
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $X:\star,x_{1}:X,x_{2}:X$
+\end_inset
+
 
 \end_layout
 
@@ -3227,6 +2879,9 @@ Leibniz equality
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\vdash sym_{x_{1},x_{2}:X}$
+\end_inset
+
 
 \end_layout
 
@@ -3236,6 +2891,9 @@ Leibniz equality
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\coloneqq\lambda p\,C\Rightarrow p\left(\lambda x\Rightarrow C\,x\rightarrow C\,x_{1}\right)\,\left(\lambda x\Rightarrow x\right)$
+\end_inset
+
 
 \end_layout
 
@@ -3245,6 +2903,9 @@ Leibniz equality
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $:x_{1}\doteq_{X}x_{2}\rightarrow x_{2}\doteq_{X}x_{1}$
+\end_inset
+
 
 \end_layout
 
@@ -3254,68 +2915,13 @@ Leibniz equality
 \begin_inset Text
 
 \begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
+symmetry
 \end_layout
 
 \end_inset
 </cell>
 </row>
 </lyxtabular>
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-% TODO: remove bad versions
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-% TODO: boolean not?
-\end_layout
 
 \end_inset
 
@@ -3370,34 +2976,6 @@ status open
 
 \begin_layout Plain Layout
 
-% TODO: check in agda
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-% TODO: 3 eq assignment?
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
 % TODO: TODo footnote on Leibniz equality for alt encoding 
 \end_layout
 
@@ -3422,7 +3000,7 @@ status open
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-Surface Language Constructions
+Example Surface Language Programs
 \end_layout
 
 \end_inset
@@ -3430,7 +3008,7 @@ Surface Language Constructions
 
 \begin_inset CommandInset label
 LatexCommand label
-name "fig:surface-constructions"
+name "fig:surface-exemples"
 
 \end_inset
 
@@ -3449,28 +3027,78 @@ Church encodings
 \begin_layout Standard
 Data types are expressible using Church encodings, (in the style of System
  F).
- Church encodings embed the elimination principle of data into continuations.
- So for instance Booleans data is eliminated against true and false, 2 tags
+ Church encodings embed the elimination principle of a data type into continuati
+ons
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% TODO: not exactly right, not just elimination, recursion is also involved
+\end_layout
+
+\end_inset
+
+.
+ For instance Boolean data is eliminated against true and false, 2 tags
  with no additional data.
- This is more recognizable as an if-then-else construct.
+ This can also be recognized as the familiar if-then-else construct.
  So 
 \begin_inset Formula $\mathbb{B}_{c}$
 \end_inset
 
- encodes the possibility of choices, 
+ encodes the possibility of choice between 2 elements, 
 \begin_inset Formula $true_{c}$
 \end_inset
 
- picks the first branch, and 
+ picks the 
+\begin_inset Quotes eld
+\end_inset
+
+then
+\begin_inset Quotes erd
+\end_inset
+
+ branch, and 
 \begin_inset Formula $false_{c}$
 \end_inset
 
- picks the false branch.
+ picks the 
+\begin_inset Quotes eld
+\end_inset
+
+else
+\begin_inset Quotes erd
+\end_inset
+
+ branch.
 \end_layout
 
 \begin_layout Standard
-Natural numbers are encodable against 2 tags, 0 and s, where s also contains
- one smaller number.
+Natural numbers
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+called 
+\begin_inset Quotes eld
+\end_inset
+
+church numerals
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+ are encodable with 2 tags, 
+\begin_inset Formula $0$
+\end_inset
+
+ and successor, where successor also contains the result of the preceding
+ number.
  So 
 \begin_inset Formula $\mathbb{N}_{c}$
 \end_inset
@@ -3479,9 +3107,29 @@ Natural numbers are encodable against 2 tags, 0 and s, where s also contains
 \begin_inset Formula $(A\rightarrow A)$
 \end_inset
 
- decides how to recursively handle the prior number in the s case, and the
- 2nd argument specifies how to handle the false branch.
+ decides how to handle the recursive result of the prior number in the successor
+ case, and the 2nd argument specifies how to handle the base case of 
+\begin_inset Formula $0$
+\end_inset
+
+.
  This can be viewed as a simple looping construct with temporary storage.
+\end_layout
+
+\begin_layout Standard
+Parameterized data types such as pairs and the 
+\begin_inset Formula $Either$
+\end_inset
+
+ type can also be encoded in this scheme.
+ A pair type can be used in any way the 2 types it contains can so the definitio
+n states that a pair is at least as good as the curried input to a function.
+ The 
+\begin_inset Formula $Either$
+\end_inset
+
+ type is handled if both possibilities are handled, which is exactly expressed
+ by it's definition.
 \end_layout
 
 \begin_layout Standard
@@ -3504,7 +3152,7 @@ status open
 
 \begin_layout Plain Layout
 
-% TODO: why church encoding?
+% not necisarily convineint
 \end_layout
 
 \end_inset
@@ -3513,17 +3161,13 @@ status open
 \end_layout
 
 \begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-% TODO: not necisarily convineint
-\end_layout
-
-\end_inset
-
-
+Church encodings provide a theoretically light weight way of working with
+ data in minimal lambda calculus, however they are very inconvenient to
+ work with.
+ For instance, the predecessor function on natural numbers is not exactly
+ straight forward.
+ To make the system easier for programmers, data types will be added in
+ chapter 4.
 \end_layout
 
 \begin_layout Subsection
@@ -3531,34 +3175,208 @@ Predicate encodings
 \end_layout
 
 \begin_layout Standard
-With dependent types, logical predicates can be encoded (in the style of
- Calculus of Constructions).
+In general we associate the truth value of a proposition with the inhabitation
+ of a type.
+ So, 
+\begin_inset Formula $\perp_{c}$
+\end_inset
+
+, the 
+\begin_inset Quotes eld
+\end_inset
+
+empty
+\begin_inset Quotes erd
+\end_inset
+
+ type, can be considered as a false proposition.
+ While 
+\begin_inset Formula $Unit_{c}$
+\end_inset
+
+ can be considered a trivially true logical proposition.
 \end_layout
 
 \begin_layout Standard
-\begin_inset ERT
-status open
+Several of the church encoded data types we have seen can also be interpreted
+ as logical predicates.
+ For instance, the tuple type can be considered as logical and, 
+\begin_inset Formula $X\times_{c}Y$
+\end_inset
 
-\begin_layout Plain Layout
+ can be inhabited exactly when both 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
 
-% TODO: ...
-\end_layout
+\begin_inset Formula $X$
+\end_inset
 
+ and 
+\begin_inset Formula $Y$
+\end_inset
+
+ are inhabited.
+ The
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+ 
+\begin_inset Formula $Either$
 \end_inset
 
 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+ type can be considered as logical or, 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+
+\begin_inset Formula $Either_{c}\,X\,Y$
+\end_inset
+
+ can be inhabited exactly when either 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $X$
+\end_inset
+
+ or 
+\begin_inset Formula $Y$
+\end_inset
+
+ is inhabited.
 \end_layout
 
-\begin_layout Subsubsection
-Leibniz equality
+\begin_layout Standard
+With dependent types, more interesting logical predicates can be encoded.
+ For instance, we can characterize when a number is Even with 
+\begin_inset Formula $Even_{c}\,x$
+\end_inset
+
+.
+ We can show that 
+\begin_inset Formula $2$
+\end_inset
+
+ is even by showing that 
+\begin_inset Formula $Even_{c}\,2_{c}$
+\end_inset
+
+ is inhabited with with the term 
+\begin_inset Formula $\lambda s\Rightarrow s\,tt_{c}$
+\end_inset
+
+ .
+\end_layout
+
+\begin_layout Standard
+Other predicates are encodable in the style of Calculus of Constructions
+\begin_inset CommandInset citation
+LatexCommand cite
+key "10.1016/0890-5401(88)90005-3"
+literal "false"
+
+\end_inset
+
+ .
+ For instance, we can encode the existential as 
+\begin_inset Formula $\exists_{c}$
+\end_inset
+
+, then if we want to show 
+\begin_inset Formula $\exists_{c}x:\mathbb{N}_{c}.\,Even_{c}\,x$
+\end_inset
+
+ we need to find a suitable inhabitant of that type.
+ 
+\begin_inset Formula $0$
+\end_inset
+
+is clearly an even number, so our inhabitant would be 
+\begin_inset Formula $\lambda f\Rightarrow f\,0_{c}\,tt_{c}$
+\end_inset
+
+.
+ Note that the existential degenerates into the tuple if 
+\begin_inset Formula $Y$
+\end_inset
+
+ does not depend on the first element.
+ 
 \end_layout
 
 \begin_layout Standard
 One of the most potent and interesting propositions is the proposition of
  equality.
- Phrased as here, it is often called Leibniz equality since 2 terms are
- equal when they behave the same on all propositions and this identification
- of indiscernibles is called 
+ 
+\begin_inset Formula $\doteq$
+\end_inset
+
+ is referred to as Leibniz equality since two terms are equal when they
+ behave the same on all 
+\begin_inset Quotes eld
+\end_inset
+
+observations
+\begin_inset Quotes erd
+\end_inset
+
+
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+The identification of indiscernibles is called 
 \begin_inset Quotes eld
 \end_inset
 
@@ -3566,12 +3384,8 @@ Leibniz law
 \begin_inset Quotes erd
 \end_inset
 
- in philosophy
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-Leibniz assumed a metaphysical notion of identification of 
+ in philosophy.
+ Leibniz assumed a metaphysical notion of identification of 
 \begin_inset Quotes eld
 \end_inset
 
@@ -3585,6 +3399,13 @@ s, not a mathematical notion of equality.
 \end_inset
 
 .
+ We can prove 
+\begin_inset Formula $\doteq$
+\end_inset
+
+ is an equivalence within the system be proving it is reflexive, symmetric,
+ and transitive.
+ Additionally we can prove congruence.
 \end_layout
 
 \begin_layout Standard
@@ -3607,7 +3428,23 @@ Leibniz asserted the identity of indiscernibles: two objects are equal if
 
 \begin_layout Plain Layout
 
-% section 9 ish, sort of asmed tobe true 
+% section 9 ish, sort of asmed tobe true  Leibniz, G.
+ (1686) Discourse on metaphysics.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% TODO: some simple non reflexive proof, though this is really hard without
+ proper induction principles
 \end_layout
 
 \end_inset
@@ -3645,25 +3482,41 @@ status open
 \end_layout
 
 \begin_layout Standard
+It is useful for a type to depend specifically on a term, this is called
+ 
 \begin_inset Quotes eld
 \end_inset
 
-Large eliminations
+Large elimination
 \begin_inset Quotes erd
 \end_inset
 
  can be simulated with type-in-type.
+ 
 \end_layout
 
 \begin_layout Standard
 \begin_inset Tabular
-<lyxtabular version="3" rows="2" columns="3">
+<lyxtabular version="3" rows="2" columns="4">
 <features tabularvalignment="middle">
-<column alignment="center" valignment="top">
-<column alignment="center" valignment="top">
-<column alignment="center" valignment="top">
+<column alignment="left" valignment="top">
+<column alignment="left" valignment="top">
+<column alignment="left" valignment="top">
+<column alignment="left" valignment="top">
 <row>
-<cell alignment="center" valignment="top" usebox="none">
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $toLogic$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -3680,7 +3533,7 @@ Large eliminations
 \uwave off
 \noun off
 \color none
-\begin_inset Formula $\lambda b\Rightarrow b\,\star\,Unit_{c}\,\perp_{c}$
+\begin_inset Formula $\coloneqq\lambda b\Rightarrow b\,\star\,Unit_{c}\,\perp_{c}$
 \end_inset
 
 
@@ -3688,7 +3541,7 @@ Large eliminations
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" usebox="none">
+<cell alignment="left" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -3700,7 +3553,7 @@ Large eliminations
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" usebox="none">
+<cell alignment="left" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -3714,11 +3567,11 @@ Large eliminations
 </cell>
 </row>
 <row>
-<cell alignment="center" valignment="top" usebox="none">
+<cell alignment="left" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\lambda n\Rightarrow n\,\star\,(\lambda-\Rightarrow Unit_{c})\,\perp_{c}$
+\begin_inset Formula $isPos$
 \end_inset
 
 
@@ -3726,7 +3579,19 @@ Large eliminations
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" usebox="none">
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\coloneqq\lambda n\Rightarrow n\,\star\,(\lambda-\Rightarrow Unit_{c})\,\perp_{c}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -3738,7 +3603,7 @@ Large eliminations
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" usebox="none">
+<cell alignment="left" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -3759,9 +3624,83 @@ Large eliminations
 \end_layout
 
 \begin_layout Standard
-Note that such functions are not possible in the Calculus of Constructions,
- and is used to motivate the extension to the Calculus of Inductive Construction
-s.
+For instance,
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+ 
+\begin_inset Formula $toLogic$
+\end_inset
+
+ can convert a 
+\begin_inset Formula $\mathbb{B}_{c}$
+\end_inset
+
+ term into it's corresponding logical type, 
+\begin_inset Formula $toLogic\,true_{c}\equiv Unit_{c}$
+\end_inset
+
+ while 
+\begin_inset Formula $toLogic\,false_{c}\equiv\perp_{c}$
+\end_inset
+
+ .
+ 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+The expression
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+ 
+\begin_inset Formula $isPos$
+\end_inset
+
+ has similar behavior, going to 
+\begin_inset Formula $\perp_{c}$
+\end_inset
+
+ at 
+\begin_inset Formula $0_{c}$
+\end_inset
+
+ and 
+\begin_inset Formula $Unit_{c}$
+\end_inset
+
+ otherwise.
+\end_layout
+
+\begin_layout Standard
+Note that such functions are not possible in the Calculus of Constructions.
 \end_layout
 
 \begin_layout Standard
@@ -3915,7 +3854,7 @@ Logical True is distinct from Logical False
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\lambda pr\Rightarrow pr\,\left(\lambda b\Rightarrow b\,\star\,Unit_{c}\,\perp_{c}\right)\,tt_{c}$
+\begin_inset Formula $\lambda pr\Rightarrow pr\,toLogic\,tt_{c}$
 \end_inset
 
 
@@ -3948,7 +3887,7 @@ Logical True is distinct from Logical False
 \begin_inset Text
 
 \begin_layout Plain Layout
-
+boolean true and false are distinct
 \end_layout
 
 \end_inset
@@ -3959,7 +3898,7 @@ Logical True is distinct from Logical False
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\lambda pr\Rightarrow pr\,\left(\lambda n\Rightarrow n\,\star\,(\lambda-\Rightarrow Unit_{c})\,\perp_{c}\right)\,tt_{c}$
+\begin_inset Formula $\lambda pr\Rightarrow pr\,isPos\,tt_{c}$
 \end_inset
 
 
@@ -3992,7 +3931,7 @@ Logical True is distinct from Logical False
 \begin_inset Text
 
 \begin_layout Plain Layout
-
+1 and 0 are distinct
 \end_layout
 
 \end_inset
@@ -4051,8 +3990,7 @@ literal "false"
 status open
 
 \begin_layout Plain Layout
-Martin Hofmann gives a more semantic proof in ...
- and excellently motivates the reasoning in 
+Martin Hofmann excellently motivates the reasoning in 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "hofmann1997syntax"
@@ -4103,255 +4041,44 @@ Recursion
 \end_layout
 
 \begin_layout Standard
+Additionally, the syntax of functions builds in unrestricted recursion.
+ Though not always necessary, recursion can be very helpful for writing
+ programs.
+ For instance, here is (an inefficient) function that calculates Fibonacci
+ numbers.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\mathsf{fun}\,f\,x\Rightarrow case_{c}\,x\,0_{c}\left(\lambda px\Rightarrow case_{c}\,px\,1_{c}\left(\lambda-\Rightarrow f\left(x-_{c}1\right)+_{c}f\left(x-_{c}2\right)\right)\right)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+given the appropriate definitions of 
+\begin_inset Formula $case_{c}$
+\end_inset
+
+, 
+\begin_inset Formula $-_{c}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Recursion can also be used to simulate induction, and this will be heavily
+ relied on when data types are added in chapter 4.
+\end_layout
+
+\begin_layout Standard
 \begin_inset ERT
 status open
 
 \begin_layout Plain Layout
 
 % TODO: GCD, recursive types
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Subsubsection
-\begin_inset Formula $\left(x:\mathbb{N}_{c}\right)\rightarrow0_{c}\,+_{c}\,x=_{\mathbb{N}_{c}}x\,+_{c}\,0_{c}$
-\end_inset
-
- (by recursion)
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula $\mathsf{fun}\,f\,x\Rightarrow x\,\left(0_{c}\,+_{c}\,x=_{\mathbb{N}_{c}}x\,+_{c}\,0_{c}\right)\,f\,\left(refl_{0_{c}:\mathbb{N}_{c}}\right)\qquad:\left(x:\mathbb{N}_{c}\right)\rightarrow0_{c}\,+_{c}\,x=_{\mathbb{N}_{c}}x\,+_{c}\,0_{c}$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-TODO: check and discuss, structural recursion
-\end_layout
-
-\begin_layout Subsection
-logical unsoundness and Nontermination
-\end_layout
-
-\begin_layout Standard
-The surface language is 
-\begin_inset Quotes eld
-\end_inset
-
-logically unsound
-\begin_inset Quotes erd
-\end_inset
-
-, every type is inhabited.
- 
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-% TODO: proper example formatting
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Subsubsection
-Every type is inhabited (by recursion)
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula $\mathsf{fun}\,f\,x\Rightarrow f\,x\qquad:\perp_{c}$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Subsubsection
-Every type is inhabited (by Type-in-type)
-\end_layout
-
-\begin_layout Standard
-It is possible to encode Gerard's paradox, producing another source of logical
- unsoundness.
- A subtle form of recursive behavior can be built out of Gerard's paradox
-\begin_inset CommandInset citation
-LatexCommand cite
-key "Reinhold89typecheckingis"
-literal "false"
-
-\end_inset
-
-, but this behavior is no worse then the unrestricted recursion already
- allowed.
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-% TODO: cite stuff (see https://stackoverflow.com/questions/18178999/do-agda-prog
-rams-necessarily-terminate)
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Subsubsection
-logical unsoundness
-\end_layout
-
-\begin_layout Standard
-While the surface language supports proofs, not every term typed in the
- surface language is a proof.
-\end_layout
-
-\begin_layout Standard
-Logical soundness seems not to matter in programming practice.
- For instance, in ML the type 
-\begin_inset Formula $\mathtt{f:Int->Int}$
-\end_inset
-
- does not imply the termination of 
-\begin_inset Formula $\mathtt{f\,2}$
-\end_inset
-
-.
- While unproductive non-termination is always a bug, it seems an easy bug
- to detect and fix when it occurs.
- In mainstream languages, types help to communicate the intent of termination,
- even though termination is not guaranteed by the type system.
- Importantly, no desirable computation is prevented in order to preserve
- logical soundness.
- By the haling problem there will never be a way to include all the terminating
- computations and exclude all the nonterminating computations.
- Therefore, logical unsoundness seems suitable for a dependently typed programmi
-ng language.
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-% TODO: talk about alternatives.
-  cite proofs of nontermination
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-The most popular ....
- Forcing logical soundness incurs a real cost...
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-% TODO: could still preform checks
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Terms can still be called proofs as long as the safety of recursion and
- type-in-type are monitored externally.
- In this sense the inequalities listed are proofs, they make no use of general
- recursion and match implementations from CIC such that universe hierarchies
- could be assigned.
- External means can still verify the desired properties, an automated process
- could supply warnings when unsafe constructs are used, traditional software
- testing can be used to discover proof bugs.
- Even though the system is not logically sound, neither are informal paper
- and pencil proofs.
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-% TODO: add ref to inequalities
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-This architecture is resilient to change.
- Where a change in the termination checking code of Coq might cause a proof
- script to no longer run, here the code will always behave in the same way.
-\end_layout
-
-\begin_layout Subsection
-Further examples
-\end_layout
-
-\begin_layout Standard
-There are more examples in 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "cardelli1986polymorphic"
-literal "false"
-
-\end_inset
-
- where Cardelli has studied a similar system.
- All Pure Type Systems
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-previously called 
-\begin_inset Quotes eld
-\end_inset
-
-Generalized type systems
-\begin_inset Quotes erd
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
- can translate into the Surface Language by accumulating their type universes
- into the surface type universe.
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-% TODO: other sources of examples
 \end_layout
 
 \end_inset
@@ -4492,8 +4219,18 @@ noprefix "false"
 
 \end_inset
 
-....
- 
+.
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% TODO: walk through each
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -4527,7 +4264,26 @@ status open
 \end_inset
 
  From the perspective of a programming language type system the most important
- property is type soundness, often motivated with the slogan, 
+ property is Type Soundness
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+also called 
+\begin_inset Quotes eld
+\end_inset
+
+Type Safety
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+.
+ Type Soundness is often motivated with the slogan, 
 \begin_inset Quotes eld
 \end_inset
 
@@ -4545,7 +4301,7 @@ literal "false"
 
 
 \begin_inset Foot
-status open
+status collapsed
 
 \begin_layout Plain Layout
 in Milner's original paper, he used 
@@ -4562,7 +4318,8 @@ wrong
 \end_inset
 
 .
- In the setting of TAS systems their is potential for a program to 
+ Given the syntax of the surface language, their is potential for a program
+ to 
 \begin_inset Quotes eld
 \end_inset
 
@@ -4610,8 +4367,8 @@ get stuck
 \noun default
 \color inherit
 .
- A good type system will make such unreasonable programs impossible.
- The type assignment system is type sound.
+ A good type system will make such unreasonable programs unreachable.
+ The type assignment system presented here is type sound.
 \end_layout
 
 \begin_layout Standard
@@ -4620,7 +4377,15 @@ Type soundness can be shown with a progress and preservation
 status open
 
 \begin_layout Plain Layout
-also called subject reduction
+also called 
+\begin_inset Quotes eld
+\end_inset
+
+Subject Reduction
+\begin_inset Quotes erd
+\end_inset
+
+
 \end_layout
 
 \end_inset
@@ -4630,6 +4395,19 @@ also called subject reduction
 LatexCommand cite
 key "WRIGHT199438"
 literal "false"
+
+\end_inset
+
+
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+most relevant textbooks outline modern forms of this proof for non-dependent
+ type systems.
+ For instance, part 2 of Types and programming languages, PFLA, the Chapala
+ book
+\end_layout
 
 \end_inset
 
@@ -4646,7 +4424,34 @@ status open
 
 .
  The preservation lemma shows that typing information is invariant over
- evaluation.
+ evaluation
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Similar proofs for dependent type systems can be found in Chapter 3 of 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "luo1994computation"
+literal "false"
+
+\end_inset
+
+, ..., Section 3.1 of 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "10.1007/3-540-45413-6_27"
+literal "false"
+
+\end_inset
+
+(including eta expansion in an implicit system),...
+ 
+\end_layout
+
+\end_inset
+
+.
  While the progress lemma shows that a single step of evaluation for a well
  typed term in an empty context will not 
 \begin_inset Quotes eld
@@ -5005,7 +4810,7 @@ status open
 
 \end_inset
 
- It is also common in the literature to assume the properties of 
+ It is also common to assume the properties of 
 \begin_inset Formula $\equiv$
 \end_inset
 
@@ -12869,41 +12674,73 @@ get stuck
 \end_inset
 
  in the surface language.
- This follows by iterating the progress and preservation lemmas
+ This follows by iterating the progress and preservation lemmas.
 \end_layout
 
 \begin_layout Subsection
-typing is non-local
+Type checking is impractical
 \end_layout
 
 \begin_layout Standard
-TODO refer to the specific judgment
+This type system is inherently non-local.
+ No type annotations are ever required to form a derivation.
+ That means it would be up to a type checking algorithm to guess the types
+ of intermediate terms.
+ For instance, 
 \end_layout
 
 \begin_layout Standard
-\begin_inset Formula $\lambda x.x$
+\begin_inset Formula 
+\begin{align*}
+\lambda f\Rightarrow & \,\\
+... & f\,1_{c}\,true_{c}\\
+... & f\,0_{c}\,1_{c}
+\end{align*}
+
 \end_inset
 
- has many types
+
 \end_layout
 
 \begin_layout Standard
-TODO and therefore untenable
+what should be deduced for the type of 
+\begin_inset Formula $f$
+\end_inset
+
+? One possibility is 
+\begin_inset Formula $f:\left(n:\mathbb{N}\right)\rightarrow n\,\star\,\left(\lambda-\Rightarrow\mathbb{N}_{c}\right)\,\mathbb{B}_{c}\rightarrow...$
+\end_inset
+
+.
+ But there are infinitely other possibilities.
+ Worse, if there is an error, it may be impossible to localize.
+ To make a practical type checker we need to insist that the user include
+ some type annotations.
 \end_layout
 
 \begin_layout Section
 Bi-directional Surface Language
 \end_layout
 
-\begin_layout Subsection
-Annotate all the vars
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% Annotate all the vars
+\end_layout
+
+\end_inset
+
+ 
 \end_layout
 
 \begin_layout Standard
 There are many possible way to localize the type checking process.
  We could ask that all variable be annotated at binders.
- This is ideal from a theoretical perspective this is good since it will
- be easy to put variables on context.
+ This is ideal from a theoretical perspective since it matches how type
+ contexts are built up.
 \end_layout
 
 \begin_layout Standard
@@ -12922,12 +12759,12 @@ However note that, our proof of
 \end_layout
 
 \begin_layout Standard
-This strategy requires a lot of redundant annotations.
+Annotating every binding site requires a lot of redundant annotations.
  Luckily there's a better way, Bi-directional type checking.
 \end_layout
 
 \begin_layout Subsection
-Bi-directional
+Bi-directional type checking
 \end_layout
 
 \begin_layout Standard
@@ -12943,7 +12780,19 @@ status open
 
  Bidirectional type-checking is a popular form of lightweight type inference,
  and strikes a good compromise between the required type annotations and
- the simplicity of the theory, allowing for localized errors (
+ the simplicity of the theory, allowing for localized errors 
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset CommandInset citation
+LatexCommand cite
+key "christiansen2013bidirectional"
+literal "false"
+
+\end_inset
+
+ is a good tutorial, 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "10.1145/3450952"
@@ -12951,11 +12800,30 @@ literal "false"
 
 \end_inset
 
- is a good survey).
- This style of type checking usually only needs top level functions to be
+ is a survey
+\end_layout
+
+\end_inset
+
+.
+ In the usual bidirectional bidirectional typing scheme annotations are
+ only required at the top-level, or around a lambda that is applied to an
+ argument
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+more generally when an elimination reduction is possible
+\end_layout
+
+\end_inset
+
+.
+ Since programers rarely write functions that are immediately evaluated,
+ this style of type checking usually only needs top level functions to be
  annotated
 \begin_inset Foot
-status open
+status collapsed
 
 \begin_layout Plain Layout
 Even in Haskell, with full Hindley-Milner type inference, top level type
@@ -12965,9 +12833,56 @@ Even in Haskell, with full Hindley-Milner type inference, top level type
 \end_inset
 
 .
- In fact, every example in this chapter has enough annotations to type-check
- under a bidirectional system.
+ In fact, every example in 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:surface-exemples"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ has enough annotations to type-check bidirectionally as written.
  
+\end_layout
+
+\begin_layout Standard
+This is accomplished by breaking typing judgments into two forms: 
+\end_layout
+
+\begin_layout Itemize
+Inference judgments where type information propagates out of a term, 
+\begin_inset Formula $\overrightarrow{\,:\,}$
+\end_inset
+
+ in our notation.
+ 
+\end_layout
+
+\begin_layout Itemize
+And Checking judgments where a type is checked against a term, 
+\begin_inset Formula $\overleftarrow{\,:\,}$
+\end_inset
+
+ in our notation.
+ 
+\end_layout
+
+\begin_layout Standard
+This allows typing information to flow from the outside in for checking
+ judgments and inside out for inference judgments.
+ When an inference flows into a conversion check verifies that the types
+ are equal.
+ This has the advantage of precisely limiting where conv rule can be used,
+ since conversion checking is usually the least efficient part of type checking.
+\end_layout
+
+\begin_layout Standard
+This enforced flow results in a system that localizes type information.
+ If a type was inferred it was unique, so it can be used freely.
+ Checking judgments localize their their check, even if the underlying term
+ could support multiple types.
 \end_layout
 
 \begin_layout Standard
@@ -12993,7 +12908,7 @@ status open
 \begin_layout Plain Layout
 \begin_inset Formula 
 \[
-\frac{x:M\in\Gamma}{\Gamma\vdash x\overrightarrow{\,:\,}M}\operatorname{var-\overrightarrow{ty}}
+\frac{x:M\in\Gamma}{\Gamma\vdash x\overrightarrow{\,:\,}M}\operatorname{\overrightarrow{ty}-var}
 \]
 
 \end_inset
@@ -13001,7 +12916,7 @@ status open
 
 \begin_inset Formula 
 \[
-\frac{\Gamma\vdash}{\Gamma\vdash\star\overrightarrow{\,:\,}\star}\operatorname{\star-\overrightarrow{ty}}
+\frac{\Gamma\vdash}{\Gamma\vdash\star\overrightarrow{\,:\,}\star}\operatorname{\overrightarrow{ty}-\star}
 \]
 
 \end_inset
@@ -13017,7 +12932,7 @@ status open
 
 \begin_inset Formula 
 \[
-\frac{\Gamma\vdash M\overleftarrow{\,:\,}\star\quad\Gamma,x:M\vdash N\overleftarrow{\,:\,}\star}{\Gamma\vdash\left(x:M\right)\rightarrow N\overrightarrow{\,:\,}\star}\operatorname{\Pi-\overrightarrow{ty}}
+\frac{\Gamma\vdash M\overleftarrow{\,:\,}\star\quad\Gamma,x:M\vdash N\overleftarrow{\,:\,}\star}{\Gamma\vdash\left(x:M\right)\rightarrow N\overrightarrow{\,:\,}\star}\operatorname{\overrightarrow{ty}-fun-ty}
 \]
 
 \end_inset
@@ -13025,7 +12940,7 @@ status open
 
 \begin_inset Formula 
 \[
-\frac{\Gamma\vdash m\overrightarrow{\,:\,}\left(x:N\right)\rightarrow M\quad\Gamma\vdash n\overleftarrow{\,:\,}N}{\Gamma\vdash m\,n\overrightarrow{\,:\,}M\left[x\coloneqq n\right]}\operatorname{\Pi-app-\overrightarrow{ty}}
+\frac{\Gamma\vdash m\overrightarrow{\,:\,}\left(x:N\right)\rightarrow M\quad\Gamma\vdash n\overleftarrow{\,:\,}N}{\Gamma\vdash m\,n\overrightarrow{\,:\,}M\left[x\coloneqq n\right]}\operatorname{\overrightarrow{ty}-fun-app}
 \]
 
 \end_inset
@@ -13033,7 +12948,7 @@ status open
 
 \begin_inset Formula 
 \[
-\frac{\Gamma\vdash m\overrightarrow{\,:\,}M\quad\Gamma\vdash M\equiv M':\star}{\Gamma\vdash m\overleftarrow{\,:\,}M'}\operatorname{conv-\overleftarrow{ty}}
+\frac{\Gamma,f:\left(x:N\right)\rightarrow M,x:N\vdash m\overleftarrow{\,:\,}M}{\Gamma\vdash\mathsf{fun}\,f\,x\Rightarrow m\overleftarrow{\,:\,}\left(x:N\right)\rightarrow M}\operatorname{\overleftarrow{ty}-\mathsf{fun}}
 \]
 
 \end_inset
@@ -13041,7 +12956,7 @@ status open
 
 \begin_inset Formula 
 \[
-\frac{\Gamma,f:\left(x:N\right)\rightarrow M,x:N\vdash m\overleftarrow{\,:\,}M}{\Gamma\vdash\mathsf{fun}\,f\,x\Rightarrow m\overleftarrow{\,:\,}\left(x:N\right)\rightarrow M}\operatorname{\Pi-\mathsf{fun}-\overleftarrow{ty}}
+\frac{\Gamma\vdash m\overrightarrow{\,:\,}M\quad\Gamma\vdash M\equiv M':\star}{\Gamma\vdash m\overleftarrow{\,:\,}M'}\operatorname{\overleftarrow{ty}-conv}
 \]
 
 \end_inset
@@ -13087,20 +13002,19 @@ name "fig:surface-bityping-rules"
 
 \begin_layout Standard
 \begin_inset ERT
-status collapsed
+status open
 
 \begin_layout Plain Layout
 
-% review the typing rule % a little muddled to talk about bidirectional
- type-checking and our rules
-\end_layout
-
-\begin_layout Plain Layout
-
+% review the typing rule 
 \end_layout
 
 \end_inset
 
+
+\end_layout
+
+\begin_layout Standard
 The surface language supports bidirectional type-checking over the pre-syntax
  with the rules in figure 
 \begin_inset CommandInset ref
@@ -13113,69 +13027,387 @@ noprefix "false"
 \end_inset
 
 .
- This is accomplished by breaking typing judgments into 2 forms: 
+ These rules are the same as before but the information flow of typing is
+ now explicit in the judgment.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% For example...
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+The bidirectional system is type sound
+\end_layout
+
+\begin_layout Standard
+It is possible to prove bidirectional systems are type sound directly
+\begin_inset CommandInset citation
+LatexCommand cite
+key "nanevski2005dependent"
+literal "false"
+
+\end_inset
+
+, but would seem to require constraining the syntax in unrealistic ways
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+by dividing the syntax explicitly into introduction and elimination forms
+\end_layout
+
+\end_inset
+
+.
+ Alternatively we can show by mutual induction that a bidirectional typing
+ judgment implies a Type assignment system typing judgment.
 \end_layout
 
 \begin_layout Itemize
-Inference judgments where type information propagates out of a term, 
-\begin_inset Formula $\overrightarrow{\,:\,}$
+if 
+\begin_inset Formula $\Gamma\vdash m\overrightarrow{\,:\,}M$
 \end_inset
 
- in our notation.
- 
+ then 
+\begin_inset Formula $\Gamma\vdash m\,:\,M$
+\end_inset
+
+
 \end_layout
 
 \begin_layout Itemize
-And Checking judgments where a type is checked against a term, 
-\begin_inset Formula $\overleftarrow{\,:\,}$
+if 
+\begin_inset Formula $\Gamma\vdash m\overleftarrow{\,:\,}M$
 \end_inset
 
- in our notation.
- 
+ then 
+\begin_inset Formula $\Gamma\vdash m\,:\,M$
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
-Inferences can be turned into checked judgments with an explicit equality
- check.
- This precisely limits the use of the problematic conv rule.
-\end_layout
-
-\begin_layout Subsection
-If it types in the bidirectional system then it types in the TAS system
-\end_layout
-
-\begin_layout Standard
-...
-\end_layout
-
-\begin_layout Subsection
-If it types in the TAS system annotations can be added such that an equivalent
- term types in the bidirectional system
-\end_layout
-
-\begin_layout Standard
-...
-\end_layout
-
-\begin_layout Subsection
-Type-checking in the Bi-directional system is still undecidable
-\end_layout
-
-\begin_layout Standard
-Type checking remains undecidable because of general recursion and type-in-type.
- However, since the user is not expected to type-check their program directly
- this should not cause any issues in practice.
- Even decidable type-checking in dependent type theory is computationally
- intractable.
+by mutual induction on the bidirectional typing derivations.
  
 \end_layout
 
 \begin_layout Subsection
-Bi-directional errors are local
+The Bidirectional system is conservative
 \end_layout
 
 \begin_layout Standard
-...
+Additionally we can show that the bidirectional system does not preclude
+ any computation available in the type assignment system.
+ Formally
+\end_layout
+
+\begin_layout Itemize
+if 
+\begin_inset Formula $\Gamma\vdash m\,:\,M$
+\end_inset
+
+ then 
+\begin_inset Formula $\Gamma\vdash m'\overrightarrow{\,:\,}M$
+\end_inset
+
+ , 
+\begin_inset Formula $\Gamma\vdash m'\overleftarrow{\,:\,}M$
+\end_inset
+
+, and 
+\begin_inset Formula $m\equiv m'$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+by induction on the typing derivation, adding annotations at each step that
+ are convertible with the original 
+\begin_inset Formula $m$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Absent Logical Properties
+\end_layout
+
+\begin_layout Standard
+When type systems are considered as a logic, it is desirable that
+\end_layout
+
+\begin_layout Itemize
+There exists an empty type that is uninhabited in the empty context, it
+ is 
+\series bold
+logically sound
+\series default
+
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+also called 
+\begin_inset Quotes eld
+\end_inset
+
+consistent
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+The conversion system normalizes.
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% TODO: remove?
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Type checking is decidable.
+\end_layout
+
+\begin_layout Standard
+The surface system has non of these properties
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+These properties are usually shown be showing that the computation that
+ generates conversion is normalizing.
+ Some proofs can be found in Chapter 4
+\begin_inset CommandInset citation
+LatexCommand cite
+key "luo1990extended,luo1994computation"
+literal "false"
+
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+
+.
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% TODO: aparently that note from Chris Casinghino is dead http://prosecco.gforge.i
+nria.fr/personal/hritcu/temp/snforcc.pdf
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Logical Unsoundness
+\end_layout
+
+\begin_layout Standard
+The surface language is logically unsound, every type is inhabited.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% TODO: proper example formatting
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Every type is inhabited (by recursion)
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\mathsf{fun}\,f\,x\Rightarrow f\,x\qquad:\perp_{c}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Every type is inhabited (by Type-in-type)
+\end_layout
+
+\begin_layout Standard
+It is possible to encode Girard's paradox, producing another source of logical
+ unsoundness.
+ A subtle form of recursive behavior can be built out of Gerard's paradox
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Reinhold89typecheckingis"
+literal "false"
+
+\end_inset
+
+, but this behavior is no worse then the unrestricted recursion already
+ allowed.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% TODO: cite stuff (see https://stackoverflow.com/questions/18178999/do-agda-prog
+rams-necessarily-terminate), 
+\end_layout
+
+\begin_layout Plain Layout
+
+% of course this hapens in Girard's french thesis
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+I am unaware of anyone accidentally encountering a falsehood from type-in-type.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+logical unsoundness
+\end_layout
+
+\begin_layout Standard
+While the surface language supports proofs, not every term typed in the
+ surface language is a proof.
+\end_layout
+
+\begin_layout Standard
+Logical soundness seems not to matter in programming practice.
+ For instance, in ML the type 
+\begin_inset Formula $\mathtt{f:Int->Int}$
+\end_inset
+
+ does not imply the termination of 
+\begin_inset Formula $\mathtt{f\,2}$
+\end_inset
+
+.
+ While unproductive non-termination is always a bug, it seems an easy bug
+ to detect and fix when it occurs.
+ In mainstream languages, types help to communicate the intent of termination,
+ even though termination is not guaranteed by the type system.
+ Importantly, no desirable computation is prevented in order to preserve
+ logical soundness.
+ There will never be a way to include all the terminating computations and
+ exclude all the nonterminating computations.
+ A tradeoff must be made.
+ Therefore, logical unsoundness seems suitable for a dependently typed programmi
+ng language.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% TODO: talk about alternatives.
+  cite proofs of nontermination
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The most popular ....
+ Forcing logical soundness incurs a real cost...
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% TODO: could still preform checks
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Terms can still be called proofs as long as the safety of recursion and
+ type-in-type are monitored externally.
+ In this sense the inequalities listed are proofs, they make no use of general
+ recursion and match implementations from CIC such that universe hierarchies
+ could be assigned.
+ External means can still verify the desired properties, an automated process
+ could supply warnings when unsafe constructs are used, traditional software
+ testing can be used to discover proof bugs.
+ Even though the system is not logically sound, neither are informal paper
+ and pencil proofs.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% TODO: add ref to inequalities
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This architecture is resilient to change.
+ Where a change in the termination checking code of Coq might cause a proof
+ script to no longer run, here the code will always behave in the same way.
 \end_layout
 
 \begin_layout Subsection
@@ -13188,10 +13420,18 @@ Given a thunk
 \end_inset
 
  defined in pcf, it can be encoded into the surface system as a thunk 
-\begin_inset Formula $f':Unit$
+\begin_inset Formula $f':Unit_{c}$
 \end_inset
 
- , such that if f reduces to the canonical unit then 
+ , such that if 
+\begin_inset Formula $f$
+\end_inset
+
+ reduces to the canonical 
+\begin_inset Formula $Unit$
+\end_inset
+
+ then 
 \begin_inset Formula $f'\Rrightarrow^{*}\lambda A.\lambda a.a$
 \end_inset
 
@@ -13224,18 +13464,61 @@ Given a thunk
 
 \begin_layout Standard
 If there is a procedure to decide type checking we can decide exactly when
- any pcf function halts
-\end_layout
-
-\begin_layout Subsection
-Still undecidable
+ any pcf function halts.
 \end_layout
 
 \begin_layout Standard
-Unfortunately, the system is logically unsound (every type is trivially
- inhabited with recursion), since our language attempts to be more oriented
- to programs than proofs.
- We expect this is acceptable.
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% normalization
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Undecidability of type checking is not as bad as it sounds for several reasons.
+ First, the pathological terms that cause normalization are rarely created
+ on purpose.
+ In the bidirectional system, conversion checks will only happen at limited
+ positions, it is possible to use a counter to warn or give errors at code
+ that does not convert because normalization takes too long.
+ Heuristic methods of normalization seem to work well enough in practice
+ even without a counter.
+ It is also possible to embed proofs of conversion directly into the syntax
+ as in
+\begin_inset CommandInset citation
+LatexCommand cite
+key "sjoberg2012irrelevance"
+literal "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Many dependent type systems, such as Agda, Coq, and Lean, aspire to decidable
+ type checking.
+ However these systems allow extremely fast growing functions to be encoded
+ (such as Ackerman's function).
+ This large function can check some concrete but difficult property, (how
+ many Turing machines whose code is smaller then 
+\begin_inset Formula $n$
+\end_inset
+
+ halt in 
+\begin_inset Formula $n$
+\end_inset
+
+ steps?).
+ When this kind of computation is lifted to the type level, type checking
+ is computationally infeasible.
 \end_layout
 
 \begin_layout Standard
@@ -13252,15 +13535,39 @@ status open
 
 \end_layout
 
-\begin_layout Section
-Implementation
+\begin_layout Standard
+Many mainstream type systems have undecidable.
+ If a language admits a Turing complete macro or preprocessor system that
+ can modify typing, this would make type checking undecidable (this would
+ technically make the type system of C, C++, Scala, and Rust undecidable).
+ Unless type features are considered very carefully, they can often create
+ undecidable type checking (Java generics and OCaml modules, make type checking
+ undecidable in those languages respectively).
+ Haskell may be the most popular language with with a static type system
+ that allows decidable type checking (thought it is often more convenient
+ to use GHC compiler flags that make type checking undecidable).
+ Even the Hindley-Milner type checking algorithm that underlies Haskell
+ and ML, has a double exponential complexity, which under normal circumstances
+ would be considered intractable.
 \end_layout
 
 \begin_layout Standard
-Implemented in Haskell.
- We have mechanized the type soundness of the type assignment system (without
- location data) in Coq.
- 
+In practice these theoretical concerns are not born out since the worst
+ that can happen is the type checking can time-out in the compilation process.
+ When this happens programmers can fix their codes, macros, or add typing
+ annotations.
+ Programers in conventional languages are already entrusted with almost
+ unlimited power to cause harm, programs regularly delete files, read and
+ modify sensitive information, and send emails.
+ Relatively speaking, undecidable type checking is not a concern.
+\end_layout
+
+\begin_layout Standard
+Finally, for the system descried in this thesis, users are expected to use
+ the elaboration procedure defined in the next chapter that will bypass
+ the type checking described here.
+ That elaboration procedures is also undecidable, but only for extremely
+ pathological terms.
 \end_layout
 
 \begin_layout Section
@@ -13272,9 +13579,27 @@ Bad logics, ok programming languages?
 \end_layout
 
 \begin_layout Standard
-Unsound logical systems that are acceptable programming languages go back
- to at least Church's lambda calculus which was originally intended to be
- a logical foundation for mathematics.
+Unsound logical systems that work as programming languages go back to at
+ least Church's lambda calculus which was originally intended to be part
+ of a foundation for mathematics
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+\begin_inset Quotes eld
+\end_inset
+
+There may, indeed, be other applications of the system than its use as a
+ logic.
+\begin_inset Quotes erd
+\end_inset
+
+ [Church, 1932, p.349, A Set of Postulates for the Foundation of Logic]
+\end_layout
+
+\end_inset
+
+.
  In the 1970s, Martin-Löf proposed a system with Type-in-Type that was shown
  logically unsound by Girard (as described in the introduction in 
 \begin_inset CommandInset citation
@@ -13337,14 +13662,6 @@ status open
  In general, the base language has been deeply informed by the Trellys project
 \begin_inset CommandInset citation
 LatexCommand cite
-key "kimmell2012equational"
-literal "false"
-
-\end_inset
-
-
-\begin_inset CommandInset citation
-LatexCommand cite
 key "sjoberg2012irrelevance"
 literal "false"
 
@@ -13388,10 +13705,57 @@ https://github.com/sweirich/trellys
 \end_layout
 
 \begin_layout Standard
-Several implementations support this combination of features without proofs
- of type soundness.
- Coquand presented an early bidirectional algorithm to type-check a similar
- language 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% TODO type in type as a well wknown shortcut, videos of Andraj, Conner
+ MB saying it 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Implementations
+\end_layout
+
+\begin_layout Standard
+Several programming language implementations support this combination of
+ features (though none prove type soundness).
+ Pebble
+\begin_inset CommandInset citation
+LatexCommand cite
+key "10.1007/3-540-13346-1_1"
+literal "false"
+
+\end_inset
+
+ was a very early language with dependent types, though conversion did not
+ associate alpha equivalent types 
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+according to 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Reinhold89typecheckingis"
+literal "false"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+.
+ Coquand implemented an early bidirectional algorithm to type-check a language
+ with Type-in-Type
 \begin_inset CommandInset citation
 LatexCommand cite
 key "COQUAND1996167"
@@ -13422,20 +13786,240 @@ unsafe
  features.
 \end_layout
 
+\begin_layout Subsection
+Other Dependent Type Systems
+\end_layout
+
 \begin_layout Standard
-A similar 
+There are many flavors of dependent type systems that are similar in spirt
+ to the language presented here, but maintain logical soundness at the expense
+ of computation.
+ 
+\end_layout
+
+\begin_layout Standard
+The Calculus of Constructions (CC, CoC)
+\begin_inset CommandInset citation
+LatexCommand cite
+key "10.1016/0890-5401(88)90005-3"
+literal "false"
+
+\end_inset
+
+ is one of the first minimal dependent type systems.
+ It contains shockingly few rules, but can express a wide variety of constructio
+ns via parametric encodings.
+ The systems does not allow type in type, instead type
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+sometimes called 
 \begin_inset Quotes eld
 \end_inset
 
-partial correctness
+prop
 \begin_inset Quotes erd
 \end_inset
 
- criterion for dependent languages with non-termination run with Call-by-Value
- is presented in 
+
+\end_layout
+
+\end_inset
+
+ lives in a larger universe 
+\begin_inset Formula $\star:\Square$
+\end_inset
+
+, where 
+\begin_inset Formula $\Square$
+\end_inset
+
+ is not considered a type.
+ Even though the Calculus of Constructions does not allow type-in-type is
+ it is still 
+\series bold
+impredicative 
+\series default
+in the sense that function types can quantify over 
+\begin_inset Formula $\star$
+\end_inset
+
+ while still being int 
+\begin_inset Formula $\star$
+\end_inset
+
+.
+ For instance, the polymorphic identity 
+\begin_inset Formula $(X:\star)\rightarrow X\rightarrow X$
+\end_inset
+
+ has type 
+\begin_inset Formula $\star$
+\end_inset
+
+ so the polymorphic identity can be applied to itself.
+ From the perspective of the surface language this impredictivity is modest,
+ but still causes issues in the presence of classical logical assumptions.
+ Many of the examples form this chapter are adapted from examples that appeared
+ along with the Calculus of Constructions.
+\end_layout
+
+\begin_layout Standard
+Several other systems were developed that directly extended or modify the
+ Calculus of Constructions.
+ The Extended Calculus of Constructions (ECC)
 \begin_inset CommandInset citation
 LatexCommand cite
-key "jia2010dependent"
+key "luo1990extended,luo1994computation"
+literal "false"
+
+\end_inset
+
+, extends the calculus of constructions with a predicative hierarchy of
+ universes and dependent pair types.
+ The Implicit Calculus of Constructions (ICC)
+\begin_inset CommandInset citation
+LatexCommand cite
+key "10.1007/3-540-45413-6_27,10.1007/978-3-540-78499-9_26"
+literal "false"
+
+\end_inset
+
+ presents an extrinsic typing system
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+Sometimes called 
+\begin_inset Quotes eld
+\end_inset
+
+Curry-style
+\begin_inset Quotes erd
+\end_inset
+
+, in contrast to intrinsic systems which are sometimes called 
+\begin_inset Quotes eld
+\end_inset
+
+Church-style
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+, unlike the Type Assignment System presented in this chapter, the Implicit
+ Calculus of Constructions allows implicit qualification over (also a hierarchy
+ of universes, and a universe of 
+\begin_inset Quotes eld
+\end_inset
+
+sets
+\begin_inset Quotes erd
+\end_inset
+
+).
+ Other extensions to the Calculus of Constructions that are primarily concerned
+ with data (UCC, CIC) will be reviewed in chapter 4.
+\end_layout
+
+\begin_layout Standard
+The lambda cube is a system fo viewing 8 typed lambda caluli in relation
+ to each other.
+ Presuming terms should always depend on terms, there are 3 additional dimension
+s of dependency: term depending on types, types dependent on types, and
+ types depending on terms.
+ The simply typed lambda calculus has only term dependency.
+ System F allows Types to depend on types.
+ The Calculus of Constructions has all forms of dependency
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+Recommended reading Chapter 14 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "sorensen2006lectures"
+literal "false"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Pure Type Systems(PTS) generalize the lambda cube to allow any number of
+ type universe with any forms of dependency.
+ Notably this includes the system with1 type universe where type-in-type.
+ Universe hierarchies can also be embedded in a PTS.
+ The system described in this chapter is almost a PTS, except that it contains
+ unrestricted recursion and the method of type annotation is different.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% TODO bresumably Barndrct was the first one to put it in a cube
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% TODO citations for PTS: (Terlouw, 1989; Berardi, 1988; Barendregt, 1991,
+ 1992; Jutting, McKinna, and Pollack, 1994; McKinna and Pollack, 1993; Pollack,
+ 1994).
+ Acording to TAPL
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+As previously mentioned Martin Lof Type Theory (MTLL) 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Martin-Lof-1972"
+literal "false"
+
+\end_inset
+
+ is one of the oldest frameworks for dependent type systems.
+ MTLL designed to be open, so that new constructs can be added with the
+ appropriate introduction elimination and typing rules.
+ The base system comes with a predicative hierarchy of universes, and at
+ least dependently typed functions and a propositional equality type.
+ The system has two flavors characterized by it's handling of definitional
+ equality: if types are only identified by convertibility (as ever system
+ described so far) it is called Intentional Type Theory (ITT).
+ If the system allows proofs of equality to associate types, it is called
+ Extensional Type Theory.
+ Since MTLL is open ended the Calculus of Constructions can be added to
+ it as a subsystem
+\begin_inset CommandInset citation
+LatexCommand cite
+key "aspinall2004dependent,hofmann1997extensional"
 literal "false"
 
 \end_inset
@@ -13449,16 +14033,12 @@ status open
 
 \begin_layout Plain Layout
 
-% TODO:  revise above
+% TODO go back to Russle?
 \end_layout
 
 \end_inset
 
-
-\end_layout
-
-\begin_layout Subsection
-relation to other formal systems
+ 
 \end_layout
 
 \begin_layout Standard
@@ -13467,16 +14047,43 @@ status open
 
 \begin_layout Plain Layout
 
-% TODO: nats+recursion make this as powerful as PCF, same issues about semantics
+% TODO sloving universe constraints
 \end_layout
 
 \end_inset
 
-
+ 
 \end_layout
 
-\begin_layout Subsection
-relation to other implementations
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% avoid data heave presentations (LIKE UTT, CIC) until CH4
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% TODO read through the inro of https://link.springer.com/book/10.1007/978-1-4471-0
+963-1#toc when was it published? what is the relation to his thesis? Is
+ chapter 1 https://www.tcs.ifi.lmu.de/mitarbeiter/martin-hofmann/pdfs/syntaxandseman
+ticsof-dependenttypes.pdf worth skiming theough eiterh way 
+\end_layout
+
+\end_inset
+
+ 
 \end_layout
 
 \begin_layout Standard
@@ -13493,6 +14100,14 @@ options "alpha"
 
 \begin_layout Section
 TODO
+\end_layout
+
+\begin_layout Itemize
+remove location date from this section entirely!
+\end_layout
+
+\begin_layout Itemize
+fully esperate ctx well formedness judgments
 \end_layout
 
 \begin_layout Itemize
@@ -13557,7 +14172,7 @@ write up style guide
 \end_layout
 
 \begin_layout Section
-unuesd
+unused
 \end_layout
 
 \begin_layout Standard
