@@ -15,12 +15,12 @@ all work related to my thesis document, will eventually become public
   - [x] Produce some larger examples
 ## Plan
 - [ ] October
-  - [ ] draft Surface Language chapter
+  - [x] draft Surface Language chapter
   - [ ] draft Cast Language chapter
+- [ ] November
   - [ ] draft Data chapter
   - [ ] Rework symbolic execution to work in the cast language
   - [ ] draft testing chapter
-- [ ] November
   - [ ] draft runtime proof search chapter
   - [ ] draft introduction
   - [ ] draft conclusion
