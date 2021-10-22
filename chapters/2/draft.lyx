@@ -73,13 +73,13 @@
 \shortcut idx
 \color #008000
 \end_index
-\leftmargin 1cm
-\topmargin 1cm
-\rightmargin 1cm
-\bottommargin 1cm
-\headheight 1cm
-\headsep 1cm
-\footskip 1cm
+\leftmargin 2cm
+\topmargin 2cm
+\rightmargin 2cm
+\bottommargin 2cm
+\headheight 2cm
+\headsep 2cm
+\footskip 2cm
 \secnumdepth 3
 \tocdepth 3
 \paragraph_separation indent
@@ -128,20 +128,6 @@ status open
 
 \begin_layout Plain Layout
 
-%% don't love this intro
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
 % overview, why
 \end_layout
 
@@ -155,34 +141,14 @@ In an ideal world programmers would write perfect programs whose correctness
  is fully proven.
  The 
 \series bold
-Surface Language
+surface language
 \series default
  presented in this chapter allows for this ideal, but difficult, workflow.
- Programmers should 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-"
-\end_layout
-
-\end_inset
-
-think
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-"
-\end_layout
-
-\end_inset
-
- in the surface language, and the machinery of later sections should reinforce
- an understanding of the surface type system, while being transparent to
- the programmer.
+ Hopefully and the machinery of later chapters will be transparent to the
+ programers that use the full system.
+ They should only need to think about the surface language.
+ Everything presented in later chapters is designed to reinforce an understandin
+g of the surface type system.
 \end_layout
 
 \begin_layout Standard
@@ -200,9 +166,9 @@ status open
 \end_layout
 
 \begin_layout Standard
-The surface language presented in this chapter is a minimal dependent type
- system.
- It will serve both as foundation for further chapters.
+The surface language is a minimal dependent type system.
+ It will serve both as foundation for further chapters and a self contained
+ technical introduction to dependent types.
  As much as possible, the syntax use's standard modern notation 
 \begin_inset Foot
 status open
@@ -245,18 +211,7 @@ status open
 
 .
  The semantics are intended to be as simple as possible and compatible with
- other well studied intentional dependent type theories 
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-most terms in this chapter could be translated into the calculus of construction
-s, or other pure type systems.
-\end_layout
-
-\end_inset
-
-.
+ other well studied intentional dependent type theories.
  
 \end_layout
 
@@ -275,12 +230,12 @@ status open
 \end_layout
 
 \begin_layout Standard
-I deviate from a standard dependent type theory to include features to ease
- programming at the expense of correctness.
+The surface language deviates from a standard dependent type theory to include
+ features to ease programming at the expense of logical correctness.
  Specifically the language allows general recursion, since general recursion
  is useful for general purpose functional programming.
- type-in-type is also supported since it simplifies the system for programmers,
- and makes the meta-theory easier when logical soundness has been abandoned.
+ Type-in-type is also supported since it simplifies the system for programmers,
+ and makes the meta-theory slightly easier.
  Despite this, type soundness is a achievable and a practical type checking
  algorithm is given.
 \end_layout
@@ -1166,61 +1121,6 @@ noprefix "false"
 \end_layout
 
 \begin_layout Standard
-The surface language subsumes or encodes many classic typed lambda calculi.
- For instance all pure type systems
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-previously called 
-\begin_inset Quotes eld
-\end_inset
-
-Generalized Type Systems
-\begin_inset Quotes erd
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
- such as System F and the Calculus of Constructions have corresponding terms
- in the the Surface Language 
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-by renaming their type universes into the Surface type universe
-\end_layout
-
-\end_inset
-
-.
- Additionally the examples from 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "cardelli1986polymorphic"
-literal "false"
-
-\end_inset
-
- where Cardelli has studied a similar system, can be expressed here.
- 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-%TODO move this into the end note?
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
 \begin_inset Float figure
 wide false
 sideways false
@@ -1228,7 +1128,7 @@ status open
 
 \begin_layout Plain Layout
 \begin_inset Tabular
-<lyxtabular version="3" rows="23" columns="5">
+<lyxtabular version="3" rows="22" columns="5">
 <features tabularvalignment="middle">
 <column alignment="left" valignment="top">
 <column alignment="left" valignment="top">
@@ -1645,7 +1545,7 @@ boolean false
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\vdash\lnot_{c}x$
+\begin_inset Formula $\vdash!_{c}x$
 \end_inset
 
 
@@ -2234,53 +2134,6 @@ either, logical or
 \begin_inset Text
 
 \begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
 \begin_inset Formula $X:\star$
 \end_inset
 
@@ -2660,7 +2513,7 @@ status open
 
 \begin_layout Plain Layout
 
-% TODO: symetry, trans
+% TODO: trans, cong
 \end_layout
 
 \end_inset
@@ -2815,12 +2668,16 @@ church numerals
 \begin_inset Formula $\mathbb{N}_{c}$
 \end_inset
 
- encodes the possibility of choices, 
-\begin_inset Formula $(A\rightarrow A)$
+ encodes the handling of those two choices, 
+\begin_inset Formula $(X\rightarrow X)$
 \end_inset
 
- decides how to handle the recursive result of the prior number in the successor
- case, and the 2nd argument specifies how to handle the base case of 
+ handles the recursive result of the prior number in the successor case,
+ and the 
+\begin_inset Formula $X$
+\end_inset
+
+ argument specifies how to handle the base case of 
 \begin_inset Formula $0$
 \end_inset
 
@@ -2834,8 +2691,9 @@ Parameterized data types such as pairs and the
 \end_inset
 
  type can also be encoded in this scheme.
- A pair type can be used in any way the 2 types it contains can so the definitio
-n states that a pair is at least as good as the curried input to a function.
+ A pair type can be used in any way the two terms it contains can, so the
+ definition states that a pair is at least as good as the curried input
+ to a function.
  The 
 \begin_inset Formula $Either$
 \end_inset
@@ -2876,8 +2734,8 @@ status open
 Church encodings provide a theoretically light weight way of working with
  data in minimal lambda calculus, however they are very inconvenient to
  work with.
- For instance, the predecessor function on natural numbers is not exactly
- straight forward.
+ For instance, the predecessor function on natural numbers is not straight
+ forward.
  To make the system easier for programmers, data types will be added in
  chapter 4.
 \end_layout
@@ -3054,7 +2912,7 @@ literal "false"
 \begin_inset Formula $0$
 \end_inset
 
-is clearly an even number, so our inhabitant would be 
+is clearly an even number, so our inhabitant could be 
 \begin_inset Formula $\lambda f\Rightarrow f\,0_{c}\,tt_{c}$
 \end_inset
 
@@ -3196,14 +3054,11 @@ status open
 \begin_layout Standard
 It is useful for a type to depend specifically on a term, this is called
  
-\begin_inset Quotes eld
-\end_inset
-
-Large elimination
-\begin_inset Quotes erd
-\end_inset
-
- can be simulated with type-in-type.
+\series bold
+large elimination
+\series default
+.
+ Large elimination can be simulated with type-in-type.
  
 \end_layout
 
@@ -3415,20 +3270,6 @@ The expression
 Note that such functions are not possible in the Calculus of Constructions.
 \end_layout
 
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-% TODO: citation for CIC?
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
 \begin_layout Subsubsection
 Inequalities
 \end_layout
@@ -3436,7 +3277,8 @@ Inequalities
 \begin_layout Standard
 Large eliminations can be used to prove inequalities that can be hard or
  impossible to express in other minimal dependent type theories such as
- the calculus of constructions.
+ the Calculus of Constructions.
+ For instance,
 \end_layout
 
 \begin_layout Standard
@@ -3768,7 +3610,7 @@ Additionally, the syntax of functions builds in unrestricted recursion.
 \end_layout
 
 \begin_layout Standard
-given the appropriate definitions of 
+Assuming appropriate definitions for 
 \begin_inset Formula $case_{c}$
 \end_inset
 
@@ -3822,7 +3664,7 @@ status open
 \begin_layout Plain Layout
 \begin_inset Formula 
 \[
-\frac{\Gamma\vdash m\,:\,M}{\Gamma\vdash m::_{\ell}M\,:\,M}\,\textrm{ty-::}
+\frac{\Gamma\vdash m\,:\,M}{\Gamma\vdash m::M\,:\,M}\,\textrm{ty-::}
 \]
 
 \end_inset
@@ -3971,7 +3813,7 @@ There is some question about how much typing information should be coupled
 \begin_inset Formula $\textrm{ty-fun-app}$
 \end_inset
 
- rule shows how toy type function application, by substituting the argument
+ rule shows how to type function application, by substituting the argument
  term directly into the dependent function type.
  Functions are typed with a variable for recursive calls along with a variable
  for their argument 
@@ -4402,7 +4244,7 @@ status open
 \begin_layout Plain Layout
 \begin_inset Formula 
 \[
-\frac{m\Rrightarrow m'\quad n\Rrightarrow n'}{\left(\mathsf{fun}\,f\,x\Rightarrow m\right)_{\ell}n\Rrightarrow m'\left[f\coloneqq\mathsf{fun}\,f\,x\Rightarrow m',x\coloneqq n'\right]}\,\textrm{\Rrightarrow-fun-app-red}
+\frac{m\Rrightarrow m'\quad n\Rrightarrow n'}{\left(\mathsf{fun}\,f\,x\Rightarrow m\right)n\Rrightarrow m'\left[f\coloneqq\mathsf{fun}\,f\,x\Rightarrow m',x\coloneqq n'\right]}\,\textrm{\Rrightarrow-fun-app-red}
 \]
 
 \end_inset
@@ -4410,7 +4252,7 @@ status open
 
 \begin_inset Formula 
 \[
-\frac{m\Rrightarrow m'}{m::_{\ensuremath{\ell}}M\Rrightarrow m'}\,\textrm{\Rrightarrow-::-red}
+\frac{m\Rrightarrow m'}{m::M\Rrightarrow m'}\,\textrm{\Rrightarrow-::-red}
 \]
 
 \end_inset
@@ -4429,7 +4271,7 @@ status open
 
 \begin_inset Formula 
 \[
-\frac{m\Rrightarrow m'\quad M\Rrightarrow M'}{m::_{\ensuremath{\ell}}M\Rrightarrow m'::_{\ensuremath{\ensuremath{\ell}'}}M'}\,\textrm{\Rrightarrow-::}
+\frac{m\Rrightarrow m'\quad M\Rrightarrow M'}{m::M\Rrightarrow m'::M'}\,\textrm{\Rrightarrow-::}
 \]
 
 \end_inset
@@ -4451,7 +4293,7 @@ status open
 \begin_layout Plain Layout
 \begin_inset Formula 
 \[
-\frac{M\Rrightarrow M'\quad N\Rrightarrow N'}{\left(x:M_{\ell}\right)\rightarrow N_{\ell'}\Rrightarrow\left(x:M'_{\ensuremath{\ell}''}\right)\rightarrow N'_{\ensuremath{\ell}'''}}\,\textrm{\Rrightarrow-fun-ty}
+\frac{M\Rrightarrow M'\quad N\Rrightarrow N'}{\left(x:M\right)\rightarrow N_{\ell'}\Rrightarrow\left(x:M'\right)\rightarrow N'}\,\textrm{\Rrightarrow-fun-ty}
 \]
 
 \end_inset
@@ -4473,7 +4315,7 @@ status open
 \begin_layout Plain Layout
 \begin_inset Formula 
 \[
-\frac{m\Rrightarrow m'\quad n\Rrightarrow n'}{m_{\ell}\,n\Rrightarrow m'_{\ell'}\,n'}\,\textrm{\Rrightarrow-fun-app}
+\frac{m\Rrightarrow m'\quad n\Rrightarrow n'}{m_{\ell}\,n\Rrightarrow m'\,n'}\,\textrm{\Rrightarrow-fun-app}
 \]
 
 \end_inset
@@ -5169,7 +5011,7 @@ noprefix "false"
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\left(\mathsf{fun}\,f\,x\Rightarrow m\right)_{\ensuremath{\ell}}\,n$
+\begin_inset Formula $\left(\mathsf{fun}\,f\,x\Rightarrow m\right)\,n$
 \end_inset
 
 
@@ -5313,7 +5155,7 @@ otherwise
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $m::_{\ensuremath{\ell}}M$
+\begin_inset Formula $m::M$
 \end_inset
 
 
@@ -5457,7 +5299,7 @@ otherwise
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\left(x:M_{\ensuremath{\ell}}\right)\rightarrow N_{\ensuremath{\ell'}}$
+\begin_inset Formula $\left(x:M\right)\rightarrow N$
 \end_inset
 
 
@@ -5481,7 +5323,7 @@ otherwise
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\left(x:max\left(M\right)_{\ensuremath{\ell}}\right)\rightarrow max\left(N\right)_{\ensuremath{\ell'}}$
+\begin_inset Formula $\left(x:max\left(M\right)\right)\rightarrow max\left(N\right)$
 \end_inset
 
 
@@ -5601,7 +5443,7 @@ otherwise
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $m_{\ensuremath{\ell}}\,n$
+\begin_inset Formula $m\,n$
 \end_inset
 
 
@@ -5625,7 +5467,7 @@ otherwise
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $max\left(m\right)_{\ensuremath{\ell}}\,max\left(n\right)$
+\begin_inset Formula $max\left(m\right)\,max\left(n\right)$
 \end_inset
 
 
@@ -11879,7 +11721,7 @@ v
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\left(x:M_{\ensuremath{\ell}}\right)\rightarrow N_{\ensuremath{\ell'}}$
+\begin_inset Formula $\left(x:M\right)\rightarrow N$
 \end_inset
 
 
@@ -11983,7 +11825,7 @@ status open
 \begin_layout Plain Layout
 \begin_inset Formula 
 \[
-\frac{\,}{\left(\mathsf{fun}\,f\,x\Rightarrow m\right)_{\ell}v\rightsquigarrow m\left[f\coloneqq\mathsf{fun}\,f\,x\Rightarrow m,x\coloneqq v\right]}
+\frac{\,}{\left(\mathsf{fun}\,f\,x\Rightarrow m\right)v\rightsquigarrow m\left[f\coloneqq\mathsf{fun}\,f\,x\Rightarrow m,x\coloneqq v\right]}
 \]
 
 \end_inset
@@ -11994,7 +11836,7 @@ status open
 \begin_layout Plain Layout
 \begin_inset Formula 
 \[
-\frac{m\rightsquigarrow m'}{m_{\ell}\,n\rightsquigarrow m'_{\ell}\,n}
+\frac{m\rightsquigarrow m'}{m\,n\rightsquigarrow m'\,n}
 \]
 
 \end_inset
@@ -12005,7 +11847,7 @@ status open
 \begin_layout Plain Layout
 \begin_inset Formula 
 \[
-\frac{n\rightsquigarrow n'}{v_{\ell}\,n\rightsquigarrow v_{\ell}\,n'}
+\frac{n\rightsquigarrow n'}{v\,n\rightsquigarrow v\,n'}
 \]
 
 \end_inset
@@ -12016,7 +11858,7 @@ status open
 \begin_layout Plain Layout
 \begin_inset Formula 
 \[
-\frac{m\rightsquigarrow m'}{m::_{\ensuremath{\ell}}M\rightsquigarrow m'::_{\ensuremath{\ell}}M}
+\frac{m\rightsquigarrow m'}{m::M\rightsquigarrow m'::M}
 \]
 
 \end_inset
@@ -12027,7 +11869,7 @@ status open
 \begin_layout Plain Layout
 \begin_inset Formula 
 \[
-\frac{\,}{v::_{\ensuremath{\ell}}M\rightsquigarrow v}
+\frac{\,}{v::M\rightsquigarrow v}
 \]
 
 \end_inset
@@ -12121,7 +11963,7 @@ Thus
 \begin_inset Formula $\rightsquigarrow$
 \end_inset
 
- preserves types.
+ also preserves types.
 \end_layout
 
 \begin_layout Subsubsection
@@ -13843,7 +13685,7 @@ status open
 
 \begin_inset Formula 
 \[
-\frac{\Gamma\vdash m\overleftarrow{\,:\,}M}{\Gamma\vdash m::_{\ell}M\overrightarrow{\,:\,}M}\operatorname{\overrightarrow{ty}-::}
+\frac{\Gamma\vdash m\overleftarrow{\,:\,}M}{\Gamma\vdash m::M\overrightarrow{\,:\,}M}\operatorname{\overrightarrow{ty}-::}
 \]
 
 \end_inset
@@ -14096,7 +13938,7 @@ Type checking is decidable.
 \end_layout
 
 \begin_layout Standard
-The surface system has niether of these properties
+The surface system has neither of these properties
 \begin_inset Foot
 status open
 
@@ -14226,7 +14068,8 @@ Logical Unsoundness
 
 \begin_layout Standard
 Operationally, logical unsoundness will present in the system as non-termination.
- Non-termination seems not to matter in programming practice.
+ However non-termination seems not to matter for programming languages practice
+ in practice.
  For instance, in ML the type 
 \begin_inset Formula $\mathtt{f:Int->Int}$
 \end_inset
@@ -14244,8 +14087,8 @@ Operationally, logical unsoundness will present in the system as non-termination
  logical soundness.
  There will never be a way to include all the terminating computations and
  exclude all the nonterminating computations.
- A tradeoff must be made, and programmers likely care more about computation
- then non-termination.
+ A tradeoff must be made, and programmers likely care more about having
+ all possible computations then preventing non-termination.
  Therefore, logical unsoundness seems suitable for a dependently typed programmi
 ng language.
 \end_layout
@@ -14270,14 +14113,14 @@ While the surface language supports proofs, not every term typed in the
  Terms can still be called proofs as long as the safety of recursion and
  type-in-type are checked externally.
  In this sense, the listed example inequalities are proofs, as they make
- no use of general recursion(so all recursions are well founded) and universes
+ no use of general recursion (so all recursions are well founded) and universes
  are used in a safe way (universe hierarchies could be assigned).
  In an advanced implementation, an automated process could supply warnings
- when constructs are used in a potentially unsafe way.
- Traditional software testing can be used to discover if these warnings
- represent actual proof bugs.
- Even though the type system is not logically sound, type checking eliminates
- a large class of possible mistakes.
+ when constructs are used in potentially unsafe ways.
+ Traditional software testing can be used to discover if there are actual
+ proof bugs.
+ Even though the type system is not logically sound, type checking still
+ eliminates a large class of possible mistakes.
  While it is possible to make a subtle error, it is easier to make an error
  in a paper and pencil proofs, or in typeset latex.
 \end_layout
@@ -14285,10 +14128,10 @@ While the surface language supports proofs, not every term typed in the
 \begin_layout Standard
 Finally by separating non-termination concerns from the core of the theory
  this architecture is resilient to change.
- If the termination checker is updated in Coq, there is some chance a older
- proof script will not longer type check.
- With the architecture proposed here code will always have the same static
- and dynamic behavour, though some warnings might appear or disappear.
+ If the termination checker is updated in Coq, there is some chance older
+ proof scripts will no longer type check.
+ With the architecture proposed here, code will always have the same static
+ and dynamic behavior, though some warnings might appear or disappear.
 \end_layout
 
 \begin_layout Subsection
@@ -14300,7 +14143,7 @@ Given a thunk
 \begin_inset Formula $f:Unit$
 \end_inset
 
- defined in pcf, it can be encoded into the surface system as a thunk 
+ defined in PCF, it can be encoded into the surface system as a thunk 
 \begin_inset Formula $f':Unit_{c}$
 \end_inset
 
@@ -14340,31 +14183,31 @@ Given a thunk
 \begin_inset Formula $f$
 \end_inset
 
- halts
+ halts.
 \end_layout
 
 \begin_layout Standard
 If there is a procedure to decide type checking we can decide exactly when
- any pcf function halts.
+ any PCF function halts.
  Since checking if a PCF function halts is undecidable, type checking here
  is undecidable.
 \end_layout
 
 \begin_layout Standard
 Again this the root of the problem is related to the non-termination that
- results by allowing Turing complete computations, which is apparently necessary
- for a realistic programing language.
+ results by allowing Turing complete computations, which are apparently
+ necessary for a realistic programing language.
 \end_layout
 
 \begin_layout Standard
 Luckily undecidability of type checking is not as bad as it sounds for several
  reasons.
- First, the pathological terms that cause normalization are rarely created
- on purpose.
+ First, the pathological terms that cause non-terminating conversion are
+ rarely created on purpose.
  In the bidirectional system, conversion checks will only happen at limited
  positions, ant it is possible to use a counter to warn or give errors at
  code positions that do not convert because normalization takes too long.
- Heuristic methods of normalization seem to work well enough in practice
+ Heuristic methods of conversion chcking seem to work well enough in practice
  even without a counter.
  It is also possible to embed proofs of conversion directly into the syntax
  as in
@@ -14383,9 +14226,9 @@ Many dependent type systems, such as Agda, Coq, and Lean, aspire to decidable
  type checking.
  However these systems allow extremely fast growing functions to be encoded
  (such as Ackerman's function).
- This large function can generate a large index that can be used to check
- some concrete but unpredictable property, (how many Turing machines whose
- code is smaller then 
+ A fast growing function can generate a very large index that can be used
+ to check some concrete but unpredictable property, (how many Turing machines
+ whose code is smaller then 
 \begin_inset Formula $n$
 \end_inset
 
@@ -14442,7 +14285,8 @@ apparently even the grammar of C++ is undecidable
 
 , Scala, and Rust undecidable).
  Unless type features are considered very carefully, they can often create
- undecidable type checking (Java generics, C++ templates, Scala implicates
+ undecidable type checking (Java generics, C++ templates, Scala implicit
+ parameters
 \begin_inset Foot
 status collapsed
 
@@ -14454,24 +14298,34 @@ without a maximum search depth
 
  and OCaml modules, make type checking undecidable in those languages respective
 ly).
- Haskell may be the most popular static typed language with decidable type
- checking (though GHC compiler flags that make type checking undecidable
- are very popular).
+ Haskell may be the most popular statically typed language with decidable
+ type checking (though GHC compiler flags that make type checking undecidable
+ are popular).
  Even the Hindley-Milner type checking algorithm that underlies Haskell
- and ML, has a double exponential complexity, which under normal circumstances
- would be considered intractable.
+ and ML, has a worst case double exponential complexity, which under normal
+ circumstances would be considered intractable.
 \end_layout
 
 \begin_layout Standard
-In practice these theoretical concerns are not born out since the worst
- that can happen is the type checking can time-out in the compilation process.
+In practice these theoretical concerns are not born out since programers
+ are not giving the compiler 
+\begin_inset Quotes eld
+\end_inset
+
+worst case
+\begin_inset Quotes erd
+\end_inset
+
+ code.
+ Even if they did all that can happen is the type checking will time-out
+ in the compilation process.
  When this happens programmers can fix their code, modify or remove macros,
  or add typing annotations.
  Programers in conventional languages are already entrusted with almost
  unlimited power to cause harm, programs regularly delete files, read and
  modify sensitive information, and send emails (some of these are even possible
  from within the language's macro systems).
- Relatively speaking, undecidable type checking is not an overwhelming concern.
+ Relatively speaking, undecidable type checking is not the biggest concern.
 \end_layout
 
 \begin_layout Standard
@@ -14512,7 +14366,7 @@ There may, indeed, be other applications of the system than its use as a
 \end_inset
 
 .
- In the 1970s, Martin-Löf proposed a system with Type-in-Type that was shown
+ In the 1970s, Martin-Löf proposed a system with type-in-type that was shown
  logically unsound by Girard (as described in the introduction in 
 \begin_inset CommandInset citation
 LatexCommand cite
@@ -14523,7 +14377,8 @@ literal "false"
 
 ).
  In the 1980s, Cardelli explored the domain semantics of a system with general
- recursive dependent functions and Type-in-Type
+ recursive dependent functions and type-in-type, and produced more good
+ examples 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "cardelli1986polymorphic"
@@ -14532,11 +14387,12 @@ literal "false"
 \end_inset
 
 .
+ 
 \end_layout
 
 \begin_layout Standard
 The first progress and preservation style proof of type soundness for a
- language with general recursive dependent functions and Type-in-Type that
+ language with general recursive dependent functions and type-in-type that
  I am aware of comes form the Trellys Project 
 \begin_inset CommandInset citation
 LatexCommand cite
@@ -14548,8 +14404,8 @@ literal "false"
 .
  At the time their language had several additional features not included
  in the surface language.
- Additionally, the surface language uses a simpler notion of equality resulting
- in an arguably simpler proof of type soundness.
+ Additionally, the surface language uses a simpler notion of definitional
+ equality resulting in a simpler proof of type soundness.
  Later work in the Trellys Project
 \begin_inset CommandInset citation
 LatexCommand cite
@@ -14571,7 +14427,8 @@ status open
 \end_inset
 
  .
- In general, the base language has been deeply informed by the Trellys project
+ In general, the surface language has been deeply informed by the Trellys
+ project
 \begin_inset CommandInset citation
 LatexCommand cite
 key "sjoberg2012irrelevance"
@@ -14667,7 +14524,7 @@ literal "false"
 
 .
  Coquand implemented an early bidirectional algorithm to type-check a language
- with Type-in-Type
+ with type-in-type
 \begin_inset CommandInset citation
 LatexCommand cite
 key "COQUAND1996167"
@@ -14684,8 +14541,8 @@ literal "false"
 
 \end_inset
 
- is a Haskell like language that combined dependent types with Type-in-Type,
- data and non-termination.
+ is a Haskell like language that combines dependent types with type-in-type
+ and non-termination.
  Agda supports general recursion and type-in-type with compiler flags.
  Idris supports similar 
 \begin_inset Quotes eld
@@ -14884,12 +14741,34 @@ status open
 \end_layout
 
 \begin_layout Standard
-Pure Type Systems (PTS) generalize the lambda cube to allow any number of
- type universe with any forms of dependency.
+Pure Type Systems (PTS)
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+previously called 
+\begin_inset Quotes eld
+\end_inset
+
+Generalized Type Systems
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+ generalize the lambda cube to allow any number of type universe with any
+ forms of dependency.
  Notably this includes the system with one type universe where type-in-type.
  Universe hierarchies can also be embedded in a PTS.
  The system described in this chapter is almost a PTS, except that it contains
  unrestricted recursion and the method of type annotation is different.
+ All pure type systems such as System F and the Calculus of Constructions
+ have corresponding terms in the the Surface Language, by renaming their
+ type universes into the surface language type universe.
+ 
 \end_layout
 
 \begin_layout Standard
@@ -15014,14 +14893,6 @@ options "alpha"
 
 \begin_layout Section
 TODO
-\end_layout
-
-\begin_layout Itemize
-remove location date from this section entirely!
-\end_layout
-
-\begin_layout Itemize
-fully esperate ctx well formedness judgments
 \end_layout
 
 \begin_layout Itemize

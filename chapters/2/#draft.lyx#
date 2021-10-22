@@ -73,13 +73,13 @@
 \shortcut idx
 \color #008000
 \end_index
-\leftmargin 1cm
-\topmargin 1cm
-\rightmargin 1cm
-\bottommargin 1cm
-\headheight 1cm
-\headsep 1cm
-\footskip 1cm
+\leftmargin 2cm
+\topmargin 2cm
+\rightmargin 2cm
+\bottommargin 2cm
+\headheight 2cm
+\headsep 2cm
+\footskip 2cm
 \secnumdepth 3
 \tocdepth 3
 \paragraph_separation indent
@@ -128,20 +128,6 @@ status open
 
 \begin_layout Plain Layout
 
-%% don't love this intro
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
 % overview, why
 \end_layout
 
@@ -155,34 +141,14 @@ In an ideal world programmers would write perfect programs whose correctness
  is fully proven.
  The 
 \series bold
-Surface Language
+surface language
 \series default
  presented in this chapter allows for this ideal, but difficult, workflow.
- Programmers should 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-"
-\end_layout
-
-\end_inset
-
-think
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-"
-\end_layout
-
-\end_inset
-
- in the surface language, and the machinery of later sections should reinforce
- an understanding of the surface type system, while being transparent to
- the programmer.
+ Hopefully and the machinery of later chapters will be transparent to the
+ programers that use the full system.
+ They should only need to think about the surface language.
+ Everything presented in later chapters is designed to reinforce an understandin
+g of the surface type system.
 \end_layout
 
 \begin_layout Standard
@@ -200,9 +166,9 @@ status open
 \end_layout
 
 \begin_layout Standard
-The surface language presented in this chapter is a minimal dependent type
- system.
- It will serve both as foundation for further chapters.
+The surface language is a minimal dependent type system.
+ It will serve both as foundation for further chapters and a self contained
+ technical introduction to dependent types.
  As much as possible, the syntax use's standard modern notation 
 \begin_inset Foot
 status open
@@ -245,18 +211,7 @@ status open
 
 .
  The semantics are intended to be as simple as possible and compatible with
- other well studied intentional dependent type theories 
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-most terms in this chapter could be translated into the calculus of construction
-s, or other pure type systems.
-\end_layout
-
-\end_inset
-
-.
+ other well studied intentional dependent type theories.
  
 \end_layout
 
@@ -275,12 +230,12 @@ status open
 \end_layout
 
 \begin_layout Standard
-I deviate from a standard dependent type theory to include features to ease
- programming at the expense of correctness.
+The surface language deviates from a standard dependent type theory to include
+ features to ease programming at the expense of logical correctness.
  Specifically the language allows general recursion, since general recursion
  is useful for general purpose functional programming.
- type-in-type is also supported since it simplifies the system for programmers,
- and makes the meta-theory easier when logical soundness has been abandoned.
+ Type-in-type is also supported since it simplifies the system for programmers,
+ and makes the meta-theory slightly easier.
  Despite this, type soundness is a achievable and a practical type checking
  algorithm is given.
 \end_layout
@@ -1163,61 +1118,6 @@ noprefix "false"
 \end_inset
 
 .
-\end_layout
-
-\begin_layout Standard
-The surface language subsumes or encodes many classic typed lambda calculi.
- For instance all pure type systems
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-previously called 
-\begin_inset Quotes eld
-\end_inset
-
-Generalized Type Systems
-\begin_inset Quotes erd
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
- such as System F and the Calculus of Constructions have corresponding terms
- in the the Surface Language 
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-by renaming their type universes into the Surface type universe
-\end_layout
-
-\end_inset
-
-.
- Additionally the examples from 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "cardelli1986polymorphic"
-literal "false"
-
-\end_inset
-
- where Cardelli has studied a similar system, can be expressed here.
- 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-%TODO move this into the end note?
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Standard
@@ -14466,7 +14366,7 @@ There may, indeed, be other applications of the system than its use as a
 \end_inset
 
 .
- In the 1970s, Martin-Löf proposed a system with Type-in-Type that was shown
+ In the 1970s, Martin-Löf proposed a system with type-in-type that was shown
  logically unsound by Girard (as described in the introduction in 
 \begin_inset CommandInset citation
 LatexCommand cite
@@ -14477,7 +14377,8 @@ literal "false"
 
 ).
  In the 1980s, Cardelli explored the domain semantics of a system with general
- recursive dependent functions and Type-in-Type
+ recursive dependent functions and type-in-type, and produced more good
+ examples 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "cardelli1986polymorphic"
@@ -14486,11 +14387,12 @@ literal "false"
 \end_inset
 
 .
+ 
 \end_layout
 
 \begin_layout Standard
 The first progress and preservation style proof of type soundness for a
- language with general recursive dependent functions and Type-in-Type that
+ language with general recursive dependent functions and type-in-type that
  I am aware of comes form the Trellys Project 
 \begin_inset CommandInset citation
 LatexCommand cite
@@ -14502,8 +14404,8 @@ literal "false"
 .
  At the time their language had several additional features not included
  in the surface language.
- Additionally, the surface language uses a simpler notion of equality resulting
- in an arguably simpler proof of type soundness.
+ Additionally, the surface language uses a simpler notion of definitional
+ equality resulting in a simpler proof of type soundness.
  Later work in the Trellys Project
 \begin_inset CommandInset citation
 LatexCommand cite
@@ -14525,7 +14427,8 @@ status open
 \end_inset
 
  .
- In general, the base language has been deeply informed by the Trellys project
+ In general, the surface language has been deeply informed by the Trellys
+ project
 \begin_inset CommandInset citation
 LatexCommand cite
 key "sjoberg2012irrelevance"
@@ -14621,7 +14524,7 @@ literal "false"
 
 .
  Coquand implemented an early bidirectional algorithm to type-check a language
- with Type-in-Type
+ with type-in-type
 \begin_inset CommandInset citation
 LatexCommand cite
 key "COQUAND1996167"
@@ -14638,8 +14541,8 @@ literal "false"
 
 \end_inset
 
- is a Haskell like language that combined dependent types with Type-in-Type,
- data and non-termination.
+ is a Haskell like language that combines dependent types with type-in-type
+ and non-termination.
  Agda supports general recursion and type-in-type with compiler flags.
  Idris supports similar 
 \begin_inset Quotes eld
@@ -14838,12 +14741,34 @@ status open
 \end_layout
 
 \begin_layout Standard
-Pure Type Systems (PTS) generalize the lambda cube to allow any number of
- type universe with any forms of dependency.
+Pure Type Systems (PTS)
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+previously called 
+\begin_inset Quotes eld
+\end_inset
+
+Generalized Type Systems
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+ generalize the lambda cube to allow any number of type universe with any
+ forms of dependency.
  Notably this includes the system with one type universe where type-in-type.
  Universe hierarchies can also be embedded in a PTS.
  The system described in this chapter is almost a PTS, except that it contains
  unrestricted recursion and the method of type annotation is different.
+ All pure type systems such as System F and the Calculus of Constructions
+ have corresponding terms in the the Surface Language, by renaming their
+ type universes into the surface language type universe.
+ 
 \end_layout
 
 \begin_layout Standard
@@ -14968,14 +14893,6 @@ options "alpha"
 
 \begin_layout Section
 TODO
-\end_layout
-
-\begin_layout Itemize
-remove location date from this section entirely!
-\end_layout
-
-\begin_layout Itemize
-fully esperate ctx well formedness judgments
 \end_layout
 
 \begin_layout Itemize
