@@ -111,7 +111,7 @@ cong = λ A B f a a' z C → z (λ z₁ → C (f z₁))
 
 
 case : (n : Nat) -> (X : *) -> X -> (Nat -> X) -> X
-case = λ n X x x₁ → ? 
+case = λ n X x x₁ → {!b!} 
 
 dcase : (n : Nat) -> (P : Nat -> *) -> P zero -> ((n : Nat) -> P n -> P (suc n)) -> P n
 dcase = {!!}
