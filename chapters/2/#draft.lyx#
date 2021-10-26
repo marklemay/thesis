@@ -4252,7 +4252,7 @@ status open
 
 \begin_inset Formula 
 \[
-\frac{\,}{m::M\Rrightarrow m'}\,\textrm{\Rrightarrow-::-red}
+\frac{m\Rrightarrow m'}{m::M\Rrightarrow m'}\,\textrm{\Rrightarrow-::-red}
 \]
 
 \end_inset

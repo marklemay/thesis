@@ -128,20 +128,6 @@ status open
 
 \begin_layout Plain Layout
 
-%% don't love this intro
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
 % overview, why
 \end_layout
 
@@ -155,34 +141,14 @@ In an ideal world programmers would write perfect programs whose correctness
  is fully proven.
  The 
 \series bold
-Surface Language
+surface language
 \series default
  presented in this chapter allows for this ideal, but difficult, workflow.
- Programmers should 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-"
-\end_layout
-
-\end_inset
-
-think
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-"
-\end_layout
-
-\end_inset
-
- in the surface language, and the machinery of later sections should reinforce
- an understanding of the surface type system, while being transparent to
- the programmer.
+ Hopefully and the machinery of later chapters will be transparent to the
+ programers that use the full system.
+ They should only need to think about the surface language.
+ Everything presented in later chapters is designed to reinforce an understandin
+g of the surface type system.
 \end_layout
 
 \begin_layout Standard
@@ -200,9 +166,9 @@ status open
 \end_layout
 
 \begin_layout Standard
-The surface language presented in this chapter is a minimal dependent type
- system.
- It will serve both as foundation for further chapters.
+The surface language is a minimal dependent type system.
+ It will serve both as foundation for further chapters and a self contained
+ technical introduction to dependent types.
  As much as possible, the syntax use's standard modern notation 
 \begin_inset Foot
 status open
@@ -264,12 +230,12 @@ status open
 \end_layout
 
 \begin_layout Standard
-I deviate from a standard dependent type theory to include features to ease
- programming at the expense of correctness.
+The surface language deviates from a standard dependent type theory to include
+ features to ease programming at the expense of logical correctness.
  Specifically the language allows general recursion, since general recursion
  is useful for general purpose functional programming.
- type-in-type is also supported since it simplifies the system for programmers,
- and makes the meta-theory easier when logical soundness has been abandoned.
+ Type-in-type is also supported since it simplifies the system for programmers,
+ and makes the meta-theory slightly easier.
  Despite this, type soundness is a achievable and a practical type checking
  algorithm is given.
 \end_layout
