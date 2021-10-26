@@ -84,7 +84,8 @@ Introduction
 \end_layout
 
 \begin_layout Standard
-We can now motivate the most fundamental problems with dependent type systems.
+We can now motivate one of the most fundamental problems with dependent
+ type systems.
  Definitional equalities pervasive and unintuitive.
 \end_layout
 
@@ -1359,6 +1360,127 @@ status open
 
 \end_layout
 
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% TODO: Revise < ...
+ change && to and, or change the example to +
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+%% walkthrough
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+We deal with higher order functions by distributing function casts around
+ applications.
+ If an application happens to a cast of function type, the argument and
+ body cast is separated and the argument cast is swapped.
+ For instance in 
+\begin_inset Formula 
+\begin{align*}
+\, & \left(\left(\lambda x\Rightarrow x\&\&x\right)::_{Bool\rightarrow Bool,\ell,.}Nat\rightarrow Nat\right)7\\
+\rightsquigarrow & \left(\left(\lambda x\Rightarrow x\&\&x\right)\left(7::_{Nat,\ell,.arg}Bool\right)\right)::_{Bool,\ell,.bod[7]}Nat\\
+\rightsquigarrow & \left(\left(7::_{Nat,\ell,.arg}Bool\right)\&\&\left(7::_{Nat,\ell,.arg}Bool\right)\right)\\
+ & ::_{Bool,\ell,.bod[7]}Nat
+\end{align*}
+
+\end_inset
+
+if evaluation gets stuck on && and we can blame the argument of the cast
+ for equating 
+\begin_inset Formula $Nat$
+\end_inset
+
+ and 
+\begin_inset Formula $Bool$
+\end_inset
+
+.
+ This is similar to how blame parity is swapped in higher order contract
+ systems 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "10.1145/581478.581484"
+literal "false"
+
+\end_inset
+
+ and gradual type systems 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "10.1007/978-3-642-00590-9_1"
+literal "false"
+
+\end_inset
+
+.
+ The body observation records the argument the function is called with.
+ For instance in the 
+\begin_inset Formula $.bod[7]$
+\end_inset
+
+ observation.
+ In a dependently typed function the exact argument of use may be important
+ to give a good error.
+ Because casts can be embedded inside of casts, types themselves need to
+ normalize and casts need to simplify.
+ Since our system has one universe of types, type casts only need to simplify
+ themselves when a term of type 
+\begin_inset Formula $\star$
+\end_inset
+
+ is cast to 
+\begin_inset Formula $\star$
+\end_inset
+
+.
+ For instance, 
+\begin_inset Formula 
+\begin{align*}
+\, & \left(\left(\lambda x\Rightarrow x\right)::_{\left(Bool\rightarrow Bool\right)::_{\star,\ell,.arg}\star,\ell,.}Nat\rightarrow Nat\right)7\\
+\rightsquigarrow & \left(\left(\lambda x\Rightarrow x\right)::_{Bool\rightarrow Bool}Nat\rightarrow Nat\right)7\\
+\rightsquigarrow & \left(\left(\lambda x\Rightarrow x\right)\left(7::_{Nat,\ell,.arg}Bool\right)\right)::_{Bool,\ell,.bod[7]}Nat\\
+\rightsquigarrow & \left(\left(7::_{Nat,\ell,.arg}Bool\right)\right)::_{Bool,\ell,.bod[7]}Nat
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% TODO: > 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsection
 Pretending 
 \begin_inset Formula $\star=_{\star}\perp$
@@ -1688,20 +1810,9 @@ status open
 \end_inset
 
 
-\end_layout
-
-\begin_layout Plain Layout
 \begin_inset Formula 
 \[
 \frac{H\vdash a:A\quad H\vdash A:\star\quad H\vdash B:\star}{H\vdash a::_{A,\ensuremath{\ell},o}B\::\:B}\operatorname{cast-::}
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-\frac{H\vdash a:A\quad H\vdash B:\star}{H\vdash a::_{A,\ensuremath{\ell},o}B\::\:B}\operatorname{cast-::}
 \]
 
 \end_inset
@@ -2034,7 +2145,7 @@ Preservation
 
 \begin_layout Standard
 \begin_inset Tabular
-<lyxtabular version="3" rows="49" columns="4">
+<lyxtabular version="3" rows="51" columns="4">
 <features tabularvalignment="middle">
 <column alignment="left" valignment="top">
 <column alignment="left" valignment="top">
@@ -2398,6 +2509,10 @@ by induction
 \begin_inset Text
 
 \begin_layout Plain Layout
+well formed 
+\begin_inset Formula $\ell,o$
+\end_inset
+
 
 \end_layout
 
@@ -2532,6 +2647,10 @@ directly by induction
 \end_inset
 
 , 
+\begin_inset Formula $H\vdash A_{2}:\star$
+\end_inset
+
+, 
 \begin_inset Formula $a\Rrightarrow a'\quad A_{1}\Rrightarrow A_{1}'\quad A_{2}\Rrightarrow A_{2}'$
 \end_inset
 
@@ -2636,6 +2755,47 @@ by induction
 </cell>
 </row>
 <row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $H\vdash A_{2}':\star$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+by induction
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
 <cell alignment="left" valignment="top" usebox="none">
 \begin_inset Text
 
@@ -2658,7 +2818,7 @@ by induction
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $H\vdash a'::A_{1}'\,:\,A_{1}'$
+\begin_inset Formula $H\vdash a'::_{A_{1}',\ell,o}A_{2}'\,:\,A_{2}'$
 \end_inset
 
 
@@ -2702,7 +2862,7 @@ by induction
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $H\vdash a'::A_{1}'\,:\,A_{1}$
+\begin_inset Formula $H\vdash a'::_{A_{1}',\ell,o}A_{2}'\,:\,A_{2}$
 \end_inset
 
 
@@ -4053,6 +4213,50 @@ by induction
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\left(x:A_{1}\right)\rightarrow B_{1}\Rrightarrow\left(x:A_{1}'\right)\rightarrow B_{1}'$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\textrm{\Rrightarrow-fun-ty}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
 \begin_inset Formula $H\vdash b':\left(x:A_{1}'\right)\rightarrow B_{1}'$
 \end_inset
 
@@ -4068,7 +4272,7 @@ by induction
 \begin_inset Formula $\operatorname{cast-conv}$
 \end_inset
 
-...
+
 \end_layout
 
 \end_inset
@@ -4581,127 +4785,6 @@ noprefix "false"
 \end_layout
 
 \begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-% TODO: Move to exampes < ...
- change && to and, or change the example to +
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-%% walkthrough
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-
-We deal with higher order functions by distributing function casts around
- applications.
- If an application happens to a cast of function type, the argument and
- body cast is separated and the argument cast is swapped.
- For instance in 
-\begin_inset Formula 
-\begin{align*}
-\, & \left(\left(\lambda x\Rightarrow x\&\&x\right)::_{Bool\rightarrow Bool,\ell,.}Nat\rightarrow Nat\right)7\\
-\rightsquigarrow & \left(\left(\lambda x\Rightarrow x\&\&x\right)\left(7::_{Nat,\ell,.arg}Bool\right)\right)::_{Bool,\ell,.bod[7]}Nat\\
-\rightsquigarrow & \left(\left(7::_{Nat,\ell,.arg}Bool\right)\&\&\left(7::_{Nat,\ell,.arg}Bool\right)\right)\\
- & ::_{Bool,\ell,.bod[7]}Nat
-\end{align*}
-
-\end_inset
-
-if evaluation gets stuck on && and we can blame the argument of the cast
- for equating 
-\begin_inset Formula $Nat$
-\end_inset
-
- and 
-\begin_inset Formula $Bool$
-\end_inset
-
-.
- This is similar to how blame parity is swapped in higher order contract
- systems 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "10.1145/581478.581484"
-literal "false"
-
-\end_inset
-
- and gradual type systems 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "10.1007/978-3-642-00590-9_1"
-literal "false"
-
-\end_inset
-
-.
- The body observation records the argument the function is called with.
- For instance in the 
-\begin_inset Formula $.bod[7]$
-\end_inset
-
- observation.
- In a dependently typed function the exact argument of use may be important
- to give a good error.
- Because casts can be embedded inside of casts, types themselves need to
- normalize and casts need to simplify.
- Since our system has one universe of types, type casts only need to simplify
- themselves when a term of type 
-\begin_inset Formula $\star$
-\end_inset
-
- is cast to 
-\begin_inset Formula $\star$
-\end_inset
-
-.
- For instance, 
-\begin_inset Formula 
-\begin{align*}
-\, & \left(\left(\lambda x\Rightarrow x\right)::_{\left(Bool\rightarrow Bool\right)::_{\star,\ell,.arg}\star,\ell,.}Nat\rightarrow Nat\right)7\\
-\rightsquigarrow & \left(\left(\lambda x\Rightarrow x\right)::_{Bool\rightarrow Bool}Nat\rightarrow Nat\right)7\\
-\rightsquigarrow & \left(\left(\lambda x\Rightarrow x\right)\left(7::_{Nat,\ell,.arg}Bool\right)\right)::_{Bool,\ell,.bod[7]}Nat\\
-\rightsquigarrow & \left(\left(7::_{Nat,\ell,.arg}Bool\right)\right)::_{Bool,\ell,.bod[7]}Nat
-\end{align*}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-% TODO: > Move to exampes
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
 \begin_inset Float figure
 wide false
 sideways false
@@ -4861,6 +4944,1442 @@ status open
 \end_layout
 
 \begin_layout Subsubsection
+Canonical forms
+\end_layout
+
+\begin_layout Standard
+As in chapter 2 we will need technical lemmas that determine the form of
+ a value of a type in the empty context.
+ However, canonical function values look different because they must account
+ for blame and the ability to get stuck.
+\end_layout
+
+\begin_layout Standard
+If 
+\begin_inset Formula $\vdash a\,:\,A$
+\end_inset
+
+ , 
+\begin_inset Formula $a\,\textbf{Val}$
+\end_inset
+
+, and 
+\begin_inset Formula $A\equiv\star$
+\end_inset
+
+ then either
+\end_layout
+
+\begin_layout Itemize
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\begin_inset Formula $a=\star$
+\end_inset
+
+ ,
+\end_layout
+
+\begin_layout Itemize
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+or there exists 
+\begin_inset Formula $C$
+\end_inset
+
+, 
+\begin_inset Formula $B$
+\end_inset
+
+, such that 
+\begin_inset Formula $a=\left(x:C\right)\rightarrow B$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+by induction on the cast derivation
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{x:A\in H}{H\vdash x\,:\,A}\operatorname{cast-var}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{H\vdash a:A\quad H\vdash A:\star\quad H\vdash B:\star}{H\vdash a::_{A,\ensuremath{\ell},o}B\::\:B}\operatorname{cast-::}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{H\vdash}{H\vdash\star:\,\star}\operatorname{cast-\star}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{H\vdash A:\star\quad H,x:A\vdash B:\star}{H\vdash\left(x:A\right)\rightarrow B\,:\,\star}\operatorname{cast-fun-ty}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{H,f:\left(x:A\right)\rightarrow B,x:A\vdash b:B}{H\vdash\mathsf{fun}\,f\,x\Rightarrow b\,:\,\left(x:A\right)\rightarrow B}\operatorname{cast-fun}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{H\vdash b:\left(x:A\right)\rightarrow B\quad H\vdash a:A}{H\vdash b\,a\,:\,B\left[x\coloneqq a\right]}\operatorname{cast-fun-app}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{H\vdash a:A\quad H\vdash A\equiv A':\star}{H\vdash a:A'}\operatorname{cast-conv}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="13" columns="3">
+<features tabularvalignment="middle">
+<column alignment="left" valignment="top">
+<column alignment="left" valignment="top">
+<column alignment="left" valignment="top">
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\operatorname{cast-\star}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\vdash\star:\star$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+follows since 
+\begin_inset Formula $a=\star$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\operatorname{cast-fun-ty}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\vdash\left(x:A\right)\rightarrow B\,:\,\star$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+follows since 
+\begin_inset Formula $a=\left(x:A\right)\rightarrow B$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\textrm{ty-conv}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\vdash a:A$
+\end_inset
+
+, 
+\begin_inset Formula $A\equiv A'$
+\end_inset
+
+, 
+\begin_inset Formula $A'\equiv\star$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+which concluded 
+\begin_inset Formula $\vdash a\,:\,A'$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $A'\equiv\star$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+by transitivity, symmetry
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\begin_inset Formula $a=\star$
+\end_inset
+
+ or there exists 
+\begin_inset Formula $C$
+\end_inset
+
+, 
+\begin_inset Formula $B$
+\end_inset
+
+, such that 
+\begin_inset Formula $a=\left(x:C\right)\rightarrow B$
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+by induction
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\operatorname{cast-::}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\vdash a:A_{1}$
+\end_inset
+
+, 
+\begin_inset Formula $\vdash A_{1}:\star$
+\end_inset
+
+, 
+\begin_inset Formula $\vdash A_{2}:\star$
+\end_inset
+
+, 
+\begin_inset Formula $A_{2}\equiv\star$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $a\cancel{=}\star,a\cancel{=}\left(x:C\right)\rightarrow B$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+since it must have been a value by 
+\begin_inset Formula $\operatorname{Val-::}$
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+but 
+\begin_inset Formula $a=\star$
+\end_inset
+
+ or there exists 
+\begin_inset Formula $C$
+\end_inset
+
+, 
+\begin_inset Formula $B$
+\end_inset
+
+, such that 
+\begin_inset Formula $a=\left(x:C\right)\rightarrow B$
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+by induction 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+!
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+so this case was impossible
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\operatorname{cast-fun}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $f:\left(x:A\right)\rightarrow B,x:A\vdash b:B$
+\end_inset
+
+, 
+\begin_inset Formula $\left(x:A\right)\rightarrow B\equiv\star$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\left(x:A\right)\rightarrow B\cancel{\equiv}\star$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+by the stability of 
+\begin_inset Formula $\equiv$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+!
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+so this case was impossible
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+other rules
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+impossible
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+since they do not type values in an empty ctx
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Leading to the corollary,
+\end_layout
+
+\begin_layout Standard
+If 
+\begin_inset Formula $\vdash A:\star$
+\end_inset
+
+, and 
+\begin_inset Formula $A\,\textbf{Val}$
+\end_inset
+
+ then either 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $A=\star$
+\end_inset
+
+ , or there exists 
+\begin_inset Formula $C$
+\end_inset
+
+, 
+\begin_inset Formula $B$
+\end_inset
+
+, such that 
+\begin_inset Formula $A=\left(x:C\right)\rightarrow B$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Likewise
+\end_layout
+
+\begin_layout Standard
+If 
+\begin_inset Formula $\vdash a\,:\,A$
+\end_inset
+
+ , 
+\begin_inset Formula $a\,\textbf{Val}$
+\end_inset
+
+, and 
+\begin_inset Formula $A\equiv\left(x:C\right)\rightarrow B$
+\end_inset
+
+ then either
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $a=\mathsf{fun}\,f\,x\Rightarrow b$
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Itemize
+or 
+\begin_inset Formula $a=d::_{D,\ensuremath{\ell},o}\left(x:C'\right)\rightarrow B'$
+\end_inset
+
+, 
+\begin_inset Formula $d\,\textbf{Val}$
+\end_inset
+
+, 
+\begin_inset Formula $D\,\textbf{Val}$
+\end_inset
+
+, 
+\begin_inset Formula $C'\equiv C$
+\end_inset
+
+, 
+\begin_inset Formula $B'\equiv B$
+\end_inset
+
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% TODO alternatively produce the blame judgment
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+by induction on the cast derivation
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{H\vdash a:A\quad H\vdash B:\star}{H\vdash a::_{A,\ensuremath{\ell},o}B\::\:B}\operatorname{cast-::}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{H\vdash}{H\vdash\star:\,\star}\operatorname{cast-\star}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{H\vdash A:\star\quad H,x:A\vdash B:\star}{H\vdash\left(x:A\right)\rightarrow B\,:\,\star}\operatorname{cast-fun-ty}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{H\vdash a:A\quad H\vdash A\equiv A':\star}{H\vdash a:A'}\operatorname{cast-conv}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\,}{\star\,\textbf{Val}}\operatorname{Val-\star}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{\,}{\left(x:A\right)\rightarrow B\,\textbf{Val}}\operatorname{Val-fun-ty}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{\,}{\mathsf{fun}\,f\,x\Rightarrow b\:\textbf{Val}}\operatorname{Val-fun}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{\begin{array}{c}
+a\:\textbf{Val}\quad A\:\textbf{Val}\quad B\:\textbf{Val}\\
+a\cancel{=}\star\\
+a\cancel{=}\left(x:C\right)\rightarrow C'
+\end{array}}{a::_{A,\ensuremath{\ell}o}B\:\textbf{Val}}\operatorname{Val-::}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="14" columns="3">
+<features tabularvalignment="middle">
+<column alignment="left" valignment="top">
+<column alignment="left" valignment="top">
+<column alignment="left" valignment="top">
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\operatorname{cast-\star}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\vdash\star:\star$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+follows since 
+\begin_inset Formula $a=\star$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\operatorname{cast-fun-ty}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\vdash\left(x:A\right)\rightarrow B\,:\,\star$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+follows since 
+\begin_inset Formula $a=\left(x:A\right)\rightarrow B$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\operatorname{cast-::}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\vdash a:A_{1}$
+\end_inset
+
+, 
+\begin_inset Formula $\vdash A_{1}:\star$
+\end_inset
+
+, 
+\begin_inset Formula $\vdash A_{2}:\star$
+\end_inset
+
+,
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $a\cancel{=}\star,a\cancel{=}\left(x:C\right)\rightarrow B$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+since it must have been a value by 
+\begin_inset Formula $\operatorname{Val-::}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+but 
+\begin_inset Formula $a=\star$
+\end_inset
+
+ or there exists 
+\begin_inset Formula $C$
+\end_inset
+
+, 
+\begin_inset Formula $B$
+\end_inset
+
+, such that 
+\begin_inset Formula $a=\left(x:C\right)\rightarrow B$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+by induction 
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+TODO:Wf?
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+!
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+so the derivation was not typed with 
+\begin_inset Formula $\operatorname{cast-::}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\textrm{ty-conv}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\vdash a:A$
+\end_inset
+
+, 
+\begin_inset Formula $A\equiv A'$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+which concluded 
+\begin_inset Formula $\vdash a\,:\,A'$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $A'\equiv\star$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+by transitivity, symmetry
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\begin_inset Formula $a=\star$
+\end_inset
+
+ or there exists 
+\begin_inset Formula $C$
+\end_inset
+
+, 
+\begin_inset Formula $B$
+\end_inset
+
+, such that 
+\begin_inset Formula $a=\left(x:C\right)\rightarrow B$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+by induction
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+other rules
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+impossible
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+since they do not type values of 
+\begin_inset Formula $\star$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+...
+\end_layout
+
+\begin_layout Subsubsection
 Progress
 \end_layout
 
@@ -4913,7 +6432,7 @@ As usual this follows form induction on the typing derivation
 
 \begin_layout Standard
 \begin_inset Tabular
-<lyxtabular version="3" rows="47" columns="5">
+<lyxtabular version="3" rows="46" columns="5">
 <features tabularvalignment="middle">
 <column alignment="left" valignment="top">
 <column alignment="left" valignment="top">
@@ -5231,6 +6750,10 @@ by induction on
 \end_inset
 
 , 
+\begin_inset Formula $\vdash A:\star$
+\end_inset
+
+, 
 \begin_inset Formula $\vdash B:\star$
 \end_inset
 
@@ -5261,66 +6784,6 @@ by induction on
 \begin_inset Text
 
 \begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\vdash A:\star$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-by reg
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-TODO (can be weak regularity)
-\end_layout
-
-\end_inset
-
 
 \end_layout
 
@@ -5823,16 +7286,6 @@ by canonical forms of
 \end_inset
 
 
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-TODO
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \end_inset
@@ -5888,16 +7341,6 @@ TODO
 \begin_layout Plain Layout
 by canonical forms of 
 \begin_inset Formula $\star$
-\end_inset
-
-
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-TODO
-\end_layout
-
 \end_inset
 
 
@@ -7253,16 +8696,6 @@ by canonical forms of
 \end_inset
 
 
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-TODO
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \end_inset
@@ -7819,6 +9252,20 @@ status open
 \begin_layout Plain Layout
 
 % TODO inferablility of inner cast
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% TODO regularity encoding, along with the cast
 \end_layout
 
 \end_inset
