@@ -11697,9 +11697,12 @@ finished
  or that a further step can be taken.
  For non-dependently typed programming languages, these steps are easy to
  characterize, but for dependent types there are issues.
- If we characterize the parstep relation as the computation used in progress,
- the lemma holds in a meaningless way since we can always take a reflexive
- step.
+ If we characterize the 
+\begin_inset Formula $\Rrightarrow$
+\end_inset
+
+ relation as the computation used in progress, the lemma holds in a meaningless
+ way since we can always take a reflexive step.
  Thus we need a more realistic computation relation, ideally one that is
  not reflexive, is deterministic and that is a sub relation of 
 \begin_inset Formula $\Rrightarrow_{*}$
@@ -11707,8 +11710,8 @@ finished
 
 .
  We can choose a Call-by-value relation since this meets all the properties
- required, and is a standard execution strategy, that might match an actual
- implementation.
+ required, and is a standard execution strategy, that reflects actual implementa
+tions.
  
 \end_layout
 
@@ -12035,7 +12038,7 @@ status open
 \end_layout
 
 \begin_layout Standard
-the following rules are admissible
+the following rule is admissible
 \end_layout
 
 \begin_layout Standard
@@ -12058,7 +12061,7 @@ Thus
 \end_layout
 
 \begin_layout Subsubsection
-Canonical forms lemma
+Canonical forms
 \end_layout
 
 \begin_layout Standard
@@ -12474,6 +12477,21 @@ If
 \end_inset
 
 .
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+%TODO not that by only considering values, we can aviod the problematic
+ application case
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsubsection

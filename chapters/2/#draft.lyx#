@@ -11707,8 +11707,8 @@ finished
 
 .
  We can choose a Call-by-value relation since this meets all the properties
- required, and is a standard execution strategy, that might match an actual
- implementation.
+ required, and is a standard execution strategy, that reflacts actual implementa
+tions.
  
 \end_layout
 
@@ -12035,7 +12035,7 @@ status open
 \end_layout
 
 \begin_layout Standard
-the following rules are admissible
+the following rule is admissible
 \end_layout
 
 \begin_layout Standard
@@ -12064,6 +12064,18 @@ Canonical forms lemma
 \begin_layout Standard
 We will need a technical lemma that determines the form of a value of function
  type in an empty context
+\end_layout
+
+\begin_layout Standard
+If 
+\begin_inset Formula $\vdash v\,:\,P$
+\end_inset
+
+ and 
+\begin_inset Formula $P\equiv\left(x:N\right)\rightarrow M$
+\end_inset
+
+ then 
 \family roman
 \series medium
 \shape up
@@ -12076,7 +12088,407 @@ We will need a technical lemma that determines the form of a value of function
 \uwave off
 \noun off
 \color none
-!
+
+\begin_inset Formula $v=\mathsf{fun}\,f\,x\Rightarrow m$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+by induction on the typing derivation
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="9" columns="3">
+<features tabularvalignment="middle">
+<column alignment="left" valignment="top">
+<column alignment="left" valignment="top">
+<column alignment="left" valignment="top">
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\textrm{ty-fun}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\vdash\mathsf{fun}\,f\,x\Rightarrow m\,:\,\left(x:N\right)\rightarrow M$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+follows immediately
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\textrm{ty-conv}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\vdash v\,:\,P$
+\end_inset
+
+, 
+\begin_inset Formula $\vdash v\,:\,P'$
+\end_inset
+
+, 
+\begin_inset Formula $P\equiv P'$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $P'\equiv\left(x:N\right)\rightarrow M$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+by transitivity, symmetry
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\begin_inset Formula $v=\mathsf{fun}\,f\,x\Rightarrow m$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+by induction
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\textrm{ty-}\star$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\vdash\star\,:\,\star$
+\end_inset
+
+, 
+\begin_inset Formula $\star\equiv\left(x:N\right)\rightarrow M$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\star\cancel{\equiv}\left(x:N\right)\rightarrow M$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+by the stability of 
+\begin_inset Formula $\equiv$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\textrm{ty-fun-ty}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\vdash\left(x:M\right)\rightarrow N\,:\,\star$
+\end_inset
+
+, 
+\begin_inset Formula $\star\equiv\left(x:N\right)\rightarrow M$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\star\cancel{\equiv}\left(x:N\right)\rightarrow M$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+by the stability of 
+\begin_inset Formula $\equiv$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+other rules
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+impossible
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+since they do not type values
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+as a corollary,
+\end_layout
+
+\begin_layout Standard
+If 
+\begin_inset Formula $\vdash v\,:\,\left(x:N\right)\rightarrow M$
+\end_inset
+
+ then 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $v=\mathsf{fun}\,f\,x\Rightarrow m$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+%TODO not that by only considering values, we can aviod the problematic
+ application case
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsubsection
@@ -13511,7 +13923,7 @@ literal "false"
 \end_inset
 
 .
- But it would be difficult for the system describe here since type annotations
+ But it would be difficult for the system described here since type annotations
  evaluate away, making preservation difficult.
  Alternatively we can show that a bidirectional typing judgment implies
  a type assignment system typing judgment.

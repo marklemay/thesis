@@ -1980,20 +1980,6 @@ status open
 \end_layout
 
 \begin_layout Plain Layout
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-% TODO: in the .bod[a] obervation is 'a' raw or cast in coq 
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
 \begin_inset Formula 
 \[
 \frac{a\Rrightarrow a'}{a::_{\star,\ensuremath{\ell},o}\star\Rrightarrow a'}\,\textrm{\Rrightarrow-::-red}
@@ -2015,7 +2001,7 @@ status open
 
 \begin_inset Formula 
 \[
-\frac{a\Rrightarrow a'\quad A_{1}\Rrightarrow A_{1}'\quad A_{2}\Rrightarrow A_{2}'}{a::_{A_{1},\ensuremath{\ell},o}A_{2}\Rrightarrow a'::_{A_{1}',\ensuremath{\ell},o}A_{2}'}\,\textrm{\Rrightarrow-::}
+\frac{a\Rrightarrow a'\quad A_{1}\Rrightarrow A_{1}'\quad A_{2}\Rrightarrow A_{2}'\quad o\Rrightarrow o'}{a::_{A_{1},\ensuremath{\ell},o}A_{2}\Rrightarrow a'::_{A_{1}',\ensuremath{\ell},o'}A_{2}'}\,\textrm{\Rrightarrow-::}
 \]
 
 \end_inset
@@ -2070,6 +2056,39 @@ status open
 \begin_layout Plain Layout
 \begin_inset Formula 
 \[
+\frac{\,}{.\Rrightarrow.}\,\textrm{\Rrightarrow-obs-emp}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+\frac{o\Rrightarrow o'}{o.arg\Rrightarrow o'.arg}\,\textrm{\Rrightarrow-obs-arg}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+\frac{o\Rrightarrow o'\quad a\Rrightarrow a'}{o.bod[a]\Rrightarrow o'.bod[a']}\,\textrm{\Rrightarrow-obs-bod}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
 \frac{\,}{a\Rrightarrow_{\ast}a}\,\textrm{\Rrightarrow_{\ast}-refl}
 \]
 
@@ -2092,7 +2111,8 @@ status open
 
 \begin_layout Plain Layout
 
-% TODO: do observations also need reductions? 
+%  observations also need reductions.
+ Explain why! 
 \end_layout
 
 \end_inset
@@ -2101,7 +2121,7 @@ status open
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-Surface Language Parallel Reductions
+Cast Language Parallel Reductions
 \end_layout
 
 \end_inset
@@ -2109,7 +2129,7 @@ Surface Language Parallel Reductions
 
 \begin_inset CommandInset label
 LatexCommand label
-name "fig:surface-reduction"
+name "fig:cast-reduction"
 
 \end_inset
 
@@ -2145,7 +2165,7 @@ Preservation
 
 \begin_layout Standard
 \begin_inset Tabular
-<lyxtabular version="3" rows="51" columns="4">
+<lyxtabular version="3" rows="53" columns="4">
 <features tabularvalignment="middle">
 <column alignment="left" valignment="top">
 <column alignment="left" valignment="top">
@@ -2639,7 +2659,7 @@ directly by induction
 
 \end_inset
 </cell>
-<cell alignment="left" valignment="top" usebox="none">
+<cell multicolumn="1" alignment="left" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -2651,7 +2671,32 @@ directly by induction
 \end_inset
 
 , 
-\begin_inset Formula $a\Rrightarrow a'\quad A_{1}\Rrightarrow A_{1}'\quad A_{2}\Rrightarrow A_{2}'$
+\begin_inset Formula $a\Rrightarrow a'$
+\end_inset
+
+, 
+\begin_inset Formula $A_{1}\Rrightarrow A_{1}'$
+\end_inset
+
+, 
+\begin_inset Formula $A_{2}\Rrightarrow A_{2}'$
+\end_inset
+
+, 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $o\Rrightarrow o'$
 \end_inset
 
 
@@ -2659,7 +2704,7 @@ directly by induction
 
 \end_inset
 </cell>
-<cell alignment="left" valignment="top" usebox="none">
+<cell multicolumn="2" alignment="left" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -2818,7 +2863,7 @@ by induction
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $H\vdash a'::_{A_{1}',\ell,o}A_{2}'\,:\,A_{2}'$
+\begin_inset Formula $H\vdash a'::_{A_{1}',\ell,o'}A_{2}'\,:\,A_{2}'$
 \end_inset
 
 
@@ -2862,7 +2907,7 @@ by induction
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $H\vdash a'::_{A_{1}',\ell,o}A_{2}'\,:\,A_{2}$
+\begin_inset Formula $H\vdash a'::_{A_{1}',\ell,o'}A_{2}'\,:\,A_{2}$
 \end_inset
 
 
@@ -4068,7 +4113,7 @@ by substitution by steps,
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" usebox="none">
+<cell multicolumn="1" alignment="left" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -4080,7 +4125,64 @@ by substitution by steps,
 \end_inset
 
 , 
-\begin_inset Formula $b\Rrightarrow b'\quad a\Rrightarrow a'\quad A_{1}\Rrightarrow A_{1}'\quad A_{2}\Rrightarrow A_{2}'\quad B_{1}\Rrightarrow B_{1}'\quad B_{2}\Rrightarrow B_{2}'$
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="1" alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $b\Rrightarrow b'$
+\end_inset
+
+, 
+\begin_inset Formula $a\Rrightarrow a'$
+\end_inset
+
+, 
+\begin_inset Formula $A_{1}\Rrightarrow A_{1}'$
+\end_inset
+
+, 
+\begin_inset Formula $A_{2}\Rrightarrow A_{2}'$
+\end_inset
+
+, 
+\begin_inset Formula $B_{1}\Rrightarrow B_{1}'$
+\end_inset
+
+, 
+\begin_inset Formula $B_{2}\Rrightarrow B_{2}'$
 \end_inset
 
 
@@ -4088,7 +4190,7 @@ by substitution by steps,
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" usebox="none">
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -4484,7 +4586,7 @@ TODO: reg?, assign a temp var?
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $H\vdash\left(b'\ \left(a'::_{A_{2}',\ell,o.arg}A_{1}\right)\right)::_{B_{1}'\left[x\coloneqq a'::_{A_{2}',\ell,o.arg}A_{1}'\right],\ensuremath{\ell},o.bod[a']}B_{2}'\left[x\coloneqq a'\right]$
+\begin_inset Formula $H\vdash\left(b'\ \left(a'::_{A_{2}',\ell,o.arg}A_{1}\right)\right)$
 \end_inset
 
 
@@ -4509,6 +4611,47 @@ TODO: reg?, assign a temp var?
 
 \end_inset
 
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $::_{B_{1}'\left[x\coloneqq a'::_{A_{2}',\ell,o.arg}A_{1}'\right],\ensuremath{\ell},o.bod[a']}B_{2}'\left[x\coloneqq a'\right]$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
 
 \end_layout
 
@@ -4607,7 +4750,7 @@ name "fig:cast-val"
 \end_layout
 
 \begin_layout Standard
-Unlike that surface language it is not longer practical to characterize
+Unlike the surface language, it is not longer practical to characterize
  values syntactically.
  Values are specified by judgments in (figure 
 \begin_inset CommandInset ref
@@ -4909,7 +5052,7 @@ noprefix "false"
 
 .
  Blame tracks the information needed to create a good error message and
- is inspired by the many systems of blame tracking 
+ is inspired by the many systems that use blame tracking 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "10.1145/581478.581484,10.1007/978-3-642-00590-9_1,wadler:LIPIcs:2015:5033"
@@ -4923,7 +5066,7 @@ literal "false"
 \begin_inset Formula $*\,\cancel{=}\,A\rightarrow B$
 \end_inset
 
- that can be witnessed.
+ can be witnessed.
  The first 2 rules of the blame judgment witness these concrete type inequalitie
 s.
  The rest of the blame rules will recursively extract concrete witnesses
@@ -4937,6 +5080,24 @@ status open
 %% "self evidently correct" sinc it is clear to only extract inequalities.
  like step and val? one of several possible contrediction extraction relations
 \end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\rightsquigarrow$
+\end_inset
+
+ preserves types since the following rule is admissible
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{m\rightsquigarrow m'}{m\Rrightarrow m'}
+\]
 
 \end_inset
 
@@ -5021,80 +5182,6 @@ or there exists
 
 \begin_layout Standard
 by induction on the cast derivation
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{x:A\in H}{H\vdash x\,:\,A}\operatorname{cast-var}
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-\frac{H\vdash a:A\quad H\vdash A:\star\quad H\vdash B:\star}{H\vdash a::_{A,\ensuremath{\ell},o}B\::\:B}\operatorname{cast-::}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{H\vdash}{H\vdash\star:\,\star}\operatorname{cast-\star}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{H\vdash A:\star\quad H,x:A\vdash B:\star}{H\vdash\left(x:A\right)\rightarrow B\,:\,\star}\operatorname{cast-fun-ty}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{H,f:\left(x:A\right)\rightarrow B,x:A\vdash b:B}{H\vdash\mathsf{fun}\,f\,x\Rightarrow b\,:\,\left(x:A\right)\rightarrow B}\operatorname{cast-fun}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{H\vdash b:\left(x:A\right)\rightarrow B\quad H\vdash a:A}{H\vdash b\,a\,:\,B\left[x\coloneqq a\right]}\operatorname{cast-fun-app}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{H\vdash a:A\quad H\vdash A\equiv A':\star}{H\vdash a:A'}\operatorname{cast-conv}
-\]
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Standard
@@ -5200,6 +5287,10 @@ follows since
 
 \begin_layout Plain Layout
 \begin_inset Formula $\vdash a:A$
+\end_inset
+
+, 
+\begin_inset Formula $a\,\textbf{Val}$
 \end_inset
 
 , 
@@ -5339,6 +5430,10 @@ by induction
 \end_inset
 
 , 
+\begin_inset Formula $a::_{A_{1},\ensuremath{\ell},o}A_{2}\:\textbf{Val}$
+\end_inset
+
+,
 \begin_inset Formula $\vdash A_{1}:\star$
 \end_inset
 
@@ -5380,6 +5475,10 @@ by induction
 
 \begin_layout Plain Layout
 \begin_inset Formula $a\cancel{=}\star,a\cancel{=}\left(x:C\right)\rightarrow B$
+\end_inset
+
+, 
+\begin_inset Formula $a\:\textbf{Val}$
 \end_inset
 
 
@@ -5482,7 +5581,11 @@ by induction
 \begin_inset Text
 
 \begin_layout Plain Layout
-so this case was impossible
+so 
+\begin_inset Formula $\operatorname{cast-::}$
+\end_inset
+
+ case was impossible
 \end_layout
 
 \end_inset
@@ -5586,7 +5689,11 @@ by the stability of
 \begin_inset Text
 
 \begin_layout Plain Layout
-so this case was impossible
+so 
+\begin_inset Formula $\operatorname{cast-fun}$
+\end_inset
+
+ case was impossible
 \end_layout
 
 \end_inset
@@ -5629,7 +5736,11 @@ since they do not type values in an empty ctx
 \end_layout
 
 \begin_layout Standard
-Leading to the corollary,
+Leading to the corollary (by reflexivity of 
+\begin_inset Formula $\equiv$
+\end_inset
+
+),
 \end_layout
 
 \begin_layout Standard
@@ -5742,7 +5853,7 @@ by induction on the cast derivation
 \begin_layout Standard
 \begin_inset Formula 
 \[
-\frac{H\vdash a:A\quad H\vdash B:\star}{H\vdash a::_{A,\ensuremath{\ell},o}B\::\:B}\operatorname{cast-::}
+\frac{H\vdash a:A\quad H\vdash A:\star\quad H\vdash B:\star}{H\vdash a::_{A,\ensuremath{\ell},o}B\::\:B}\operatorname{cast-::}
 \]
 
 \end_inset
@@ -5753,18 +5864,7 @@ by induction on the cast derivation
 \begin_layout Standard
 \begin_inset Formula 
 \[
-\frac{H\vdash}{H\vdash\star:\,\star}\operatorname{cast-\star}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{H\vdash A:\star\quad H,x:A\vdash B:\star}{H\vdash\left(x:A\right)\rightarrow B\,:\,\star}\operatorname{cast-fun-ty}
+\frac{H,f:\left(x:A\right)\rightarrow B,x:A\vdash b:B}{H\vdash\mathsf{fun}\,f\,x\Rightarrow b\,:\,\left(x:A\right)\rightarrow B}\operatorname{cast-fun}
 \]
 
 \end_inset
@@ -5834,122 +5934,6 @@ a\cancel{=}\left(x:C\right)\rightarrow C'
 \begin_inset Text
 
 \begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
 \begin_inset Formula $\operatorname{cast-\star}$
 \end_inset
 
@@ -5962,7 +5946,7 @@ a\cancel{=}\left(x:C\right)\rightarrow C'
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\vdash\star:\star$
+\begin_inset Formula $\star\equiv\left(x:C\right)\rightarrow B$
 \end_inset
 
 
@@ -5974,8 +5958,40 @@ a\cancel{=}\left(x:C\right)\rightarrow C'
 \begin_inset Text
 
 \begin_layout Plain Layout
-follows since 
-\begin_inset Formula $a=\star$
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\star\cancel{\equiv}\left(x:C\right)\rightarrow B$
+\end_inset
+
+ !
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+by the stability of 
+\begin_inset Formula $\equiv$
 \end_inset
 
 
@@ -6001,7 +6017,7 @@ follows since
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\vdash\left(x:A\right)\rightarrow B\,:\,\star$
+\begin_inset Formula $\star\equiv\left(x:C\right)\rightarrow B$
 \end_inset
 
 
@@ -6013,11 +6029,111 @@ follows since
 \begin_inset Text
 
 \begin_layout Plain Layout
-follows since 
-\begin_inset Formula $a=\left(x:A\right)\rightarrow B$
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\star\cancel{\equiv}\left(x:C\right)\rightarrow B$
+\end_inset
+
+ !
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+by the stability of 
+\begin_inset Formula $\equiv$
 \end_inset
 
 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\operatorname{cast-fun}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="1" alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $f:\left(x:C'\right)\rightarrow B',x:C'\vdash b:B'$
+\end_inset
+
+, 
+\begin_inset Formula $\left(x:C'\right)\rightarrow B'\equiv\left(x:C\right)\rightarrow B$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+follows directly
 \end_layout
 
 \end_inset
@@ -6051,7 +6167,11 @@ follows since
 \begin_inset Formula $\vdash A_{2}:\star$
 \end_inset
 
-,
+, 
+\begin_inset Formula $A_{2}\equiv\left(x:C\right)\rightarrow B$
+\end_inset
+
+
 \end_layout
 
 \end_inset
@@ -6081,6 +6201,18 @@ follows since
 
 \begin_layout Plain Layout
 \begin_inset Formula $a\cancel{=}\star,a\cancel{=}\left(x:C\right)\rightarrow B$
+\end_inset
+
+, 
+\begin_inset Formula $a\:\textbf{Val}$
+\end_inset
+
+, 
+\begin_inset Formula $A_{1}\:\textbf{Val}$
+\end_inset
+
+, 
+\begin_inset Formula $A_{2}\:\textbf{Val}$
 \end_inset
 
 
@@ -6116,33 +6248,7 @@ since it must have been a value by
 \begin_inset Text
 
 \begin_layout Plain Layout
-
-\family roman
-\series medium
-\shape up
-\size normal
-\emph off
-\bar no
-\strikeout off
-\xout off
-\uuline off
-\uwave off
-\noun off
-\color none
-but 
-\begin_inset Formula $a=\star$
-\end_inset
-
- or there exists 
-\begin_inset Formula $C$
-\end_inset
-
-, 
-\begin_inset Formula $B$
-\end_inset
-
-, such that 
-\begin_inset Formula $a=\left(x:C\right)\rightarrow B$
+\begin_inset Formula $A_{2}=\left(x:C'\right)\rightarrow B'$
 \end_inset
 
 
@@ -6154,12 +6260,20 @@ but
 \begin_inset Text
 
 \begin_layout Plain Layout
-by induction 
+by the stability of 
+\begin_inset Formula $\equiv$
+\end_inset
+
+, 
+\begin_inset Formula $A_{2}\:\textbf{Val}$
+\end_inset
+
+
 \begin_inset Foot
 status open
 
 \begin_layout Plain Layout
-TODO:Wf?
+TODO...
 \end_layout
 
 \end_inset
@@ -6184,7 +6298,14 @@ TODO:Wf?
 \begin_inset Text
 
 \begin_layout Plain Layout
-!
+\begin_inset Formula $C'\equiv C$
+\end_inset
+
+, 
+\begin_inset Formula $B'\equiv B$
+\end_inset
+
+
 \end_layout
 
 \end_inset
@@ -6193,8 +6314,8 @@ TODO:Wf?
 \begin_inset Text
 
 \begin_layout Plain Layout
-so the derivation was not typed with 
-\begin_inset Formula $\operatorname{cast-::}$
+by the stability of 
+\begin_inset Formula $\equiv$
 \end_inset
 
 
@@ -6227,6 +6348,10 @@ so the derivation was not typed with
 \begin_inset Formula $A\equiv A'$
 \end_inset
 
+, 
+\begin_inset Formula $A'\equiv\left(x:C\right)\rightarrow B$
+\end_inset
+
 
 \end_layout
 
@@ -6236,10 +6361,6 @@ so the derivation was not typed with
 \begin_inset Text
 
 \begin_layout Plain Layout
-which concluded 
-\begin_inset Formula $\vdash a\,:\,A'$
-\end_inset
-
 
 \end_layout
 
@@ -6260,7 +6381,7 @@ which concluded
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $A'\equiv\star$
+\begin_inset Formula $A\equiv\left(x:C\right)\rightarrow B$
 \end_inset
 
 
@@ -6272,7 +6393,7 @@ which concluded
 \begin_inset Text
 
 \begin_layout Plain Layout
-by transitivity, symmetry
+by transitivity
 \end_layout
 
 \end_inset
@@ -6305,22 +6426,7 @@ by transitivity, symmetry
 \uwave off
 \noun off
 \color none
-\begin_inset Formula $a=\star$
-\end_inset
-
- or there exists 
-\begin_inset Formula $C$
-\end_inset
-
-, 
-\begin_inset Formula $B$
-\end_inset
-
-, such that 
-\begin_inset Formula $a=\left(x:C\right)\rightarrow B$
-\end_inset
-
-
+...
 \end_layout
 
 \end_inset
@@ -6376,7 +6482,62 @@ since they do not type values of
 \end_layout
 
 \begin_layout Standard
-...
+As a corollary (by reflexivity of 
+\begin_inset Formula $\equiv$
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Standard
+If 
+\begin_inset Formula $\vdash a:\left(x:C\right)\rightarrow B$
+\end_inset
+
+ , and 
+\begin_inset Formula $a\,\textbf{Val}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $a=\mathsf{fun}\,f\,x\Rightarrow b$
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Itemize
+or 
+\begin_inset Formula $a=d::_{D,\ensuremath{\ell},o}\left(x:C'\right)\rightarrow B'$
+\end_inset
+
+, 
+\begin_inset Formula $d\,\textbf{Val}$
+\end_inset
+
+, 
+\begin_inset Formula $D\,\textbf{Val}$
+\end_inset
+
+, 
+\begin_inset Formula $C'\equiv C$
+\end_inset
+
+, 
+\begin_inset Formula $B'\equiv B$
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+which further implies 
+\begin_inset Formula $a\cancel{=}\star,a\cancel{=}\left(x:C\right)\rightarrow C'$
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsubsection
@@ -7507,16 +7668,6 @@ if
 
 \begin_layout Plain Layout
 by canonical forms of fun 
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-TODO
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \end_inset
@@ -8450,6 +8601,16 @@ if
 \end_inset
 
 
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+todo clean up extra conclusions
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \end_inset
@@ -9182,8 +9343,7 @@ status collapsed
 
 \end_inset
 
-The cast language supports a weaker form of type soundness.
- 
+We can now prove cast soundness.
 \end_layout
 
 \begin_layout Standard
@@ -9220,25 +9380,7 @@ For any
 \end_inset
 
  does not step.
- A well cast term (in an empty context) will never get stuck without a location
- to blame and an observation that witnesses it.
- We will refer to this property as 
-\begin_inset Quotes eld
-\end_inset
-
-cast soundness
-\begin_inset Quotes erd
-\end_inset
-
-, and it can be shown with a 
-\begin_inset Quotes eld
-\end_inset
-
-progress and preservation
-\begin_inset Quotes erd
-\end_inset
-
--like proof.
+ This follows by iteration the progress and preservation lemmas.
 \end_layout
 
 \begin_layout Subsection
