@@ -3885,7 +3885,7 @@ literal "false"
 
 
 \begin_inset Foot
-status collapsed
+status open
 
 \begin_layout Plain Layout
 in Milner's original paper, he used 
@@ -3983,7 +3983,7 @@ literal "false"
 
 
 \begin_inset Foot
-status collapsed
+status open
 
 \begin_layout Plain Layout
 Though first published in 
@@ -4014,6 +4014,22 @@ literal "false"
 \end_inset
 
 , the Chapala book
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% TODO: TAPL cites Harper as a co-originator of progress-preservation.
+  Maybe just email him?  it might be also good to gice him for intractability.
+  might want to review his book first/comenentary
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \end_inset
@@ -4897,8 +4913,8 @@ Church-Rosser
 \end_inset
 
 .
- If a relation is confluent in specific path doesn't matter since you can
- alway reach the same destinations.
+ If a relation is confluent, in a sense, specific paths don't matter since
+ you can alway reach the same destinations.
 \end_layout
 
 \begin_layout Standard
@@ -6133,7 +6149,11 @@ by induction on
 \begin_inset Text
 
 \begin_layout Plain Layout
-by induction
+by induction with 
+\begin_inset Formula $\left(x:N\right)\rightarrow M\Rrightarrow_{\ast}P'$
+\end_inset
+
+
 \end_layout
 
 \end_inset
@@ -6468,7 +6488,7 @@ literal "false"
 \end_layout
 
 \begin_layout Standard
-We need a number of lemmas before we can prove that 
+We need a number of technical lemmas before we can prove that 
 \begin_inset Formula $\Rrightarrow_{\ast}$
 \end_inset
 
@@ -6484,6 +6504,24 @@ grow
 
  with recursive calls while still being well founded by the tree structure
  of the derivation.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% unneeded: In many cases lemmas will produce derivations that are equal
+ or smaller in height to one of the derivations used in their input, so
+ that inductions can be preformed on the output of the lemma while still
+ being well founded.
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsubsection
@@ -6510,15 +6548,11 @@ by induction on typing derivations
 \end_layout
 
 \begin_layout Subsubsection
-Typed Substitution
+Substitution Preservation
 \end_layout
 
 \begin_layout Standard
-For any 
-\begin_inset Formula $\Gamma\vdash x:N$
-\end_inset
-
-, the following rule is admissible
+The following rule is admissible
 \begin_inset Foot
 status open
 
@@ -6526,7 +6560,7 @@ status open
 This lemma is sufficient for our informal account of variable substitution
  and binding.
  A fully formal account will be sensitive to the specific binding strategy,
- and may need to prove the lemma for simultaneous substitutions
+ and may need to prove this lemma as a corollary from simultaneous substitutions
 \end_layout
 
 \end_inset
@@ -6537,8 +6571,22 @@ This lemma is sufficient for our informal account of variable substitution
 \begin_layout Standard
 \begin_inset Formula 
 \[
-\frac{\Gamma,x:N,\Gamma'\vdash m:M}{\Gamma,\Gamma'\left[x\coloneqq n\right]\vdash m\left[x\coloneqq n\right]:M\left[x\coloneqq n\right]}
+\frac{\Gamma\vdash n:N\quad\Gamma,x:N,\Gamma'\vdash m:M}{\Gamma,\Gamma'\left[x\coloneqq n\right]\vdash m\left[x\coloneqq n\right]:M\left[x\coloneqq n\right]}
 \]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+%TODO would be H subscript instead of H' according to unposted style guide
+\end_layout
 
 \end_inset
 
@@ -6773,16 +6821,6 @@ if
 
 \begin_layout Plain Layout
 by weakening 
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-unproven
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \end_inset
@@ -6917,16 +6955,6 @@ if
 
 \begin_layout Plain Layout
 by weakening 
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-unproven
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \end_inset
@@ -7616,11 +7644,11 @@ by induction
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\Gamma\vdash m\,:\,\left(x:N\right)\rightarrow M$
+\begin_inset Formula $\Gamma,x:N,\Gamma'\vdash m\,:\,\left(x:P\right)\rightarrow M$
 \end_inset
 
 , 
-\begin_inset Formula $\Gamma\vdash n\,:\,N$
+\begin_inset Formula $\Gamma,x:N,\Gamma'\vdash p\,:\,P$
 \end_inset
 
 
@@ -8847,7 +8875,11 @@ by induction
 \begin_inset Text
 
 \begin_layout Plain Layout
-by induction
+by induction with 
+\begin_inset Formula $\Gamma,x:M\vdash N\,:\,\star$
+\end_inset
+
+
 \end_layout
 
 \end_inset
@@ -9045,7 +9077,24 @@ by induction
 \begin_inset Text
 
 \begin_layout Plain Layout
-by induction
+by induction with 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $\Gamma,f:\left(x:N\right)\rightarrow M,x:N\vdash m\,:\,M$
+\end_inset
+
+
 \end_layout
 
 \end_inset
@@ -9477,11 +9526,11 @@ by preservation of contexts
 \end_inset
 
 , 
-\begin_inset Formula $P\equiv P'$
+\begin_inset Formula $P'\equiv P$
 \end_inset
 
 , 
-\begin_inset Formula $P'\equiv\left(x:N\right)\rightarrow M$
+\begin_inset Formula $P\equiv\left(x:N\right)\rightarrow M$
 \end_inset
 
 
@@ -9624,6 +9673,26 @@ by noting that
 \end_inset
 
 , by reflexivity 
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+%TODO: Note that the result of this lemma will always produce derivations
+ of equal or smaller hight to the input typing derivation.
+\end_layout
+
+\begin_layout Plain Layout
+
+% unneeded
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsubsection
@@ -11697,12 +11766,12 @@ finished
  or that a further step can be taken.
  For non-dependently typed programming languages, these steps are easy to
  characterize, but for dependent types there are issues.
- If we characterize the 
+ If we characterize computation with the 
 \begin_inset Formula $\Rrightarrow$
 \end_inset
 
- relation as the computation used in progress, the lemma holds in a meaningless
- way since we can always take a reflexive step.
+ relation, the progress lemma holds in a meaningless way since we can always
+ take a reflexive step.
  Thus we need a more realistic computation relation, ideally one that is
  not reflexive, is deterministic and that is a sub relation of 
 \begin_inset Formula $\Rrightarrow_{*}$
@@ -13552,6 +13621,21 @@ status open
  
 \end_layout
 
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% TODO: other lemmas not needed for this proof, par max is par, inversions
+ 
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
 \begin_layout Subsection
 Type checking is impractical
 \end_layout
@@ -13829,21 +13913,9 @@ status open
 \end_inset
 
 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-% also include context rules?
 \end_layout
 
 \begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-
-
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
@@ -14354,6 +14426,21 @@ status open
 \begin_layout Plain Layout
 
 % TODO extract example
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% cite this blog https://existentialtype.wordpress.com/2014/03/20/old-neglected-th
+eorems-are-still-theorems/
 \end_layout
 
 \end_inset

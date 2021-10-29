@@ -79,6 +79,37 @@
 Draft
 \end_layout
 
+\begin_layout Standard
+Abstract
+\end_layout
+
+\begin_layout Standard
+This theses follows 2 convictions that have been under explored in the type
+ theory literature:
+\end_layout
+
+\begin_layout Itemize
+It should be easier to write programs with dependent types then without
+\end_layout
+
+\begin_layout Itemize
+Whenever possible, static errors should be replaced with 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+static warnings, 
+\end_layout
+
+\begin_layout Itemize
+more concrete and clear runtime errors,
+\end_layout
+
+\begin_layout Itemize
+and testing strategies that uncover concrete runtime errors
+\end_layout
+
+\end_deeper
 \begin_layout Part
 Introduction 
 \end_layout
@@ -841,13 +872,21 @@ Runtime proof search
 \end_layout
 
 \begin_layout Part
-Conclusion And future work
+Conclusion and Future Work
 \end_layout
 
 \begin_layout Standard
 Chapter 2 argueged that decidability was a poor metric for type systems,
  A more meaningful metric, perhaps based on localizing problems would be
- good
+ good.
+\end_layout
+
+\begin_layout Standard
+non-termination as warning and error.
+\end_layout
+
+\begin_layout Standard
+...
 \end_layout
 
 \begin_layout Part
