@@ -11993,7 +11993,7 @@ noprefix "false"
 \end_layout
 
 \begin_layout Standard
-If we know that a context is well formed we can show other good properties.
+We need to exclude properties like this so that .
 \end_layout
 
 \begin_layout Standard
@@ -15931,50 +15931,6 @@ by mutual induction on the
 \end_layout
 
 \begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{H,f:\left(x:A\right)\rightarrow B,x:A\vdash m\overleftarrow{\,:_{\ell,o.bod[x]}\,}B\,\textbf{Elab}\ b}{H\vdash\left(\mathsf{fun}\,f\,x\Rightarrow m\right)\overleftarrow{\,:_{\ell,o}\,}\left(x:A\right)\rightarrow B\,\textbf{Elab}\left(\mathsf{fun}\,f\,x\Rightarrow b\right)}\operatorname{\overleftarrow{\textbf{Elab}}-fun}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{H\vdash n\,\textbf{Elab}\ a\overrightarrow{\,:\,}\left(x:A\right)\rightarrow B\quad H\vdash n\overleftarrow{\,:_{\ell,.arg}\,}A\,\textbf{Elab}\ a}{H\vdash\left(m_{\ell}\,n\right)\textbf{Elab}\left(b\,a\right)\overrightarrow{\,:\,}B\left[x\coloneqq a\right]}\operatorname{\overrightarrow{\textbf{Elab}}-fun-app}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{H\vdash M\overleftarrow{\,:_{\ell.}\,}\star\,\textbf{Elab}\ A\quad H\vdash m\overleftarrow{\,:_{\ell,.}\,}A\,\textbf{Elab}\ a}{H\vdash\left(m::_{\ell}M\right)\textbf{Elab}\,a\overrightarrow{\,:\,}A}\operatorname{\overrightarrow{\textbf{Elab}}-::}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{H\vdash m\,\textbf{Elab}\ a\overrightarrow{\,:\,}A}{H\vdash m\overleftarrow{\,:_{\ell,o}\,}A'\ \textbf{Elab}\left(a::_{A,\ensuremath{\ell},o}A'\right)}\operatorname{\overleftarrow{\textbf{Elab}}-conv}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
 \begin_inset Tabular
 <lyxtabular version="3" rows="19" columns="3">
 <features tabularvalignment="middle">
@@ -16617,10 +16573,6 @@ by induction
 
 \end_layout
 
-\begin_layout Standard
-...
-\end_layout
-
 \begin_layout Itemize
 It follows that whenever an elaborated cast term evaluates, the corresponding
  surface term evaluates consistently 
@@ -16689,8 +16641,7 @@ Since
 \end_layout
 
 \begin_layout Itemize
-elaborated terms are well-cast.
- 
+elaborated terms are well-cast in a well formed ctx.
 \end_layout
 
 \begin_deeper
@@ -16703,11 +16654,23 @@ for any
 \begin_inset Formula $H\vdash a:A$
 \end_inset
 
- 
+, 
+\begin_inset Formula $H\vdash A:\star$
+\end_inset
+
+
 \end_layout
 
 \begin_layout Enumerate
 for any 
+\begin_inset Formula $H\vdash$
+\end_inset
+
+, 
+\begin_inset Formula $H\vdash A:\star$
+\end_inset
+
+ , 
 \begin_inset Formula $H\vdash a\overleftarrow{\,:_{\ell,o}\,}A\,\textbf{Elab}\,m$
 \end_inset
 
@@ -16729,7 +16692,7 @@ by mutual induction on
 
 \begin_layout Standard
 \begin_inset Tabular
-<lyxtabular version="3" rows="21" columns="3">
+<lyxtabular version="3" rows="32" columns="3">
 <features tabularvalignment="middle">
 <column alignment="left" valignment="top">
 <column alignment="left" valignment="top">
@@ -16783,7 +16746,43 @@ by mutual induction on
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $H\vdash x\,:\,A$
+\begin_inset Formula $H\vdash A:\star$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+by 
+\begin_inset Formula $H\vdash$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $H\vdash x:A$
 \end_inset
 
 
@@ -16809,7 +16808,7 @@ by mutual induction on
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\operatorname{\overrightarrow{\textbf{Elab}}-var}$
+\begin_inset Formula $\operatorname{\overrightarrow{\textbf{Elab}}-\star}$
 \end_inset
 
 
@@ -16856,7 +16855,7 @@ for some
 \begin_layout Plain Layout
 \begin_inset Formula 
 \[
-H\vdash\star:\,\star
+H\vdash\star:\star
 \]
 
 \end_inset
@@ -16994,6 +16993,42 @@ by induction
 \begin_layout Plain Layout
 \begin_inset Formula 
 \[
+H\vdash\star:\star
+\]
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
 H\vdash\left(x:A\right)\rightarrow B\,:\,\star
 \]
 
@@ -17069,6 +17104,10 @@ H\vdash\left(x:A\right)\rightarrow B\,:\,\star
 \begin_inset Formula $H\vdash b:C$
 \end_inset
 
+, 
+\begin_inset Formula $H\vdash C:\star$
+\end_inset
+
 
 \end_layout
 
@@ -17079,6 +17118,78 @@ H\vdash\left(x:A\right)\rightarrow B\,:\,\star
 
 \begin_layout Plain Layout
 by induction
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $H\vdash\left(x:A\right)\rightarrow B:\star$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+by 
+\begin_inset Formula $\Rrightarrow_{\ast}$
+\end_inset
+
+ preservation
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $H\vdash A:\star$
+\end_inset
+
+, 
+\begin_inset Formula $H,x:A\vdash B:\star$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+by fun-ty inversion
 \end_layout
 
 \end_inset
@@ -17165,6 +17276,38 @@ by induction
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $H\vdash B\left[x\coloneqq a\right]:\star$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+by subst preservation
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
 \begin_inset Formula $H\vdash b\,a\,:\,B\left[x\coloneqq a\right]$
 \end_inset
 
@@ -17203,7 +17346,11 @@ by induction
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $H,f:\left(x:A\right)\rightarrow B,x:A\vdash m\overleftarrow{\,:_{\ell,o.bod[x]}\,}B\,\textbf{Elab}\ b$
+\begin_inset Formula $H,f:\left(x:A\right)\rightarrow B,x:A\vdash$
+\end_inset
+
+, 
+\begin_inset Formula $H,f:\left(x:A\right)\rightarrow B,x:A\vdash B:\star$
 \end_inset
 
 
@@ -17216,6 +17363,163 @@ by induction
 
 \begin_layout Plain Layout
 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $H,f:\left(x:A\right)\rightarrow B,x:A\vdash m\overleftarrow{\,:_{\ell,o.bod[x]}\,}B\,\textbf{Elab}\ b$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+TODO revise!
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $H,f:\left(x:A\right)\rightarrow B,x:A\vdash A:\star$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+by reg
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $H\vdash A:\star$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+by removing free vars
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $H,x:A\vdash B:\star$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+similarly with fun-ty inversion
 \end_layout
 
 \end_inset
@@ -17337,6 +17641,38 @@ by induction
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $H\vdash A:\star$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+by induction
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
 \begin_inset Formula $H\vdash a:A$
 \end_inset
 
@@ -17372,6 +17708,14 @@ by induction
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $H\vdash$
+\end_inset
+
+, 
+\begin_inset Formula $H\vdash A':\star$
+\end_inset
+
+ , 
 \begin_inset Formula $H\vdash m\,\textbf{Elab}\ a\overrightarrow{\,:\,}A$
 \end_inset
 
@@ -17408,8 +17752,14 @@ by induction
 \begin_inset Text
 
 \begin_layout Plain Layout
-...
- regularity issues
+\begin_inset Formula $H\vdash a:A$
+\end_inset
+
+, 
+\begin_inset Formula $H\vdash A:\star$
+\end_inset
+
+
 \end_layout
 
 \end_inset
@@ -17418,7 +17768,7 @@ by induction
 \begin_inset Text
 
 \begin_layout Plain Layout
-
+by induction
 \end_layout
 
 \end_inset
@@ -17438,6 +17788,9 @@ by induction
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $H\vdash a::_{A,\ensuremath{\ell},o}B\::\:B$
+\end_inset
+
 
 \end_layout
 
@@ -17447,6 +17800,9 @@ by induction
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\operatorname{cast-::}$
+\end_inset
+
 
 \end_layout
 
@@ -17458,10 +17814,6 @@ by induction
 \end_inset
 
 
-\end_layout
-
-\begin_layout Standard
-...
 \end_layout
 
 \begin_layout Itemize
@@ -17570,6 +17922,139 @@ TODO can
 by mutual induction on the bi-directional typing derivations and the well
  formedness of 
 \begin_inset Formula $\Gamma\vdash$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\Gamma\vdash\quad x:M\in\Gamma}{\Gamma\vdash x\overrightarrow{\,:\,}M}\operatorname{\overrightarrow{ty}-var}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{\Gamma\vdash}{\Gamma\vdash\star\overrightarrow{\,:\,}\star}\operatorname{\overrightarrow{ty}-\star}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{\Gamma\vdash m\overleftarrow{\,:\,}M}{\Gamma\vdash m::M\overrightarrow{\,:\,}M}\operatorname{\overrightarrow{ty}-::}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{\Gamma\vdash M\overleftarrow{\,:\,}\star\quad\Gamma,x:M\vdash N\overleftarrow{\,:\,}\star}{\Gamma\vdash\left(x:M\right)\rightarrow N\overrightarrow{\,:\,}\star}\operatorname{\overrightarrow{ty}-fun-ty}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{\Gamma\vdash m\overrightarrow{\,:\,}\left(x:N\right)\rightarrow M\quad\Gamma\vdash n\overleftarrow{\,:\,}N}{\Gamma\vdash m\,n\overrightarrow{\,:\,}M\left[x\coloneqq n\right]}\operatorname{\overrightarrow{ty}-fun-app}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{\Gamma,f:\left(x:N\right)\rightarrow M,x:N\vdash m\overleftarrow{\,:\,}M\quad\Gamma\vdash M\overleftarrow{\,:\,}\star\quad\Gamma,x:M\vdash N\overleftarrow{\,:\,}\star}{\Gamma\vdash\mathsf{fun}\,f\,x\Rightarrow m\overleftarrow{\,:\,}\left(x:N\right)\rightarrow M}\operatorname{\overleftarrow{ty}-\mathsf{fun}}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{\Gamma\vdash m\overrightarrow{\,:\,}M\quad M\equiv M'\quad\Gamma\vdash M'\overleftarrow{\,:\,}\star}{\Gamma\vdash m\overleftarrow{\,:\,}M'}\operatorname{\overleftarrow{ty}-conv}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{x:A\in H}{H\vdash x\,:\,A}\operatorname{cast-var}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{H\vdash a:A\quad H\vdash A:\star\quad H\vdash B:\star}{H\vdash a::_{A,\ensuremath{\ell},o}B\::\:B}\operatorname{cast-::}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\,}{H\vdash\star:\,\star}\operatorname{cast-\star}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{H\vdash A:\star\quad H,x:A\vdash B:\star}{H\vdash\left(x:A\right)\rightarrow B\,:\,\star}\operatorname{cast-fun-ty}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{H,f:\left(x:A\right)\rightarrow B,x:A\vdash b:B}{H\vdash\mathsf{fun}\,f\,x\Rightarrow b\,:\,\left(x:A\right)\rightarrow B}\operatorname{cast-fun}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{H\vdash b:\left(x:A\right)\rightarrow B\quad H\vdash a:A}{H\vdash b\,a\,:\,B\left[x\coloneqq a\right]}\operatorname{cast-fun-app}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{H\vdash a:A\quad A\equiv A'}{H\vdash a:A'}\operatorname{cast-conv}
+\]
+
 \end_inset
 
 
@@ -18365,88 +18850,6 @@ by induction
 
 \end_layout
 
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{\Gamma\vdash m\overrightarrow{\,:\,}\left(x:N\right)\rightarrow M\quad\Gamma\vdash n\overleftarrow{\,:\,}N}{\Gamma\vdash m\,n\overrightarrow{\,:\,}M\left[x\coloneqq n\right]}\operatorname{\overrightarrow{ty}-fun-app}
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-\frac{\Gamma,f:\left(x:N\right)\rightarrow M,x:N\vdash m\overleftarrow{\,:\,}M}{\Gamma\vdash\mathsf{fun}\,f\,x\Rightarrow m\overleftarrow{\,:\,}\left(x:N\right)\rightarrow M}\operatorname{\overleftarrow{ty}-\mathsf{fun}}
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-\frac{\Gamma\vdash m\overrightarrow{\,:\,}M\quad M\equiv M'}{\Gamma\vdash m\overleftarrow{\,:\,}M'}\operatorname{\overleftarrow{ty}-conv}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{H\vdash m\,\textbf{Elab}\ b\overrightarrow{\,:\,}C\quad C\Rrightarrow_{\ast}\left(x:A\right)\rightarrow B\quad H\vdash n\overleftarrow{\,:_{\ell,.arg}\,}A\,\textbf{Elab}\,a}{H\vdash\left(m_{\ell}\,n\right)\textbf{Elab}\left(b\,a\right)\overrightarrow{\,:\,}B\left[x\coloneqq a\right]}\operatorname{\overrightarrow{\textbf{Elab}}-fun-app}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{H,f:\left(x:A\right)\rightarrow B,x:A\vdash m\overleftarrow{\,:_{\ell,o.bod[x]}\,}B\,\textbf{Elab}\ b}{H\vdash\left(\mathsf{fun}\,f\,x\Rightarrow m\right)\overleftarrow{\,:_{\ell,o}\,}\left(x:A\right)\rightarrow B\,\textbf{Elab}\left(\mathsf{fun}\,f\,x\Rightarrow b\right)}\operatorname{\overleftarrow{\textbf{Elab}}-fun}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{H\vdash n\,\textbf{Elab}\ a\overrightarrow{\,:\,}\left(x:A\right)\rightarrow B\quad H\vdash n\overleftarrow{\,:_{\ell,.arg}\,}A\,\textbf{Elab}\ a}{H\vdash\left(m_{\ell}\,n\right)\textbf{Elab}\left(b\,a\right)\overrightarrow{\,:\,}B\left[x\coloneqq a\right]}\operatorname{\overrightarrow{\textbf{Elab}}-fun-app}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{H\vdash M\overleftarrow{\,:_{\ell.}\,}\star\,\textbf{Elab}\ A\quad H\vdash m\overleftarrow{\,:_{\ell,.}\,}A\,\textbf{Elab}\ a}{H\vdash\left(m::_{\ell}M\right)\textbf{Elab}\,a\overrightarrow{\,:\,}A}\operatorname{\overrightarrow{\textbf{Elab}}-::}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{H\vdash m\,\textbf{Elab}\ a\overrightarrow{\,:\,}A}{H\vdash m\overleftarrow{\,:_{\ell,o}\,}A'\ \textbf{Elab}\left(a::_{A,\ensuremath{\ell},o}A'\right)}\operatorname{\overleftarrow{\textbf{Elab}}-conv}
-\]
-
-\end_inset
-
-
-\end_layout
-
 \begin_layout Enumerate
 Blame never points to something that checked in the bidirectional system
  
@@ -19027,7 +19430,7 @@ Salvage dictation notes?
 \end_layout
 
 \begin_layout Itemize
-where shoud I talk about error msgs?
+where should I talk about error msgs?
 \end_layout
 
 \begin_layout Itemize

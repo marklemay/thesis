@@ -7,7 +7,11 @@ Formatting
 * nice looking multi tabbed proof format?
 * note on equality
 * make rule names conistent, match fonts
+* Consider experemantal presentations
+  * coloerizing inductive hypothises?
+  * greying out wf conditions that can be hidden
 
 Send to people for review
-* CH1 Zach
+* CH2 Zach
 * almost done Luara
+* Eric's friends
