@@ -6,6 +6,7 @@ open import Data.Fin hiding (_+_)
 open import Data.Vec   hiding (lookup ; [_])
 open import Data.Product hiding (map)
 
+-- TODO remove Pre- p- prefexes and enocourage imports
 
 data PreSyntax {n : ℕ} : Set
 data PreSyntax {n} where
@@ -50,12 +51,15 @@ _[_] {n} inthis withThis = substPreSyntax {suc n} {n} σ inthis
     σ (suc x) = pVar x
 
 
-data PreCtx : ℕ -> Set where
-  pEmp : PreCtx 0
-  pExtCtx : {n : ℕ} -> PreCtx n -> PreSyntax {n} -> PreCtx (suc n)
+data pCtx : {n : ℕ} -> Set where
+  pEmp : pCtx {zero}
+  pExt : {n : ℕ} -> (Γ : pCtx {n}) -> (a : PreSyntax {n}) -> pCtx {suc n}
 
 postulate
-  pLookup : {n : ℕ} (Γ : PreCtx n) -> (i : Fin n)  -> PreSyntax {n}
+  In : {n : ℕ} -> (Γ : pCtx {n}) -> (v : Fin n) -> (ty : PreSyntax {n})  -> Set
+
+postulate
+--  pLookup : {n : ℕ} (Γ : pCtx n) -> (i : Fin n)  -> PreSyntax {n}
   _[_::=_] :{n : ℕ} -> PreSyntax {suc n} -> (i : Fin n) -> PreSyntax {n} -> PreSyntax {n}
     
 data _~>p_ {n : ℕ} : PreSyntax {n}  -> PreSyntax {n} -> Set  where

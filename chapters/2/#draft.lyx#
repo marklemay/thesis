@@ -114,6 +114,20 @@ status open
 
 \begin_layout Plain Layout
 
+%% TODO completely rewite this with a positive
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
 %% TODO notes
 \end_layout
 
@@ -174,9 +188,8 @@ The surface language is a minimal dependent type system.
 status open
 
 \begin_layout Plain Layout
-several alternative syntax exist in the literature.
- In this document the typed polymorphic identity function be written as
- 
+several alternative syntaxes exist in the literature.
+ In this document the typed polymorphic identity function is written, 
 \begin_inset Formula $\lambda-\,x\Rightarrow x\ :\,\left(X:\star\right)\rightarrow X\rightarrow X$
 \end_inset
 
@@ -204,7 +217,7 @@ status open
 
 \begin_layout Plain Layout
 
-%TODO , Martin Loff/Hoff (TODO PI notation) 
+%TODO Hott, Martin Loff/Hoff (TODO PI notation) 
 \end_layout
 
 \end_inset
@@ -14439,6 +14452,21 @@ status open
 
 \begin_layout Plain Layout
 
+% cite this blog https://existentialtype.wordpress.com/2014/03/20/old-neglected-th
+eorems-are-still-theorems/
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
 % TODO make sure I'm not missing any langs, C#...?
 \end_layout
 
@@ -15124,6 +15152,19 @@ make usre implementation is smooth around this
 
 \begin_layout Itemize
 write up style guide
+\end_layout
+
+\begin_layout Itemize
+NuPRl bar types 
+\begin_inset Quotes eld
+\end_inset
+
+Constable and Smith had papers at LICS around 1987 or so, leading to both
+ Smith’s and Crary’s theses on the topic
+\begin_inset Quotes erd
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section

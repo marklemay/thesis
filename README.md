@@ -1,6 +1,12 @@
 # thesis
 all work related to my thesis document, will eventually become public
 
+
+## What to Review
+* Chapter 2
+  * proofs and formalizms
+
+
 ## Complete
 * 6/16/2021 thesis proposal
 - [x] June
@@ -13,11 +19,11 @@ all work related to my thesis document, will eventually become public
 - [x] September
   - [x] Submit to [CPP](https://popl22.sigplan.org/home/CPP-2022)
   - [x] Produce some larger examples
-## Plan
-- [ ] October
+- [x] October
   - [x] draft Surface Language chapter
-  - [ ] draft Cast Language chapter
+## Plan
 - [ ] November
+  - [ ] draft Cast Language chapter
   - [ ] draft Data chapter
   - [ ] Rework symbolic execution to work in the cast language
   - [ ] draft testing chapter

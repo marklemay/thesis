@@ -6,6 +6,8 @@ open import bidir
 import precast as c
 import cast as c
 
+import syn-paper as t
+
 
 open import Data.Nat
 open import Data.Fin hiding (_+_)
@@ -70,15 +72,15 @@ data _|-_ELAB_:<-:_ {n} Γ  where
     -> Γ |-  m ELAB (c.pCast a A B) :<-: B
 
 
-data _|-ELAB_ : {n : ℕ} (Γ : Ctx {n}) -> c.Ctx {n} -> Set where
-  emp-ELAB : Emp |-ELAB c.Emp
-  ext-ELAB : {n : ℕ} {Γ : Ctx {n}} {H : c.Ctx {n}} {M : _} {A : _}
+data _|-ELAB_ : {n : ℕ} (Γ : pCtx {n}) -> c.Ctx {n} -> Set where
+  emp-ELAB : pEmp |-ELAB c.Emp
+  ext-ELAB : {n : ℕ} {Γ : pCtx {n}} {H : c.Ctx {n}} {M : _} {A : _}
     -> Γ |-ELAB H
     -> H |- M ELAB A :<-: c.pTyU
-    -> Ext Γ M |-ELAB c.Ext H A
+    -> pExt Γ M |-ELAB c.Ext H A
 
 
-{-
+{- TODO seperate file?
 props:
 erasure
 well-cast
@@ -176,52 +178,162 @@ well-cast<- (Conv x x₁ mTy) -- MTy
 well-cast-> = {!!}
 -}
 
+data _Erase_ {n : ℕ} : (PreSyntax {n}) -> c.PreSyntax {n} -> Set where
 
-record out->  {n : ℕ} (Γ : Ctx {n}) (m M : PreSyntax {n}) : Set where
+  eVar : (i : Fin n) -> (pVar i) Erase (c.pVar i)
+  eTyU :  pTyU Erase c.pTyU
+  -- ePi :  (aTy : PreSyntax {n}) -> (bodTy :  PreSyntax {suc n}) -> PreSyntax
+  --eFun : (bod : PreSyntax {suc (suc n)}) -> PreSyntax
+  --eApp :  (f : PreSyntax {n}) -> (a : PreSyntax {n}) -> PreSyntax
+  --eAnn :  (e : PreSyntax {n}) -> (ty : PreSyntax {n}) -> PreSyntax
+  --eCast
+
+
+record out->  {n : ℕ} {Γ : pCtx {n}} {H : c.Ctx {n}} (ctxElab : Γ |-ELAB H) {m M : PreSyntax {n}} (ty : Γ |- m :->: M) : Set where
   field
-    H : c.Ctx {n}
     a A : c.PreSyntax {n}
-    ctxElab : Γ |-ELAB H
     elab : H |- m ELAB a :->: A
- --  (H |- M ELAB A :<-: c.pTyU)
-record out<-  {n : ℕ} (Γ : Ctx {n}) (m M : PreSyntax {n}) : Set where
+
+record out<-  {n : ℕ} {Γ : pCtx {n}} {H : c.Ctx {n}} (ctxElab : Γ |-ELAB H)  (m M : PreSyntax {n}) : Set where
   field
-    H : c.Ctx {n}
     a A : c.PreSyntax {n}
-    ctxElab : Γ |-ELAB H
     elab : H |- m ELAB a :<-: A
+    elabTy : H |- M ELAB A :<-: c.pTyU
 
 postulate
-  in-both : {n : ℕ}{Γ : Ctx {n}} {H : c.Ctx {n}} 
+  in-both : {n : ℕ}{Γ : pCtx {n}} {H : c.Ctx {n}} 
     -> Γ |-ELAB H
     -> (v : Fin n)
     -> {M : PreSyntax {n}}
     -> In Γ v M
     -> Σ (c.PreSyntax {n}) λ A → c.In H v A × H |- M ELAB A :<-: c.pTyU
 
-bi-elabs-ctx : {n : ℕ}
-  -> (Γ : Ctx {n})
-  -> Σ (c.Ctx {n}) λ H → Γ |-ELAB H
 
-bi-elabs-> : {n : ℕ} {Γ : Ctx {n}} {m M : PreSyntax {n}}
-  -> Γ |- m :->: M 
-  -> out-> Γ m M
+bi-elabs-> : {n : ℕ} {Γ : pCtx {n}} {H : c.Ctx {n}}
+  -> (ctxElab : Γ |-ELAB H)
+  -> {m M : PreSyntax {n}}
+  -> (ty : Γ |- m :->: M)
+  -> out-> ctxElab ty
 
-bi-elabs<- : {n : ℕ} {Γ : Ctx {n}} {m M : PreSyntax {n}}
+bi-elabs<- : {n : ℕ} {Γ : pCtx {n}} {H : c.Ctx {n}}
+  -> (ctxElab : Γ |-ELAB H)
+  -> {m M : PreSyntax {n}}
   -> Γ |- m :<-: M
-  -> out<- Γ m M
+  -> out<- ctxElab m M
+
+bi-elabs<-TyU : {n : ℕ} {Γ : pCtx {n}} {H : c.Ctx {n}}
+  -> (ctxElab : Γ |-ELAB H)
+  -> {M : PreSyntax {n}}
+  -> Γ |- M :<-: pTyU
+  -> Σ _ λ A → H |- M ELAB A :<-: c.pTyU
 
 
+bi-elabs-> {_} {Γ} ctxElab (Var x v lkup) with in-both ctxElab v lkup
+bi-elabs-> {_} {Γ} ctxElab (Var x v lkup) | fst , fst₁ , snd
+  = record { a = c.pVar v ; A = fst ; elab = Var v fst₁ }
+bi-elabs-> ctxElab (TyU x) = record { a = c.pTyU ; A = c.pTyU ; elab = TyU }
+bi-elabs-> ctxElab (Ann MTy M) with bi-elabs<- ctxElab M
+... | record { a = a ; A = A ; elab = am ; elabTy = tyum } = record { a = a ; A = A ; elab = Ann tyum am }
+bi-elabs-> ctxElab (Pi argTy bodTy) with bi-elabs<-TyU ctxElab argTy | bi-elabs<-TyU  {!!} bodTy -- elab extention
+... | A , Aelab | B , BElab = record { a = c.pPi A B ; A = c.pTyU ; elab = Pi Aelab {!BElab!} }
+bi-elabs-> ctxElab (App F Arg) with bi-elabs-> ctxElab F | bi-elabs<- ctxElab Arg
+... | record { a = b ; A = B ; elab = Felab } | record { a = a ; A = A ; elab = elab ; elabTy = elabTy }
+ = record { a = c.pApp b a ; A = {!!} ; elab = App Felab {!!} elab }
+ -- needs erasure of typse, for conversion
 
-bi-elabs-> {_} {Γ} (Var x v lkup) with bi-elabs-ctx Γ
-bi-elabs-> {_} {Γ} (Var x v lkup) | H' , ΓElabH with in-both ΓElabH v lkup
-bi-elabs-> {_} {Γ} (Var x v lkup) | H' , ΓElabH | fst , fst₁ , snd = record { H = H' ; a = c.pVar v ; A = fst ; ctxElab = ΓElabH ; elab = Var v fst₁ }
-bi-elabs-> {_} {Γ} (TyU _) with bi-elabs-ctx Γ
-... | H' , ΓElabH = record { H = H' ; a = c.pTyU ; A = c.pTyU ; ctxElab = ΓElabH ; elab = TyU }
-bi-elabs-> (Ann BTy B) with bi-elabs<- B | bi-elabs<- BTy
-... | record { H = H ; a = a ; A = A ; ctxElab = ctxElab ; elab = elab } | yy = record { H = {!!} ; a = {!!} ; A = {!!} ; ctxElab = {!!} ; elab = Ann {!!} elab }
-bi-elabs-> (Pi aTy bodTy) = {!!}
-bi-elabs-> (App x x₁) = {!!}
-bi-elabs<- = {!!}
+bi-elabs<- ctxElab (Fun x x₁ x₂) = record { a = c.pFun {!!} ; A = {!c.Pi!} ; elab = Fun {!!} ; elabTy = {!Pi!} }
+bi-elabs<- ctxElab (Conv under _ ty) with bi-elabs-> ctxElab under | bi-elabs<-TyU ctxElab ty
+... | record { a = a ; A = A ; elab = elab } | fst , snd = record { a = c.pCast a A fst ; A = fst ; elab = Conv elab ; elabTy = snd }
+-- suspends allmost all evaluation
 
+bi-elabs<-TyU ctxElab (Conv under _ ty) with bi-elabs-> ctxElab under
+... | record { a = a ; A = A ; elab = elab } = c.pCast a A c.pTyU , Conv elab
+
+-- elaboration from bi has == conversions?
+-- if |- M : * and M Elab C and if M ~>* (A -> B) then C ~>* (A' -> B')
+
+consistent-lemma : {n : ℕ} {Γ : pCtx {n}} {H : c.Ctx {n}}
+  -> (ctxElab : Γ |-ELAB H)
+  -> {M : _} {N : _}
+  -> {m : PreSyntax {n}}
+  -> Γ |- m :->: pPi M N
+  -> {c C : _}
+  -> H |- m ELAB c :->: C
+  -> Σ _ λ A →  Σ _ λ B → c c~>p* c.pPi A B
+  
+consistent-lemma<- : {n : ℕ} {Γ : pCtx {n}} {H : c.Ctx {n}}  -- might be wrong IH
+  -> (ctxElab : Γ |-ELAB H)
+  -> {M : _} {N : _}
+  -> {m : PreSyntax {n}}
+  -> Γ |- m :<-: pPi M N
+  -> {c C : _}
+  -> H |- m ELAB c :<-: C
+  -> Σ _ λ A →  Σ _ λ B → c c~>p* c.pPi A B
+
+
+consistent-lemma ctxElab (Var x .v x₂) (Var v x₁) = {!!}  {!!} , ({!!} , {!!}) -- by erasure of the lookup ctxElab
+consistent-lemma ctxElab (Ann x x₃) (Ann x₁ x₂) = consistent-lemma<- ctxElab x₃  x₂
+consistent-lemma ctxElab x (App e x₁ x₂) = {!!}
+-- must be that, bodTy [ a₁ ] ≟ pPi M₁ N₁
+-- thus bodTy ≟ pPi M₁' N₁' and folloews by (mutual?) induction
+-- or  bodTy = x, a₁ ≟ pPi M₁ N₁ and folloews by (mutual?) induction
+
+consistent-lemma<- ctxElab (Fun x x₁ x₂) (Fun e) = {!!} -- directly
+consistent-lemma<- ctxElab (Conv x x₂ x₃) (Conv x₁) = {!!}
+ --by def of ==, , induction on sub-der
+{-
+consistent-lemma : {n : ℕ} {Γ : pCtx {n}} {H : c.Ctx {n}}
+  -> (ctxElab : Γ |-ELAB H)
+  -> {M : _} {N : _}
+  -> {m : PreSyntax {n}}
+  -> Γ t.|- m :: pPi M N
+  -> {c C : _}
+  -> H |- m ELAB c :->: C
+  -> Σ _ λ A →  Σ _ λ B → c c~>p* c.pPi A B
+  
+consistent-lemma<- : {n : ℕ} {Γ : pCtx {n}} {H : c.Ctx {n}}  -- might be wrong IH
+  -> (ctxElab : Γ |-ELAB H)
+  -> {M : _} {N : _}
+  -> {m : PreSyntax {n}}
+  -> Γ t.|- m :: pPi M N
+  -> {c C : _}
+  -> H |- m ELAB c :<-: C
+  -> Σ _ λ A →  Σ _ λ B → c c~>p* c.pPi A B
+
+
+consistent-lemma ctxElab (t.Var .v x) (Var v x₁) = {!!} , ({!!} , {!!}) -- by erasure of the lookup ctxElab
+consistent-lemma ctxElab (t.Ann x) (Ann x₁ x₂) = consistent-lemma<- ctxElab x x₂
+consistent-lemma ctxElab x (App e x₁ x₂) = {!!}
+-- must be that, bodTy [ a₁ ] ≟ pPi M₁ N₁
+-- thus bodTy ≟ pPi M₁' N₁' and folloews by (mutual?) induction
+-- or  bodTy = x, a₁ ≟ pPi M₁ N₁ and folloews by (mutual?) induction
+
+
+-- other syntax would need to be typed by conversion
+consistent-lemma ctxElab (t.Conv x x₂) e = {!!} --by def of ==, , induction on sub-der
+
+consistent-lemma<- ctxElab (t.Fun x) (Fun e) = {!!} -- directly
+consistent-lemma<- ctxElab x (Conv x₁) = {!!}
+-- need to show that the type underlieing the cast is Pi
+-- ????!!!!!!!
+
+consistent-lemma<- ctxElab (t.Conv x x₁) e = {!!} --by def of ==, , induction on sub-der
+
+-}
+{-
+consistent-lemma : {n : ℕ} {Γ : pCtx {n}} {H : c.Ctx {n}}
+  -> (ctxElab : Γ |-ELAB H)
+  -> {m : PreSyntax {n}}
+  -> Γ t.|- m :: pTyU
+  -> {M : _} {N : _}
+  -> m ~>p* pPi M N
+  -> m ~>p* pPi M N
+  -> {!Σ ? ?!}
+consistent-lemma = {!!}
+--  m ~>p* pPi M N
+-}
+
+bi-elabs-ctx : {n : ℕ}
+  -> (Γ : pCtx {n})
+  -> Σ (c.Ctx {n}) λ H → Γ |-ELAB H
 bi-elabs-ctx = {!!} -- bidierctional reg

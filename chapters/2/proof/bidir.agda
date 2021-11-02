@@ -22,14 +22,9 @@ data  _~~_ {n : ℕ} : PreSyntax {n} -> PreSyntax {n} -> Set where
 --  Emp : Ctx 0
 
 
-
-data Ctx : {n : ℕ} -> Set where
-  Emp : Ctx {zero}
-  Ext : {n : ℕ} -> (Γ : Ctx {n}) ->  PreSyntax {n} -> Ctx {suc n}
-
 -- data Ctx : {n : ℕ} -> Set
-data _|-_:<-:_ {n : ℕ} (Γ : Ctx {n}) : PreSyntax {n} -> PreSyntax {n} -> Set
-data _|-_:->:_ {n : ℕ} (Γ : Ctx {n}) : PreSyntax {n} -> PreSyntax {n} -> Set
+data _|-_:<-:_ {n : ℕ} (Γ : pCtx {n}) : PreSyntax {n} -> PreSyntax {n} -> Set
+data _|-_:->:_ {n : ℕ} (Γ : pCtx {n}) : PreSyntax {n} -> PreSyntax {n} -> Set
 
 {-
 -- in agda it makes sense to work in mutially well formed contexts
@@ -45,21 +40,8 @@ data WFCtx : {n : ℕ} -> pCtx {n} -> Ctx {n} -> Set where
     -> WFCtx (pExt H a) (Ext Γ awf)
 -}
 
-postulate
-  -- o : {n : ℕ} {a aTy ty : PreSyntax {n}} {Γ : Ctx} -> Γ |- a :->: aTy --  -> {Ty : Γ |- ty :<-: pTyU}
-  --   -> Ext Γ ty |- po a :<-: po aTy
-    
-{-
-  o-== : {n : ℕ} {a a' aTy ty : PreSyntax {n}} {Γ : Ctx} -> Γ |- a == a' :: aTy -> {Ty : Γ |- ty :: pTyU}
-    -> Ext Γ Ty |- po a == po a' :: po aTy
--}
 
-  -- In : {n : ℕ} {ty : PreSyntax {n}} -> (Γ : Ctx) -> (v : Fin n) -> Γ |- ty :<-: pTyU -> Set 
-  In : {n : ℕ} -> (Γ : Ctx {n}) -> (v : Fin n) -> (ty : PreSyntax {n}) -> Set 
-
-
-
-CtxOK : {n : ℕ} -> (Γ : Ctx {n}) -> Set
+CtxOK : {n : ℕ} -> (Γ : pCtx {n}) -> Set
 CtxOK Γ = (v : _) -> (ty : _ ) -> In Γ v ty -> Γ |- ty :<-: pTyU
 
 
@@ -79,18 +61,19 @@ data _|-_:->:_ {n} Γ  where
     -> Γ |-  pAnn e ty :->: ty
   Pi : { aty : PreSyntax } -> {bodty : PreSyntax }
     -> (aTy : Γ  |- aty :<-: pTyU)
-    -> (bodTy : Ext Γ aty |- bodty :<-: pTyU)
+    -> (bodTy : pExt Γ aty |- bodty :<-: pTyU)
     -> Γ |-  pPi aty bodty :->: pTyU
   App : {f a aTy : PreSyntax } -> {bodTy : PreSyntax }
-    -> Γ |-  f :<-: pPi aTy bodTy -> Γ  |- a :<-: aTy 
-    -> Γ |-  pApp f a  :->: (bodTy [ a ])
+    -> Γ |- f :->: pPi aTy bodTy
+    -> Γ |- a :<-: aTy 
+    -> Γ |- pApp f a  :->: (bodTy [ a ])
     
 data _|-_:<-:_ {n} Γ  where
   Fun : { aty : PreSyntax } -> {bodty : PreSyntax }
     -> {bod : PreSyntax }
     -> (aTy : Γ  |- aty :<-: pTyU)
-    -> (bodTy : Ext Γ aty |- bodty :<-: pTyU)
-    -> Ext (Ext Γ aty)  (po (pPi aty bodty)) |- bod :<-: po bodty
+    -> (bodTy : pExt Γ aty |- bodty :<-: pTyU)
+    -> pExt (pExt Γ aty)  (po (pPi aty bodty)) |- bod :<-: po bodty
     -> Γ |- pFun bod :<-: pPi aty bodty
     
   Conv : {a m m' : PreSyntax }
@@ -100,9 +83,6 @@ data _|-_:<-:_ {n} Γ  where
     -> Γ |- a :<-: m'
     
 {-
---postulate
---  ok :  {n : ℕ} {Γ : PreCtx n} {a aTy : _} -> Γ |- a :: aTy -> Ctx {_} {Γ}
---  lookup :  {n : ℕ} {Γ : PreCtx n} -> (Ctx  {_} {Γ}) -> Fin n -> Σ _ \ aTy -> Γ |- aTy :: pTyU
 TODO
  well typed
  regularity
