@@ -1,3 +1,4 @@
+{-# OPTIONS --allow-unsolved-metas #-} 
 module precast where
 
 
@@ -37,9 +38,17 @@ extPreSyntax : {i j : ℕ}
 extPreSyntax ρ zero = zero
 extPreSyntax ρ (suc x) = suc (ρ x)
 
+
+o : {n : ℕ} -> PreSyntax {n} -> PreSyntax {suc n}
+o pTyU = pTyU -- helpful if ithi is definitional
+o (pCast x x₁ x₂) = {!!}
+o (pPi x x₁) = {!!}
+o (pFun x) = {!!}
+o (pApp x x₁) = {!!}
+o (pVar i) = {!!}
  
 postulate
-  o : {n : ℕ} -> PreSyntax {n} -> PreSyntax {suc n}
+--  o : {n : ℕ} -> PreSyntax {n} -> PreSyntax {suc n}
 
   _[_] :{n : ℕ} -> PreSyntax {suc n} -> PreSyntax {n} -> PreSyntax {n}
 

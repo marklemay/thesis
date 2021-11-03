@@ -206,7 +206,20 @@ literal "false"
 \begin_inset Formula $\left(\lambda X:\star\right)\left(\lambda x:X\right)x\ :\,\left[X:\star\right]\left[x:X\right]X$
 \end_inset
 
+.
+ In 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "HoTTbook"
+literal "false"
 
+\end_inset
+
+ it might be written 
+\begin_inset Formula $\lambda X.\lambda x.x\ :\,\underset{\left(X:\mathcal{U}\right)}{\prod}X\rightarrow X$
+\end_inset
+
+.
 \end_layout
 
 \end_inset
@@ -217,7 +230,7 @@ status open
 
 \begin_layout Plain Layout
 
-%TODO Hott, Martin Loff/Hoff (TODO PI notation) 
+%TODO Martin Loff/Hoff (TODO pr notation) 
 \end_layout
 
 \end_inset

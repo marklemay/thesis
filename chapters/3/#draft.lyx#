@@ -16980,7 +16980,9 @@ if
 \end_layout
 
 \begin_layout Standard
-regularity properties (need some lemmas?)
+regularity properties (need some lemmas?).
+ as it turns out,merely having the tags gives enough information for indunction,
+ and the properties are not needed directly
 \end_layout
 
 \begin_layout Itemize
