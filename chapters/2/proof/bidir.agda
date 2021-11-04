@@ -75,6 +75,9 @@ data _|-_:<-:_ {n} Γ  where
     -> (bodTy : pExt Γ aty |- bodty :<-: pTyU)
     -> pExt (pExt Γ aty)  (po (pPi aty bodty)) |- bod :<-: po bodty
     -> Γ |- pFun bod :<-: pPi aty bodty
+    -- TODO discuss that funs take types that are not directly convertable, and thus require annotations
+    -- thjis is standard as per https://www.cl.cam.ac.uk/~nk480/bidir-survey.pdf (Coqrand whnfed it)
+    -- the implementation is more libral and will atempt to evaluate to WHNF
     
   Conv : {a m m' : PreSyntax }
     -> Γ |- a :->: m

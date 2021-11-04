@@ -12920,8 +12920,22 @@ status open
 \begin_layout Plain Layout
 \begin_inset Formula 
 \[
-\frac{H\vdash m\,\textbf{Elab}\ a\overrightarrow{\,:\,}A}{H\vdash m\overleftarrow{\,:_{\ell,o}\,}A'\ \textbf{Elab}\left(a::_{A,\ensuremath{\ell},o}A'\right)}\operatorname{\overleftarrow{\textbf{Elab}}-conv}
+\frac{H\vdash m\,\textbf{Elab}\ a\overrightarrow{\,:\,}A}{H\vdash m\overleftarrow{\,:_{\ell,o}\,}B\ \textbf{Elab}\left(a::_{A,\ensuremath{\ell},o}B\right)}\operatorname{\overleftarrow{\textbf{Elab}}-conv}
 \]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+%TODO properly speaking use subscripts
+\end_layout
 
 \end_inset
 
@@ -15470,11 +15484,6 @@ if
 \end_layout
 
 \begin_layout Enumerate
-if 
-\begin_inset Formula $\Gamma\vdash$
-\end_inset
-
-, 
 \begin_inset Formula $\Gamma\vdash m\overrightarrow{\,:\,}M$
 \end_inset
 
@@ -15502,11 +15511,6 @@ if
 \end_layout
 
 \begin_layout Enumerate
-if 
-\begin_inset Formula $\Gamma\vdash$
-\end_inset
-
-, 
 \begin_inset Formula $\Gamma\vdash m\overleftarrow{\,:\,}M$
 \end_inset
 
@@ -15922,6 +15926,10 @@ mutual induction
 \begin_inset Formula $\Gamma\vdash m\overleftarrow{\,:\,}M$
 \end_inset
 
+, 
+\begin_inset Formula $\Gamma\vdash M\overleftarrow{\,:\,}\star$
+\end_inset
+
 , for some 
 \begin_inset Formula $\ell$
 \end_inset
@@ -16039,14 +16047,8 @@ by regularity
 \begin_inset Text
 
 \begin_layout Plain Layout
-by induction
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-not well founded?
-\end_layout
-
+by induction, 
+\begin_inset Formula $o=.$
 \end_inset
 
 
@@ -16469,7 +16471,7 @@ by induction
 \begin_inset Text
 
 \begin_layout Plain Layout
-
+TODO: Mutual cases
 \end_layout
 
 \end_inset
@@ -16662,7 +16664,7 @@ Unlike in gradual typing, we cannot elaborate arbitrary untyped syntax.
 \end_layout
 
 \begin_layout Part
-Clean up
+Suitable Warnings
 \end_layout
 
 \begin_layout Part
@@ -16909,7 +16911,7 @@ revise the bidirectional system so regularity properties hold, match with
 
 \begin_inset Formula 
 \[
-\frac{\Gamma\vdash m\overleftarrow{\,:\,}M}{\Gamma\vdash m::M\overrightarrow{\,:\,}M}\operatorname{\overrightarrow{ty}-::}
+\frac{\Gamma\vdash M\overleftarrow{\,:\,}\star\quad\Gamma\vdash m\overleftarrow{\,:\,}M}{\Gamma\vdash m::M\overrightarrow{\,:\,}M}\operatorname{\overrightarrow{ty}-::}
 \]
 
 \end_inset
@@ -16978,7 +16980,9 @@ if
 \end_layout
 
 \begin_layout Standard
-regularity properties (need some lemmas?)
+regularity properties (need some lemmas?).
+ as it turns out,merely having the tags gives enough information for indunction,
+ and the properties are not needed directly
 \end_layout
 
 \begin_layout Itemize

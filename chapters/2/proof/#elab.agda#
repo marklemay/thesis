@@ -257,6 +257,9 @@ consistent-lemma = {!!}
 consistent-lemma<- = {!!}
 
 
+preserv-pi : {n : ℕ} {H : c.Ctx {n}} {H: }
+  -> H |- pPi aty bodty ELAB A :<-: c.pTyU
+
 bi-elabs-> : {n : ℕ} {Γ : pCtx {n}} {H : c.Ctx {n}}
   -> (ctxElab : Γ |-ELAB H)
   -> {m M : PreSyntax {n}}
@@ -296,8 +299,8 @@ bi-elabs-> ctxElab (App F Arg) with bi-elabs-> ctxElab F
 ... | record { a = a ; elab = elab } = record { a = c.pApp b a ; A = bty c.[ a ] ; elab = App Felab red elab }
 
 
-bi-elabs<- ctxElab (Fun ty ty₁ ty₂) ety = ?
-bi-elabs<- ctxElab (Conv x x₁ ty) ety = ?
+bi-elabs<- ctxElab (Fun ty ty₁ ty₂) ety = {!!}
+bi-elabs<- ctxElab (Conv x x₁ ty) ety = {!!}
 {-
 bi-elabs<- ctxElab (Fun e e₁ Bod) (Pi _ _) with bi-elabs<- ((ext-ELAB (ext-ELAB ctxElab))) Bod {!!}
 ... | record { a = a ; elab = elab } = record { a = c.pFun a ; elab = Fun elab }

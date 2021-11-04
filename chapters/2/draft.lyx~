@@ -15141,6 +15141,19 @@ make usre implementation is smooth around this
 write up style guide
 \end_layout
 
+\begin_layout Itemize
+NuPRl bar types 
+\begin_inset Quotes eld
+\end_inset
+
+Constable and Smith had papers at LICS around 1987 or so, leading to both
+ Smith’s and Crary’s theses on the topic
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
 \begin_layout Section
 unused
 \end_layout

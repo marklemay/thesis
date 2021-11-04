@@ -114,6 +114,20 @@ status open
 
 \begin_layout Plain Layout
 
+%% TODO completely rewite this with a positive
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
 %% TODO notes
 \end_layout
 
@@ -174,9 +188,8 @@ The surface language is a minimal dependent type system.
 status open
 
 \begin_layout Plain Layout
-several alternative syntax exist in the literature.
- In this document the typed polymorphic identity function be written as
- 
+several alternative syntaxes exist in the literature.
+ In this document the typed polymorphic identity function is written, 
 \begin_inset Formula $\lambda-\,x\Rightarrow x\ :\,\left(X:\star\right)\rightarrow X\rightarrow X$
 \end_inset
 
@@ -193,7 +206,20 @@ literal "false"
 \begin_inset Formula $\left(\lambda X:\star\right)\left(\lambda x:X\right)x\ :\,\left[X:\star\right]\left[x:X\right]X$
 \end_inset
 
+.
+ In 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "HoTTbook"
+literal "false"
 
+\end_inset
+
+ it might be written 
+\begin_inset Formula $\lambda X.\lambda x.x\ :\,\underset{\left(X:\mathcal{U}\right)}{\prod}X\rightarrow X$
+\end_inset
+
+.
 \end_layout
 
 \end_inset
@@ -204,7 +230,7 @@ status open
 
 \begin_layout Plain Layout
 
-%TODO , Martin Loff/Hoff (TODO PI notation) 
+%TODO Martin Loff/Hoff (TODO pr notation) 
 \end_layout
 
 \end_inset

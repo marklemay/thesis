@@ -33,6 +33,7 @@ data Ctx where
 postulate
   -- definitional eq
   _~~_ : {n : ℕ} -> PreSyntax {n} -> PreSyntax {n} -> Set
+  refl~~ : {n : ℕ} -> (a : PreSyntax {n}) -> a ~~ a
 {-
   o : {n : ℕ} {a aTy ty : PreSyntax {n}} {Γ : Ctx} -> Γ |- a :: aTy -> {Ty : Γ |- ty :: pTyU}
     -> Ext Γ Ty |- po a :: po aTy
