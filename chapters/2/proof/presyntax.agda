@@ -188,3 +188,8 @@ confulent-~>p* : {n : ℕ}  {m a a' : PreSyntax {n}}
 confulent-~>p* {_} {m} {.m} {a'} par-refl ma' = a' , ma' , par-refl
 confulent-~>p* {_} {m} {a} {.m}  ma par-refl = a , par-refl , ma
 confulent-~>p* {_} {m} {a} {a'} (par-step m*b ba) (par-step m*b' b'a') = {!!}
+
+{-
+data WHNF {n : ℕ}  : PreSyntax {n} -> Set  where
+  whnf : 
+-}

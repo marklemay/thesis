@@ -114,7 +114,7 @@ status open
 
 \begin_layout Plain Layout
 
-%% TODO notes
+%% TODO completely rewite this with a positive
 \end_layout
 
 \end_inset
@@ -123,60 +123,30 @@ status open
 \end_layout
 
 \begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-% overview, why
-\end_layout
-
-\end_inset
-
-
+Despite the usability issues this thesis hopes to correct, dependent type
+ systems are still one of the most promising formal methods technology.
+ Since proofs and programs are associated there is no additional syntax
+ to learn.
+ The systems is predictable from the perspective of a functional programmer.
 \end_layout
 
 \begin_layout Standard
-In an ideal world programmers would write perfect programs whose correctness
- is fully proven.
- The 
+The 
 \series bold
 surface language
 \series default
- presented in this chapter allows for this ideal, but difficult, workflow.
- Hopefully and the machinery of later chapters will be transparent to the
- programers that use the full system.
- They should only need to think about the surface language.
- Everything presented in later chapters is designed to reinforce an understandin
-g of the surface type system.
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-% overview, What
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-The surface language is a minimal dependent type system.
- It will serve both as foundation for further chapters and a self contained
- technical introduction to dependent types.
- As much as possible, the syntax use's standard modern notation 
+ presented in this chapter fully specifies a minimal dependent type system.
+ The semantics are intended to be as simple as possible and compatible with
+ other well studied intentional dependent type theories.
+ It has several (but not all) of the standard properties of dependent type
+ theory.
+ As much as possible, the syntax uses standard modern notation 
 \begin_inset Foot
 status open
 
 \begin_layout Plain Layout
-several alternative syntax exist in the literature.
- In this document the typed polymorphic identity function be written as
- 
+several alternative syntaxes have exised in the literature.
+ In this document the typed polymorphic identity function is written, 
 \begin_inset Formula $\lambda-\,x\Rightarrow x\ :\,\left(X:\star\right)\rightarrow X\rightarrow X$
 \end_inset
 
@@ -193,7 +163,20 @@ literal "false"
 \begin_inset Formula $\left(\lambda X:\star\right)\left(\lambda x:X\right)x\ :\,\left[X:\star\right]\left[x:X\right]X$
 \end_inset
 
+.
+ In 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "HoTTbook"
+literal "false"
 
+\end_inset
+
+ it might be written 
+\begin_inset Formula $\lambda X.\lambda x.x\ :\,\underset{\left(X:\mathcal{U}\right)}{\prod}X\rightarrow X$
+\end_inset
+
+.
 \end_layout
 
 \end_inset
@@ -204,15 +187,23 @@ status open
 
 \begin_layout Plain Layout
 
-%TODO , Martin Loff/Hoff (TODO PI notation) 
+%TODO Martin Loff/Hoff (TODO pr notation) 
 \end_layout
 
 \end_inset
 
 .
- The semantics are intended to be as simple as possible and compatible with
- other well studied intentional dependent type theories.
  
+\end_layout
+
+\begin_layout Standard
+The surface language will serve both as foundation for later chapters and
+ a self contained technical introduction to dependent types.
+ By design, the machinery of later chapters should be transparent to the
+ programers that use the full system.
+ They should only need to think about the surface language.
+ Everything presented in later chapters is designed to reinforce an understandin
+g of the surface type system, and make it easier to use.
 \end_layout
 
 \begin_layout Standard
@@ -237,7 +228,7 @@ The surface language deviates from a standard dependent type theory to include
  Type-in-type is also supported since it simplifies the system for programmers,
  and makes the meta-theory slightly easier.
  Despite this, type soundness is a achievable and a practical type checking
- algorithm is given.
+ system is given.
 \end_layout
 
 \begin_layout Standard
@@ -281,7 +272,7 @@ status open
 \end_layout
 
 \begin_layout Standard
-The syntax for the Surface Language is in figure 
+The syntax for the surface language is in figure 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:surface-pre-syntax"
@@ -299,11 +290,6 @@ ons.
  formal typing judgments that will appear more frequently in this text,
  in the implemented language a user of the programming language would use
  a single colon.
- Location data 
-\begin_inset Formula $\ensuremath{\ell}$
-\end_inset
-
- is marked at every position where a type error might occur.
  
 \end_layout
 
@@ -792,8 +778,7 @@ name "fig:surface-pre-syntax"
 \end_layout
 
 \begin_layout Standard
-Several abbreviations are convenient when dealing with a language like this.
- These are listed in 
+Several convenient abbreviations are listed in 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:surface-pre-syntax-abrev"
@@ -803,7 +788,7 @@ noprefix "false"
 
 \end_inset
 
-
+.
 \end_layout
 
 \begin_layout Standard
@@ -2547,21 +2532,6 @@ status open
 \end_inset
 
 
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-% TODO: apure abouse of notation allows quantifiaction from function types
- or lambda or a combintation
-\end_layout
-
-\end_inset
-
-
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
@@ -2658,17 +2628,17 @@ church numerals
 
 \end_inset
 
- are encodable with 2 tags, 
+ are encodable with two tags, 
 \begin_inset Formula $0$
 \end_inset
 
- and successor, where successor also contains the result of the preceding
- number.
+ and successor.
+ Where successor also contains the result of the preceding number.
  So 
 \begin_inset Formula $\mathbb{N}_{c}$
 \end_inset
 
- encodes the handling of those two choices, 
+ encodes those two choices, 
 \begin_inset Formula $(X\rightarrow X)$
 \end_inset
 
@@ -2698,8 +2668,8 @@ Parameterized data types such as pairs and the
 \begin_inset Formula $Either$
 \end_inset
 
- type is handled if both possibilities are handled, which is exactly expressed
- by it's definition.
+ type is handled if both possibilities are handled, which is expressed by
+ it's definition.
 \end_layout
 
 \begin_layout Standard
@@ -2737,11 +2707,11 @@ Church encodings provide a theoretically light weight way of working with
  For instance, the predecessor function on natural numbers is not straight
  forward.
  To make the system easier for programmers, data types will be added in
- chapter 4.
+ Chapter 4.
 \end_layout
 
 \begin_layout Subsection
-Predicate encodings
+Proposition encodings
 \end_layout
 
 \begin_layout Standard
@@ -3614,11 +3584,7 @@ Assuming appropriate definitions for
 \begin_inset Formula $case_{c}$
 \end_inset
 
-, 
-\begin_inset Formula $-_{c}$
-\end_inset
-
-.
+, and subtraction.
 \end_layout
 
 \begin_layout Standard
@@ -3642,6 +3608,46 @@ status open
 
 \begin_layout Section
 Surface Language Type Assignment System
+\end_layout
+
+\begin_layout Standard
+When is an expression reasonable? The expression 
+\begin_inset Formula $\star\star\star\star$
+\end_inset
+
+ is allowed by the grammar of the language, but seems dubious.
+ Type systems can disregard bad terms and avoid bad runtime behavior.
+\end_layout
+
+\begin_layout Standard
+We will present our our type system as a type assignment system.
+ Practically this means that the type assignment system may need to infer
+ an unrealistic amount of information from a term and its context for typing.
+ This means that terms do not necessarily have unique typings.
+ For instance 
+\begin_inset Formula $\vdash\lambda x\Rightarrow x:\mathbb{N}_{c}\rightarrow\mathbb{N}_{c}$
+\end_inset
+
+, and 
+\begin_inset Formula $\vdash\lambda x\Rightarrow x:\mathbb{B}_{c}\rightarrow\mathbb{B}_{c}$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+%TODO example of an unearased term?
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -3728,17 +3734,6 @@ status open
 \end_layout
 
 \begin_layout Plain Layout
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-% TODO: Note the location needs explanation
-\end_layout
-
-\end_inset
-
-
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
@@ -4016,7 +4011,12 @@ literal "false"
 , the Chapala book
 \end_layout
 
-\begin_layout Plain Layout
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 \begin_inset ERT
 status open
 
@@ -4025,11 +4025,6 @@ status open
 % TODO: TAPL cites Harper as a co-originator of progress-preservation.
   Maybe just email him?  it might be also good to gice him for intractability.
   might want to review his book first/comenentary
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \end_inset
@@ -4083,8 +4078,8 @@ automatically
 \begin_inset Formula $\equiv$
 \end_inset
 
- relation is usually based on the definition of computation, it is called
- 
+ relation is usually based on the definition of terms, rather then on extrinsic
+ properties, it is called 
 \series bold
 definitional equality
 \series default
@@ -4120,7 +4115,7 @@ status open
 .
  Usually it is desirable to make the definitional equality relation as large
  as possible, though we will not do that in this chapter.
- Definitional equality will be revisited in the next chapter.
+ Chapter 3 will pose an alternative way to handle Definitional equalities.
 \end_layout
 
 \begin_layout Standard
@@ -4128,11 +4123,11 @@ In a progress and preservation style proof the
 \begin_inset Formula $\equiv$
 \end_inset
 
- should be
+ relation should
 \end_layout
 
 \begin_layout Itemize
-reflexive, 
+be reflexive, 
 \begin_inset Formula $m\equiv m$
 \end_inset
 
@@ -4140,7 +4135,7 @@ reflexive,
 \end_layout
 
 \begin_layout Itemize
-symmetric, if 
+be symmetric, if 
 \begin_inset Formula $m\equiv m'$
 \end_inset
 
@@ -4152,7 +4147,7 @@ symmetric, if
 \end_layout
 
 \begin_layout Itemize
-transitive, if 
+be transitive, if 
 \begin_inset Formula $m\equiv m'$
 \end_inset
 
@@ -4168,7 +4163,7 @@ transitive, if
 \end_layout
 
 \begin_layout Itemize
-closed under substitutions and evaluation, for instance if 
+be closed under substitutions and evaluation, for instance if 
 \begin_inset Formula $m\equiv m'$
 \end_inset
 
@@ -4184,7 +4179,7 @@ closed under substitutions and evaluation, for instance if
 \end_layout
 
 \begin_layout Itemize
-Distinguishes type constructors, for instance 
+distinguish between type constructors, for instance 
 \begin_inset Formula $\star\cancel{\equiv}\left(x:N\right)\rightarrow M$
 \end_inset
 
@@ -4211,19 +4206,19 @@ A particularly simple definition of
 \end_layout
 
 \begin_layout Standard
-this relation is
+this relation
 \end_layout
 
 \begin_layout Itemize
-reflexive by definition
+is reflexive, by definition
 \end_layout
 
 \begin_layout Itemize
-symmetric automatically
+is symmetric, automatically
 \end_layout
 
 \begin_layout Itemize
-transitive if 
+is transitive, if 
 \begin_inset Formula $\Rrightarrow_{\ast}$
 \end_inset
 
@@ -4231,7 +4226,7 @@ transitive if
 \end_layout
 
 \begin_layout Itemize
-closed under substitution if 
+is closed under substitution if 
 \begin_inset Formula $\Rrightarrow_{\ast}$
 \end_inset
 
@@ -4239,7 +4234,7 @@ closed under substitution if
 \end_layout
 
 \begin_layout Itemize
-Distinguishes type constructors, if they are stable under reduction.
+distinguishes type constructors, if they are stable under reduction.
  For instance 
 \begin_inset Formula $\left(x:N\right)\rightarrow M\Rrightarrow\left(x:N'\right)\rightarrow M'$
 \end_inset
@@ -4385,7 +4380,7 @@ name "fig:surface-reduction"
 \begin_layout Standard
 Parallel reductions are defined to make confluence easy to prove, by allowing
  the simultaneous evaluation of any available reduction.
- The system of parallel reductions is in 
+ The system of parallel reductions is defined in 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:surface-reduction"
@@ -4403,9 +4398,9 @@ noprefix "false"
 \begin_inset Formula $\textrm{\Rrightarrow-::-red}$
 \end_inset
 
- since they preform reductions.
+ since they directly preform reductions.
  The other rules are entirely structural.
- Repeating a parallel step zero or more times is written 
+ Repeating a parallel reductions zero or more times is written 
 \begin_inset Formula $\Rrightarrow_{\ast}$
 \end_inset
 
@@ -4449,6 +4444,11 @@ status open
 
 \begin_layout Subsection
 Definitional Equality
+\end_layout
+
+\begin_layout Standard
+We now have enough information to prove the critical properties of definitional
+ equality.
 \end_layout
 
 \begin_layout Subsubsection
@@ -13698,7 +13698,7 @@ status open
 \begin_layout Standard
 There are many possible way to localize the type checking process.
  We could ask that all variable be annotated at binders.
- This is ideal from a theoretical perspective since it matches how type
+ This is ideal from a theoretical perspective, since it matches how type
  contexts are built up.
 \end_layout
 
@@ -13719,7 +13719,7 @@ However note that, our proof of
 
 \begin_layout Standard
 Annotating every binding site requires a lot of redundant information.
- Luckily there's a better way, bidirectional type checking.
+ Luckily there's a better way.
 \end_layout
 
 \begin_layout Subsection
@@ -13735,7 +13735,7 @@ Bidirectional type checking
 e between the required type annotations and the simplicity of the theory,
  allowing for localized errors 
 \begin_inset Foot
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \begin_inset CommandInset citation
@@ -13759,11 +13759,10 @@ literal "false"
 \end_inset
 
 .
- In the usual bidirectional bidirectional typing scheme annotations are
- only required at the top-level, or around a lambda that is directly applied
- to an argument
+ In the usual bidirectional typing schemes, annotations are only required
+ at the top-level, or around a lambda that is directly applied to an argument
 \begin_inset Foot
-status collapsed
+status open
 
 \begin_layout Plain Layout
 more generally when an elimination reduction is possible
@@ -13771,16 +13770,36 @@ more generally when an elimination reduction is possible
 
 \end_inset
 
+, for example 
+\begin_inset Formula $(\lambda x\Rightarrow x+x)7$
+\end_inset
+
+ would need to be written 
+\begin_inset Formula $\left((\lambda x\Rightarrow x+x)::\mathbb{N}\rightarrow\mathbb{N}\right)7$
+\end_inset
+
 .
  Since programers rarely write functions that are immediately evaluated,
  this style of type checking usually only needs top level functions to be
  annotated
 \begin_inset Foot
-status collapsed
+status open
 
 \begin_layout Plain Layout
 Even in Haskell, with full Hindley-Milner type inference, top level type
  annotations are encouraged.
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+%TODO ref style guide.
+ the point was simialarly made in Agda thesis.
 \end_layout
 
 \end_inset
@@ -13802,8 +13821,8 @@ n.
 \end_layout
 
 \begin_layout Standard
-This is accomplished by breaking the typing judgments into two inter connected
- judgments: 
+This is accomplished by breaking the typing judgments into two mutual judgments:
+ 
 \end_layout
 
 \begin_layout Itemize
@@ -13838,8 +13857,8 @@ This allows typing information to flow from the outside in for type checking
  When an inference meets a check, a conversion verifies that the types are
  definitionally equal.
  This has the advantage of precisely limiting where conversion rule can
- be used, since conversion checking is usually the least efficient part
- of dependent type checking.
+ be used, since conversion checking is usually an efficient part of dependent
+ type checking.
 \end_layout
 
 \begin_layout Standard
@@ -13966,22 +13985,174 @@ noprefix "false"
 \end_inset
 
 .
- These rules are the same as before except that typing direction is now
- explicit in the judgment.
+ The rules are almost the same as before except that typing direction is
+ now explicit in the judgment.
 \end_layout
 
 \begin_layout Standard
-\begin_inset ERT
-status open
+As mentioned, bidirectional type checking handles higher order inputs very
+ well.
+ For instance, the expression 
+\begin_inset Formula $\vdash(\lambda x\Rightarrow x\,(\lambda y\Rightarrow y)\,2)\overleftarrow{\,:\,}\left(\left(\mathbb{N}\rightarrow\mathbb{N}\right)\rightarrow\mathbb{N}\rightarrow\mathbb{N}\right)\rightarrow\mathbb{N}$
+\end_inset
+
+ checks because 
+\begin_inset Formula $\vdash(\lambda y\Rightarrow y)\overleftarrow{\,:\,}\left(\mathbb{N}\rightarrow\mathbb{N}\right)$
+\end_inset
+
+ and 
+\begin_inset Formula $\vdash2\overleftarrow{\,:\,}\mathbb{N}$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+Unlike the undirected judgments of the Type Assignment System, the inference
+ rule of the the bidirectional system does not convert, it us unique up
+ to syntax! For example 
+\begin_inset Formula $x:Vec\,3\vdash x\overrightarrow{\,:\,}Vec\,3$
+\end_inset
+
+, but 
+\begin_inset Formula $x:Vec\,3\cancel{\vdash}x\overrightarrow{\,:\,}Vec\,\left(1+2\right)$
+\end_inset
+
+.
+ This could cause unexpected behavior around function applications if 
+\begin_inset Formula $\Gamma\vdash m\overrightarrow{\,:\,}\mathbb{N}\rightarrow\mathbb{N}$
+\end_inset
+
+ then 
+\begin_inset Formula $m\:7$
+\end_inset
+
+ will infer, but if the 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ from bing in the head position of the type even under another cast, for
+ instance 
+\begin_inset Formula $\Gamma\vdash m\overrightarrow{\,:\,}\left(\mathbb{N}\rightarrow\mathbb{N}::\star\right)$
+\end_inset
+
+ then 
+\begin_inset Formula $m\:7$
+\end_inset
+
+ will will not infer.
+\end_layout
+
+\begin_layout Standard
+The reverse issue is possible around Check rules against function definitions.
+ For instance 
+\begin_inset Formula $\left((\lambda x\Rightarrow x)::\mathbb{N}\rightarrow\mathbb{N}\right)$
+\end_inset
+
+ will infer, but if computation blocks the 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ from bing in the head position, inference will be impossible.
+ As in this expression, 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $\left((\lambda x\Rightarrow x)::\left(\mathbb{N}\rightarrow\mathbb{N}::\star\right)\right)$
+\end_inset
+
+ 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+which will not infer.
+ 
+\end_layout
+
+\begin_layout Standard
+For these reasons, realistic implementations will often evaluate the types
+ needed for 
+\begin_inset Formula $\overleftarrow{ty}-\mathsf{fun}$
+\end_inset
+
+, and 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $\operatorname{\overrightarrow{ty}-fun-app}$
+\end_inset
+
+ into weak head normal form 
+\begin_inset Foot
+status collapsed
 
 \begin_layout Plain Layout
 
-% For example...
-\end_layout
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+as in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "10.1007/3-540-45842-5_4"
+literal "false"
 
 \end_inset
 
 
+\end_layout
+
+\end_inset
+
+.
+ More advanced bidirectional implementations such as Agda even preform unificati
+on as part of their bidirectional type checking.
+\end_layout
+
+\begin_layout Standard
+This document opts for the simplest possible presentation, of bidirectional
+ types.
+ There will always be ways to make type inference more powerful, at the
+ cost of complexity.
 \end_layout
 
 \begin_layout Subsection
@@ -13999,7 +14170,7 @@ literal "false"
 
 .
  But it would be difficult for the system described here since type annotations
- evaluate away, making preservation difficult.
+ evaluate away, complicating preservation.
  Alternatively we can show that a bidirectional typing judgment implies
  a type assignment system typing judgment.
 \end_layout
@@ -14053,23 +14224,27 @@ if
 \end_inset
 
  then 
-\begin_inset Formula $\Gamma\vdash m'\overrightarrow{\,:\,}M$
+\begin_inset Formula $\Gamma\vdash m'\overrightarrow{\,:\,}M'$
 \end_inset
 
  , 
-\begin_inset Formula $\Gamma\vdash m'\overleftarrow{\,:\,}M$
+\begin_inset Formula $\Gamma\vdash m'\overleftarrow{\,:\,}M'$
 \end_inset
 
-, and 
+, 
 \begin_inset Formula $m\equiv m'$
 \end_inset
 
+ and 
+\begin_inset Formula $M\equiv M'$
+\end_inset
 
+ 
 \end_layout
 
 \begin_layout Standard
-by induction on the typing derivation, adding annotations at each step that
- are convertible with the original 
+by induction on the typing derivation, adding and removing annotations at
+ each step that are convertible with the original 
 \begin_inset Formula $m$
 \end_inset
 
@@ -14081,7 +14256,7 @@ Absent Logical Properties
 \end_layout
 
 \begin_layout Standard
-When type systems are considered as a logic, it is desirable that
+When type systems are used as logics, it is desirable that
 \end_layout
 
 \begin_layout Itemize
@@ -14116,9 +14291,9 @@ Type checking is decidable.
 \end_layout
 
 \begin_layout Standard
-The surface system has neither of these properties
+Neither the TAS system or the Bidirectional systems has these properties
 \begin_inset Foot
-status open
+status collapsed
 
 \begin_layout Plain Layout
 These properties are usually shown be showing that the computation that
@@ -14245,9 +14420,9 @@ Logical Unsoundness
 \end_layout
 
 \begin_layout Standard
-Operationally, logical unsoundness will present in the system as non-termination.
- However non-termination seems not to matter for programming languages practice
- in practice.
+Operationally, logical unsoundness will be recognized by programmers as
+ non-termination.
+ Non-termination seems not to matter for programming languages in practice.
  For instance, in ML the type 
 \begin_inset Formula $\mathtt{f:Int->Int}$
 \end_inset
@@ -14269,6 +14444,21 @@ Operationally, logical unsoundness will present in the system as non-termination
  all possible computations then preventing non-termination.
  Therefore, logical unsoundness seems suitable for a dependently typed programmi
 ng language.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% TODO: argue from the Blum proof?  Allowing non-termination makes writeing
+ termination programs easier.
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -14372,9 +14562,9 @@ If there is a procedure to decide type checking we can decide exactly when
 \end_layout
 
 \begin_layout Standard
-Again this the root of the problem is related to the non-termination that
- results by allowing Turing complete computations, which are apparently
- necessary for a realistic programing language.
+Again this the root of the problem is the non-termination that results by
+ allowing Turing complete computations, which are apparently necessary for
+ a realistic programing language.
 \end_layout
 
 \begin_layout Standard
@@ -14385,10 +14575,10 @@ Luckily undecidability of type checking is not as bad as it sounds for several
  In the bidirectional system, conversion checks will only happen at limited
  positions, ant it is possible to use a counter to warn or give errors at
  code positions that do not convert because normalization takes too long.
- Heuristic methods of conversion chcking seem to work well enough in practice
+ Heuristic methods of conversion checking seem to work well enough in practice
  even without a counter.
  It is also possible to embed proofs of conversion directly into the syntax
- as in
+ 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "sjoberg2012irrelevance"
@@ -14464,9 +14654,9 @@ status open
 
 \begin_layout Standard
 Many mainstream programming languages have undecidable type checking.
- If a language admits a Turing complete macro or preprocessor system that
- can modify typing, this would make type checking undecidable (this makes
- the type system of C, C++
+ If a language admits a sufficiently powerful macro or preprocessor system
+ that can modify typing, this would make type checking undecidable (this
+ makes the type system of C, C++
 \begin_inset Foot
 status collapsed
 
@@ -14500,8 +14690,8 @@ ly).
 \end_layout
 
 \begin_layout Standard
-In practice these theoretical concerns are not born out since programers
- are not giving the compiler 
+In practice these theoretical concerns are irrelevant since programers are
+ not giving the compiler 
 \begin_inset Quotes eld
 \end_inset
 
@@ -14510,14 +14700,15 @@ worst case
 \end_inset
 
  code.
- Even if they did all that can happen is the type checking will time-out
+ Even if they did, the worst that can happen is the type checking will time-out
  in the compilation process.
  When this happens programmers can fix their code, modify or remove macros,
  or add typing annotations.
  Programers in conventional languages are already entrusted with almost
- unlimited power to cause harm, programs regularly delete files, read and
- modify sensitive information, and send emails (some of these are even possible
- from within the language's macro systems).
+ unlimited power to cause harm.
+ Programs regularly delete files, read and modify sensitive information,
+ and send emails (some of these are even possible from within the language's
+ macro systems).
  Relatively speaking, undecidable type checking is not the biggest concern.
 \end_layout
 
@@ -14553,7 +14744,7 @@ There may, indeed, be other applications of the system than its use as a
 \begin_inset Quotes erd
 \end_inset
 
- [Church, 1932, p.349, A Set of Postulates for the Foundation of Logic]
+[Church, 1932, p.349, A Set of Postulates for the Foundation of Logic]
 \end_layout
 
 \end_inset
@@ -14581,6 +14772,17 @@ literal "false"
 
 .
  
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+%TODO cite origional if I can find it
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -14776,7 +14978,7 @@ ns via parametric encodings.
 status open
 
 \begin_layout Plain Layout
-sometimes called 
+called 
 \begin_inset Quotes eld
 \end_inset
 
@@ -14822,14 +15024,25 @@ in the sense that function types can quantify over
 
  so the polymorphic identity can be applied to itself.
  From the perspective of the surface language this impredictivity is modest,
- but still causes issues in the presence of classical logical assumptions.
+ but still causes issues in the presence of classical logical assumptions
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% TODO Cite
+\end_layout
+
+\end_inset
+
+ .
  Many of the examples form this chapter are adapted from examples that were
  first worked out for the Calculus of Constructions.
 \end_layout
 
 \begin_layout Standard
-Several other systems were developed that directly extended or modify the
- Calculus of Constructions.
+Several other systems were developed that directly extended or modified
+ the Calculus of Constructions.
  The Extended Calculus of Constructions (ECC)
 \begin_inset CommandInset citation
 LatexCommand cite
@@ -14997,11 +15210,11 @@ literal "false"
  least dependently typed functions and a propositional equality type.
  The system has two flavors characterized by it's handling of definitional
  equality.
- If types are only identified by convertibility (as ever system described
+ If types are only identified by convertibility (as every system described
  so far) it is called Intentional Type Theory (ITT).
  If the system allows proofs of equality to associate types, it is called
  Extensional Type Theory.
- Since MTLL is open ended the Calculus of Constructions can be added to
+ Since MTLL is open ended, the Calculus of Constructions can be added to
  it as a subsystem
 \begin_inset CommandInset citation
 LatexCommand cite
@@ -15093,7 +15306,7 @@ include references from https://www.lix.polytechnique.fr/~vsiles/papers/PTSATR.p
 \end_layout
 
 \begin_layout Itemize
-discuss 
+discuss invariants that don't hold
 \end_layout
 
 \begin_deeper
@@ -15129,12 +15342,12 @@ caveat about unsupported features
 \end_layout
 
 \begin_layout Itemize
-go through previous stack overflow questions to remindmyself about past
+go through previous stack overflow questions to remind myself about past
  confusion.
 \end_layout
 
 \begin_layout Itemize
-make usre implementation is smooth around this
+make user implementation is smooth around this
 \end_layout
 
 \begin_layout Itemize
