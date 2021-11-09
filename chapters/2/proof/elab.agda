@@ -333,7 +333,7 @@ consistent-lemma : {n : ℕ} {Γ : pCtx {n}} {H : c.Ctx {n}}
   -> H |- m ELAB c :->: C
   -> Σ _ λ A →  Σ _ λ B → C c~>p* c.pPi A B
 consistent-lemma ctxElab (Var x .v x₂) (Var v x₁) = {!!} -- from ctx
-consistent-lemma ctxElab (Ann x x₃) (Ann x₁ x₂) = {!!}
+consistent-lemma ctxElab (Ann x x₃) (Ann x₁ x₂) = {!!}  -- by induction + trans
 consistent-lemma ctxElab x (App yy x₁ x₂) = {!!}
 -- must be that, bodTy [ a₁ ] ≟ pPi M₁ N₁
 -- thus bodTy ≟ pPi M₁' N₁' and folloews by (mutual?) induction

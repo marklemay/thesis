@@ -145,7 +145,7 @@ surface language
 status open
 
 \begin_layout Plain Layout
-several alternative syntaxes have exised in the literature.
+several alternative syntaxes have existed in the literature.
  In this document the typed polymorphic identity function is written, 
 \begin_inset Formula $\lambda-\,x\Rightarrow x\ :\,\left(X:\star\right)\rightarrow X\rightarrow X$
 \end_inset
@@ -567,7 +567,7 @@ variable
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $m::_{\ensuremath{\ell}}M$
+\begin_inset Formula $m::M$
 \end_inset
 
 
@@ -649,7 +649,7 @@ type universe
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\left(x:M_{\ensuremath{\ell}}\right)\rightarrow N_{\ensuremath{\ell'}}$
+\begin_inset Formula $\left(x:M\right)\rightarrow N$
 \end_inset
 
 
@@ -731,7 +731,7 @@ function
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $m_{\ensuremath{\ell}}\,n$
+\begin_inset Formula $m\,n$
 \end_inset
 
 
@@ -2535,7 +2535,7 @@ status open
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-Example Surface Language Programs
+Example Surface Language Expressions
 \end_layout
 
 \end_inset
@@ -14114,7 +14114,7 @@ For these reasons, realistic implementations will often evaluate the types
 
  into weak head normal form 
 \begin_inset Foot
-status collapsed
+status open
 
 \begin_layout Plain Layout
 
@@ -14133,7 +14133,7 @@ status collapsed
 as in 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "10.1007/3-540-45842-5_4"
+key "COQUAND1996167"
 literal "false"
 
 \end_inset
@@ -14210,6 +14210,20 @@ Therefore the bidirectional system is also type sound.
 
 \begin_layout Subsection
 The Bidirectional System is Conservative
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+%TODO complete is more common?
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -15298,7 +15312,527 @@ options "alpha"
 \end_layout
 
 \begin_layout Section
+alt bidirectional formalization
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{x:M\in\Gamma}{\Gamma\vdash x\overrightarrow{\,:\,}M}\operatorname{\overrightarrow{ty}-var}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{\,}{\Gamma\vdash\star\overrightarrow{\,:\,}\star}\operatorname{\overrightarrow{ty}-\star}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{\Gamma\vdash m\overleftarrow{\,:\,}M}{\Gamma\vdash m::M\overrightarrow{\,:\,}M}\operatorname{\overrightarrow{ty}-::}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{\Gamma\vdash M\overleftarrow{\,:\,}\star\quad\Gamma,x:M\vdash N\overleftarrow{\,:\,}\star}{\Gamma\vdash\left(x:M\right)\rightarrow N\overrightarrow{\,:\,}\star}\operatorname{\overrightarrow{ty}-fun-ty}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{\Gamma\vdash m\overrightarrow{\,:\,}C\quad C\Rrightarrow\left(x:N\right)\rightarrow M\quad\Gamma\vdash n\overleftarrow{\,:\,}N}{\Gamma\vdash m\,n\overrightarrow{\,:\,}M\left[x\coloneqq n\right]}\operatorname{\overrightarrow{ty}-fun-app}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{C\Rrightarrow\left(x:N\right)\rightarrow M\quad\Gamma,f:\left(x:N\right)\rightarrow M,x:N\vdash m\overleftarrow{\,:\,}M}{\Gamma\vdash\mathsf{fun}\,f\,x\Rightarrow m\overleftarrow{\,:\,}C}\operatorname{\overleftarrow{ty}-\mathsf{fun}}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{\Gamma\vdash m\overrightarrow{\,:\,}M\quad M\equiv M'}{\Gamma\vdash m\overleftarrow{\,:\,}M'}\operatorname{\overleftarrow{ty}-conv}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This is more in the spirit of bidirectional type checking, and closer to
+ the implemented algorithm.
+ If keeping the old style, need to more carefully review the examples since
+ more annotations may be needed.
+ Additionally it makes the symmetry clear against the cast lang of the next
+ section.
+\end_layout
+
+\begin_layout Standard
+However, 
+\end_layout
+
+\begin_layout Itemize
+this formalization makes it difficulty to bake in regularity conditions,
+ since the reductions may not preserve bidirectionally.
+ Which cause non-biderecitonal types to be added to the context.
+ 
+\end_layout
+
+\begin_layout Itemize
+it seems reasonable to add some restriction to M' in the conversion rule
+ so as not to allow checks at untyped types.
+ though this may subtly interact with other invariants
+\begin_inset Formula 
+\[
+\frac{\Gamma\vdash m\overrightarrow{\,:\,}M\quad M\equiv M'\quad\Gamma\vdash M\overleftarrow{\,:\,}\star}{\Gamma\vdash m\overleftarrow{\,:\,}M'}\operatorname{\overleftarrow{ty}-conv}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+thought the symmetry with the cast language is more clear, it seems to make
+ proofs more difficult.
+ Though fully proving it might be more enlightening
+\end_layout
+
+\begin_layout Itemize
+This allows a strict super-set of terms from the current formalization,
+ so in principle it is easer to draw conclusions from the existing system
+\end_layout
+
+\begin_layout Standard
+The alt formalization allows the key proofs from this section,
+\end_layout
+
+\begin_layout Subsection
+The bidirectional System is Type Sound
+\end_layout
+
+\begin_layout Itemize
+if 
+\begin_inset Formula $\Gamma\vdash m\overrightarrow{\,:\,}M$
+\end_inset
+
+ then 
+\begin_inset Formula $\Gamma\vdash m\,:\,M$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+if 
+\begin_inset Formula $\Gamma\vdash m\overleftarrow{\,:\,}M$
+\end_inset
+
+ then 
+\begin_inset Formula $\Gamma\vdash m\,:\,M$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+by mutual induction on the bidirectional typing derivations, generating
+ definitional equalities from reduction.
+\end_layout
+
+\begin_layout Subsection
+The Bidirectional System is Conservative
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+%TODO complete is more common?
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Additionally we can show that the bidirectional system does not preclude
+ any computation available in the type assignment system.
+ Formally
+\end_layout
+
+\begin_layout Itemize
+if 
+\begin_inset Formula $\Gamma\vdash m\,:\,M$
+\end_inset
+
+ then 
+\begin_inset Formula $\Gamma\vdash m'\overleftarrow{\,:\,}M$
+\end_inset
+
+, 
+\begin_inset Formula $m\equiv m'$
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Itemize
+if 
+\begin_inset Formula $\Gamma\vdash m\,:\,M$
+\end_inset
+
+ then 
+\begin_inset Formula $\Gamma\vdash m'\overrightarrow{\,:\,}M'$
+\end_inset
+
+, 
+\begin_inset Formula $m\equiv m'$
+\end_inset
+
+ and 
+\begin_inset Formula $M\equiv M'$
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+by induction on the typing derivation, adding and removing annotations at
+ each step that are convertible with the original 
+\begin_inset Formula $m$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+%TODO double check this in agda
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+alt bidirectional formalization (with some regularity)
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\Gamma\vdash M\overleftarrow{\,:\,}\star\quad\Gamma\vdash m\overleftarrow{\,:\,}M}{\Gamma\vdash m::M\overrightarrow{\,:\,}M}\operatorname{\overrightarrow{ty}-::}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+this variant better motivates the placement of the location positions.
+ however it does not match the undirected type system precisely which may
+ make induction harder, since the undirected system does not have regularity.
+\end_layout
+
+\begin_layout Standard
+This system is still sound, but may not be complete 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $x:3\vdash x\,:\,3$
+\end_inset
+
+, but not 
+\begin_inset Formula $X:3\vdash m\overleftarrow{\,:\,}\star$
+\end_inset
+
+, for any 
+\begin_inset Formula $3\equiv m$
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Itemize
+(
+\begin_inset Formula $\vdash\star\,:\,\left(\lambda-\Rightarrow\star\right)\left(\star\star\right)$
+\end_inset
+
+, since 
+\begin_inset Formula $\left(\lambda-\Rightarrow\star\right)\left(\star\star\right)\equiv\star$
+\end_inset
+
+ is ok with norm)
+\end_layout
+
+\begin_layout Standard
+it is likely complete over reasonable contexts
+\end_layout
+
+\begin_layout Itemize
+if 
+\begin_inset Formula $\Gamma\vdash$
+\end_inset
+
+, 
+\begin_inset Formula $\Gamma\vdash m\,:\,M$
+\end_inset
+
+ then 
+\begin_inset Formula $\Gamma'\vdash m'\overleftarrow{\,:\,}M$
+\end_inset
+
+, 
+\begin_inset Formula $\Gamma'\overset{\leftarrow}{\vdash}$
+\end_inset
+
+, 
+\begin_inset Formula $m\equiv m'$
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Itemize
+if 
+\begin_inset Formula $\Gamma\vdash$
+\end_inset
+
+, 
+\begin_inset Formula $\Gamma\vdash m\,:\,M$
+\end_inset
+
+ then 
+\begin_inset Formula $\Gamma'\vdash m'\overrightarrow{\,:\,}M'$
+\end_inset
+
+, 
+\begin_inset Formula $\Gamma'\overset{\leftarrow}{\vdash}$
+\end_inset
+
+, 
+\begin_inset Formula $m\equiv m'$
+\end_inset
+
+ and 
+\begin_inset Formula $M\equiv M'$
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Section
+alt bidirectional formalization (with strict regularity)
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\Gamma\overset{\leftarrow}{\vdash}\quad x:M\in\Gamma}{\Gamma\vdash x\overrightarrow{\,:\,}M}\operatorname{\overrightarrow{ty}-var}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{\Gamma\overset{\leftarrow}{\vdash}}{\Gamma\vdash\star\overrightarrow{\,:\,}\star}\operatorname{\overrightarrow{ty}-\star}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{\Gamma\vdash M\overleftarrow{\,:\,}\star\quad\Gamma\vdash m\overleftarrow{\,:\,}M}{\Gamma\vdash m::M\overrightarrow{\,:\,}M}\operatorname{\overrightarrow{ty}-::}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{\Gamma\vdash M\overleftarrow{\,:\,}\star\quad\Gamma,x:M\vdash N\overleftarrow{\,:\,}\star}{\Gamma\vdash\left(x:M\right)\rightarrow N\overrightarrow{\,:\,}\star}\operatorname{\overrightarrow{ty}-fun-ty}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{\Gamma\vdash m\overrightarrow{\,:\,}C\quad\Gamma\vdash C\overleftarrow{\,:\,}\star\quad C\Rrightarrow\left(x:N\right)\rightarrow M\quad\Gamma\vdash\left(x:N\right)\rightarrow M\overleftarrow{\,:\,}\star\quad\Gamma\vdash n\overleftarrow{\,:\,}N}{\Gamma\vdash m\,n\overrightarrow{\,:\,}M\left[x\coloneqq\left(n::N\right)\right]}\operatorname{\overrightarrow{ty}-fun-app}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{\Gamma\vdash C\overleftarrow{\,:\,}\star\quad C\Rrightarrow\left(x:N\right)\rightarrow M\quad\Gamma\vdash\left(x:N\right)\rightarrow M\overleftarrow{\,:\,}\star\quad\Gamma,f:\left(x:N\right)\rightarrow M,x:N\vdash m\overleftarrow{\,:\,}M}{\Gamma\vdash\mathsf{fun}\,f\,x\Rightarrow m\overleftarrow{\,:\,}C}\operatorname{\overleftarrow{ty}-\mathsf{fun}}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{\Gamma\vdash m\overrightarrow{\,:\,}M\quad M\equiv M'\quad\Gamma\vdash M'\overleftarrow{\,:\,}\star}{\Gamma\vdash m\overleftarrow{\,:\,}M'}\operatorname{\overleftarrow{ty}-conv}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+this variant ensures a strict form of regularity, similar to an undirected
+ system that embeds well formed contexts into typing derivations.
+ The advantage here is that a strict form of regularity holds
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $\Gamma\vdash m\overleftarrow{\,:\,}M$
+\end_inset
+
+ then 
+\begin_inset Formula $\Gamma\overset{\leftarrow}{\vdash}$
+\end_inset
+
+ and 
+\begin_inset Formula $\Gamma\vdash M\overleftarrow{\,:\,}\star$
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $\Gamma\vdash m\overrightarrow{\,:\,}M$
+\end_inset
+
+ then 
+\begin_inset Formula $\Gamma\overset{\leftarrow}{\vdash}$
+\end_inset
+
+ and 
+\begin_inset Formula $\Gamma\vdash M\overleftarrow{\,:\,}\star$
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+Additionally, well formedness condition are 
+\begin_inset Quotes eld
+\end_inset
+
+baked
+\begin_inset Quotes erd
+\end_inset
+
+ into the derivation that makes it available inductively (inductions are
+ clearly well founded).
+\end_layout
+
+\begin_layout Standard
+clearly sound.
+ but completeness may be difficult to show without building a regular version
+ of the type system, additionally it will be difficult to show some WHNF
+ reduction will maintain bidirectionality
+\end_layout
+
+\begin_layout Itemize
+if 
+\begin_inset Formula $\Gamma\vdash$
+\end_inset
+
+, 
+\begin_inset Formula $\Gamma\vdash m\,:\,M$
+\end_inset
+
+ then 
+\begin_inset Formula $\Gamma'\vdash m'\overleftarrow{\,:\,}M$
+\end_inset
+
+, 
+\begin_inset Formula $\Gamma'\overset{\leftarrow}{\vdash}$
+\end_inset
+
+, 
+\begin_inset Formula $m\equiv m'$
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Itemize
+if 
+\begin_inset Formula $\Gamma\vdash$
+\end_inset
+
+, 
+\begin_inset Formula $\Gamma\vdash m\,:\,M$
+\end_inset
+
+ then 
+\begin_inset Formula $\Gamma'\vdash m'\overrightarrow{\,:\,}M'$
+\end_inset
+
+, 
+\begin_inset Formula $\Gamma'\overset{\leftarrow}{\vdash}$
+\end_inset
+
+, 
+\begin_inset Formula $m\equiv m'$
+\end_inset
+
+ and 
+\begin_inset Formula $M\equiv M'$
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+This could be presented in a fancy way that greys out invariants while leaving
+ the algorithmic procedure black
+\end_layout
+
+\begin_layout Section
 TODO
+\end_layout
+
+\begin_layout Itemize
+The proofs may break the flow, review that.
+\end_layout
+
+\begin_layout Itemize
+Should I say more about regularity?
 \end_layout
 
 \begin_layout Itemize

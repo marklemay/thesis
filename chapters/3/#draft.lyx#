@@ -14609,9 +14609,9 @@ noprefix "false"
 
 .
  Elaboration rules are written in a style of bidirectional type checking.
- However, unlike bidirectional type checking, when checking an inference
- elaboration adds a cast assertion that the two types are equal.
- Thus any conversion checking can be suspended until runtime.
+ However, unlike bidirectional type checking, when inferring a check we
+ add a cast assertion that the 2 types are equal.
+ 
 \end_layout
 
 \begin_layout Standard
@@ -15923,22 +15923,8 @@ by mutual induction on
 \end_layout
 
 \begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-%TODO revise below, cuasing latex some issues
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
 \begin_inset Tabular
-<lyxtabular version="3" rows="29" columns="3">
+<lyxtabular version="3" rows="32" columns="3">
 <features tabularvalignment="middle">
 <column alignment="left" valignment="top">
 <column alignment="left" valignment="top">
@@ -16054,6 +16040,81 @@ by
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $\operatorname{\overrightarrow{\textbf{Elab}}-\star}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+for some 
+\begin_inset Formula $H$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+H\vdash\star:\star
+\]
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\operatorname{cast-\star}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
 \begin_inset Formula $\operatorname{\overrightarrow{\textbf{Elab}}-fun-ty}$
 \end_inset
 
@@ -16143,6 +16204,42 @@ by induction
 
 \begin_layout Plain Layout
 by induction
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+H\vdash\star:\star
+\]
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
 \end_layout
 
 \end_inset
@@ -17078,11 +17175,28 @@ literal "false"
 
 \begin_layout Standard
 As formulated here the elaboration procedure is total.
- However in a realistic implementation the function application would reduce
- the function type to weak head normal form (to match realistic bidirectional
- implementations) and will be undecidable for some pathological terms.
- Because the application rule needs to determine if a type level computation
- results in a function type.
+ However in a realistic implementation the function application 
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+% uhoh
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+The elaboration relation is mostly well behaved, but as presented here,
+ it is undecidable for some pathological terms.
+ Because the application rule follows the bidirectional style, we may need
+ to determine if a type level computation results in a function type.
  If that computation 
 \begin_inset Quotes eld
 \end_inset
@@ -17101,7 +17215,7 @@ run forever
 
 .
  If we did not allow general recursion (and the non-termination allowable
- by type-in-type), it seems elaboration would always terminate.
+ by type-in-type), we suspect elaboration would always terminate.
 \end_layout
 
 \begin_layout Standard
