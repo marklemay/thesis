@@ -670,7 +670,7 @@ list of
 \begin_inset Formula $s$
 \end_inset
 
- 
+
 \end_layout
 
 \end_inset
@@ -1609,110 +1609,6 @@ values,
 \end_layout
 
 \begin_layout Plain Layout
-\begin_inset Flex TODO Note (Margin)
-status open
-
-\begin_layout Plain Layout
-ebnf? if reinventing it underline
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Flex TODO Note (Margin)
-status open
-
-\begin_layout Plain Layout
-pat or p?
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Flex TODO Note (Margin)
-status open
-
-\begin_layout Plain Layout
-alternatively
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-differentiate identifiers with font 
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-motive should not need to insist on the type info of the binder?
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-Grey out things that are surface syntax but not needed for theory
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-Make identifiers consistent with chapter 2, and locations in chapter 3
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-Make a module syntax?
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
@@ -1729,6 +1625,110 @@ name "fig:surface-data-min"
 \end_inset
 
 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+ebnf? if reinventing it underline
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+pat or p?
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+alternatively
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+differentiate identifiers with font
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+motive should not need to insist on the type info of the binder?
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+Grey out things that are surface syntax but not needed for theory
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+Make identifiers consistent with chapter 2, and locations in chapter 3
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+Make a module syntax?
 \end_layout
 
 \end_inset
@@ -1770,12 +1770,6 @@ Specification
 \end_layout
 
 \begin_layout Standard
-\begin_inset Float figure
-wide false
-sideways false
-status open
-
-\begin_layout Plain Layout
 \begin_inset Formula 
 \[
 \frac{\ }{\Gamma\vdash.}\,...
@@ -1794,7 +1788,7 @@ status open
 
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 \begin_inset Flex TODO Note (inline)
 status open
 
@@ -1807,7 +1801,7 @@ suspect this also hinges on regularity
 
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 \begin_inset Formula 
 \[
 \frac{\Gamma\vdash}{\Gamma\vdash\lozenge:.}\,...
@@ -1818,7 +1812,7 @@ suspect this also hinges on regularity
 
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 \begin_inset Formula 
 \[
 \frac{\Gamma,x:M\vdash\Delta\quad\Gamma\vdash m:M\quad\Gamma\vdash\overline{n}\left[x\coloneqq m\right]:\Delta\left[x\coloneqq m\right]}{\Gamma\vdash m,\overline{n}\,:\,x:M,\Delta}\,...
@@ -1829,37 +1823,7 @@ suspect this also hinges on regularity
 
 \end_layout
 
-\begin_layout Plain Layout
-\begin_inset Caption Standard
-
-\begin_layout Plain Layout
-Surface Language Type Assignment System
-\end_layout
-
-\end_inset
-
-
-\begin_inset CommandInset label
-LatexCommand label
-name "fig:surface-TAS-1"
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
 \begin_layout Standard
-\begin_inset Float figure
-wide false
-sideways false
-status open
-
-\begin_layout Plain Layout
 \begin_inset Formula 
 \[
 \frac{\mathsf{data}\,D\,\Delta\in\Gamma}{\Gamma\vdash D\,:\,\Delta\rightarrow*}\,...
@@ -1870,7 +1834,7 @@ status open
 
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 \begin_inset Formula 
 \[
 \frac{d\,:\,\varTheta\rightarrow D\overline{m}\in\Gamma}{\Gamma\vdash d\,:\,\varTheta\rightarrow D\overline{m}}\,...
@@ -1881,7 +1845,7 @@ status open
 
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 \begin_inset Flex TODO Note (inline)
 status open
 
@@ -1911,7 +1875,7 @@ define these
 
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 \begin_inset Formula 
 \[
 \frac{\begin{array}{c}
@@ -1930,7 +1894,7 @@ define these
 
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 \begin_inset Flex TODO Note (inline)
 status open
 
@@ -1960,7 +1924,7 @@ don't need
 
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 \begin_inset Formula 
 \[
 \frac{\begin{array}{c}
@@ -1979,7 +1943,7 @@ don't need
 
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 \begin_inset Flex TODO Note (inline)
 status open
 
@@ -1992,7 +1956,7 @@ may not need scrut wf check? oh but what about the empty types!
 
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 \begin_inset Formula 
 \[
 \frac{\Gamma\vdash\Delta}{\Gamma\vdash\mathsf{data}\,D\,\Delta}\,...
@@ -2003,7 +1967,7 @@ may not need scrut wf check? oh but what about the empty types!
 
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 \begin_inset Formula 
 \[
 \frac{\Gamma\vdash\mathsf{data}\,D\,\Delta\quad\forall d.\Gamma,\mathsf{data}\,D\,\Delta\vdash\varTheta_{d}\quad\forall d.\:\Gamma,\mathsf{data}\,D\,\Delta,\varTheta_{d}\vdash\overline{m}_{d}:\Delta}{\Gamma\vdash\mathsf{data}\,D\,:\,\Delta\left\{ \overline{|\,d\,:\,\varTheta_{d}\rightarrow D\overline{m}_{d}}\right\} }\,...
@@ -2014,7 +1978,7 @@ may not need scrut wf check? oh but what about the empty types!
 
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 \begin_inset Flex TODO Note (inline)
 status open
 
@@ -2040,7 +2004,7 @@ to ensure regularity
 
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 \begin_inset Formula 
 \[
 \frac{\Gamma\vdash\mathsf{data}\,D\,\Delta}{\Gamma,\mathsf{data}\,D\,\Delta\vdash}\,...
@@ -2051,7 +2015,7 @@ to ensure regularity
 
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 \begin_inset Formula 
 \[
 \frac{\Gamma\vdash\mathsf{data}\,D\,:\,\Delta\left\{ \overline{|\,d\,:\,\varTheta\rightarrow D\overline{m}}\right\} }{\Gamma,\mathsf{data}\,D\,:\,\Delta\left\{ \overline{|\,d\,:\,\varTheta\rightarrow D\overline{m}}\right\} \vdash}\,...
@@ -2062,37 +2026,11 @@ to ensure regularity
 
 \end_layout
 
-\begin_layout Plain Layout
-\begin_inset Caption Standard
-
-\begin_layout Plain Layout
-Surface Language Type Assignment System + Minimal Data
-\end_layout
-
-\end_inset
-
-
-\begin_inset CommandInset label
-LatexCommand label
-name "fig:surface-TAS"
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
+\begin_layout Standard
+red
 \end_layout
 
 \begin_layout Standard
-\begin_inset Float figure
-wide false
-sideways false
-status open
-
-\begin_layout Plain Layout
 \begin_inset Formula 
 \[
 \frac{\begin{array}{c}
@@ -2107,7 +2045,7 @@ m_{d}\Rrightarrow m_{d}'
 
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 \begin_inset Flex TODO Note (inline)
 status open
 
@@ -2120,7 +2058,7 @@ it's actually kind of fine discriminating between non converting motives?
 
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 \begin_inset Formula 
 \[
 \frac{\begin{array}{c}
@@ -2135,11 +2073,11 @@ m_{d}\Rrightarrow m_{d}'
 
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 structural reductions
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 \begin_inset Formula 
 \[
 \frac{\begin{array}{c}
@@ -2158,7 +2096,7 @@ m_{d}\Rrightarrow m_{d}'
 
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 \begin_inset Formula 
 \[
 \frac{\begin{array}{c}
@@ -2177,7 +2115,7 @@ m_{d}\Rrightarrow m_{d}'
 
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 \begin_inset Formula 
 \[
 \frac{\overline{m}\Rrightarrow\overline{m'}}{D\overline{m}\Rrightarrow D\overline{m'}}\,...
@@ -2196,7 +2134,7 @@ m_{d}\Rrightarrow m_{d}'
 
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 \begin_inset Flex TODO Note (inline)
 status open
 
@@ -2209,37 +2147,11 @@ extend reductions over lists
 
 \end_layout
 
-\begin_layout Plain Layout
-\begin_inset Caption Standard
-
-\begin_layout Plain Layout
-Surface Language Parallel Reductions
-\end_layout
-
-\end_inset
-
-
-\begin_inset CommandInset label
-LatexCommand label
-name "fig:surface-reduction"
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
+\begin_layout Standard
+cbv
 \end_layout
 
 \begin_layout Standard
-\begin_inset Float figure
-wide false
-sideways false
-status open
-
-\begin_layout Plain Layout
 \begin_inset Formula 
 \[
 \frac{\,}{\mathsf{case}\,\overline{N,}\,n\,\left\langle ...\right\rangle \left\{ \overline{|\,\overline{\Rightarrow x}\Rightarrow(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} \rightsquigarrow\mathsf{case}\,\overline{N,}\,n\left\{ \overline{|\,\overline{\Rightarrow x}\Rightarrow(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} }...
@@ -2250,7 +2162,7 @@ status open
 
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 \begin_inset Formula 
 \[
 \frac{\exists\overline{x\Rightarrow}(d\,\overline{y}_{d})\Rightarrow m_{d}\in\left\{ \overline{|\,\overline{x\Rightarrow}(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} }{\mathsf{case}\,\overline{V,}\,d\overline{v}\,\left\{ \overline{|\,\overline{x\Rightarrow}(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} \rightsquigarrow m_{d}\left[\overline{x}\coloneqq\overline{V},\overline{y}_{d}\coloneqq\overline{v}\right]}\,\textrm{\Rrightarrow-\mathsf{case}-red}
@@ -2261,7 +2173,7 @@ status open
 
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 \begin_inset Formula 
 \[
 \frac{\overline{n}\rightsquigarrow\overline{n'}}{\mathsf{case}\,\overline{V,}\,d\overline{n}\,\left\{ \overline{|\,\overline{x\Rightarrow}(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} \rightsquigarrow\mathsf{case}\,\overline{V,}\,d\overline{n'}\,\left\{ \overline{|\,\overline{x\Rightarrow}(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} }\,
@@ -2272,7 +2184,7 @@ status open
 
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 \begin_inset Formula 
 \[
 \frac{\overline{N}\rightsquigarrow\overline{N'}}{\mathsf{case}\,\overline{N,}\,d\overline{n}\,\left\{ \overline{|\,\overline{x\Rightarrow}(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} \rightsquigarrow\mathsf{case}\,\overline{N',}\,d\overline{n}\,\left\{ \overline{|\,\overline{x\Rightarrow}(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} }\,
@@ -2283,11 +2195,11 @@ status open
 
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 structural reductions
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 \begin_inset Formula 
 \[
 \frac{\begin{array}{c}
@@ -2306,7 +2218,7 @@ m_{d}\Rrightarrow m_{d}'
 
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 \begin_inset Formula 
 \[
 \frac{\begin{array}{c}
@@ -2325,7 +2237,7 @@ m_{d}\Rrightarrow m_{d}'
 
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 \begin_inset Formula 
 \[
 \frac{\overline{m}\rightsquigarrow\overline{m'}}{D\overline{m}\rightsquigarrow D\overline{m'}}\,...
@@ -2336,7 +2248,7 @@ m_{d}\Rrightarrow m_{d}'
 
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 \begin_inset Flex TODO Note (inline)
 status open
 
@@ -2349,7 +2261,7 @@ what about D? how much of a value should it be?
 
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 \begin_inset Formula 
 \[
 \frac{\overline{m}\rightsquigarrow\overline{m'}}{D\overline{m}\rightsquigarrow D\overline{m'}}\,...
@@ -2360,36 +2272,12 @@ what about D? how much of a value should it be?
 
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 \begin_inset Flex TODO Note (inline)
 status open
 
 \begin_layout Plain Layout
 extend step over lists
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Caption Standard
-
-\begin_layout Plain Layout
-Surface Language cbv
-\end_layout
-
-\end_inset
-
-
-\begin_inset CommandInset label
-LatexCommand label
-name "fig:surface-cbv"
-
-\end_inset
-
-
 \end_layout
 
 \end_inset
@@ -3261,32 +3149,6 @@ match a constructor
 \end_layout
 
 \begin_layout Plain Layout
-\begin_inset Flex TODO Note (Margin)
-status open
-
-\begin_layout Plain Layout
-type annotations are allowed
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Flex TODO Note (Margin)
-status open
-
-\begin_layout Plain Layout
-pat or p?
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
@@ -3303,6 +3165,32 @@ name "fig:surface-data"
 \end_inset
 
 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+type annotations are allowed
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+pat or p?
 \end_layout
 
 \end_inset
@@ -3657,19 +3545,6 @@ peek (refl 4 :: Id Nat 0 1) = 4
 \end_layout
 
 \begin_layout Plain Layout
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-to stylize consistently, should use math font, or like a nice image
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
@@ -3686,6 +3561,19 @@ name "fig:cast-pattern-matching"
 \end_inset
 
 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+to stylize consistently, should use math font, or like a nice image
 \end_layout
 
 \end_inset
@@ -3766,12 +3654,12 @@ status collapsed
 Extending the syntax in this way complicates the type system and the reduction
  rules.
  We include a sample of our reduction rules in 
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "fig:data-red"
-plural "false"
-caps "false"
-noprefix "false"
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+fig
+\end_layout
 
 \end_inset
 
@@ -4877,33 +4765,6 @@ data cons.
 \end_layout
 
 \begin_layout Plain Layout
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-technically speaking, telescopes should generalize to the different syntactic
- classes
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-~ is a bit of a hack
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
@@ -4928,12 +4789,37 @@ name "fig:cast-data"
 \end_layout
 
 \begin_layout Standard
-\begin_inset Float figure
-wide false
-sideways false
+\begin_inset Flex TODO Note (inline)
 status open
 
 \begin_layout Plain Layout
+technically speaking, telescopes should generalize to the different syntactic
+ classes
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+~ is a bit of a hack
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+old style red rules
+\end_layout
+
+\begin_layout Standard
 \begin_inset Formula 
 \[
 \frac{\,}{rev\,\left(p\,p'\right)\rightsquigarrow\left(rev\,p'\right)\left(rev\,p\right)}
@@ -4944,7 +4830,7 @@ status open
 
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 \begin_inset Formula 
 \[
 \frac{\,}{inTC_{i}\,\left(p\,p'\right)\rightsquigarrow\left(inTC_{i}\,p'\right)\left(inTC_{i}\,p\right)}
@@ -4955,7 +4841,7 @@ status open
 
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 \begin_inset Formula 
 \[
 \frac{\,}{inC_{i}\,\left(p\,p'\right)\rightsquigarrow\left(inC_{i}\,p'\right)\left(inC_{i}\,p\right)}
@@ -4966,7 +4852,7 @@ status open
 
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 \begin_inset Formula 
 \[
 \frac{\,}{inTC_{i}\,refl\rightsquigarrow refl}
@@ -4977,7 +4863,7 @@ status open
 
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 \begin_inset Formula 
 \[
 \frac{\,}{inC_{i}\,refl\rightsquigarrow refl}
@@ -4988,7 +4874,7 @@ status open
 
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 \begin_inset Formula 
 \[
 \frac{\overline{a}_{i}=a'\;\overline{c}_{i}=c'\;\overline{b}_{i}=b'}{inTC_{i}\,\left(D\,\overline{a}_{\ell.D\,\overline{c}}D\,\overline{b}\right)\rightsquigarrow a'_{\ell.c'}b'}
@@ -4999,7 +4885,7 @@ status open
 
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 \begin_inset Formula 
 \[
 \frac{\,}{inC_{i}\,\left(\left(a::A\right)_{\ell.c}b\right)\rightsquigarrow inC_{i}\,\left(a_{\ell.c}b\right)}
@@ -5010,7 +4896,7 @@ status open
 
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 \begin_inset Formula 
 \[
 \frac{\,}{inC_{i}\,\left(a_{\ell.c}\left(b::B\right)\right)\rightsquigarrow inC_{i}\,\left(a_{\ell.c}b\right)}
@@ -5021,7 +4907,7 @@ status open
 
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 \begin_inset Formula 
 \[
 \frac{\,}{inC_{i}\,\left(a_{\ell.\left(c::C\right)}b\right)\rightsquigarrow inC_{i}\,\left(a_{\ell.c}b\right)}
@@ -5040,7 +4926,7 @@ status open
 
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 \begin_inset Formula 
 \[
 \frac{\,}{a::_{A,p\,refl,x.C}B\rightsquigarrow a::_{A,p,x.C}B}
@@ -5051,13 +4937,13 @@ status open
 
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 \begin_inset Formula 
 \[
 \frac{\,}{\begin{array}{c}
 a::_{A,p\,A'_{\ell.C''}B',x.C}B\rightsquigarrow\\
 a::_{A,p,x.C}C\left[x\coloneqq A'\right]::_{\ell.C\left[x\coloneqq C''\right]}C\left[x\coloneqq B'\right]
-\end{array}{c}}
+\end{array}c}
 \]
 
 \end_inset
@@ -5065,7 +4951,20 @@ a::_{A,p,x.C}C\left[x\coloneqq A'\right]::_{\ell.C\left[x\coloneqq C''\right]}C\
 
 \end_layout
 
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
 \begin_layout Plain Layout
+c?
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 \begin_inset Formula 
 \[
 \frac{\,}{\left(a::_{A,p,x.C}C\right)\sim_{\ell o}b\rightsquigarrow a\sim_{\ell o}b}
@@ -5076,32 +4975,11 @@ a::_{A,p,x.C}C\left[x\coloneqq A'\right]::_{\ell.C\left[x\coloneqq C''\right]}C\
 
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 \begin_inset Formula 
 \[
 \frac{\,}{a\sim_{\ell o}\left(b::_{B,p,x.C}C\right)\rightsquigarrow a\sim_{\ell o}b}
 \]
-
-\end_inset
-
-
-\begin_inset Caption Standard
-
-\begin_layout Plain Layout
-select reduction rules
-\end_layout
-
-\end_inset
-
-
-\begin_inset CommandInset label
-LatexCommand label
-name "fig:data-red"
-
-\end_inset
-
-
-\end_layout
 
 \end_inset
 
