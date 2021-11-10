@@ -795,6 +795,70 @@ The programmer uses the untyped syntax of the surface language to write
  is presented against the static location of the error, with a counter example.
 \end_layout
 
+\begin_layout Section
+error msgs
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+%% problem
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+If programmers found dependent type systems easier to learn and use, software
+ could become more reliable.
+ Unfortunately, dependent type systems have yet to see widespread use in
+ industry.
+ One source of difficulty is the conservative equality checking required
+ by most dependent type systems.
+ This conservative equality is a source of some of the confusing error messages
+ dependent type systems are known for 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "eremondi2019framework"
+literal "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+This error will help the programmer fix the bug in 
+\begin_inset Formula $\mathtt{add}$
+\end_inset
+
+.
+ There is evidence that specific examples like this can help clarify the
+ type error messages in OCaml 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "10.1145/2951913.2951915"
+literal "false"
+
+\end_inset
+
+ and there has been an effort to make refinement type error messages more
+ concrete in other systems like Liquid Haskell 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "10.1145/3314221.3314618"
+literal "false"
+
+\end_inset
+
+.
+\end_layout
+
 \begin_layout Part
 Surface language
 \end_layout
@@ -805,6 +869,10 @@ see chapter draft
 
 \begin_layout Part
 Dynamic and Elab
+\end_layout
+
+\begin_layout Standard
+see chapter draft
 \end_layout
 
 \begin_layout Standard
@@ -824,47 +892,15 @@ Data and Pattern matching
 \end_layout
 
 \begin_layout Standard
-there are several simpler systems that can be worked through: eliminator
- style patterns, cast patterns, but to bring it all together we need congruence
- over functions.
-\end_layout
-
-\begin_layout Standard
-adding paths and path variables means that constructs can still fail at
- runtime, but they can blame the actually problematic components
-\end_layout
-
-\begin_layout Standard
-validating the K axiom, not that edqualities are unique, merely that we
- don't care which one of the unique equalities is used.
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-%TODO review chapter 9 of file:///Users/stephaniesavir/Downloads/Computation-and
--Reasoning.dependently
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Other extensions to the Calculus of Constructions that are primarily concerned
- with data (UCC, CIC) will be reviewed in chapter 4.
-\end_layout
-
-\begin_layout Standard
-Coq and Lean trace their core theory back to the Calculus of Constructions.
+see chapter draft
 \end_layout
 
 \begin_layout Part
 Automated testing
+\end_layout
+
+\begin_layout Standard
+https://arxiv.org/abs/1507.04817
 \end_layout
 
 \begin_layout Part

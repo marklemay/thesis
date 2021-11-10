@@ -22,6 +22,9 @@
 \newcommand*{\qarrow}[2][]{\arrow[RRightarrow, #1]{#2}\arrow[equal, double distance = 0.25pt, shorten >= 1.28pt, #1]{#2}}
 \end_preamble
 \use_default_options true
+\begin_modules
+todonotes
+\end_modules
 \maintain_unincluded_children false
 \language english
 \language_package default
@@ -101,7 +104,11 @@
 \begin_body
 
 \begin_layout Title
-Chapter 2 (draft)
+Chapter 2 (draft): a Dependent Type System
+\end_layout
+
+\begin_layout Author
+Mark Lemay
 \end_layout
 
 \begin_layout Part
@@ -14144,8 +14151,44 @@ literal "false"
 \end_inset
 
 .
- More advanced bidirectional implementations such as Agda even preform unificati
-on as part of their bidirectional type checking.
+ More advanced bidirectional implementations such as Agda
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+Cite Ulf
+\end_layout
+
+\end_inset
+
+ even preform unification as part of their bidirectional type checking.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% TODO what else does the algorithm infer not listed here
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -14156,7 +14199,7 @@ This document opts for the simplest possible presentation, of bidirectional
 \end_layout
 
 \begin_layout Subsection
-The bidirectional System is Type Sound
+The Bidirectional System is Type Sound
 \end_layout
 
 \begin_layout Standard
@@ -14209,7 +14252,17 @@ Therefore the bidirectional system is also type sound.
 \end_layout
 
 \begin_layout Subsection
-The Bidirectional System is Conservative
+The TAS System is annotatable
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+also called completeness
+\end_layout
+
+\end_inset
+
+ by the Bidirectional System
 \end_layout
 
 \begin_layout Standard
@@ -14228,7 +14281,19 @@ status open
 
 \begin_layout Standard
 Additionally we can show that the bidirectional system does not preclude
- any computation available in the type assignment system.
+ any computation available in the type assignment system, though annotations
+ may need to be added (or removed
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% no need to remove if properly biderectional
+\end_layout
+
+\end_inset
+
+).
  Formally
 \end_layout
 
@@ -14897,6 +14962,27 @@ status open
 
 \end_layout
 
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% TODO section on bidirectional dependent type systems, citing http://www.cse.chal
+mers.se/~nad/publications/altenkirch-et-al-flops2010.pdf https://www.seas.upenn.edu/~
+sweirich/papers/congruence-extended.pdf posibly https://arxiv.org/pdf/1203.4716.pdf
+ https://drops.dagstuhl.de/opus/volltexte/2021/13919/pdf/LIPIcs-ITP-2021-24.pdf
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
 \begin_layout Subsection
 Implementations
 \end_layout
@@ -15218,7 +15304,7 @@ literal "false"
 \end_inset
 
  is one of the oldest frameworks for dependent type systems.
- MTLL is designed to be open, so that new constructs can be added with the
+ MLTT is designed to be open, so that new constructs can be added with the
  appropriate introduction, elimination, and typing rules.
  The base system comes with a predicative hierarchy of universes, and at
  least dependently typed functions and a propositional equality type.
@@ -15296,7 +15382,7 @@ ticsof-dependenttypes.pdf worth skiming theough eiterh way
 
 \end_inset
 
- 
+
 \end_layout
 
 \begin_layout Standard
@@ -15592,7 +15678,8 @@ This system is still sound, but may not be complete
 \end_layout
 
 \begin_layout Standard
-it is likely complete over reasonable contexts
+it is likely complete over reasonable contexts (though regularity lemmas
+ or assumptions will be needed)
 \end_layout
 
 \begin_layout Itemize
@@ -15645,6 +15732,26 @@ if
 \end_inset
 
  
+\end_layout
+
+\begin_layout Standard
+Alternatively modify the undirected rule to
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\Gamma\vdash M:\,\star\quad\Gamma\vdash m:\,M}{\Gamma\vdash m::M:\,M}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+this will start out unmotivated, but make things cleaner in the long run.
+ regularity assumptions or a system with regularity will be needed.
 \end_layout
 
 \begin_layout Section
@@ -15747,7 +15854,7 @@ this variant ensures a strict form of regularity, similar to an undirected
 \end_layout
 
 \begin_layout Standard
-Additionally, well formedness condition are 
+Additionally, well formedness conditions are 
 \begin_inset Quotes eld
 \end_inset
 
@@ -15835,6 +15942,15 @@ The proofs may break the flow, review that.
 Should I say more about regularity?
 \end_layout
 
+\begin_deeper
+\begin_layout Itemize
+tempted to add a summery section with greyed out regularity conditions.
+ Advice expereinced readers to skip ahead.
+ make 2 systems, the irregular system (as written) and the regular system
+ (2 systems will make concluding things from induction easier)
+\end_layout
+
+\end_deeper
 \begin_layout Itemize
 include references from https://www.lix.polytechnique.fr/~vsiles/papers/PTSATR.pdf
 \end_layout

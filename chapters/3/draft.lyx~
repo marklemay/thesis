@@ -76,7 +76,11 @@
 \begin_body
 
 \begin_layout Title
-Chapter 3
+Chapter 3Chapter 2 (draft): the Dependent Cast System
+\end_layout
+
+\begin_layout Author
+Mark Lemay
 \end_layout
 
 \begin_layout Part
@@ -15938,7 +15942,7 @@ status open
 
 \begin_layout Standard
 \begin_inset Tabular
-<lyxtabular version="3" rows="29" columns="3">
+<lyxtabular version="3" rows="28" columns="3">
 <features tabularvalignment="middle">
 <column alignment="left" valignment="top">
 <column alignment="left" valignment="top">
@@ -16143,45 +16147,6 @@ by induction
 
 \begin_layout Plain Layout
 by induction
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula 
-\[
-H\vdash\left(x:A\right)\rightarrow B\,:\,\star
-\]
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\operatorname{cast-fun-ty}$
-\end_inset
-
-
 \end_layout
 
 \end_inset
@@ -17143,6 +17108,540 @@ Unlike in gradual typing, we cannot elaborate arbitrary untyped syntax.
 Suitable Warnings
 \end_layout
 
+\begin_layout Standard
+As presented here, not every cast corresponds to a reasonable warning.
+ For instance, 
+\begin_inset Formula $\left(\lambda x\Rightarrow x\right)::_{\star\rightarrow\star}\star\rightarrow\star$
+\end_inset
+
+ is a possible output from elaboration.
+ By the rules given the cast will not reduce, it is however inert, and should
+ not cuase an error.
+ In fact since the user only interacts with the surface langugae, any cast
+ 
+\begin_inset Formula $a::_{A}B$
+\end_inset
+
+ where 
+\begin_inset Formula $|A|\equiv|B|$
+\end_inset
+
+ will not produce an understandable warning, and further will not be a direct
+ source of runtime errors.
+ A reasonable first attempt would be to simply remove these trivial casts,
+ but this ignores the possiblility that casts themsselves may contain problemati
+c equalities.
+ Currently the implementation leaves most casts intact and filters our equvelnt
+ casts from teh warnings shown to the user
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="7" columns="6">
+<features tabularvalignment="middle">
+<column alignment="left" valignment="top">
+<column alignment="left" valignment="top">
+<column alignment="left" valignment="top">
+<column alignment="left" valignment="top">
+<column alignment="left" valignment="top">
+<column alignment="left" valignment="top">
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $Warns($
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $a::_{A,\ensuremath{\ell},o}B$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $)=$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\left\{ (a,\ensuremath{\ell},o,B)\right\} \cup Warns(a)\cup Warns(A)\cup Warns(B)$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+if
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $|A|\cancel{\equiv}|B|$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $Warns($
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $a::_{A,\ensuremath{\ell},o}B$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $)=$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $Warns(a)\cup Warns(A)\cup Warns(B)$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+if
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $|A|\equiv|B|$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $Warns($
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\star$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $)=$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\emptyset$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $Warns($
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $x$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $)=$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\emptyset$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $Warns($
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\left(x:A\right)\rightarrow B$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $)=$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $Warns(A)\cup Warns(B)$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $Warns($
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathsf{fun}\,f\,x\Rightarrow b$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $)=$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $Warns(b)$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $Warns($
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $b\,a$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $)=$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $Warns(a)\cup Warns(b)$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Since the 
+\begin_inset Formula $\equiv$
+\end_inset
+
+ relation is undecidable an approximation can be used in practice.
+\end_layout
+
 \begin_layout Part
 Related Work
 \end_layout
@@ -17172,7 +17671,7 @@ literal "false"
 \end_inset
 
 .
- However, these impressive efforts are still require a prohibitively high
+ However, these impressive efforts currently require a prohibitively high
  level of expertise from programmers.
  Further, since program equivalence is undecidable in general, no system
  will be able to statically verify every 
@@ -17184,10 +17683,142 @@ obvious
 \end_inset
 
  equality for arbitrary user defined data types and functions.
- The above work is important, but it is not yet usable for non-experts.
  In the meantime systems should trust the programmer when they use an unverified
  equality.
  
+\end_layout
+
+\begin_layout Subsection
+Contract Systems
+\end_layout
+
+\begin_layout Standard
+Several of the tricks and notations in this chapter find their basis in
+ the large amount of work on higher order contracts and their related fields.
+ Higher order contracts were introduced in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "10.1145/581478.581484"
+literal "false"
+
+\end_inset
+
+, as a way to dynamically enforce invariants of software interfaces, specificall
+y higher order functions
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% cotracts go back to the 70s aparently, but this seems a reasonable place
+ to start the story, though Bigloo Scheme [28] is cited there
+\end_layout
+
+\end_inset
+
+.
+ The notion of blame dates at least that far back.
+ Swapping the type cast of the input argument can be traced directly to
+ that paper's use of blame contravarience, though it is presented in a much
+ different way.
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% However the contract language of that paper was somewhat limited.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Contract semantics were revisited in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "10.1145/1925844.1926410,10.1007/978-3-642-28869-2_11"
+literal "false"
+
+\end_inset
+
+ where a more specific correctness criteria based in blame is presented.
+\end_layout
+
+\begin_layout Standard
+Contract systems still generally rely on users making annotating their invariant
+s explicitly
+\end_layout
+
+\begin_layout Standard
+While there are similarities between contract systems and the cast system
+ outlined here, the cast system is designed to addresses issues with definitiona
+l equality.
+ Definitional equality simply isn't relevant in the vast majority of contract
+ systems.
+\end_layout
+
+\begin_layout Standard
+While the gradual typing goals of mixing static certainty with runtime checks
+ are similar to our work here, the approach and details are different.
+ Instead of trying to strengthen untyped languages by adding types, we take
+ a dependent type system and allow more permissive equalities.
+ This leads to different trade-offs in the design space.
+ For instance, we cannot support completely unannotated code, but we do
+ not need to complicate the type language with wildcards for uncertainty.
+ Further we assume someone using a dependent type system feels positively
+ about types in general and will not want fragments of completely typed
+ code.
+\end_layout
+
+\begin_layout Subsubsection
+Gradual Types
+\end_layout
+
+\begin_layout Standard
+Types can be viewed as a very specific form of contracts, gradual type systems
+ allow for a mixing of the static view of data and dynamic checking.
+ Often type information can be inferred using standard techniques, allowing
+ programmers to write fewer annotations.
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% TODO first paper, DLS2008
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Gradual type systems usually achieve this by adding in a 
+\begin_inset Formula $?$
+\end_inset
+
+ meta character to denote inprecise typing information.
+ The first plausible account of gradual typed semantic's appeared in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "siek_et_al:LIPIcs:2015:5031"
+literal "false"
+
+\end_inset
+
+ with the alliterative name of 
+\begin_inset Quotes eld
+\end_inset
+
+the gradual guarantee
+\begin_inset Quotes erd
+\end_inset
+
+ which has inspired some of the properties in this chapter.
 \end_layout
 
 \begin_layout Standard
@@ -17196,51 +17827,55 @@ status open
 
 \begin_layout Plain Layout
 
-% tODO seperate these out
-\end_layout
+% , which informally asserts that 
+\begin_inset Quotes eld
+\end_inset
 
+runtime checks will not change the expected behavour
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+runtime checks will not change the expected behavour
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+well typed code won't be blamed
+\begin_inset Quotes erd
 \end_inset
 
 
 \end_layout
 
-\begin_layout Subsection
-Contract Systems, Gradual Types, and Blame
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
-This paper has been influenced by the large amount of work done on higher
- order contracts 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "10.1145/581478.581484"
-literal "false"
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% and then like an endless back and forth over criteria
+\end_layout
 
 \end_inset
 
-, gradual types 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "siek_et_al:LIPIcs:2015:5031,10.1145/2837614.2837670"
-literal "false"
 
-\end_inset
-
-, and especially blame 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "10.1007/978-3-642-00590-9_1,wadler:LIPIcs:2015:5033,10.1145/3110283"
-literal "false"
-
-\end_inset
-
-.
- Most work in those areas focuses on simply typed languages that are not
- necessarily pure.
 \end_layout
 
 \begin_layout Standard
-The implementation also takes inspiration from 
+Additionally some of the formalism from this chapter was inspired by the
+ 
 \begin_inset Quotes eld
 \end_inset
 
@@ -17248,7 +17883,7 @@ Abstracting gradual typing
 \begin_inset Quotes erd
 \end_inset
 
- 
+ methodology 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "10.1145/2837614.2837670"
@@ -17259,7 +17894,7 @@ literal "false"
 , where static evidence annotations become runtime checks.
  
 \begin_inset ERT
-status collapsed
+status open
 
 \begin_layout Plain Layout
 
@@ -17279,7 +17914,7 @@ cite{10.1145/3110283}, our system does not attempt to enforce any parametric
 
 
 \begin_inset ERT
-status collapsed
+status open
 
 \begin_layout Plain Layout
 
@@ -17293,7 +17928,20 @@ status collapsed
 
 \end_inset
 
- A system for gradual dependent types has been presented in 
+
+\end_layout
+
+\begin_layout Standard
+This thesis barrows some notational conventions from gradual typing such
+ as the 
+\begin_inset Formula $a::A$
+\end_inset
+
+ construct for type assertions.
+\end_layout
+
+\begin_layout Standard
+A system for gradual dependent types has been presented in 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "10.1145/3341692"
@@ -17310,19 +17958,77 @@ literal "false"
 \end_inset
 
  as a runtime error.
+ Additionally it is unclear if adding the 
+\begin_inset Formula $?$
+\end_inset
+
+ meta-symbol into an already very complicated type theory, makes the system
+ more complicated from the programmers perspective.
 \end_layout
 
 \begin_layout Standard
-While the gradual typing goals of mixing static certainty with runtime checks
- are similar to our work here, the approach and details are different.
- Instead of trying to strengthen untyped languages by adding types, we take
- a dependent type system and allow more permissive equalities.
- This leads to different trade-offs in the design space.
- For instance, we cannot support completely unannotated code, but we do
- not need to complicate the type language with wildcards for uncertainty.
- Further we assume someone using a dependent type system feels positively
- about types in general and will not want fragments of completely typed
- code.
+This chapter has a much tighter scope then the other strong work cited here,
+ dealing only with equational assumptions.
+ It is assumed anyone using a dependent type system has already bought into
+ the usefulness of dependent types, and the common motivation for gradual
+ type systems to gradually convert a code base from untyped to (simply)
+ typed is less plausible then gradually converting an untyped code base
+ to use dependent types
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Especially considering that most real-life codebases will use effects freely,
+ while dependent types and effects are a complicated area of ongoing research
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% TODO gradualiing deffinitional equality
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Blame
+\end_layout
+
+\begin_layout Standard
+Blame is one of the key ideas explored in the contract type and gradual
+ types literature
+\begin_inset CommandInset citation
+LatexCommand cite
+key "10.1007/978-3-642-00590-9_1,wadler:LIPIcs:2015:5033,10.1145/3110283"
+literal "false"
+
+\end_inset
+
+.
+ Often the reasonableness of a system can be judged by the way blame is
+ handled
+\begin_inset CommandInset citation
+LatexCommand cite
+key "wadler:LIPIcs:2015:5033"
+literal "false"
+
+\end_inset
+
+.
+ Blame is treated there very similarly to the presentation in this chapter.
+ Though in addition to merely blaming a source locations we ensure that
+ a witnessing observation can also be made.
 \end_layout
 
 \begin_layout Subsection
@@ -17330,7 +18036,7 @@ Refinement Style Approaches
 \end_layout
 
 \begin_layout Standard
-In this paper we have described a full-spectrum dependently typed language.
+In this thesis we have described a full-spectrum dependently typed language.
  This means computation can appear uniformly in both term and type position.
  An alternative approach to dependent types is found in refinement type
  systems.
@@ -17338,28 +18044,20 @@ In this paper we have described a full-spectrum dependently typed language.
  base types such as int or bool.
  
 \begin_inset ERT
-status collapsed
+status open
 
 \begin_layout Plain Layout
 
 % TODO code format
 \end_layout
 
-\begin_layout Plain Layout
-
-\end_layout
-
 \end_inset
 
- It is straightforward to check these decidable equalities at runtime in
- the 
-\begin_inset Quotes eld
-\end_inset
-
+ Under this restriction, it is straightforward to check these decidable
+ equalities and additional properties at runtime with the 
+\series bold
 Hybrid Type Checking
-\begin_inset Quotes erd
-\end_inset
-
+\series default
  methodology 
 \begin_inset CommandInset citation
 LatexCommand cite
@@ -17378,6 +18076,15 @@ literal "false"
 \end_inset
 
  which describes a refinement system that limits predicates to base types.
+ Another example is 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "10.1145/3093333.3009856"
+literal "false"
+
+\end_inset
+
+, a refinement system treated in a specifically gradual way.
  A refinement type system with higher order features is gradualized in 
 \begin_inset CommandInset citation
 LatexCommand cite
@@ -17388,6 +18095,21 @@ literal "false"
 
 .
  
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% consider also citing https://www.youtube.com/watch?v=gIYMERs7AZQ https://www.yout
+ube.com/watch?v=EGKeWg2ES0A
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -17512,6 +18234,24 @@ The
 \end_layout
 
 \begin_layout Standard
+It may be possible to prove one of the elaboration properties by stages,
+ for instance with a lemma like 
+\begin_inset Formula $\Gamma\vdash m:M$
+\end_inset
+
+ (some constraint on gamma) 
+\begin_inset Formula $H\vdash m\,\textbf{Elab}\ a\overrightarrow{\,:\,}A$
+\end_inset
+
+ where 
+\begin_inset Formula $a$
+\end_inset
+
+cannot cuase blame.
+ Then use that as a lemma in the main thing
+\end_layout
+
+\begin_layout Standard
 \begin_inset ERT
 status collapsed
 
@@ -17560,12 +18300,45 @@ Salvage dictation notes?
 \end_layout
 
 \begin_layout Itemize
-where should I talk about error msgs?
+properly complete the 
+\begin_inset Quotes eld
+\end_inset
+
+correctness guarantees
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+the warning scheme hints at the induction invariant that is needed, not
+ only are the casts types generated by well typed code similar, every cast
+ inside of those labels are similar
 \end_layout
 
 \begin_layout Itemize
+this should hold for terms the TAS and check, which is prob easier to work
+ with.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
 TODO relate to https://hal.archives-ouvertes.fr/hal-01849166v3/document ?
  
+\end_layout
+
+\begin_layout Itemize
+locations are 
+\begin_inset Quotes eld
+\end_inset
+
+correct by construction
+\begin_inset Quotes erd
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -17575,70 +18348,6 @@ In every popular type system users are allowed to assume unsafe equalities.
 
 \begin_layout Part
 scratch
-\end_layout
-
-\begin_layout Section
-error msgs
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-%% problem
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-
-If programmers found dependent type systems easier to learn and use, software
- could become more reliable.
- Unfortunately, dependent type systems have yet to see widespread use in
- industry.
- One source of difficulty is the conservative equality checking required
- by most dependent type systems.
- This conservative equality is a source of some of the confusing error messages
- dependent type systems are known for 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "eremondi2019framework"
-literal "false"
-
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Standard
-This error will help the programmer fix the bug in 
-\begin_inset Formula $\mathtt{add}$
-\end_inset
-
-.
- There is evidence that specific examples like this can help clarify the
- type error messages in OCaml 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "10.1145/2951913.2951915"
-literal "false"
-
-\end_inset
-
- and there has been an effort to make refinement type error messages more
- concrete in other systems like Liquid Haskell 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "10.1145/3314221.3314618"
-literal "false"
-
-\end_inset
-
-.
 \end_layout
 
 \begin_layout Part

@@ -795,6 +795,70 @@ The programmer uses the untyped syntax of the surface language to write
  is presented against the static location of the error, with a counter example.
 \end_layout
 
+\begin_layout Section
+error msgs
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+%% problem
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+If programmers found dependent type systems easier to learn and use, software
+ could become more reliable.
+ Unfortunately, dependent type systems have yet to see widespread use in
+ industry.
+ One source of difficulty is the conservative equality checking required
+ by most dependent type systems.
+ This conservative equality is a source of some of the confusing error messages
+ dependent type systems are known for 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "eremondi2019framework"
+literal "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+This error will help the programmer fix the bug in 
+\begin_inset Formula $\mathtt{add}$
+\end_inset
+
+.
+ There is evidence that specific examples like this can help clarify the
+ type error messages in OCaml 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "10.1145/2951913.2951915"
+literal "false"
+
+\end_inset
+
+ and there has been an effort to make refinement type error messages more
+ concrete in other systems like Liquid Haskell 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "10.1145/3314221.3314618"
+literal "false"
+
+\end_inset
+
+.
+\end_layout
+
 \begin_layout Part
 Surface language
 \end_layout
@@ -867,18 +931,30 @@ Coq and Lean trace their core theory back to the Calculus of Constructions.
 Automated testing
 \end_layout
 
+\begin_layout Standard
+https://arxiv.org/abs/1507.04817
+\end_layout
+
 \begin_layout Part
 Runtime proof search
 \end_layout
 
 \begin_layout Part
-Conclusion And future work
+Conclusion and Future Work
 \end_layout
 
 \begin_layout Standard
 Chapter 2 argueged that decidability was a poor metric for type systems,
  A more meaningful metric, perhaps based on localizing problems would be
- good
+ good.
+\end_layout
+
+\begin_layout Standard
+non-termination as warning and error.
+\end_layout
+
+\begin_layout Standard
+...
 \end_layout
 
 \begin_layout Part
