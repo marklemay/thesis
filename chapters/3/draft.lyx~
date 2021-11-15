@@ -4,8 +4,14 @@
 \begin_header
 \save_transient_properties true
 \origin unavailable
-\textclass article
+\textclass book
 \use_default_options true
+\begin_modules
+theorems-ams
+eqs-within-sections
+figs-within-sections
+todonotes
+\end_modules
 \maintain_unincluded_children false
 \language english
 \language_package default
@@ -28,10 +34,11 @@
 \output_sync 0
 \bibtex_command default
 \index_command default
-\paperfontsize default
+\paperfontsize 12
+\spacing single
 \use_hyperref false
-\papersize default
-\use_geometry false
+\papersize letterpaper
+\use_geometry true
 \use_package amsmath 1
 \use_package amssymb 1
 \use_package cancel 1
@@ -44,6 +51,7 @@
 \use_package undertilde 1
 \cite_engine basic
 \cite_engine_type default
+\biblio_style plain
 \use_bibtopic false
 \use_indices false
 \paperorientation portrait
@@ -55,6 +63,8 @@
 \shortcut idx
 \color #008000
 \end_index
+\topmargin 1.5in
+\bottommargin 1in
 \secnumdepth 3
 \tocdepth 3
 \paragraph_separation indent
@@ -64,7 +74,7 @@
 \quotes_style english
 \dynamic_quotes 0
 \papercolumns 1
-\papersides 1
+\papersides 2
 \paperpagestyle default
 \tracking_changes false
 \output_changes false
@@ -76,7 +86,7 @@
 \begin_body
 
 \begin_layout Title
-Chapter 3Chapter 2 (draft): the Dependent Cast System
+Chapter 3 (draft): the Dependent Cast System
 \end_layout
 
 \begin_layout Author
@@ -305,14 +315,15 @@ status open
 %% solution
 \end_layout
 
-\begin_layout Plain Layout
+\end_inset
+
 
 \end_layout
 
-\end_inset
-
+\begin_layout Standard
 Why not sidestep definitional equality? A more convenient system can assume
- the equalities hold until a concrete witness of inequality is discovered.
+ the equalities hold until a concrete witness of inequality is discovered
+ at runtime.
  A good dependently typed programming language should
 \end_layout
 
@@ -333,8 +344,8 @@ obvious
 \end_layout
 
 \begin_layout Itemize
-Give static warnings about potential type inequalities; users can decide
- if they are worth verifying.
+Give static warnings about potential type inequalities; programmers can
+ decide if they are concerning.
  
 \end_layout
 
@@ -344,21 +355,9 @@ Give runtime errors, with a concrete witness of inequality, if one of the
 \end_layout
 
 \begin_layout Standard
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-%% example of solution
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-
-For instance, if the 
+If a meaningful problem occurs at runtime a clear error message that pinpoints
+ the exact source of errors should be provided.
+ For instance, if the 
 \begin_inset Formula $+_{c}$
 \end_inset
 
@@ -379,29 +378,12 @@ get stuck
 \end_inset
 
 .
- If that application is encountered at runtime we can give an error stating
- 
+ If that application is encountered at runtime the system give an error
+ stating 
 \begin_inset Formula $9_{c}\,\neq\,0_{c}=8_{c}+_{c}1_{c}$
 \end_inset
 
 .
- 
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-%% why is the solution good, for users
-\end_layout
-
-\end_inset
-
-Wherever possible, type errors should be turned into warnings.
- If a meaningful problem occurs at runtime a clear error message that pinpoints
- the exact source of errors should be provided.
  This way runtime errors and static warnings both inform the programmer.
  Since the user can gradually correct their program as errors surface, we
  call this workflow 
@@ -438,8 +420,8 @@ While it is easy to test when natural numbers are equal at runtime, testing
 \end_layout
 
 \begin_layout Itemize
-Some amount of type information must be maintained in the term so that good
- runtime error messages are possible.
+Some amount of information must be maintained in the term so that good runtime
+ error messages are possible.
  
 \end_layout
 
@@ -450,10 +432,15 @@ If equality checks are embedded into syntax, they may propagate into the
 \end_layout
 
 \begin_layout Standard
-We are unaware of research that directly handles all of these concerns.
- Furthermore, if we want the above, we cannot work in the surface language
- directly a new system is needed.
- This system is comprised of
+I am unaware of research that directly addresses all of these concerns.
+ Furthermore, we cannot work in the surface language directly, a new system
+ is needed.
+ This is the 
+\series bold
+cast system
+\series default
+ described in this chapter.
+ The cast system is comprised of
 \end_layout
 
 \begin_layout Itemize
@@ -470,7 +457,8 @@ The
 \series bold
 elaboration procedure
 \series default
- that transforms untyped surface syntax into checked cast language terms.
+ that transforms appropriate untyped surface syntax into checked cast language
+ terms.
  
 \end_layout
 
@@ -598,9 +586,6 @@ source location information,
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\Coloneqq$
-\end_inset
-
 
 \end_layout
 
@@ -610,7 +595,7 @@ source location information,
 \begin_inset Text
 
 \begin_layout Plain Layout
-...
+
 \end_layout
 
 \end_inset
@@ -1174,22 +1159,47 @@ function type-body
 \end_inset
 
 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-% time permitting factor the location to where .
- is
 \end_layout
 
 \begin_layout Plain Layout
+\begin_inset Flex TODO Note (inline)
+status open
 
+\begin_layout Plain Layout
+would 
+\begin_inset Formula $a_{A}:?:_{\ensuremath{\ell},o}B$
+\end_inset
+
+ be clearer syntax then 
+\begin_inset Formula $a::_{A,\ensuremath{\ell},o}B$
+\end_inset
+
+ ?
 \end_layout
 
 \end_inset
 
 
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+would it be clearer to add the 
+\begin_inset Formula $\ell$
+\end_inset
+
+ to the observation?
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
@@ -1228,11 +1238,7 @@ status collapsed
 
 \end_inset
 
-The syntax for the cast language can be seen in figure
-\begin_inset space ~
-\end_inset
-
-
+The syntax for the cast language can be seen in figure 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:cast-pre-syntax"
@@ -1244,7 +1250,8 @@ noprefix "false"
 
 .
  By design the cast language is almost identical to the surface language
- except for the cast construct.
+ except that the cast construct has been added and cast annotations have
+ been removed.
 \end_layout
 
 \begin_layout Standard
@@ -1293,9 +1300,9 @@ and the expected type of the term
 \end_layout
 
 \begin_layout Standard
-Every time there is a type mismatch between the type of the term and the
- type expected from the usage, the elaboration procedure will produce a
- cast.
+Every time there is a definitional mismatch between the type inferred from
+ a term and the type expected from the usage, the elaboration procedure
+ will produce a cast.
 \end_layout
 
 \begin_layout Standard
@@ -1375,8 +1382,9 @@ How does the cast construct interact with the existing constructs? These
 
 \begin_layout Standard
 \begin_inset Tabular
-<lyxtabular version="3" rows="3" columns="1">
+<lyxtabular version="3" rows="3" columns="2">
 <features tabularvalignment="middle">
+<column alignment="center" valignment="top">
 <column alignment="center" valignment="top">
 <row>
 <cell alignment="center" valignment="top" usebox="none">
@@ -1387,6 +1395,15 @@ How does the cast construct interact with the existing constructs? These
 \end_inset
 
 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+universe under cast
 \end_layout
 
 \end_inset
@@ -1405,6 +1422,15 @@ How does the cast construct interact with the existing constructs? These
 
 \end_inset
 </cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+function type under cast
+\end_layout
+
+\end_inset
+</cell>
 </row>
 <row>
 <cell alignment="center" valignment="top" usebox="none">
@@ -1419,6 +1445,15 @@ How does the cast construct interact with the existing constructs? These
 
 \end_inset
 </cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+application blocked by cast
+\end_layout
+
+\end_inset
+</cell>
 </row>
 </lyxtabular>
 
@@ -1428,8 +1463,8 @@ How does the cast construct interact with the existing constructs? These
 \end_layout
 
 \begin_layout Standard
-we can account for these as follows, by realizing obvious casts should evaporate
-, freeing up the underling term
+we can account for these by realizing obvious casts should evaporate, freeing
+ up the underling term
 \end_layout
 
 \begin_layout Standard
@@ -1982,10 +2017,11 @@ The fully formal reduction rules are listed later, but their complete detail
  Terms that take input must be functions, so any cast that contradicts this
  should blame the source location.
  The most interesting case is when a cast confirms that the applied term
- is a function, then we use the function cast to determine the correct cast
- over the argument, and maintain the appropriate cast over the body.
+ is a function, but with potentially different input and output types.
+ Then we use the function cast to determine a reasonable cast over the argument,
+ and maintain the appropriate cast over the resulting computation.
  This distribution is similar to the way higher order contracts invert the
- blame of arguments 
+ polarity of blame for the arguments of higher order funcitons 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "10.1145/581478.581484"
@@ -2015,36 +2051,21 @@ literal "false"
 \end_layout
 
 \begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-% TODO cite
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
 Note that the rules outlined here are not deterministic since there are
  cases when we might blame or continue reducing the argument.
- One of the subtle innovations in this chapter is to completely separate
- blame from reduction.
+ One of the subtle innovations of the system described in this chapter is
+ to completely separate blame from reduction.
  This sidesteps many of the complexities of having a reduction relevant
  
 \begin_inset Formula $\mathtt{abort}$
 \end_inset
 
  term in a dependent type theory
-\begin_inset ERT
+\begin_inset Flex TODO Note (Margin)
 status open
 
 \begin_layout Plain Layout
-
-% TODO cite
+cites
 \end_layout
 
 \end_inset
@@ -2058,10 +2079,11 @@ get stuck
 \begin_inset Quotes erd
 \end_inset
 
- as it might on an unsatisfiable term in the typeing context.
- Otherwise the reduction behavior is well behaved and deterministic.
+ as it might on a variable assumed in the typing context.
+ Otherwise the reduction behavior is well behaved.
  Terms my be blamable by the rules outlined in this chapter, but it is easy
- to imagine more sophisticated extensions without causing theoretical issues.
+ to imagine more sophisticated ways to extract blame without interfering
+ with reduction.
  
 \end_layout
 
@@ -2203,7 +2225,7 @@ when
 \end_layout
 
 \begin_layout Standard
-however these rules preclude extracting blame that may be embedded within
+However these rules preclude extracting blame that may be embedded within
  the casts themselves.
  These rules also seem to complicate the type theory.
  Despite this we will use these reductions in examples to keep the book
@@ -2220,17 +2242,13 @@ status open
 
 \begin_layout Plain Layout
 
-% TODO explain some benine assumptions
+% We can reexamine some of the examples terms from Chapter 2, but this time
+ with equality assumptions
 \end_layout
 
 \end_inset
 
 
-\end_layout
-
-\begin_layout Standard
-We can reexamine some of the examples terms from Chapter 2, but this time
- with equality assumptions
 \end_layout
 
 \begin_layout Subsection
@@ -2252,7 +2270,7 @@ status collapsed
 
 \end_inset
 
-We deal with higher order functions by distributing function casts around
+ Higher order functions are dealt with by distributing function casts around
  applications.
  If an application happens to a cast of function type, the argument and
  body cast is separated and the argument cast is swapped.
@@ -2324,7 +2342,8 @@ Recall that we proved
 \begin_inset Formula $\lnot true_{c}\doteq_{\mathbb{B}_{c}}false_{c}$
 \end_inset
 
- what happens if we assume it anyway? Every type equality assumption needs
+ in Chapter 2.
+ What happens if it is assumed anyway? Every type equality assumption needs
  an underlying term, here we can choose 
 \begin_inset Formula $refl_{true_{c}:\mathbb{B}_{c}}:true_{c}\doteq_{\mathbb{B}_{c}}true_{c}$
 \end_inset
@@ -2910,11 +2929,7 @@ gotten stuck
 \end_inset
 
 .
- Applying 
-\begin_inset Formula $\star$
-\end_inset
-
- will uncover the error 
+ Applying any type will uncover the error.
 \end_layout
 
 \begin_layout Standard
@@ -3187,29 +3202,7 @@ Reminding the programmer that they should not confuse true with false.
 \end_layout
 
 \begin_layout Section
-Cast System
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-% TODO: 
-\begin_inset Quotes eld
-\end_inset
-
 Cast Language Type Assignment System
-\begin_inset Quotes erd
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Standard
@@ -3227,9 +3220,10 @@ status open
 \end_layout
 
 \begin_layout Standard
-Type soundness, proving some undesirable behaviors are unreachable from
- a well type term, is the most important property for a typed programming
- language to exhibit.
+Recall that type soundness is the property for a typed programming language
+ to exhibit.
+ In a programming language, type soundness proves some undesirable behaviors
+ are unreachable from a well typed term.
  How should this apply to the cast language, where bad behaviors are intended
  to be reachable? We allow bad behavior, but require that when a bad state
  is reached we blame the original faulty type annotations.
@@ -3409,7 +3403,7 @@ TODO: highlight differnences form CH2
 \end_layout
 
 \begin_layout Standard
-As before we need a suitable evaluation relation to generate our proof of
+As before we need a suitable reduction relation to generate our proof of
  equality.
 \end_layout
 
@@ -3633,6 +3627,19 @@ Definitional Equality
 \end_layout
 
 \begin_layout Standard
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+Address the irony of using a def eq to avoid the issues of a def eq
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 As in Chapter 2, 
 \begin_inset Formula $\Rrightarrow_{*}$
 \end_inset
@@ -3674,7 +3681,8 @@ As in Chapter 2,
 \noun default
 \color inherit
  must be extended to observations.
- Proofs must be extended to mutually induct on observations.
+ Proofs must be extended to mutually induct on observations, since they
+ can contain expressions that could also reduce.
 \end_layout
 
 \begin_layout Standard
@@ -13563,9 +13571,9 @@ status collapsed
 \end_inset
 
 Even though the cast language allows us to optimistically assert equalities,
- manually noting every cast would be cumbersome.
- This can be solved with an elaboration procedure that translates (untyped)
- terms from the surface language into the cast language.
+ manually noting every cast would be unrealistically cumbersome.
+ This bureaucracy is solved with an elaboration procedure that translates
+ (untyped) terms from the surface language into the cast language.
  If the term is well typed in the surface language elaboration will produce
  a term without blamable errors.
  Terms with unproven equality in types are mapped to a cast with enough
@@ -13590,15 +13598,26 @@ noprefix "false"
 \end_inset
 
 .
- Not that the location tags match exactly with the check annotations of
- the bidirectional system.
+ Not that the location tags match exactly
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+or will after rewritten
+\end_layout
+
+\end_inset
+
+ with the check annotations of the bidirectional system.
  We also insist that the set of locations is nonempty, and designate a specific
  null location 
 \begin_inset Formula $.$
 \end_inset
 
-that can be used when we need to generate fresh terms, but have no sensible
- location information 
+ that can be used when we need to generate fresh terms, but have no sensible
+ location information available .
+ All the meta theory from chapter 2 goes through assuming that all locations
+ are equivalent and by generating null locations when needed
 \begin_inset Foot
 status open
 
@@ -13624,8 +13643,6 @@ For instance, the parallel reduction relation will associate all locations,
 \end_inset
 
 .
- All the meta theory from chapter 2 goes through assuming that all locations
- are equivalent.
  We will avoid writing these annotations when they are unneeded (explicitly
  in 
 \begin_inset CommandInset ref
@@ -14548,13 +14565,12 @@ status open
 \end_layout
 
 \begin_layout Plain Layout
-\begin_inset ERT
+\begin_inset Flex TODO Note (inline)
 status open
 
 \begin_layout Plain Layout
-
-%TODO which typing form looks the best? on the left when input, or alway
- on the right like the typing judgment
+which syntax looks the best? on the left when input, or alway on the right
+ like the typing judgment
 \end_layout
 
 \end_inset
@@ -15927,12 +15943,11 @@ by mutual induction on
 \end_layout
 
 \begin_layout Standard
-\begin_inset ERT
+\begin_inset Flex TODO Note (Margin)
 status open
 
 \begin_layout Plain Layout
-
-%TODO revise below, cuasing latex some issues
+revise below, causing latex some issues
 \end_layout
 
 \end_inset
@@ -18341,9 +18356,13 @@ correct by construction
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Itemize
 In every popular type system users are allowed to assume unsafe equalities.
- Thus 
+ Thus ...
+\end_layout
+
+\begin_layout List of TODOs
+
 \end_layout
 
 \begin_layout Part

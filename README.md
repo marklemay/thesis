@@ -11,7 +11,7 @@ all work related to my thesis document, will eventually become public
 * 6/16/2021 thesis proposal
 - [x] June
   - [x] Propose
-  - [x] extendecd abstract submission
+  - [x] extended abstract submission
 - [x] July
   - [x] reworked data
 - [x] August
@@ -23,14 +23,14 @@ all work related to my thesis document, will eventually become public
   - [x] draft Surface Language chapter
 ## Plan
 - [ ] November
-  - [ ] draft Cast Language chapter
+  - [x] draft Cast Language chapter
   - [ ] draft Data chapter
   - [ ] Rework symbolic execution to work in the cast language
   - [ ] draft testing chapter
   - [ ] draft runtime proof search chapter
+- [ ] December
   - [ ] draft introduction
   - [ ] draft conclusion
-- [ ] December
   - [ ] finalize thesis
   - [ ] Send to commitee (at least 2 weeks before defense)
   - [ ] Defend

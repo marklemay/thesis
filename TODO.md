@@ -42,6 +42,7 @@ the design of CastCIC."
 
 
 Formatting
+* validity/regularity
 * department
 * nice looking multi tabbed proof format?
 * note on equality
@@ -49,7 +50,7 @@ Formatting
 * Consider experemantal presentations
   * coloerizing inductive hypothises?
   * greying out wf conditions that can be hidden
-* validity/regularity
+* listing the git location and hash
 
 Send to people for review
 * CH2 Zach

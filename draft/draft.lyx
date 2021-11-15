@@ -6,6 +6,9 @@
 \origin unavailable
 \textclass article
 \use_default_options true
+\begin_modules
+todonotes
+\end_modules
 \maintain_unincluded_children false
 \language english
 \language_package default
@@ -29,6 +32,7 @@
 \bibtex_command default
 \index_command default
 \paperfontsize default
+\spacing single
 \use_hyperref false
 \papersize default
 \use_geometry false
@@ -44,6 +48,7 @@
 \use_package undertilde 1
 \cite_engine basic
 \cite_engine_type default
+\biblio_style plain
 \use_bibtopic false
 \use_indices false
 \paperorientation portrait
@@ -77,6 +82,27 @@
 
 \begin_layout Title
 Draft
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+The abstract should contain a clear and brief statement of the problem,
+ the procedure(s) and/or method(s) followed, the result(s), and the conclusion(s
+).
+ The purpose of an abstract is to help a reader decide if they want to consult
+ the complete work.
+ 11 As with the title, the abstract is searchable in many databases, including
+ ProQuest Dissertations & Theses Global.
+ Include relevant place names, full personal names, and other proper nouns,
+ which can be very useful keywords for scholars locating resources.
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -912,9 +938,8 @@ Conclusion and Future Work
 \end_layout
 
 \begin_layout Standard
-Chapter 2 argueged that decidability was a poor metric for type systems,
- A more meaningful metric, perhaps based on localizing problems would be
- good.
+Chapter 2 argued that decidability was a poor metric for type systems, A
+ more meaningful metric, perhaps based on localizing problems would be good.
 \end_layout
 
 \begin_layout Standard
@@ -922,7 +947,51 @@ non-termination as warning and error.
 \end_layout
 
 \begin_layout Standard
-...
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+btprint "btPrintCited"
+bibfiles "/Users/stephaniesavir/dtest/papers/2022-cpp/dtest"
+options "alpha"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Part
+TODO
+\end_layout
+
+\begin_layout Itemize
+https://library.bu.edu/theses
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+https://library.bu.edu/ld.php?content_id=30310050
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+am I a dual from 1.5.4
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Itemize
+instructions for running the artifact (tag a corresponding git release)
+\end_layout
+
+\begin_layout Itemize
+clearly explain the subtext
+\end_layout
+
+\begin_layout Itemize
+invite reader to contact
+\end_layout
+
+\begin_layout List of TODOs
+
 \end_layout
 
 \begin_layout Part
@@ -1052,18 +1121,6 @@ it is possible that
 \[
 M\equiv\left\langle 7,\lambda y.\mathtt{loopForever}\right\rangle 
 \]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset CommandInset bibtex
-LatexCommand bibtex
-btprint "btPrintCited"
-bibfiles "/Users/stephaniesavir/dtest/papers/2022-cpp/dtest"
-options "alpha"
 
 \end_inset
 

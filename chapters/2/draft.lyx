@@ -179,21 +179,21 @@ literal "false"
 
 \end_inset
 
+ it might be written 
+\begin_inset Formula $\lambda X.\lambda x.x\ :\,\underset{\left(X:\mathcal{U}\right)}{\prod}X\rightarrow X$
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
 
 \begin_inset Flex TODO Note (Margin)
 status open
 
 \begin_layout Plain Layout
 should cite as [HOTT13]
-\end_layout
-
-\end_inset
-
- it might be written 
-\begin_inset Formula $\lambda X.\lambda x.x\ :\,\underset{\left(X:\mathcal{U}\right)}{\prod}X\rightarrow X$
-\end_inset
-
-.
 \end_layout
 
 \end_inset
@@ -14162,7 +14162,20 @@ literal "false"
 
 .
  More advanced bidirectional implementations such as Agda
-\begin_inset Flex TODO Note (Margin)
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+
+\begin_inset Flex TODO Note (inline)
 status open
 
 \begin_layout Plain Layout
@@ -14184,6 +14197,19 @@ Cite Ulf
 
 \end_inset
 
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
  even preform unification as part of their bidirectional type checking.
 \end_layout
 
@@ -14194,6 +14220,34 @@ status open
 \begin_layout Plain Layout
 
 % TODO what else does the algorithm infer not listed here
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+More about extending the system so constraint solving can happen under a
+ check judgment 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+Clearly explain why this is needed for the cast system, annotating every
+ var is combersome, constraint solving is iffy when things may be undecidable
 \end_layout
 
 \end_inset
@@ -15342,6 +15396,20 @@ status open
 
 \begin_layout Plain Layout
 
+% TODO cite the autosubst proof
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
 % TODO go back to Russle?
 \end_layout
 
@@ -15446,7 +15514,7 @@ alt bidirectional formalization
 
 \begin_inset Formula 
 \[
-\frac{\Gamma\vdash m\overrightarrow{\,:\,}C\quad C\Rrightarrow\left(x:N\right)\rightarrow M\quad\Gamma\vdash n\overleftarrow{\,:\,}N}{\Gamma\vdash m\,n\overrightarrow{\,:\,}M\left[x\coloneqq n\right]}\operatorname{\overrightarrow{ty}-fun-app}
+\frac{\Gamma\vdash m\overrightarrow{\,:\,}C\quad C\Rrightarrow_{*}\left(x:N\right)\rightarrow M\quad\Gamma\vdash n\overleftarrow{\,:\,}N}{\Gamma\vdash m\,n\overrightarrow{\,:\,}M\left[x\coloneqq n\right]}\operatorname{\overrightarrow{ty}-fun-app}
 \]
 
 \end_inset
@@ -15454,7 +15522,7 @@ alt bidirectional formalization
 
 \begin_inset Formula 
 \[
-\frac{C\Rrightarrow\left(x:N\right)\rightarrow M\quad\Gamma,f:\left(x:N\right)\rightarrow M,x:N\vdash m\overleftarrow{\,:\,}M}{\Gamma\vdash\mathsf{fun}\,f\,x\Rightarrow m\overleftarrow{\,:\,}C}\operatorname{\overleftarrow{ty}-\mathsf{fun}}
+\frac{C\Rrightarrow_{*}\left(x:N\right)\rightarrow M\quad\Gamma,f:\left(x:N\right)\rightarrow M,x:N\vdash m\overleftarrow{\,:\,}M}{\Gamma\vdash\mathsf{fun}\,f\,x\Rightarrow m\overleftarrow{\,:\,}C}\operatorname{\overleftarrow{ty}-\mathsf{fun}}
 \]
 
 \end_inset
@@ -16024,6 +16092,10 @@ Constable and Smith had papers at LICS around 1987 or so, leading to both
 \begin_inset Quotes erd
 \end_inset
 
+
+\end_layout
+
+\begin_layout List of TODOs
 
 \end_layout
 

@@ -1609,6 +1609,19 @@ values,
 \end_layout
 
 \begin_layout Plain Layout
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+Constructors build application, drop this with applications
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
@@ -1755,6 +1768,10 @@ abbreviate away dumb arrows, unstated separator is a space, also usual syntax
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+relevent motives!
 \end_layout
 
 \begin_layout Section
@@ -2548,6 +2565,49 @@ or
 \noun default
 \color inherit
 ...
+ 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+or 
+\begin_inset Formula $\Gamma\,\mathbf{context}$
+\end_inset
+
+ , 
+\begin_inset Formula $\Delta\,\mathbf{telescope}$
+\end_inset
+
+ as in 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "cockx_devriese_2018"
+literal "false"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -3149,32 +3209,6 @@ match a constructor
 \end_layout
 
 \begin_layout Plain Layout
-\begin_inset Flex TODO Note (Margin)
-status open
-
-\begin_layout Plain Layout
-type annotations are allowed
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Flex TODO Note (Margin)
-status open
-
-\begin_layout Plain Layout
-pat or p?
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
@@ -3191,6 +3225,32 @@ name "fig:surface-data"
 \end_inset
 
 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+type annotations are allowed
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+pat or p?
 \end_layout
 
 \end_inset
@@ -3284,6 +3344,140 @@ there is a lot of jenkyness about unification in general, but I think the
 \begin_layout Standard
 Parentheses are used to distinguish between matching a single variable and
  a constructor that takes no arguments
+\end_layout
+
+\begin_layout Standard
+TAS pattern matching
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\begin{array}{cl}
+\Gamma\vdash\overline{n}:\Delta' & (scrutinees\ type\ check)\\
+\Gamma,\overline{x}:\Delta'\vdash M:\star & (motive\ exists\ and\ is\ well\ formed)\\
+\forall i.\:\left(\forall\:\Gamma',\sigma,\overline{n'}.\,\Gamma,\overline{x}:\Delta'\sim\sigma\Gamma'\,\wedge\,\Gamma'\vdash\overline{pat}_{i}\sim_{\sigma'}\overline{n'}:\sigma\Delta'\,\supset\,\sigma'\Gamma'\vdash\sigma'm_{i}:\sigma'\sigma M\right) & (every\ branch\ is\ well\ typed\ over\ all\ possible\ instantiations)\\
+\forall\:\Gamma',\sigma,n'.\,\Gamma\sim\sigma\Gamma'\,\wedge\,\Gamma'\vdash n':\sigma\Delta'\,\supset\exists i.\,\sigma'\Gamma'\vdash\overline{pat}_{i}\sim_{\sigma'}\overline{n'}:\sigma\Delta' & (every\ input\ is\ handled)
+\end{array}}{\begin{array}{c}
+\Gamma\vdash\mathsf{case}\,\overline{n,}\,\left\{ \overline{|\,\overline{pat\Rightarrow}_{i}m_{i}}\right\} \\
+:M\left[\overline{x}\coloneqq\overline{n}\right]
+\end{array}}\,...
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+last condition is incorrect, since a loop will type but not match
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+should delta be well formed?
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+last condition is optional if you're willing to modify type soundness to
+ allow pattern match errors (they are no worse then the non-termination
+ already allowed, and much better behaved).
+ allows for repeated patterns.
+\end_layout
+
+\begin_layout Standard
+matching 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\ }{x\sim_{\left\{ x\coloneqq m\right\} }m}\,...
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{\overline{pat}\sim_{\sigma}\overline{m}}{d\overline{pat}\sim_{\sigma}d\overline{m}}\,...
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{pat'\sim_{\sigma}n\quad\overline{pat}\sim_{\sigma'}\overline{m}}{pat',\overline{pat}\sim_{\sigma\cup\sigma'}n,\overline{m}}\,...
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{\,}{.\sim_{\emptyset}.}\,...
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+unification
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $U(pat=M,\sigma+)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+not quite a sub propely a ctx thing
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{U\left(\right)}{x\sim_{\left\{ x\coloneqq m\right\} }m}\,...
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+...
 \end_layout
 
 \begin_layout Part
@@ -5418,71 +5612,6 @@ options "alpha"
 
 \end_layout
 
-\begin_layout Standard
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-Note test
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Note Comment
-status open
-
-\begin_layout Plain Layout
-Comment test
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Note Greyedout
-status open
-
-\begin_layout Plain Layout
-greyed out test
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Flex TODO Note (Margin)
-status open
-
-\begin_layout Plain Layout
-Todo (margin) test
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-TODO (inline) test
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
 \begin_layout Part
 TODO
 \end_layout
@@ -5512,8 +5641,8 @@ adding paths and path variables means that constructs can still fail at
 \end_layout
 
 \begin_layout Standard
-validating the K axiom, not that edqualities are unique, merely that we
- don't care which one of the unique equalities is used.
+validating the K axiom, not that equalities are unique, merely that we don't
+ care which one of the unique equalities is used.
 \end_layout
 
 \begin_layout Standard
