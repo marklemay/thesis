@@ -4,7 +4,7 @@
 \begin_header
 \save_transient_properties true
 \origin unavailable
-\textclass book
+\textclass article
 \use_default_options true
 \begin_modules
 theorems-ams
@@ -18243,7 +18243,7 @@ It may be possible to prove one of the elaboration properties by stages,
 \begin_inset Formula $a$
 \end_inset
 
-cannot cuase blame.
+cannot cause blame.
  Then use that as a lemma in the main thing
 \end_layout
 
@@ -18290,6 +18290,15 @@ run forever
 \begin_layout Standard
 If we did not allow general recursion (and the non-termination allowable
  by type-in-type), it seems elaboration would always terminate.
+\end_layout
+
+\begin_layout Section
+Alt construction
+\end_layout
+
+\begin_layout Standard
+consider making the cast system intrinsically typed? or intrinsically typed
+ enough that casts can easily be removed
 \end_layout
 
 \begin_layout Section

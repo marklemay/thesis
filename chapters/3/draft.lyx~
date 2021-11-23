@@ -4,7 +4,7 @@
 \begin_header
 \save_transient_properties true
 \origin unavailable
-\textclass book
+\textclass article
 \use_default_options true
 \begin_modules
 theorems-ams
@@ -16932,7 +16932,7 @@ by induction
 \end_layout
 
 \begin_layout Itemize
-We conjecture that every term well typed in the bidirectional surface language
+I conjecture that every term well typed in the bidirectional surface language
  elaborates 
 \end_layout
 
@@ -17017,7 +17017,7 @@ and
 
 \end_deeper
 \begin_layout Itemize
-We conjecture blame never points to something that checked in the bidirectional
+I conjecture blame never points to something that checked in the bidirectional
  system 
 \end_layout
 
@@ -17059,7 +17059,7 @@ literal "false"
 \begin_layout Standard
 As formulated here the elaboration procedure is total.
  However in a realistic implementation the function application would reduce
- the function type to weak head normal form (to match realistic bidirectional
+ the function type to weak head normal form (to match a realistic bidirectional
  implementations) and will be undecidable for some pathological terms.
  Because the application rule needs to determine if a type level computation
  results in a function type.
@@ -17080,22 +17080,7 @@ run forever
 \end_inset
 
 .
- If we did not allow general recursion (and the non-termination allowable
- by type-in-type), it seems elaboration would always terminate.
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-% tODO example
-\end_layout
-
-\end_inset
-
-
+ 
 \end_layout
 
 \begin_layout Standard
@@ -17130,9 +17115,9 @@ As presented here, not every cast corresponds to a reasonable warning.
 \end_inset
 
  is a possible output from elaboration.
- By the rules given the cast will not reduce, it is however inert, and should
- not cuase an error.
- In fact since the user only interacts with the surface langugae, any cast
+ By the rules given the cast will not reduce without input, it is however
+ inert, and vill not cause blame.
+ In fact since the user only interacts with the surface language, any cast
  
 \begin_inset Formula $a::_{A}B$
 \end_inset
@@ -17141,13 +17126,13 @@ As presented here, not every cast corresponds to a reasonable warning.
 \begin_inset Formula $|A|\equiv|B|$
 \end_inset
 
- will not produce an understandable warning, and further will not be a direct
- source of runtime errors.
+ will not produce an understandable warning, and further should not be a
+ direct source of runtime errors.
  A reasonable first attempt would be to simply remove these trivial casts,
- but this ignores the possiblility that casts themsselves may contain problemati
-c equalities.
- Currently the implementation leaves most casts intact and filters our equvelnt
- casts from teh warnings shown to the user
+ but this ignores the possibility that casts themselves may contain problematic
+ equalities.
+ Currently the implementation leaves most casts intact and filters our equivalen
+t casts from the warnings shown to the user
 \end_layout
 
 \begin_layout Standard
@@ -17676,6 +17661,10 @@ status open
 
 \end_inset
 
+
+\end_layout
+
+\begin_layout Standard
 Difficulties in dependently typed equality have motivated many research
  projects 
 \begin_inset CommandInset citation
@@ -17686,8 +17675,8 @@ literal "false"
 \end_inset
 
 .
- However, these impressive efforts currently require a prohibitively high
- level of expertise from programmers.
+ However, these impressive efforts currently require a high level of expertise
+ from programmers.
  Further, since program equivalence is undecidable in general, no system
  will be able to statically verify every 
 \begin_inset Quotes eld
@@ -17699,7 +17688,7 @@ obvious
 
  equality for arbitrary user defined data types and functions.
  In the meantime systems should trust the programmer when they use an unverified
- equality.
+ equality, and use that advanced research to suppress warnings.
  
 \end_layout
 
@@ -17709,7 +17698,7 @@ Contract Systems
 
 \begin_layout Standard
 Several of the tricks and notations in this chapter find their basis in
- the large amount of work on higher order contracts and their related fields.
+ the large amount of work on higher order contracts and related fields.
  Higher order contracts were introduced in 
 \begin_inset CommandInset citation
 LatexCommand cite
@@ -17718,8 +17707,8 @@ literal "false"
 
 \end_inset
 
-, as a way to dynamically enforce invariants of software interfaces, specificall
-y higher order functions
+ as a way to dynamically enforce invariants of software interfaces, specifically
+ higher order functions
 \begin_inset ERT
 status open
 
@@ -17764,28 +17753,16 @@ literal "false"
 
 \begin_layout Standard
 Contract systems still generally rely on users making annotating their invariant
-s explicitly
+s explicitly.
+ Similar to how programmers might include asserts in conventional languages.
 \end_layout
 
 \begin_layout Standard
 While there are similarities between contract systems and the cast system
- outlined here, the cast system is designed to addresses issues with definitiona
-l equality.
+ outlined here, the cast system is designed to address only issues with
+ definitional equality.
  Definitional equality simply isn't relevant in the vast majority of contract
  systems.
-\end_layout
-
-\begin_layout Standard
-While the gradual typing goals of mixing static certainty with runtime checks
- are similar to our work here, the approach and details are different.
- Instead of trying to strengthen untyped languages by adding types, we take
- a dependent type system and allow more permissive equalities.
- This leads to different trade-offs in the design space.
- For instance, we cannot support completely unannotated code, but we do
- not need to complicate the type language with wildcards for uncertainty.
- Further we assume someone using a dependent type system feels positively
- about types in general and will not want fragments of completely typed
- code.
 \end_layout
 
 \begin_layout Subsubsection
@@ -17796,7 +17773,7 @@ Gradual Types
 Types can be viewed as a very specific form of contracts, gradual type systems
  allow for a mixing of the static view of data and dynamic checking.
  Often type information can be inferred using standard techniques, allowing
- programmers to write fewer annotations.
+ programmers to write fewer contract annotations.
  
 \begin_inset ERT
 status open
@@ -17816,7 +17793,7 @@ Gradual type systems usually achieve this by adding in a
 \begin_inset Formula $?$
 \end_inset
 
- meta character to denote inprecise typing information.
+ meta character to denote imprecise typing information.
  The first plausible account of gradual typed semantic's appeared in 
 \begin_inset CommandInset citation
 LatexCommand cite
@@ -17947,7 +17924,7 @@ status open
 \end_layout
 
 \begin_layout Standard
-This thesis barrows some notational conventions from gradual typing such
+This thesis borrows some notational conventions from gradual typing such
  as the 
 \begin_inset Formula $a::A$
 \end_inset
@@ -17967,8 +17944,8 @@ literal "false"
 .
  That paper is largely concerned with establishing decidable type checking
  via an approximate term normalization.
- However, that system retains the definitional style of equality, so that
- it is possible, in principle, to get 
+ However, that system retains the intentional style of definitional equality,
+ so that it is possible, in principle, to get 
 \begin_inset Formula $vec\,(1+x)\neq vec\,(x+1)$
 \end_inset
 
@@ -17977,24 +17954,24 @@ literal "false"
 \begin_inset Formula $?$
 \end_inset
 
- meta-symbol into an already very complicated type theory, makes the system
- more complicated from the programmers perspective.
+ meta-symbol into an already very complicated type theory, easier or harder
+ from the programmers perspective.
 \end_layout
 
 \begin_layout Standard
-This chapter has a much tighter scope then the other strong work cited here,
- dealing only with equational assumptions.
- It is assumed anyone using a dependent type system has already bought into
- the usefulness of dependent types, and the common motivation for gradual
- type systems to gradually convert a code base from untyped to (simply)
- typed is less plausible then gradually converting an untyped code base
- to use dependent types
+This chapter has a much tighter scope then the other work cited here, dealing
+ only with equational assumptions.
+ Anyone using a dependent type system has already bought into the usefulness
+ of types in general and will not want fragments of completely untyped code.
+ The common motivation for gradual type systems to gradually convert a code
+ base from untyped to (simply) typed is less plausible than gradually converting
+ an untyped code base to use dependent types
 \begin_inset Foot
 status open
 
 \begin_layout Plain Layout
-Especially considering that most real-life codebases will use effects freely,
- while dependent types and effects are a complicated area of ongoing research
+Especially considering that most real-life codebases will use effects, while
+ dependent types and effects are a complicated area of ongoing research
 \end_layout
 
 \end_inset
@@ -18003,17 +17980,15 @@ Especially considering that most real-life codebases will use effects freely,
 \end_layout
 
 \begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-% TODO gradualiing deffinitional equality
-\end_layout
-
-\end_inset
-
-
+While the gradual typing goals of mixing static certainty with runtime checks
+ are similar to our work here, the approach and details are different.
+ Instead of trying to strengthen untyped languages by adding types, we take
+ a dependent type system and allow more permissive equalities.
+ This leads to different trade-offs in the design space.
+ For instance, we cannot support completely unannotated code, but we do
+ not need to complicate the type language with wildcards for uncertainty.
+ However it might be reasonable to characterize this work as gradualizing
+ the definitional equality relation.
 \end_layout
 
 \begin_layout Subsubsection
@@ -18041,7 +18016,15 @@ literal "false"
 \end_inset
 
 .
- Blame is treated there very similarly to the presentation in this chapter.
+ Blame is treated in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "wadler:LIPIcs:2015:5033"
+literal "false"
+
+\end_inset
+
+ very similarly to the presentation in this chapter.
  Though in addition to merely blaming a source locations we ensure that
  a witnessing observation can also be made.
 \end_layout
@@ -18051,25 +18034,23 @@ Refinement Style Approaches
 \end_layout
 
 \begin_layout Standard
-In this thesis we have described a full-spectrum dependently typed language.
+In this thesis I describe a full-spectrum dependently typed language.
  This means computation can appear uniformly in both term and type position.
  An alternative approach to dependent types is found in refinement type
  systems.
  Refinement type systems restrict type dependency, possibly to specific
- base types such as int or bool.
- 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-% TODO code format
-\end_layout
-
+ base types such as 
+\begin_inset Formula $\mathtt{int}$
 \end_inset
 
+ or 
+\begin_inset Formula $\mathtt{bool}$
+\end_inset
+
+.
  Under this restriction, it is straightforward to check these decidable
- equalities and additional properties at runtime with the 
+ equalities and some additional properties hold at runtime.
+ One specific approach is called 
 \series bold
 Hybrid Type Checking
 \series default
@@ -18082,7 +18063,7 @@ literal "false"
 \end_inset
 
 .
- A notable example is 
+ Another notable example is 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "10.1007/1-4020-8141-3_34"
@@ -18304,6 +18285,11 @@ run forever
 .
  If we did not allow general recursion (and the non-termination allowable
  by type-in-type), we suspect elaboration would always terminate.
+\end_layout
+
+\begin_layout Standard
+If we did not allow general recursion (and the non-termination allowable
+ by type-in-type), it seems elaboration would always terminate.
 \end_layout
 
 \begin_layout Section

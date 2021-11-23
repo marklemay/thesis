@@ -163,16 +163,16 @@ User defined data is an essential feature of a realistic programming language.
 \begin_inset Formula $\mathtt{Id}$
 \end_inset
 
- can represent the mathematical predicate of equality.
- Dependent data can also be used to preserve invariants like the length
- in 
+ can represent the mathematical predicates like equality.
+ Dependent data can also be used to preserve invariants, like the length
+ of a list in 
 \begin_inset Formula $\mathtt{Vec}$
 \end_inset
 
 .
  
 \begin_inset ERT
-status collapsed
+status open
 
 \begin_layout Plain Layout
 
@@ -781,9 +781,6 @@ data type identifier,
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\Coloneqq$
-\end_inset
-
 
 \end_layout
 
@@ -793,7 +790,7 @@ data type identifier,
 \begin_inset Text
 
 \begin_layout Plain Layout
-...
+
 \end_layout
 
 \end_inset
@@ -863,9 +860,6 @@ data constructor identifier,
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\Coloneqq$
-\end_inset
-
 
 \end_layout
 
@@ -875,7 +869,7 @@ data constructor identifier,
 \begin_inset Text
 
 \begin_layout Plain Layout
-...
+
 \end_layout
 
 \end_inset
@@ -1007,7 +1001,7 @@ contexts,
 \begin_inset Text
 
 \begin_layout Plain Layout
-data def
+data def extention
 \end_layout
 
 \end_inset
@@ -1048,7 +1042,7 @@ data def
 \begin_inset Text
 
 \begin_layout Plain Layout
-abstract data
+abstract data extention
 \end_layout
 
 \end_inset
@@ -1121,7 +1115,7 @@ abstract data
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $D\,\overline{m}$
+\begin_inset Formula $D$
 \end_inset
 
 
@@ -1162,7 +1156,7 @@ type cons.
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $d\,\overline{m}$
+\begin_inset Formula $d$
 \end_inset
 
 
@@ -1203,7 +1197,7 @@ data cons.
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\mathsf{case}\,\overline{N,}m\,\left\{ \overline{|\,pat\Rightarrow m}\right\} $
+\begin_inset Formula $\mathsf{case}\,\overline{N,}n\,\left\{ \overline{|\,pat\Rightarrow m}\right\} $
 \end_inset
 
 
@@ -1245,7 +1239,7 @@ data elim.
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\mathsf{case}\,\overline{N,}m\,\left\langle \overline{x\Rightarrow}y:D\,\overline{x}\Rightarrow M\right\rangle \left\{ \overline{|\,pat\Rightarrow m}\right\} $
+\begin_inset Formula $\mathsf{case}\,\overline{N,}n\,\left\langle \overline{x\Rightarrow}y:D\,\overline{x}\Rightarrow M\right\rangle \left\{ \overline{|\,pat\Rightarrow m}\right\} $
 \end_inset
 
 
@@ -1774,6 +1768,19 @@ abbreviate away dumb arrows, unstated separator is a space, also usual syntax
 relevent motives!
 \end_layout
 
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+define a closed context
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Section
 Incomplete Eliminations
 \end_layout
@@ -1787,9 +1794,13 @@ Specification
 \end_layout
 
 \begin_layout Standard
+telescopes are well formed
+\end_layout
+
+\begin_layout Standard
 \begin_inset Formula 
 \[
-\frac{\ }{\Gamma\vdash.}\,...
+\frac{\Gamma\,\mathbf{ok}}{\Gamma\vdash.\,\mathbf{ok}}\,...
 \]
 
 \end_inset
@@ -1797,7 +1808,7 @@ Specification
 
 \begin_inset Formula 
 \[
-\frac{\Gamma\vdash M:\star\quad\Gamma,x:M\vdash\Delta}{\Gamma\vdash x:M,\Delta}\,...
+\frac{\Gamma\vdash M:\star\quad\Gamma,x:M\vdash\Delta\,\mathbf{ok}}{\Gamma\vdash x:M,\Delta\,\mathbf{ok}}\,...
 \]
 
 \end_inset
@@ -1821,7 +1832,7 @@ suspect this also hinges on regularity
 \begin_layout Standard
 \begin_inset Formula 
 \[
-\frac{\Gamma\vdash}{\Gamma\vdash\lozenge:.}\,...
+\frac{\Gamma\,\mathbf{ok}}{\Gamma\vdash\lozenge:.}\,...
 \]
 
 \end_inset
@@ -1843,7 +1854,7 @@ suspect this also hinges on regularity
 \begin_layout Standard
 \begin_inset Formula 
 \[
-\frac{\mathsf{data}\,D\,\Delta\in\Gamma}{\Gamma\vdash D\,:\,\Delta\rightarrow*}\,...
+\frac{\Gamma\,\mathbf{ok}\quad\mathsf{data}\,D\,\Delta\in\Gamma}{\Gamma\vdash D\,:\,\Delta\rightarrow*}\,...
 \]
 
 \end_inset
@@ -1854,7 +1865,7 @@ suspect this also hinges on regularity
 \begin_layout Standard
 \begin_inset Formula 
 \[
-\frac{d\,:\,\varTheta\rightarrow D\overline{m}\in\Gamma}{\Gamma\vdash d\,:\,\varTheta\rightarrow D\overline{m}}\,...
+\frac{\Gamma\,\mathbf{ok}\quad d\,:\,\varTheta\rightarrow D\overline{m}\in\Gamma}{\Gamma\vdash d\,:\,\varTheta\rightarrow D\overline{m}}\,...
 \]
 
 \end_inset
@@ -1897,7 +1908,7 @@ define these
 \[
 \frac{\begin{array}{c}
 \mathsf{data}\,D\,\Delta\in\Gamma\\
-\Gamma\vdash\overline{N}:\Delta\quad\Gamma\vdash n:D\overline{N}\\
+\Gamma\vdash n:D\overline{N}\\
 \Gamma,\overline{x}:\Delta,z:D\,\overline{x}\vdash M:\star\\
 \forall\:d\,:\,\varTheta\rightarrow D\overline{m}\in\Gamma.\quad\Gamma,\overline{x}:\Delta,\overline{y}_{d}:\varTheta\vdash m_{d}:M
 \end{array}}{\begin{array}{c}
@@ -1950,7 +1961,7 @@ don't need
 \Gamma,\overline{x}:\Delta,z:D\,\overline{x}\vdash M:\star\\
 \forall\:d\,:\,\varTheta\rightarrow D\overline{m}\in\Gamma.\quad\Gamma,\overline{x}:\Delta,\overline{y}_{d}:\varTheta\vdash m_{d}:M
 \end{array}}{\begin{array}{c}
-\Gamma\vdash\mathsf{case}\,\overline{N,},n\,\left\langle \overline{x\Rightarrow}z:D\,\overline{x}\Rightarrow M\right\rangle \left\{ \overline{|\,\overline{x\Rightarrow}(d\,\overline{y}_{d})\Rightarrow m_{d}}\right\} \\
+\Gamma\vdash\mathsf{case}\,\overline{N,}n\,\left\langle \overline{x\Rightarrow}z:D\,\overline{x}\Rightarrow M\right\rangle \left\{ \overline{|\,\overline{x\Rightarrow}(d\,\overline{y}_{d})\Rightarrow m_{d}}\right\} \\
 :M\left[\overline{x}\coloneqq\overline{N},z\coloneqq n\right]
 \end{array}}\,...
 \]
@@ -1976,7 +1987,7 @@ may not need scrut wf check? oh but what about the empty types!
 \begin_layout Standard
 \begin_inset Formula 
 \[
-\frac{\Gamma\vdash\Delta}{\Gamma\vdash\mathsf{data}\,D\,\Delta}\,...
+\frac{\Gamma\vdash\Delta\,\mathbf{ok}}{\Gamma\vdash\mathsf{data}\,D\,\Delta\,\mathbf{ok}}\,...
 \]
 
 \end_inset
@@ -1987,7 +1998,7 @@ may not need scrut wf check? oh but what about the empty types!
 \begin_layout Standard
 \begin_inset Formula 
 \[
-\frac{\Gamma\vdash\mathsf{data}\,D\,\Delta\quad\forall d.\Gamma,\mathsf{data}\,D\,\Delta\vdash\varTheta_{d}\quad\forall d.\:\Gamma,\mathsf{data}\,D\,\Delta,\varTheta_{d}\vdash\overline{m}_{d}:\Delta}{\Gamma\vdash\mathsf{data}\,D\,:\,\Delta\left\{ \overline{|\,d\,:\,\varTheta_{d}\rightarrow D\overline{m}_{d}}\right\} }\,...
+\frac{\Gamma\vdash\mathsf{data}\,D\,\Delta\,\mathbf{ok}\quad\forall d.\Gamma,\mathsf{data}\,D\,\Delta\vdash\varTheta_{d}\,\mathbf{ok}\quad\forall d.\:\Gamma,\mathsf{data}\,D\,\Delta,\varTheta_{d}\vdash\overline{m}_{d}:\Delta}{\Gamma\vdash\mathsf{data}\,D\,:\,\Delta\left\{ \overline{|\,d\,:\,\varTheta_{d}\rightarrow D\overline{m}_{d}}\right\} \,\mathbf{ok}}\,...
 \]
 
 \end_inset
@@ -2024,7 +2035,7 @@ to ensure regularity
 \begin_layout Standard
 \begin_inset Formula 
 \[
-\frac{\Gamma\vdash\mathsf{data}\,D\,\Delta}{\Gamma,\mathsf{data}\,D\,\Delta\vdash}\,...
+\frac{\Gamma\vdash\mathsf{data}\,D\,\Delta\,\mathbf{ok}}{\Gamma,\mathsf{data}\,D\,\Delta\,\mathbf{ok}}\,...
 \]
 
 \end_inset
@@ -2035,7 +2046,7 @@ to ensure regularity
 \begin_layout Standard
 \begin_inset Formula 
 \[
-\frac{\Gamma\vdash\mathsf{data}\,D\,:\,\Delta\left\{ \overline{|\,d\,:\,\varTheta\rightarrow D\overline{m}}\right\} }{\Gamma,\mathsf{data}\,D\,:\,\Delta\left\{ \overline{|\,d\,:\,\varTheta\rightarrow D\overline{m}}\right\} \vdash}\,...
+\frac{\Gamma\vdash\mathsf{data}\,D\,:\,\Delta\left\{ \overline{|\,d\,:\,\varTheta\rightarrow D\overline{m}}\right\} \,\mathbf{ok}}{\Gamma,\mathsf{data}\,D\,:\,\Delta\left\{ \overline{|\,d\,:\,\varTheta\rightarrow D\overline{m}}\right\} \,\mathbf{ok}}\,...
 \]
 
 \end_inset
@@ -2391,7 +2402,7 @@ may not need scrut wf check? oh but what about the empty types!
 \begin_layout Standard
 \begin_inset Formula 
 \[
-\frac{\Gamma\vdash\Delta\,\overleftarrow{wf}}{\Gamma\vdash\mathsf{data}\,D\,\Delta\,\overleftarrow{wf}}\,...
+\frac{\Gamma\vdash\Delta\,\overleftarrow{\mathbf{ok}}}{\Gamma\vdash\mathsf{data}\,D\,\Delta\,\overleftarrow{\mathbf{ok}}}\,...
 \]
 
 \end_inset
@@ -2492,7 +2503,7 @@ ok?
 \noun off
 \color none
 
-\begin_inset Formula $\Gamma\vdash\Delta\,ok$
+\begin_inset Formula $\Gamma\vdash\Delta\,\mathbf{ok}$
 \end_inset
 
  
@@ -3358,10 +3369,7 @@ TAS pattern matching
 \Gamma,\overline{x}:\Delta'\vdash M:\star & (motive\ exists\ and\ is\ well\ formed)\\
 \forall i.\:\left(\forall\:\Gamma',\sigma,\overline{n'}.\,\Gamma,\overline{x}:\Delta'\sim\sigma\Gamma'\,\wedge\,\Gamma'\vdash\overline{pat}_{i}\sim_{\sigma'}\overline{n'}:\sigma\Delta'\,\supset\,\sigma'\Gamma'\vdash\sigma'm_{i}:\sigma'\sigma M\right) & (every\ branch\ is\ well\ typed\ over\ all\ possible\ instantiations)\\
 \forall\:\Gamma',\sigma,n'.\,\Gamma\sim\sigma\Gamma'\,\wedge\,\Gamma'\vdash n':\sigma\Delta'\,\supset\exists i.\,\sigma'\Gamma'\vdash\overline{pat}_{i}\sim_{\sigma'}\overline{n'}:\sigma\Delta' & (every\ input\ is\ handled)
-\end{array}}{\begin{array}{c}
-\Gamma\vdash\mathsf{case}\,\overline{n,}\,\left\{ \overline{|\,\overline{pat\Rightarrow}_{i}m_{i}}\right\} \\
-:M\left[\overline{x}\coloneqq\overline{n}\right]
-\end{array}}\,...
+\end{array}}{\Gamma\vdash\mathsf{case}\,\overline{n,}\,\left\{ \overline{|\,\overline{pat\Rightarrow}_{i}m_{i}}\right\} :M\left[\overline{x}\coloneqq\overline{n}\right]}\,...
 \]
 
 \end_inset
@@ -3388,6 +3396,20 @@ status open
 
 \begin_layout Plain Layout
 should delta be well formed?
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+uniquness of match.
+ or better yet, any determinitic way to resolve paths
 \end_layout
 
 \end_inset
@@ -3442,6 +3464,78 @@ matching
 \end_layout
 
 \begin_layout Standard
+bidirectional 
+\end_layout
+
+\begin_layout Standard
+aproxomations
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\Gamma\vdash\overline{pat}:_{E}?\Delta$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\ }{\Gamma\vdash x:_{\left\{ x:M\right\} }M}\,...
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{d\,:\,\varTheta\rightarrow D\overline{n}\in\Gamma\quad\Gamma\vdash\overline{m}:_{c}?\varTheta}{\Gamma\vdash d\overline{m}:_{\left\{ M\sim D\overline{n}\left[\varTheta\coloneqq\overline{m}\right]\right\} \cup c}?M}\,...
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\quad}{\Gamma\vdash.:_{\emptyset}?.}\,...
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{d\,:\,\varTheta\rightarrow D\overline{n}\in\Gamma\quad\Gamma\vdash\overline{m}:_{c}?\varTheta}{\Gamma\vdash d\overline{m}:_{\left\{ M\sim D\overline{n}\left[\varTheta\coloneqq\overline{m}\right]\right\} \cup c}?M}\,...
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+abuse of notation
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 unification
 \end_layout
 
@@ -3468,7 +3562,7 @@ not quite a sub propely a ctx thing
 \begin_layout Standard
 \begin_inset Formula 
 \[
-\frac{U\left(\right)}{x\sim_{\left\{ x\coloneqq m\right\} }m}\,...
+\frac{\,}{U\left(\emptyset,\emptyset\right)}\,...
 \]
 
 \end_inset
@@ -3477,7 +3571,111 @@ not quite a sub propely a ctx thing
 \end_layout
 
 \begin_layout Standard
-...
+\begin_inset Formula 
+\[
+\frac{U\left(E,a\right)\quad m\equiv m'}{U\left(\left\{ m\sim m'\right\} \cup E,a\right)}\,...
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{U\left(E\left[x\coloneqq m\right],a\left[x\coloneqq m\right]\right)}{U\left(\left\{ x\sim m\right\} \cup E,\left\{ a,x\coloneqq m\right\} \right)}\,...
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{U\left(E\left[x\coloneqq m\right],a\left[x\coloneqq m\right]\right)}{U\left(\left\{ m\sim x\right\} \cup E,a\cup\left\{ x\coloneqq m\right\} \right)}\,...
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{U\left(\overline{m}\sim\overline{m'}\cup E,a\right)\quad n\equiv d\overline{m}\quad n'\equiv d\overline{m'}}{U\left(\left\{ n\sim n'\right\} \cup E,a\right)}\,...
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{U\left(\overline{m}\sim\overline{m'}\cup E,a\right)\quad N\equiv D\overline{m}\quad N'\equiv D\overline{m'}}{U\left(\left\{ N\sim N'\right\} \cup E,a\right)}\,...
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+there is no inherent reason to limit vars to those that appear in the pattern
+\end_layout
+
+\begin_layout Standard
+non termination of unification (cyclic)
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\begin{array}{c}
+\Gamma\vdash\overline{n}\overrightarrow{\,:\,\Delta_{?}=}\ \Delta\\
+\Gamma,\Delta\vdash M\overleftarrow{\,:\,}\star\\
+\forall\:i\,\left(\Gamma\vdash\overline{pat}_{i}:_{E}?\Delta\quad U\left(E,\sigma\right)\quad\sigma\left(\Gamma,|\overline{pat}_{i}|\right)\vdash\sigma m\overleftarrow{\,:\,}\sigma\left(M\left[\Delta\coloneqq\overline{pat}_{i}\right]\right)\right)\\
+\Gamma\vdash\overline{\overline{pat}}:\Delta\ \mathbf{complete}
+\end{array}}{\begin{array}{c}
+\Gamma\vdash\mathsf{case}\,\overline{n,}\,\left\langle \Delta_{?}\Rightarrow M\right\rangle \left\{ \overline{|\,\overline{pat\Rightarrow}m}\right\} \\
+\overrightarrow{\,:\,}M\left[\Delta_{?}\coloneqq\overline{n}\right]
+\end{array}}\,...
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\begin{array}{c}
+\Gamma\vdash\overline{n}\overrightarrow{\,:\,}\ \Delta\\
+\forall\:i\,\left(\Gamma\vdash\overline{pat}_{i}:_{E}?\Delta\quad U\left(E,\sigma\right)\quad\sigma\left(\Gamma,|\overline{pat}_{i}|\right)\vdash\sigma m\overleftarrow{\,:\,}\sigma\left(M\right)\right)\\
+\Gamma\vdash\overline{\overline{pat}}:\Delta\ \mathbf{complete}
+\end{array}}{\Gamma\vdash\mathsf{case}\,\overline{n,}\,\left\{ \overline{|\,\overline{pat\Rightarrow}m}\right\} \overleftarrow{\,:\,}M}\,...
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This complicates the simple story from chapter 2, where the bidirectional
+ system made the TAS system tractable by only adding annotations (and having
+ annotatability).
+ It seems plausible that the bidirectional rules here can be considered
+ an extension over the TAS rules outlines above, but the exact formulation
+ would probably be cumbersome involving non-trivial transformations of case
+ expressions, along with an appropriate equivalence associating those equivalenc
+es.
 \end_layout
 
 \begin_layout Part
@@ -3499,24 +3697,27 @@ status collapsed
 
 \end_inset
 
-Surprisingly, the cast language can be extended with a pattern matching
- construct without unification.
- This becomes clear when considering the normal forms of data terms.
- While in standard dependent type theory a normal form of data must have
- the data constructor in head position (justifying the pattern syntax),
- in the cast language the normal form of data will have a stack of casts
- applied to it.
+Surprisingly, the cast system can be extended with a pattern matching construct
+ without unification.
+\end_layout
+
+\begin_layout Standard
+Consider the normal forms of data terms.
+ While in standard dependent type theory a normal form of data, in a closed
+ context, must have the data constructor in head position (justifying the
+ pattern syntax), in the cast language the normal form of data will have
+ a stack of 0 or more casts applied to it.
  Casts will be wrapped around constructors during the elaboration procedure,
  and will accumulate during evaluation.
  If the cast language is extended with a path variable that can represent
  the stack of equalities then that stack can be matched and used in the
- body of the pattern.
+ body of the branch.
  Since the type constructor is known, it is possible to check the coverage
- of the patterns.
+ of the patterns against it's constructors.
  If every constructor is accounted for, only blameable data remains.
  Quantifying over casts allows blame to be redirected, so if the program
  gets stuck in a pattern branch it can blame the malformed input.
- We conjecture that this extension preserves cast soundness.
+ 
 \end_layout
 
 \begin_layout Standard
@@ -3831,6 +4032,19 @@ noprefix "false"
 \end_layout
 
 \begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+We conjecture that this extension preserves cast soundness.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 \begin_inset ERT
 status collapsed
 
@@ -4021,7 +4235,7 @@ path exp.,
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $refl$
+\begin_inset Formula $x_{p}$
 \end_inset
 
 
@@ -4062,7 +4276,7 @@ path exp.,
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $A_{\ell.C}B$
+\begin_inset Formula $A_{\ell.x\Rightarrow C}B$
 \end_inset
 
 
@@ -4103,7 +4317,7 @@ concrete cast
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $x_{p}$
+\begin_inset Formula $refl$
 \end_inset
 
 
@@ -4959,6 +5173,56 @@ data cons.
 \end_layout
 
 \begin_layout Plain Layout
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+steal path syntax from CTT?
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+extend H ctxs
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+concrete casts need more explanation
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+~ should be removed from the grammar? is functions better as an op of elaboratio
+n
+\end_layout
+
+\end_inset
+
+
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
@@ -5003,6 +5267,549 @@ status open
 \begin_layout Plain Layout
 ~ is a bit of a hack
 \end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+typing rules (pathing rules)
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+not sure it's good to have paths be quantifiable?it will never come up in
+ elabvoration.
+ try it now for simplicity 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{x_{p}:A\thickapprox B\in H}{H\vdash x_{p}:A\thickapprox B}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{H\vdash A:\star}{H\vdash refl:A\thickapprox A}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{H\vdash B:\star\quad H,x:B\vdash C:\star\quad H\vdash b:B\quad H\vdash b':B\quad C\left[x\coloneqq b\right]\equiv A\quad C\left[x\coloneqq b'\right]\equiv A'}{H\vdash A_{\ell.x\Rightarrow C}A':A\thickapprox A'}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+ALT, would then need to resolve endpoint def equality
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{H\vdash a:A\quad H\vdash a':A\quad H,x:A\vdash C:\star}{H\vdash assert_{\ell.(a=a':A).x\Rightarrow C}:C\left[x\coloneqq a\right]\thickapprox C\left[x\coloneqq a'\right]}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{H\vdash p:A\thickapprox B\quad H\vdash p':B\thickapprox C}{H\vdash p\,p':A\thickapprox C}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{H\vdash p:A\thickapprox B}{H\vdash rev\,p:B\thickapprox A}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{H\vdash p:D\,\overline{a}\thickapprox D\,\overline{b}}{H\vdash inTC_{i}\,p:a_{i}\thickapprox b_{i}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{H\vdash p:d\,\overline{a}\thickapprox d\,\overline{b}}{H\vdash inC_{i}\,p:a_{i}\thickapprox b_{i}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+the last few rules that manually transform paths, are specifically designed
+ to encode the implicit reasoning behind unification.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+allow conversion of endpoints?
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+typing rules
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{H\vdash C:\star\quad H\vdash p:A\thickapprox B\quad(AandBDisagree)}{H\vdash A\neq_{p}B:C}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{H\vdash a:A\quad H,x:B\vdash C:\star\quad C\left[x\coloneqq b\right]\equiv A\quad C\left[x\coloneqq b'\right]\equiv B}{H\vdash a::_{A,\ell.x\Rightarrow C}B}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+ALT
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{H\vdash a:A\quad H\vdash a':A\quad H,x:A\vdash C:\star\quad H\vdash a:c\left[x\coloneqq a\right]}{H\vdash c::_{\ell\left(a=a':A\right).x\Rightarrow C}\quad:C\left[x\coloneqq a'\right]}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+ALT remove concrete casts and merely use a symbolic cast instead?
+\end_layout
+
+\begin_layout Standard
+...
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{H\vdash a:A\quad H,x:B\vdash C:\star\quad C\left[x\coloneqq b\right]\equiv A\quad C\left[x\coloneqq b'\right]\equiv B\quad p:b\thickapprox b'}{H\vdash a::_{A,p.x\Rightarrow C}B}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+ALT
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{H\vdash c:C\left[x\coloneqq a\right]\quad H,x:A\vdash C:\star\quad H\vdash p:a\thickapprox a'}{H\vdash c::_{p.x\Rightarrow C}\quad:C\left[x\coloneqq a'\right]}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\begin{array}{c}
+H\vdash\overline{a}:\Delta\\
+H,\Delta\vdash B:\star\\
+\forall\:i\,\left(H\vdash Gen\left(\overline{patc}_{i}:\Delta,\Theta\right)\quad\Gamma,\Theta\vdash m:M\left[\Delta\coloneqq\overline{patc}_{i}\right]\right)\\
+H\vdash\overline{\overline{patc}}:\Delta\ \mathbf{complete}
+\end{array}}{\begin{array}{c}
+\mathsf{case}\,\overline{a,}\,\left\langle \overline{\Delta\Rightarrow}B\right\rangle \left\{ \overline{|\,\overline{patc\Rightarrow}b}\right\} \\
+:M\left[\Delta\coloneqq\overline{n}\right]
+\end{array}}\,...
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Gen is defined as 
+\begin_inset Formula 
+\[
+\frac{\,}{H\vdash Gen\left(.:.,.\right)}\,...
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\sim H\vdash A:\star\sim}{H\vdash Gen\left(x:(x:A),\;x:A\right)}\,...
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\sim H\vdash A:\star\sim}{H\vdash Gen\left(x:A,\;x:A\right)}\,...
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{d\,:\,\varTheta\rightarrow D\overline{a}\in H\quad H\vdash Gen\left(\overline{pat_{c}}:\varTheta,\Delta\right)}{H\vdash Gen\left(d\overline{pat_{c}}::_{x_{p}}:D\overline{b},\;\Delta,x_{p}:D\overline{a}\thickapprox D\overline{b}\right)}\,...
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{H\vdash Gen\left(pat_{c}:A,\Theta\right)\quad H,\Theta\vdash Gen\left(\overline{pat_{c}}:\Delta\left[x\coloneqq pat_{c}\right],\Theta'\right)}{H\vdash Gen\left(pat_{c}\overline{pat_{c}}:\left(x:A,\Delta\right),\Theta\Theta'\right)}\,...
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+other rules similar to the surface lang
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="6" columns="4">
+<features tabularvalignment="middle">
+<column alignment="left" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="left" valignment="top">
+<column alignment="left" valignment="top">
+<row>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+|
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $a\sim_{\ell o}b$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="none" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+hacky erasure
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell multicolumn="1" alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+observations,
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+o
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\Coloneqq$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+...
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+|
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $o.App[a]$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+application
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+|
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $o.TCon[i]$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+type cons.
+ arg.
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+|
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $o.DCon[i]$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+data cons.
+ arg.
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
 
 \end_inset
 
