@@ -8,7 +8,7 @@ open import Data.Fin hiding (_+_)
 open import Data.Maybe 
 open import Data.Bool 
 import Data.List -- hiding (lookup ; [_])
-open import Data.Vec hiding (lookup ; [_])
+open import Data.Vec hiding (lookup ; [_] ) -- ; insert)
 open import Data.Sum  hiding (map)
 open import Data.Product hiding (map)
 open import Relation.Nullary -- using (¬_)
@@ -37,21 +37,25 @@ bind : ℕ -> D -> D
 bind x d = record d {var = (x + D.var d)  }
 
 
+bindsep : ℕ -> D -> D
+bindsep x d = record d {var = (x + D.var d)  }
+
 unseperate : D -> D
 unseperate x = record x {sepV = 0 }
 
 
 fixChoice : (d : D) -> (i : Fin (D.sepV d)) -> D
-fixChoice = {!!}
+fixChoice = λ d i →  record d {sepV = (Data.Nat.pred (D.sepV d)) }
+
 {-
 data choiceTree (A : Set) : (n : ℕ) -> Set where
   Just : A -> choiceTree A 0
   choice : {n : _} -> choiceTree A n -> choiceTree A n -> choiceTree A (suc n)
--}
 
 -- This is what I want, but hard to work with definitionally
 ChoiceTree : {A : Set} -> {n : ℕ} -> Set
 ChoiceTree {A} {n} = Vec Bool n -> A
+-}
 
 
 
@@ -60,6 +64,11 @@ ChoiceTree {A} {n} = Vec Bool n -> A
 
 data PreSyntax {d : D} : Set
 
+
+ChoiceTree : {D} -> Set
+ChoiceTree {d} = Vec Bool (D.sepV d) -> PreSyntax {unseperate d}
+
+
 data Obs {d : D} : Set where
   here :  Obs
   InTC :  ℕ -> Obs
@@ -67,11 +76,10 @@ data Obs {d : D} : Set where
 
 data PrePath {d : D} : Set where
   PVar : (i : Fin (D.pathV d)) -> PrePath
-  Assert : (a a' : PreSyntax {d})
-    -> Loc -> Obs {d} -- if observations live here, it is hard to seperate out function inputs.
-    -> PreSyntax {bind 1 d}
+  Assert : (a : PreSyntax {bindsep d})
     -> PrePath
---  Refl : PrePath
+    
+  Refl : PrePath
   Trans : PrePath {d} -> PrePath {d} -> PrePath {d}
   Rev : PrePath {d} -> PrePath {d}
   
@@ -110,7 +118,7 @@ data PreSyntax {d} where
   Blame : PrePath {d} -> PreSyntax
   Cast : (bod : PreSyntax {d})
     -- -> (uty : PreSyntax {d}) -- need to explicitly track these, since they are needed to block untyped computation.  specifically functions applied to pi types
-    -> ChoiceTree {PrePath {unseperate d}} {D.sepV d}
+    -> ChoiceTree {d}
     -- -> (ty : PreSyntax {d})
     -> PreSyntax
   
@@ -121,26 +129,92 @@ data PreSyntax {d} where
   
   App :  PreSyntax {d} -> PreSyntax {d} -> PreSyntax
   
-  Same : (i : Fin (D.sepV d)) -> PreSyntax {fixChoice d i} -> PreSyntax {fixChoice d i} -> PreSyntax
+  Same : (i : Fin (D.sepV d)) -> PreSyntax {fixChoice d i} -> PreSyntax {fixChoice d i}
+    -> Loc -> Obs {d}
+    -> PreSyntax
 
+
+
+
+{-
+
+{(A :: int bool)      ~i       (B :: sting float)}
+
+
+
+{(A :: int bool)      ~i       (B :: sting float)}
+
+
+A~B :: (i=true -> int bool)
+       (i=false->  sting float)
+
+
+f ::  (i=true -> (x : q) -> w)
+      (i=false-> (x : r) -> t)   A
+
+
+
+f ::  (i=true -> .)
+      (i=false-> (x : r) -> t)   (A  :: ...)    ) ::...
+
+
+
+f ::  (i=true -> (x : q) -> w)
+      (i=false-> . )            (A  :: ...)    ) ::...
+
+
+
+
+f  (A :: (i=true -> q)
+         (i=false-> r]) 
+ )
+  ::  (i=true -> w [x = A :: q])
+      (i=false-> t [x = A :: r])   
+
+
+
+{(A ~ B)  :: ( int bool ~  sting float)}
+
+
+
+
+-}
 
 {-
 data IsTCSpine {d} : PreSyntax {d} -> Fin (D.tCon d) -> {numArgs : _} -> Vec (PreSyntax {d}) numArgs -> Set where
 
-
-
 data PreTelUnit {d : D} : {n : ℕ} -> Set where
 
-
 data PreTel {d : D} : (D -> Set) -> Set where
-  
+-}
 
 postulate
   o : {n : ℕ} {d : D} -> PreSyntax {d} -> PreSyntax {bind 1 d}
 
   _[_] : {d : D} -> PreSyntax {bind 1 d} -> PreSyntax {d} -> PreSyntax {d}
 
+  --TODO sketchyest def
+  -- a partition of pts
+  EndPoints : {d : D} -> ChoiceTree {d}
+    -> {!!}
+    -> {!!}
 
+  -- can "cheat" byforcing an arbitrary order
+  EndPoint : {d : D} -> ChoiceTree {d}
+    -> ChoiceTree {d}
+    -> Vec Bool (D.sepV d)
+    -> PreSyntax {unseperate d}
+    -> PreSyntax {unseperate d}
+    -> Set
+
+  -- build in the suc
+ -- insert : {n : ℕ} -> Vec Bool n -> Fin n -> Bool -> Vec Bool (suc n)
+
+  
+  single : {d : D} -> Vec Bool (D.sepV d) -> PrePath {unseperate d} -> ChoiceTree {d}
+
+  
+  veiw : {d : D} -> Vec Bool (D.sepV d) -> PreSyntax {d} -> PreSyntax {unseperate d}
 -- \Rrightarrow not great in this font
 
 -- figure out typeclasses?
@@ -149,9 +223,52 @@ postulate
 
 data _⇛path_ {d : D} : PrePath {d} -> PrePath {d} -> Set
 
+
+data _⇛paths_ {d : D} : ChoiceTree {d} -> ChoiceTree {d} -> Set where
+  reflHack : {a : _}
+   -> a ⇛paths a
+  
 data _⇛_ {d : D} : PreSyntax {d} -> PreSyntax {d} -> Set where
 
   
+  App-fun-red : {!!}
+  
+  App-cast-red : {!!}
+
+  -- need to combine these rules for par red reasons? or strictly order it
+  Same-lCast-red :
+    {l l' : _}
+    -> l ⇛ l'
+    -> {r r' : _}
+    -> r ⇛ r'
+    -> {ii : _} {ps p : _} {ll rr : _}
+    -> EndPoint ps p ii ll rr
+    -> {p' : _} 
+    -> p ⇛paths p'
+    -> {ll' : _}
+    -> ll ⇛ ll'
+    -> {rr' : _}
+    -> rr ⇛ rr'
+    -> {i : Fin (D.sepV d)} {loc : Loc} {o : Obs {d}}
+    -> Same i (Cast l ps) r loc o ⇛  Cast (Same i (Cast l' p') r' loc o) let temp = single (insert ii {!i!} true) (Assert {!!} {!!} ) -- (veiw { record d {sepV = {!!} }} ii {!ll'!}) {!!})
+         in {!!} 
+
+  Same-rCast-red : {!!}
+
+  Same-TyU-red :  {i : Fin (D.sepV d)} {l : Loc} {o : Obs {d}}
+    -> Same i TyU TyU l o ⇛ TyU
+  
+  Same-data-ty-red : {!!}
+  
+  Same-data-cons-red : {!!}
+  
+  Same-pi-red : {!!}
+
+  Same-fun-red : {!!}
+  -- needs to multistep
+  cast-trans-red : {!!}
+  
+  cast-refl-red : {!!}
   
   
 -- structural rules
@@ -194,6 +311,7 @@ data _⇛Obs_ {d : D} : Obs {d} -> Obs {d} -> Set where
 
 data _⇛path_ {d} where
 
+{-
   Assert-red-TC : {tc : Fin (D.tCon d)} -> {numArgs : _} -- TODO restrict to fully applied
     -> {l : PreSyntax {d}}
     -> {largs : Vec (PreSyntax {d}) numArgs } 
@@ -211,10 +329,11 @@ data _⇛path_ {d} where
     -- zip and rebind args as assertions with observations
     
     -> Assert l r loc o c ⇛path {!!}
-
+-}
 
 -- structural rules
 
+{-
   Assert : {a a' b b' : PreSyntax {d}} 
     -> a ⇛ a'
     -> b ⇛ b'
@@ -224,11 +343,12 @@ data _⇛path_ {d} where
     -> c ⇛ c'
     -> {l : Loc} 
     -> Assert a b l o c ⇛path Assert a' b' l o' c'
+-}
 
   reflHack : {a : PrePath {d}}
    -> a ⇛path a
   
-
+{-
 
 
  -- subst :{n j : ℕ} -> PreSyntax {n} -> (Fin n -> PreSyntax { j}) -> PreSyntax { j}

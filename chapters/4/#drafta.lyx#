@@ -104,11 +104,32 @@ todonotes
 \begin_body
 
 \begin_layout Title
-Chapter 4 (draft): Data and Pattern Matching
+Chapter 4a (draft): Data and Pattern Matching in the Surface Language
 \end_layout
 
 \begin_layout Author
 Mark Lemay
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+for the perposes of this draft seperating the 
+\begin_inset Quotes eld
+\end_inset
+
+conventional stuff
+\begin_inset Quotes erd
+\end_inset
+
+ from the new stuff? should it be recombined?
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Part
@@ -143,7 +164,7 @@ status collapsed
 
 \end_inset
 
-User defined data is a required feature of a realistic programming language.
+User defined data is a core feature of a realistic programming language.
  Simple data types like 
 \begin_inset Formula $\mathtt{Nat}$
 \end_inset
@@ -461,12 +482,44 @@ name "fig:data-defs"
 \end_layout
 
 \begin_layout Part
-Data and elimination
+Data and direct elimination
 \end_layout
 
 \begin_layout Standard
-How should data be used? One option is a direct eliminator scheme, like
- Coq uses in its core language.
+How should data be used? Since the term of a given type can only be created
+ from one of a few constructors, we can completely handle data of a type
+ if each sonstructor is acconted for.
+ For instance, Nat has the two constructors Z and S (which holds the preceding
+ number), so teh expression 
+\begin_inset Formula $\mathsf{case}\,n\,\left\{ |\,Z\Rightarrow Z\,|\,S\,x\Rightarrow x\right\} $
+\end_inset
+
+ will extract teh preceeding number from 
+\begin_inset Formula $n$
+\end_inset
+
+(or 
+\begin_inset Formula $0$
+\end_inset
+
+ if 
+\begin_inset Formula $n=0$
+\end_inset
+
+).
+ In this light, boolean case eleimination is corresponds to an if-then-else
+ expression.
+ This style of case elimination is popu
+\end_layout
+
+\begin_layout Standard
+We will need to extend the syntax above to support dependent types.
+ start by extending the notion of direct elimintors, to allow a number of
+ type argument 
+\end_layout
+
+\begin_layout Standard
+One option is a direct eliminator scheme, like Coq uses in its core language.
 \end_layout
 
 \begin_layout Standard

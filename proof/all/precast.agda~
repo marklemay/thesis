@@ -1,11 +1,12 @@
 {-# OPTIONS --allow-unsolved-metas #-}
-{-# OPTIONS --allow-unsolved-metas #-} 
+{-# OPTIONS --type-in-type #-} 
 module precast where
 
 
 open import Data.Nat
-open import Data.Fin
+open import Data.Fin hiding (_+_)
 open import Data.Maybe 
+open import Data.Bool 
 import Data.List -- hiding (lookup ; [_])
 open import Data.Vec hiding (lookup ; [_])
 open import Data.Sum  hiding (map)
@@ -26,14 +27,36 @@ record D : Set where
     tCon : ℕ
     con : ℕ
     pathV : ℕ
+    sepV : ℕ
      --TODO Spine lengths should live here?
     
 --    
 --    nulLoc : Loc
 
 bind : ℕ -> D -> D
-bind = λ z _ → record { var = z ; tCon = z ; con = z ; pathV = z }
+bind x d = record d {var = (x + D.var d)  }
 
+
+unseperate : D -> D
+unseperate x = record x {sepV = 0 }
+
+
+fixChoice : (d : D) -> (i : Fin (D.sepV d)) -> D
+fixChoice = {!!}
+{-
+data choiceTree (A : Set) : (n : ℕ) -> Set where
+  Just : A -> choiceTree A 0
+  choice : {n : _} -> choiceTree A n -> choiceTree A n -> choiceTree A (suc n)
+-}
+
+-- This is what I want, but hard to work with definitionally
+ChoiceTree : {A : Set} -> {n : ℕ} -> Set
+ChoiceTree {A} {n} = Vec Bool n -> A
+
+
+
+--postulate
+--  ChoiceF
 
 data PreSyntax {d : D} : Set
 
@@ -48,14 +71,14 @@ data PrePath {d : D} : Set where
     -> Loc -> Obs {d} -- if observations live here, it is hard to seperate out function inputs.
     -> PreSyntax {bind 1 d}
     -> PrePath
-  Refl : PrePath
+--  Refl : PrePath
   Trans : PrePath {d} -> PrePath {d} -> PrePath {d}
   Rev : PrePath {d} -> PrePath {d}
   InTC : ℕ -> PrePath {d} -> PrePath {d} --TODO as Fin?
   InC : ℕ -> PrePath {d} -> PrePath {d}
   
-  InFunTyArg : PrePath {d} -> PrePath {d}
-  InFunTyBod : PrePath {d} -> PrePath {d}
+ -- InFunTyArg : PrePath {d} -> PrePath {d}
+ -- InFunTyBod : PrePath {d} -> PrePath {d}
   
   UncastL : PrePath {d} -> PrePath {d}
   UncastR : PrePath {d} -> PrePath {d}
@@ -85,9 +108,9 @@ data PreSyntax {d} where
     -> PreSyntax
   Blame : PrePath {d} -> PreSyntax
   Cast : (bod : PreSyntax {d})
-    -> (uty : PreSyntax {d}) -- need to explicitly track these, since they are needed to block untyped computation.  specifically functions applied to pi types
-    -> PrePath {d}
-    -> (ty : PreSyntax {d})
+    -- -> (uty : PreSyntax {d}) -- need to explicitly track these, since they are needed to block untyped computation.  specifically functions applied to pi types
+    -> ChoiceTree {PrePath {unseperate d}} {D.sepV d}
+    -- -> (ty : PreSyntax {d})
     -> PreSyntax
   
   TyU : PreSyntax
@@ -96,8 +119,11 @@ data PreSyntax {d} where
   Fun : (bod : PreSyntax {bind 2 d}) -> PreSyntax
   
   App :  PreSyntax {d} -> PreSyntax {d} -> PreSyntax
+  
+  Same : (i : Fin (D.sepV d)) -> PreSyntax {fixChoice d i} -> PreSyntax {d} -> PreSyntax
 
 
+{-
 data IsTCSpine {d} : PreSyntax {d} -> Fin (D.tCon d) -> {numArgs : _} -> Vec (PreSyntax {d}) numArgs -> Set where
 
 
@@ -132,7 +158,7 @@ data _⇛_ {d : D} : PreSyntax {d} -> PreSyntax {d} -> Set where
   Blame : {p p' : _}
     -> p ⇛path p'
     -> Blame p ⇛ Blame p'
-
+{-
   Cast :
     {b b' : _}
     -> b ⇛ b'
@@ -144,7 +170,7 @@ data _⇛_ {d : D} : PreSyntax {d} -> PreSyntax {d} -> Set where
     ->{p p' : _}
     -> p ⇛path p'
     -> Cast b uty p ty ⇛ Cast b' uty' p' ty'
-
+-}
   Pi :
     {a a' : _}
     -> a ⇛ a'
@@ -444,4 +470,5 @@ data _val {n : ℕ} : PreSyntax {n} -> Set where
 -}
 -}
 
+-}
 -}
