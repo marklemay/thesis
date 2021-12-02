@@ -17032,7 +17032,7 @@ if
 \end_inset
 
  , then for no 
-\begin_inset Formula $a\rightsquigarrow^{*}a'$
+\begin_inset Formula $a\rightsquigarrow_{*}a'$
 \end_inset
 
  will 

@@ -104,11 +104,32 @@ todonotes
 \begin_body
 
 \begin_layout Title
-Chapter 4 (draft): Data and Pattern Matching
+Chapter 4a (draft): Data and Pattern Matching in the Surface Language
 \end_layout
 
 \begin_layout Author
 Mark Lemay
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+for the perposes of this draft seperating the 
+\begin_inset Quotes eld
+\end_inset
+
+conventional stuff
+\begin_inset Quotes erd
+\end_inset
+
+ from the new stuff? should it be recombined?
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Part
@@ -143,7 +164,7 @@ status collapsed
 
 \end_inset
 
-User defined data is a required feature of a realistic programming language.
+User defined data is a core feature of a realistic programming language.
  Simple data types like 
 \begin_inset Formula $\mathtt{Nat}$
 \end_inset
@@ -461,17 +482,87 @@ name "fig:data-defs"
 \end_layout
 
 \begin_layout Part
-Data and elimination
+Data and direct elimination
 \end_layout
 
 \begin_layout Standard
-How should data be used? One option is a direct eliminator scheme, like
- Coq uses in its core language.
+How should data be used? Since the term of a given type can only be created
+ from one of a few constructors, we can completely handle data of a type
+ if each sonstructor is acconted for.
+ For instance, Nat has the two constructors Z and S (which holds the preceding
+ number), so teh expression 
+\begin_inset Formula $\mathsf{case}\,n\,\left\{ |\,Z\Rightarrow Z\,|\,S\,x\Rightarrow x\right\} $
+\end_inset
+
+ will extract teh preceeding number from 
+\begin_inset Formula $n$
+\end_inset
+
+(or 
+\begin_inset Formula $0$
+\end_inset
+
+ if 
+\begin_inset Formula $n=0$
+\end_inset
+
+).
+ In this light, boolean case eleimination is corresponds to an if-then-else
+ expression.
+ This style of case elimination is pervasive in ML style langugaes and has
+ become popular in more mainstrame languages such as Python and Java
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+double check and perhaps not restricitons
+\end_layout
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
-A minimal version of data can be given by extending the surface language
- syntax in Chapter 2.
+We will need to extend the syntax above to support realistic dependent type
+ checking.
+ Specifically, we will need to add a motive that allows the type checker
+ to compute the output type of the branches if the very in terms of the
+ input.
+ For insance, recursively generating a vector of a given length.
+ We may also want to use some values of teh type level argument to calculate
+ the motive, and type the branches.
+ this will be allowed with additional bindings in the motive and in each
+ branch
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+This slightly awkward case eliminator syntax is designed to be forward compatibl
+e with the pattern matching system defined in the rest of this chapter,
+ which in turn allows function definition by cases.
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+This version of data can be given by extending the surface language syntax
+ in Chapter 2, as in 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:data-defs"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ .
+ This direct eliminator scheme, is similar to how Coq handles data in it's
+ core language.
 \begin_inset Float figure
 wide false
 sideways false
@@ -479,7 +570,7 @@ status open
 
 \begin_layout Plain Layout
 \begin_inset Tabular
-<lyxtabular version="3" rows="27" columns="4">
+<lyxtabular version="3" rows="23" columns="4">
 <features tabularvalignment="middle">
 <column alignment="left" valignment="top">
 <column alignment="center" valignment="top">
@@ -1220,7 +1311,7 @@ data cons.
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\mathsf{case}\,\overline{N,}n\,\left\{ \overline{|\,pat\Rightarrow m}\right\} $
+\begin_inset Formula $\mathsf{case}\,\overline{N,}n\,\left\{ \overline{|\overline{x\Rightarrow}(d\,\overline{y})\Rightarrow m}\right\} $
 \end_inset
 
 
@@ -1262,7 +1353,7 @@ data elim.
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\mathsf{case}\,\overline{N,}n\,\left\langle \overline{x\Rightarrow}y:D\,\overline{x}\Rightarrow M\right\rangle \left\{ \overline{|\,pat\Rightarrow m}\right\} $
+\begin_inset Formula $\mathsf{case}\,\overline{N,}n\,\left\langle \overline{x\Rightarrow}y:D\,\overline{x}\Rightarrow M\right\rangle \left\{ \overline{|\overline{x\Rightarrow}(d\,\overline{y})\Rightarrow m}\right\} $
 \end_inset
 
 
@@ -1276,179 +1367,6 @@ data elim.
 \begin_layout Plain Layout
 data elim.
  with motive
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell multicolumn="1" alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-(minimal) patterns,
-\end_layout
-
-\end_inset
-</cell>
-<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $pat$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\Coloneqq$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\overline{\Rightarrow x}\Rightarrow(d\,\overline{y})$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $pat$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\Coloneqq$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $x\Rightarrow pat$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-match a variable
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-|
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $(d\,\overline{x})$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-match a constructor
 \end_layout
 
 \end_inset
@@ -1630,7 +1548,7 @@ values,
 status open
 
 \begin_layout Plain Layout
-Constructors build application, drop this with applications
+short hands
 \end_layout
 
 \end_inset
@@ -1676,32 +1594,6 @@ ebnf? if reinventing it underline
 \end_layout
 
 \begin_layout Standard
-\begin_inset Flex TODO Note (Margin)
-status open
-
-\begin_layout Plain Layout
-pat or p?
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Flex TODO Note (Margin)
-status open
-
-\begin_layout Plain Layout
-alternatively
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
 \begin_inset Flex TODO Note (inline)
 status open
 
@@ -1719,7 +1611,7 @@ differentiate identifiers with font
 status open
 
 \begin_layout Plain Layout
-motive should not need to insist on the type info of the binder?
+motive should not need to insist on the type info of the binder? grey out?
 \end_layout
 
 \end_inset
@@ -1754,37 +1646,6 @@ Make identifiers consistent with chapter 2, and locations in chapter 3
 \end_layout
 
 \begin_layout Standard
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-Make a module syntax?
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-The definition is aided by telescopes, which generalize typed binding and
- lists of syntax that generalize dependent pairs.
-\end_layout
-
-\begin_layout Standard
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-Example
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
 The case eliminator first takes the explicit type arguments, followed by
  a scrutinee of correct type.
  Then optionally a motive that characterizes the output type of each branch
@@ -1808,16 +1669,18 @@ x:Vec\,\mathbb{B}\,1\vdash\mathsf{case}\,\mathbb{B},1,x\,\left\langle y\Rightarr
 \end_layout
 
 \begin_layout Standard
-This slightly awkward case eliminator syntax is designed to be forward compatibl
-e with the pattern matching system defined in the rest of this chapter,
- which in turn allows function definition by cases.
+Additionally we define telescopes, which generalize 0 or more typed bindings.
+ This allows us to set up data definitnions in a clean way.
+ Also we define syntactic lists, when syntax is listed it can be used to
+ generalize dependent pairs, this becomes helpfule wehn we need to extract
+ the applide arguments of a constructor.
 \end_layout
 
 \begin_layout Standard
 In the presence of general recursion this form of case eliminator is very
  expressive.
- Well-founded recursion can be used to make structurally inductive arguments
- in proofs.
+ Well-founded recursion can be used to make structurally inductive computations
+ that can be interperted as proofs.
 \end_layout
 
 \begin_layout Standard
@@ -1848,7 +1711,7 @@ define a closed context
 \end_layout
 
 \begin_layout Standard
-Adding data allows for 2 additional sources of bad behavior.
+Adding data allows for two additional sources of bad behavior.
  In-exhaustive matches, and non strictly positive data.
 \end_layout
 
@@ -1872,14 +1735,45 @@ x:\mathbb{N}\vdash\mathsf{case}\,x\,\left\langle s:\mathbb{N}\Rightarrow\mathbb{
 \end_layout
 
 \begin_layout Standard
-this match will get stuck if x is 0.
- Because it is easy to ensure all constructors are matched the surface language
- type assignment system will exclude in-exhaustive cases.
+this match will get stuck if 
+\begin_inset Formula $0$
+\end_inset
+
+ is substitutted for 
+\begin_inset Formula $x$
+\end_inset
+
+.
+ Because it is easy to ensure all constructors are matched, the surface
+ language type assignment system will require cases to be exhuastive.
+ 
 \end_layout
 
 \begin_layout Standard
-When we get to the cast language, we will allow in-exhaustive data that
- will allow 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% Since this is a 
+\begin_inset Quotes eld
+\end_inset
+
+well behaved
+\begin_inset Quotes erd
+\end_inset
+
+ failure it is usually only a warning in other programming languges.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+When we get to the cast language, we will allow in-exhaustive data to ber
+ reported as an elaboration warning and that will allow 
 \begin_inset Quotes eld
 \end_inset
 
@@ -1895,10 +1789,9 @@ unmatched
 \end_layout
 
 \begin_layout Standard
-A more subtle concern is posed by data that is not strictly positive.
- This data can cause unexpected non-termination, since non-termination is
- already allowed in the surface TAS, we will not restrict ourselves to strictly
- positive date
+A more subtle concern is posed by data definitions that are not strictly
+ positive.
+ 
 \end_layout
 
 \begin_layout Standard
@@ -1914,8 +1807,33 @@ Example!
 
 \end_layout
 
+\begin_layout Standard
+This data can cause unexpected non-termination.
+ Dependent types usually requires a strictness check to eliminate this possiblit
+y.
+ However this would block usfule constructions like higher order abstract
+ synax, and co-inductive uses of data.
+ Additionally since non-termination is already allowed in the surface TAS,
+ we will not restrict ourselves to strictly positive date.
+\end_layout
+
 \begin_layout Section
 Specification
+\end_layout
+
+\begin_layout Standard
+The type assignment system must be extended with the rules in 
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+TODO
+\end_layout
+
+\end_inset
+
+.
+ 
 \end_layout
 
 \begin_layout Standard
@@ -1968,7 +1886,7 @@ suspect this also hinges on regularity
 \begin_layout Standard
 \begin_inset Formula 
 \[
-\frac{\Gamma,x:M\vdash\Delta\quad\Gamma\vdash m:M\quad\Gamma\vdash\overline{n}\left[x\coloneqq m\right]:\Delta\left[x\coloneqq m\right]}{\Gamma\vdash m,\overline{n}\,:\,x:M,\Delta}\,...
+\frac{\Gamma,x:M\vdash\Delta\quad\Gamma\vdash m:M\quad\Gamma\vdash\overline{n}\left[x\coloneqq m\right]:\Delta\left[x\coloneqq m\right]}{\Gamma\vdash m,\overline{n}\,:\,\left(x:M\right),\Delta}\,...
 \]
 
 \end_inset
@@ -2437,6 +2355,29 @@ extend step over lists
 
 \end_layout
 
+\begin_layout Standard
+While similar systems are explored in 
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+Cite
+\end_layout
+
+\end_inset
+
+, we will not prove the Type soundness of the system here.
+ For clarity we will list it as a conjecture.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Conjecture 
+\series default
+the data aextention to the surface langugae is type sound.
+\end_layout
+
 \begin_layout Section
 Bidirectional extension
 \end_layout
@@ -2778,6 +2719,23 @@ abuse of notation...
 
 \end_layout
 
+\begin_layout Standard
+
+\series bold
+Conjecture 
+\series default
+the data extention to the bidirectional surface langugae is type sound.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Conjecture 
+\series default
+the data extention to the bidirectional surface langugae is weakly annotatatable
+ from the data extention of the surface langugae.
+\end_layout
+
 \begin_layout Part
 Pattern Matching
 \end_layout
@@ -3061,9 +3019,11 @@ noprefix "false"
  The syntax of data constructors and data type constructors is standard.
  Our case eliminators match a tuple of expressions, allowing us to be very
  precise about the typing of branches.
+ Additionally this style allows for syntactic sugar for easy definitions
+ of functions by cases.
  
 \begin_inset ERT
-status collapsed
+status open
 
 \begin_layout Plain Layout
 
@@ -3224,7 +3184,7 @@ data elim.
 \begin_inset Text
 
 \begin_layout Plain Layout
-(minimal) patterns,
+patterns,
 \end_layout
 
 \end_inset
@@ -3603,9 +3563,43 @@ name "fig:surface-data-match"
 \end_layout
 
 \begin_layout Standard
-It is now possible for branches to overlap.
+It is now possible for branches to overlap, which could allow nondeterministic
+ reduction.
+ There are several pluasable ways to handle this, such as reuiring each
+ branch to have independent patterns, or requireing patterns have the same
+ behavour when tehy oeverlap 
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+cite
+\end_layout
+
+\end_inset
+
+.
  For the purposes of this thesis, we will use the programatic convention
  that the first matching pattern has precedence.
+ For example, we will be able to type check
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\mathsf{case}\,4\,\left\langle s:\mathbb{N}\Rightarrow\mathbb{B}\right\rangle \left\{ |S\left(S\,-\right)\Rightarrow True\,|\,-\Rightarrow False\right\} 
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+and it will reduce to 
+\begin_inset Formula $True$
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
@@ -3627,7 +3621,7 @@ While pattern matching is an extremely practical feature, typing these expressio
 ns tends to be messy.
  To implement dependently typed pattern matching, a procedure is needed
  to resolve the equational constraints that arise on each branch, and to
- validate the impossibility of unused branches.
+ confirm the impossibility of unwritten branches.
  There is no 
 \begin_inset Quotes eld
 \end_inset
@@ -3636,7 +3630,10 @@ optimal
 \begin_inset Quotes erd
 \end_inset
 
- strategy to handle these equational constraints.
+ strategy to handle these equational constraints, since the constraints
+ are undecidable in general, since arbitrary computation can be embedded
+ in the arguments of a type constructor.
+ Any approach will have to be an aproxomation that performs well in practice.
  Several options are explored in 
 \begin_inset CommandInset citation
 LatexCommand cite
@@ -3646,9 +3643,6 @@ literal "false"
 \end_inset
 
 .
- Worse, the constraints are undecidable in general, since arbitrary computation
- can be embedded in the arguments of a type constructor.
- There fore an approximate procedure is required.
  In practice this procedure usually takes the form of a first order unification.
 \end_layout
 
@@ -3731,63 +3725,68 @@ uniquness of match.
 
 \end_layout
 
-\begin_layout Standard
-bidirectional 
+\begin_layout Section
+First Order Unification
 \end_layout
 
 \begin_layout Standard
-aproxomations
+When type checing the branches of the a case expression, teh patterns are
+ interperted as epressions under bindings for each variable used in teh
+ pattern.
+ If thses equations can be unified, then the brach will typecheck under
+ the variable assignments, with teh additional typing information.
+ For insatnce, the pattern
 \end_layout
 
 \begin_layout Standard
-\begin_inset Formula $\Gamma\vdash\overline{pat}:_{E}?\Delta$
+\begin_inset Formula $Cons\,x\,\left(S\,y\right)\,2\,z$
 \end_inset
 
 
 \end_layout
 
 \begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{\ }{\Gamma\vdash x:_{\left\{ x:M\right\} }M}\,...
-\]
-
+could be checked against the type 
+\begin_inset Formula $Vec\,Nat\,w$
 \end_inset
 
 
 \end_layout
 
 \begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{d\,:\,\varTheta\rightarrow D\overline{n}\in\Gamma\quad\Gamma\vdash\overline{m}:_{c}?\varTheta}{\Gamma\vdash d\overline{m}:_{\left\{ M\sim D\overline{n}\left[\varTheta\coloneqq\overline{m}\right]\right\} \cup c}?M}\,...
-\]
-
+this implies the typings 
+\begin_inset Formula $x:*,y:Nat,\left(S\,y\right):x,2:Nat,z:Vec\,x\,2,\left(Cons\,x\,\left(S\,y\right)\,2\,z\right):Vec\,Nat\,w$
 \end_inset
 
 
 \end_layout
 
 \begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{\quad}{\Gamma\vdash.:_{\emptyset}?.}\,...
-\]
+which in turn imply the equalities
+\end_layout
 
+\begin_layout Standard
+\begin_inset Formula $x=Nat,w=3$
 \end_inset
 
 
 \end_layout
 
 \begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{d\,:\,\varTheta\rightarrow D\overline{n}\in\Gamma\quad\Gamma\vdash\overline{m}:_{c}?\varTheta}{\Gamma\vdash d\overline{m}:_{\left\{ M\sim D\overline{n}\left[\varTheta\coloneqq\overline{m}\right]\right\} \cup c}?M}\,...
-\]
-
+note that this is a ver simple example, in the worst case we may have equations
+ in the form 
+\begin_inset Formula $m\,n=m'\,n'$
 \end_inset
 
+ which are hard to solve (until an assignment of 
+\begin_inset Formula $m=\lambda x.x$
+\end_inset
 
+, and 
+\begin_inset Formula $m'=\lambda-.0$
+\end_inset
+
+ are solved).
 \end_layout
 
 \begin_layout Standard
@@ -3795,7 +3794,7 @@ aproxomations
 status open
 
 \begin_layout Plain Layout
-abuse of notation
+uniquness of unificaiton solution
 \end_layout
 
 \end_inset
@@ -3804,30 +3803,44 @@ abuse of notation
 \end_layout
 
 \begin_layout Standard
-unification
-\end_layout
+A simplified version of a typical unifiaction procedure is listed in 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:surface-data-unification"
+plural "false"
+caps "false"
+noprefix "false"
 
-\begin_layout Standard
-\begin_inset Formula $U(pat=M,\sigma+)$
+\end_inset
+
+.
+ The unifiacation does not exclude teh possibly cyclic assingnemtns that
+ could occur 
+\begin_inset Formula $x=S\,x$
 \end_inset
 
 
-\end_layout
-
-\begin_layout Standard
 \begin_inset Flex TODO Note (inline)
 status open
 
 \begin_layout Plain Layout
-not quite a sub propely a ctx thing
+as a threat to soundness this should be corrected?
 \end_layout
 
 \end_inset
 
-
+.
+ Unification is not guarenteed to terminate since it relies on definitional
+ equaliteis.
 \end_layout
 
 \begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
 \begin_inset Formula 
 \[
 \frac{\,}{U\left(\emptyset,\emptyset\right)}\,...
@@ -3838,7 +3851,7 @@ not quite a sub propely a ctx thing
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 \begin_inset Formula 
 \[
 \frac{U\left(E,a\right)\quad m\equiv m'}{U\left(\left\{ m\sim m'\right\} \cup E,a\right)}\,...
@@ -3849,7 +3862,7 @@ not quite a sub propely a ctx thing
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 \begin_inset Formula 
 \[
 \frac{U\left(E\left[x\coloneqq m\right],a\left[x\coloneqq m\right]\right)}{U\left(\left\{ x\sim m\right\} \cup E,\left\{ a,x\coloneqq m\right\} \right)}\,...
@@ -3860,7 +3873,7 @@ not quite a sub propely a ctx thing
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 \begin_inset Formula 
 \[
 \frac{U\left(E\left[x\coloneqq m\right],a\left[x\coloneqq m\right]\right)}{U\left(\left\{ m\sim x\right\} \cup E,a\cup\left\{ x\coloneqq m\right\} \right)}\,...
@@ -3871,7 +3884,7 @@ not quite a sub propely a ctx thing
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 \begin_inset Formula 
 \[
 \frac{U\left(\overline{m}\sim\overline{m'}\cup E,a\right)\quad n\equiv d\overline{m}\quad n'\equiv d\overline{m'}}{U\left(\left\{ n\sim n'\right\} \cup E,a\right)}\,...
@@ -3882,7 +3895,7 @@ not quite a sub propely a ctx thing
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 \begin_inset Formula 
 \[
 \frac{U\left(\overline{m}\sim\overline{m'}\cup E,a\right)\quad N\equiv D\overline{m}\quad N'\equiv D\overline{m'}}{U\left(\left\{ N\sim N'\right\} \cup E,a\right)}\,...
@@ -3893,19 +3906,70 @@ not quite a sub propely a ctx thing
 
 \end_layout
 
-\begin_layout Standard
-there is no inherent reason to limit vars to those that appear in the pattern
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Surface Language Unificaiton
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:surface-data-unification"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
-non termination of unification (cyclic)
+After the branches have typechecked we should makes sure that they are exhastive.
+again tehre are several possible strategies.
+ In general it is undecidabel wether any given pattern is impossible or
+ not, so a practical approxomation must be chosen.
+ At least programmers have the ability to manually include non bovous branches
+ and prove thier imposiblity, or direct those branches to dummy outputs.
+ Thoudh there is a real risk that the unification procedure gets stuck in
+ ways that are not clear to the programmer, and a clean error messafge may
+ be very dificult.
+\end_layout
+
+\begin_layout Standard
+Ususally this priomative impossiblility is tied to a contrediction of the
+ unificaiton procedure.
+ but there is still a matter of generating patterns that cover all the unmatched
+ cases.
+ Again there is no clear best way to do this since a more fine devision
+ of patterns may allow enough aditional dffinitional information to show
+ unsatisfiablity, while a more coarse devision of patterns may be more efficient.
+ Agda uses a tree branching approach, that is efficincent but generates
+ course patterns.
+ The current experemental implementation of the language in this thesis
+ generates patterns by a system of complements, this system seams slightly
+ eaiser to implement, more uniform, and generates a much finer system of
+ pattterns then the case trees used in agda.
+ However this aproach is exponentially less performant then Agda in the
+ worse case.
+\end_layout
+
+\begin_layout Standard
+All told we can extend the bidriectional system with rules that look like
+ 
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
 \[
 \frac{\begin{array}{c}
-\Gamma\vdash\overline{n}\overrightarrow{\,:\,\Delta_{?}=}\ \Delta\\
+\Gamma\vdash\overline{n}\overrightarrow{\,:\,}\ \Delta\\
 \Gamma,\Delta\vdash M\overleftarrow{\,:\,}\star\\
 \forall\:i\,\left(\Gamma\vdash\overline{pat}_{i}:_{E}?\Delta\quad U\left(E,\sigma\right)\quad\sigma\left(\Gamma,|\overline{pat}_{i}|\right)\vdash\sigma m\overleftarrow{\,:\,}\sigma\left(M\left[\Delta\coloneqq\overline{pat}_{i}\right]\right)\right)\\
 \Gamma\vdash\overline{\overline{pat}}:\Delta\ \mathbf{complete}
@@ -3935,6 +3999,61 @@ non termination of unification (cyclic)
 
 \end_layout
 
+\begin_layout Standard
+where 
+\begin_inset Formula $\Gamma\vdash\overline{pat}:_{E}?\Delta$
+\end_inset
+
+ is shorthad for a set of equations that allow a list of patterns to typecheck
+ under 
+\begin_inset Formula $\Delta$
+\end_inset
+
+.
+ and 
+\begin_inset Formula $\Gamma\vdash\overline{\overline{pat}}:\Delta\ \mathbf{complete}$
+\end_inset
+
+ is shorthand for teh exuastiveness check.
+ 
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Conjecture 
+\series default
+Their exists a suitable
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+supporting at least subject reduction, type soundnes, and regularity
+\end_layout
+
+\end_inset
+
+ extention to the surface language TAS that supports patten matching style
+ elimination
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Conjecture 
+\series default
+The bidirecitonal extention listed here is weakly anotatable with that extention
+ to teh surface language.
+\end_layout
+
+\begin_layout Standard
+Additionally, it makessense to allow some additional type annotations in
+ the motive and for these annotations to swich the the type inference of
+ teh scrutinee into a type-check.
+ Along with a full syntax of modules, and even mutually defined data types.
+ For simplicity these have been excluded from teh formal presentation.
+\end_layout
+
 \begin_layout Section
 Discussion
 \end_layout
@@ -3944,31 +4063,47 @@ Pattern matching seems simple, but is a surprisingly subtle.
 \end_layout
 
 \begin_layout Standard
-However the syntax here does not support mutual patterns, thought the implementa
-tion does with a slight extensions.
- 
+Even without dependent types, pattern matching is a strange feature.
+ How important is it that patterns correspond exactly to a subset expression
+ syntax? What about capture annotations or side conditions? Restricting
+ patterns to constructors and variable means that it is hard to encapsulate
+ functionality, a fact noticed by wadler as early as 
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+cite
 \end_layout
 
-\begin_layout Standard
-Even without dependent types, pattern matching is a strange feature.
- How important is it that patterns correspond to expression syntax? what
- about capture annotations or side conditions? restricting patterns to construct
-ors and variable means that it is hard to encapsulate functionality.
+\end_inset
+
+.
  This has lead to making pattern behavior override-able in Scala.
  An extension in GHC allows some computations to happen within a pattern
- match.
+ match
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+Which
+\end_layout
+
+\end_inset
+
+.
  It seems unreasonable to extend patterns to arbitrary computation (thought
- this is exactly what Curry does).
+ this is exactly what teh Curry language does as a way to make use of it's
+ logical programming features).
  
 \end_layout
 
 \begin_layout Standard
-In the presence of Dependent types, the perspective shifts.
- Any reasonable unification algorithm with necessarily exclude some valid
+In the presence of full-spectrum dependent types, the perspective shifts.
+ Any terminating typing procedure will necessarily exclude some typable
  patterns and be unable to exclude some reachable branches.
  Since dependent patterns are already attacking a much more difficult problem
- then in the non dependent case but also only considering restricted data
- (no functions), it may make sense to extend the notion of pattern matching
+ then in the non-dependent case but also only considering data values (no
+ functions), it may make sense to extend the notion of pattern matching
  to include other useful but difficult features.
  To some extent this is similar to the with syntax of 
 \begin_inset Flex TODO Note (Margin)
@@ -3980,11 +4115,34 @@ cite
 
 \end_inset
 
- .
- In principle it seems that in dependent case expressions could be extended
- with some amount of constraint solving, without being any theoretically
- worse then unification.
+.
+ In principle it seems that dependent case expressions could be extended
+ with uniqueness side conditions, arbitrary computation or some amount of
+ constraint solving, without being any theoretically worse than usual unificatio
+n.
  
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+Epigram
+\end_layout
+
+\end_inset
+
+, Agda and Idris attempt to deal with these issues using 
+\series bold
+with
+\series default
+ syntaxx that allows further branging based on teh computation of each branch.
+ This is justifed as syntactic sugar that corresponds to several halper
+ functions that can be apropriately typed.
+ The language described in this thesis does not use the with side condition
+ since nested case expressions carry the same compuatational behavour, and
+ the elaboration to the cast langugae will allow possibly questionable typing.
 \end_layout
 
 \begin_layout Standard
@@ -4001,22 +4159,101 @@ ATS
 \end_layout
 
 \begin_layout Standard
-Never mind that some people want every branch to hold deffintionally.
- How should overlapping branches be handled? partial evaluation of case
- expressions can change the definitional nature of the theory.
+How should overlapping branches be handled? partial evaluation of case expressio
+ns can change the definitional nature of the theory.
  
 \end_layout
 
 \begin_layout Standard
-how Finely should the uncompleted cases be devided
+the details of pattern matching chang e the logical character of the system.
+ Since non-ermination is allowed in the langugae described here the logical
+ issues are less of a concern.
+ However it is worth noting that pattern matching as described here validates
+ axiom k and thus apears unsuatable for Hott or CTT developments.
 \end_layout
 
 \begin_layout Standard
-never mind equality.
+We have glossed over the definitional behavior of case branches in this
+ chapter since we plan sidestep the issue with the cast langauge.
+ Though it is still worth noting that their are several ways to set up the
+ definitional reductions.
+ Agda style case trees may result in unpredicatble definitional equalities
+ (in so far as definitional behavour is ever predicatable)
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+cite
+\end_layout
+
+\end_inset
+
+.
+ 
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+cite
+\end_layout
+
+\end_inset
+
+ advocates for a more conservative aproach that makes function definitionas
+ be cases defintiional (wich is nice in that it respectes the surface langauge
+ euqality, but shifts teh dificulties to overlapping branches and does not
+ allow shadowinf behavior programmers are used to).
+ another extream would be to only allowredcutions at fully computed scrutinee
+ valuess, as in trellies worke)
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+cite
+\end_layout
+
+\end_inset
+
+.
+ Alternatively a partial reduction is possible, such that branches are eliminate
+d as they are found unreachable and substituations made as that are availible.
+ This last aproach is experimantally implemented in the implementation.
 \end_layout
 
 \begin_layout Standard
-TAS pattern matching
+This complicates the simple story from chapter 2, where the bidirectional
+ system made the TAS system tractable by only adding annotations (and having
+ annotatability).
+ We have only conjectured the existnace of a saitable TAS system.
+ If the definitinoal equality that feeds the TAS is generated by a system
+ of reductions, any of the reduction strategies from the last section will
+ generate a different TAS with subtly different characteristics.
+ For instance, insisting on a call-by-value case reduction will leave many
+ equivelent computiaitons unassociated.
+ If the TAS system uses partial reductions it will need to inspect the construct
+ors of the scrutinee in order to preserve typeing over reduction.
+ Agda style reductions need to extend syntax under reduction to account
+ for side conditions.
+ For this reason it is rare to see a fully formailized account of pattern
+ matching.
+\end_layout
+
+\begin_layout Standard
+Ideally the typeing rule for pattern matching case expression in teh TAS
+ should not use the notion of pattern matching at all.
+ Instead the rule should characterize the behavour that is required directly
+ and formally
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Cite has a good imformal description
+\end_layout
+
+\end_inset
+
+.
+ An ideal rule might look like
 \end_layout
 
 \begin_layout Standard
@@ -4025,8 +4262,8 @@ TAS pattern matching
 \frac{\begin{array}{cl}
 \Gamma\vdash\overline{n}:\Delta' & (scrutinees\ type\ check)\\
 \Gamma,\overline{x}:\Delta'\vdash M:\star & (motive\ exists\ and\ is\ well\ formed)\\
-\forall i.\:\left(\forall\:\Gamma',\sigma,\overline{n'}.\,\Gamma,\overline{x}:\Delta'\sim\sigma\Gamma'\,\wedge\,\Gamma'\vdash\overline{pat}_{i}\sim_{\sigma'}\overline{n'}:\sigma\Delta'\,\supset\,\sigma'\Gamma'\vdash\sigma'm_{i}:\sigma'\sigma M\right) & (every\ branch\ is\ well\ typed\ over\ all\ possible\ instantiations)\\
-\forall\:\Gamma',\sigma,n'.\,\Gamma\sim\sigma\Gamma'\,\wedge\,\Gamma'\vdash n':\sigma\Delta'\,\supset\exists i.\,\sigma'\Gamma'\vdash\overline{pat}_{i}\sim_{\sigma'}\overline{n'}:\sigma\Delta' & (every\ input\ is\ handled)
+\forall i.\:? & (every\ branch\ is\ well\ typed\ over\ all\ possible\ instantiations)\\
+? & (all\ scrutinees\ are\ handled)
 \end{array}}{\Gamma\vdash\mathsf{case}\,\overline{n,}\,\left\{ \overline{|\,\overline{pat\Rightarrow}_{i}m_{i}}\right\} :M\left[\overline{x}\coloneqq\overline{n}\right]}\,...
 \]
 
@@ -4036,2691 +4273,9 @@ TAS pattern matching
 \end_layout
 
 \begin_layout Standard
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-last condition is incorrect, since a loop will type but not match
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-should delta be well formed?
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
 last condition is optional if you're willing to modify type soundness to
- allow pattern match errors (they are no worse then the non-termination
+ allow pattern match errors (again, they are no worse then the non-termination
  already allowed, and much better behaved).
- allows for repeated patterns.
-\end_layout
-
-\begin_layout Standard
-This complicates the simple story from chapter 2, where the bidirectional
- system made the TAS system tractable by only adding annotations (and having
- annotatability).
- It seems plausible that the bidirectional rules here can be considered
- an extension over the TAS rules outlines above, but the exact formulation
- would probably be cumbersome involving non-trivial transformations of case
- expressions, along with an appropriate equivalence associating those equivalenc
-es.
-\end_layout
-
-\begin_layout Part
-Cast Language Data
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-% Cast pattern matching is easy!
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-
-Surprisingly, the cast system can be extended with a pattern matching construct
- without unification.
-\end_layout
-
-\begin_layout Standard
-Consider the normal forms of data terms.
- While in standard dependent type theory a normal form of data, in a closed
- context, must have the data constructor in head position (justifying the
- pattern syntax), in the cast language the normal form of data will have
- a stack of 0 or more casts applied to it.
- Casts will be wrapped around constructors during the elaboration procedure,
- and will accumulate during evaluation.
- If the cast language is extended with a path variable that can represent
- the stack of equalities then that stack can be matched and used in the
- body of the branch.
- Since the type constructor is known, it is possible to check the coverage
- of the patterns against it's constructors.
- If every constructor is accounted for, only blameable data remains.
- Quantifying over casts allows blame to be redirected, so if the program
- gets stuck in a pattern branch it can blame the malformed input.
- 
-\end_layout
-
-\begin_layout Standard
-If we hope to target the lemmas of Chapter 3 we need the cast language to
- be 
-\series bold
-cast sound
-\series default
- and elaboration to have the 
-\series bold
-gradual correctness
-\series default
- properties relative to the type assignment system.
- 
-\end_layout
-
-\begin_layout Standard
-To account for impossible patterns, we can record the proof of inequality
- that makes the unification unsatisfiable with an explicit blame syntax.
- It is perfectly possible for a case expression to reduce into such an 
-\begin_inset Quotes eld
-\end_inset
-
-unreachable
-\begin_inset Quotes erd
-\end_inset
-
- branch if a bad case is made.
- If this happens blame will be reflected back onto the specific problematic
- cast of the input.
-\end_layout
-
-\begin_layout Standard
-When we internalize the notion of path we need to support path operations
- that correspond to each of operations used by the unification of the bidirectio
-nal type system.
- Specifically we need to index into the arguments of data constructors,
- data type constructors.
- We will also need to be able to reverse paths and concatenate paths since
- the unification algorithm implicitly uses these properties of equality.
- Finally we need new rules to remove casts from the endpoints of paths under
- the assumption that if 
-\begin_inset Formula $A::B=C$
-\end_inset
-
- then 
-\begin_inset Formula $A=C$
-\end_inset
-
- except for possible miscasts in 
-\begin_inset Formula $B$
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Standard
-During elaboration, after a pattern is unified, we will inject the proofs
- of equality into the branch terms so that they cast check.
- this will require that our notion of paths is congruent.
- The most strait forward way to do this seems to be inserting an operator
- into the syntax that ensures that 2 pieces of syntax are the same.
- This operator will be linked to a binding path assertion and track the
- observation locally.
-\end_layout
-
-\begin_layout Standard
-These observations allow for observations that were impossible before.
- we can now observe specific arguments in type constructors and tern constructor
-s.
- Since function terms can appear directly in data type constructors it is
- now possible to observe functions directly.
-\end_layout
-
-\begin_layout Standard
-How should these new syntaxes interact with each-other? Since every term
- level equivalence will be bound to a specific assertion there will only
- ever be a finite combination to deal with, though inelegant (and inefficient)
- we can keep track of an array of casts covering every possible assumption.
- Then we can commute equivalences in a plausible way.
-\end_layout
-
-\begin_layout Section
-Cast
-\end_layout
-
-\begin_layout Standard
-\begin_inset Float figure
-wide false
-sideways false
-status open
-
-\begin_layout Plain Layout
-\begin_inset listings
-lstparams "basicstyle={\ttfamily\small}"
-inline false
-status open
-
-\begin_layout Plain Layout
-
--- standard data in normal form, 3
-\end_layout
-
-\begin_layout Plain Layout
-
-S (S (S 0))
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\begin_layout Plain Layout
-
--- cast data in normal form
-\end_layout
-
-\begin_layout Plain Layout
-
-S (S (S 0) :: Nat ) :: Nat :: Nat :: Nat
-\end_layout
-
-\begin_layout Plain Layout
-
-S (S (S 0) :: Nat ) :: Bool :: Nat
-\end_layout
-
-\begin_layout Plain Layout
-
-True :: Nat
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\begin_layout Plain Layout
-
--- cast pattern matching
-\end_layout
-
-\begin_layout Plain Layout
-
-case x <_ => Bool> {
-\end_layout
-
-\begin_layout Plain Layout
-
-| (Z :: _) => True
-\end_layout
-
-\begin_layout Plain Layout
-
-| (S (Z :: _) :: _) => True
-\end_layout
-
-\begin_layout Plain Layout
-
-| (S (S :: _) :: _) => False
-\end_layout
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\begin_layout Plain Layout
-
--- extract specific blame,
-\end_layout
-
-\begin_layout Plain Layout
-
--- c is a path from Bool~Nat
-\end_layout
-
-\begin_layout Plain Layout
-
-case x <_ => Nat> {
-\end_layout
-
-\begin_layout Plain Layout
-
-| (S ((true::c)::_) :: _) =>
-\end_layout
-
-\begin_layout Plain Layout
-
- add (false :: c) 2
-\end_layout
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\begin_layout Plain Layout
-
--- can reconstitute any term,
-\end_layout
-
-\begin_layout Plain Layout
-
--- not always possible with unification
-\end_layout
-
-\begin_layout Plain Layout
-
--- based pattern matching
-\end_layout
-
-\begin_layout Plain Layout
-
-case x <_:Nat => Nat> {
-\end_layout
-
-\begin_layout Plain Layout
-
-| (Z :: c) => Z :: c
-\end_layout
-
-\begin_layout Plain Layout
-
-| (S x :: c) => S x :: c
-\end_layout
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\begin_layout Plain Layout
-
--- direct blame
-\end_layout
-
-\begin_layout Plain Layout
-
-case x <_ => Nat> {
-\end_layout
-
-\begin_layout Plain Layout
-
-| (S (true::c) :: _) => Bool =/=c Nat
-\end_layout
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\begin_layout Plain Layout
-
-peek x =
-\end_layout
-
-\begin_layout Plain Layout
-
-case x <_: Id Nat 0 1 => Nat> {
-\end_layout
-
-\begin_layout Plain Layout
-
-  | (refl x :: _) => x
-\end_layout
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\begin_layout Plain Layout
-
-peek (refl 4 :: Id Nat 0 1) = 4
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Caption Standard
-
-\begin_layout Plain Layout
-Cast Pattern Matching
-\end_layout
-
-\end_inset
-
-
-\begin_inset CommandInset label
-LatexCommand label
-name "fig:cast-pattern-matching"
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-to stylize consistently, should use math font, or like a nice image
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-% direct blame
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-
-It makes sense to further extend the cast syntax so that blame can be invoked
- directly by a path.
- For example, in 
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "fig:cast-pattern-matching"
-plural "false"
-caps "false"
-noprefix "false"
-
-\end_inset
-
-.
- Branches set up in this way prove their 
-\begin_inset Quotes eld
-\end_inset
-
-unreachability
-\begin_inset Quotes erd
-\end_inset
-
- by using their input to generate blame.
- Once direct blame is added it makes sense to allow operations on paths,
- such as concatenation, and reverse so that more proofs of inequality are
- possible.
- Proofs of inequality can be further helped by inspecting the arguments
- of type constructors and data constructors.
- See 
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "fig:cast-data"
-plural "false"
-caps "false"
-noprefix "false"
-
-\end_inset
-
- for the extended path syntax.
-\end_layout
-
-\begin_layout Standard
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-We conjecture that this extension preserves cast soundness.
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-% This seems to require heavy modifications to the cast syntax
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-
-Extending the syntax in this way complicates the type system and the reduction
- rules.
- We include a sample of our reduction rules in 
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-fig
-\end_layout
-
-\end_inset
-
-.
- We conjecture that these extensions support all of our expected properties.
-\end_layout
-
-\begin_layout Standard
-\begin_inset Float figure
-wide false
-sideways false
-status open
-
-\begin_layout Plain Layout
-\begin_inset Tabular
-<lyxtabular version="3" rows="27" columns="4">
-<features tabularvalignment="middle">
-<column alignment="left" valignment="top">
-<column alignment="center" valignment="top">
-<column alignment="left" valignment="top">
-<column alignment="left" valignment="top">
-<row>
-<cell multicolumn="1" alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-path var,
-\end_layout
-
-\end_inset
-</cell>
-<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell multicolumn="2" alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell multicolumn="2" alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $x_{p}$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell multicolumn="1" alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-path exp.,
-\end_layout
-
-\end_inset
-</cell>
-<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $p,p'$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\Coloneqq$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $x_{p}$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-|
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $A_{\ell.x\Rightarrow C}B$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-concrete cast
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-|
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $refl$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="none" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-|
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $p$
-\end_inset
-
-
-\begin_inset Formula $p'$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="none" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-|
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $rev\,p$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="none" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-|
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $inTC_{i}\,p$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="none" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-|
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $inC_{i}\,p$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="none" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-|
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $uncastL\,p$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-|
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $uncastR\,p$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell multicolumn="1" alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-cast pattern,
-\end_layout
-
-\end_inset
-</cell>
-<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $patc$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\Coloneqq$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $x$
-\end_inset
-
- | 
-\begin_inset Formula $d\,\overline{pat}::_{x_{p}}$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="none" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell multicolumn="1" alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-cast expression,
-\end_layout
-
-\end_inset
-</cell>
-<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $a$
-\end_inset
-
-...
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\Coloneqq$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-...
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="none" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-|
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $D$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-type cons.
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-|
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $d$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-data cons.
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-|
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\mathsf{case}\,\overline{n,}\,\left\langle \overline{\Delta\Rightarrow}M\right\rangle \left\{ \overline{|\,\overline{patc\Rightarrow}n}\overline{|\,\overline{patc\Rightarrow}!_{\ell}}\right\} $
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-data elim.
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-|
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $A\neq_{p}B$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-force blame
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-|
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $a::_{A,\ell.C}B$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-concrete cast
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-|
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $a::_{A,p,x.C}B$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-symbolic cast
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell multicolumn="1" alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-observations,
-\end_layout
-
-\end_inset
-</cell>
-<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-o
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\Coloneqq$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-...
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-|
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $o.App[a]$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-application
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-|
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $o.TCon[i]$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-type cons.
- arg.
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-|
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $o.DCon[i]$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-data cons.
- arg.
-\end_layout
-
-\end_inset
-</cell>
-</row>
-</lyxtabular>
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-steal path syntax from CTT?
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-extend H ctxs
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-concrete casts need more explanation
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-~ should be removed from the grammar? is functions better as an op of elaboratio
-n
-\end_layout
-
-\end_inset
-
-
-\begin_inset Caption Standard
-
-\begin_layout Plain Layout
-Cast Language Data
-\end_layout
-
-\end_inset
-
-
-\begin_inset CommandInset label
-LatexCommand label
-name "fig:cast-data"
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-technically speaking, telescopes should generalize to the different syntactic
- classes
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-~ is a bit of a hack
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-typing rules (pathing rules)
-\end_layout
-
-\begin_layout Standard
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-not sure it's good to have paths be quantifiable?it will never come up in
- elabvoration.
- try it now for simplicity 
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{x_{p}:A\thickapprox B\in H}{H\vdash x_{p}:A\thickapprox B}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{H\vdash A:\star}{H\vdash refl:A\thickapprox A}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{H\vdash B:\star\quad H,x:B\vdash C:\star\quad H\vdash b:B\quad H\vdash b':B\quad C\left[x\coloneqq b\right]\equiv A\quad C\left[x\coloneqq b'\right]\equiv A'}{H\vdash A_{\ell.x\Rightarrow C}A':A\thickapprox A'}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-ALT, would then need to resolve endpoint def equality
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{H\vdash a:A\quad H\vdash a':A\quad H,x:A\vdash C:\star}{H\vdash assert_{\ell.(a=a':A).x\Rightarrow C}:C\left[x\coloneqq a\right]\thickapprox C\left[x\coloneqq a'\right]}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{H\vdash p:A\thickapprox B\quad H\vdash p':B\thickapprox C}{H\vdash p\,p':A\thickapprox C}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{H\vdash p:A\thickapprox B}{H\vdash rev\,p:B\thickapprox A}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{H\vdash p:D\,\overline{a}\thickapprox D\,\overline{b}}{H\vdash inTC_{i}\,p:a_{i}\thickapprox b_{i}}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{H\vdash p:d\,\overline{a}\thickapprox d\,\overline{b}}{H\vdash inC_{i}\,p:a_{i}\thickapprox b_{i}}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{H\vdash p:A::...\thickapprox B\quad TBD}{H\vdash uncastL\,p:A\thickapprox B}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-casts can normalize away so have to be careful about this! vars can inject
- more casts.
- probably best f it only works on constructors overall still seems less
- hacky.
-\end_layout
-
-\begin_layout Standard
-the last few rules that manually transform paths, are specifically designed
- to encode the implicit reasoning behind unification.
-\end_layout
-
-\begin_layout Standard
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-allow conversion of endpoints?
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-typing rules
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{H\vdash C:\star\quad H\vdash p:A\thickapprox B\quad AandBDisagree}{H\vdash A\neq_{p}B:C}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{H\vdash a:A\quad H,x:B\vdash C:\star\quad C\left[x\coloneqq b\right]\equiv A\quad C\left[x\coloneqq b'\right]\equiv B}{H\vdash a::_{A,\ell.x\Rightarrow C}B}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-ALT
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{H\vdash a:A\quad H\vdash a':A\quad H,x:A\vdash C:\star\quad H\vdash a:c\left[x\coloneqq a\right]}{H\vdash c::_{\ell\left(a=a':A\right).x\Rightarrow C}\quad:C\left[x\coloneqq a'\right]}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-ALT remove concrete casts and merely use a symbolic cast instead?
-\end_layout
-
-\begin_layout Standard
-...
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{H\vdash a:A\quad H,x:B\vdash C:\star\quad C\left[x\coloneqq b\right]\equiv A\quad C\left[x\coloneqq b'\right]\equiv B\quad p:b\thickapprox b'}{H\vdash a::_{A,p.x\Rightarrow C}B}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-ALT
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{H\vdash c:C\left[x\coloneqq a\right]\quad H,x:A\vdash C:\star\quad H\vdash p:a\thickapprox a'}{H\vdash c::_{p.x\Rightarrow C}\quad:C\left[x\coloneqq a'\right]}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{\begin{array}{c}
-H\vdash\overline{a}:\Delta\\
-H,\Delta\vdash B:\star\\
-\forall\:i\,\left(H\vdash Gen\left(\overline{patc}_{i}:\Delta,\Theta\right)\quad\Gamma,\Theta\vdash m:M\left[\Delta\coloneqq\overline{patc}_{i}\right]\right)\\
-H\vdash\overline{\overline{patc}}:\Delta\ \mathbf{complete}
-\end{array}}{\begin{array}{c}
-\mathsf{case}\,\overline{a,}\,\left\langle \overline{\Delta\Rightarrow}B\right\rangle \left\{ \overline{|\,\overline{patc\Rightarrow}b}\right\} \\
-:M\left[\Delta\coloneqq\overline{n}\right]
-\end{array}}\,...
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Gen is defined as 
-\begin_inset Formula 
-\[
-\frac{\,}{H\vdash Gen\left(.:.,.\right)}\,...
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{\sim H\vdash A:\star\sim}{H\vdash Gen\left(x:(x:A),\;x:A\right)}\,...
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{\sim H\vdash A:\star\sim}{H\vdash Gen\left(x:A,\;x:A\right)}\,...
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{d\,:\,\varTheta\rightarrow D\overline{a}\in H\quad H\vdash Gen\left(\overline{pat_{c}}:\varTheta,\Delta\right)}{H\vdash Gen\left(d\overline{pat_{c}}::_{x_{p}}:D\overline{b},\;\Delta,x_{p}:D\overline{a}\thickapprox D\overline{b}\right)}\,...
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{H\vdash Gen\left(pat_{c}:A,\Theta\right)\quad H,\Theta\vdash Gen\left(\overline{pat_{c}}:\Delta\left[x\coloneqq pat_{c}\right],\Theta'\right)}{H\vdash Gen\left(pat_{c}\overline{pat_{c}}:\left(x:A,\Delta\right),\Theta\Theta'\right)}\,...
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-other rules similar to the surface lang
-\end_layout
-
-\begin_layout Standard
-\begin_inset Tabular
-<lyxtabular version="3" rows="5" columns="4">
-<features tabularvalignment="middle">
-<column alignment="left" valignment="top">
-<column alignment="center" valignment="top">
-<column alignment="left" valignment="top">
-<column alignment="left" valignment="top">
-<row>
-<cell multicolumn="1" alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-observations,
-\end_layout
-
-\end_inset
-</cell>
-<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-o
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\Coloneqq$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-...
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-|
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $o.App[a]$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-application
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-|
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $o.TCon[i]$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-type cons.
- arg.
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-|
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $o.DCon[i]$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-data cons.
- arg.
-\end_layout
-
-\end_inset
-</cell>
-</row>
-</lyxtabular>
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-old style red rules
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{\,}{rev\,\left(p\,p'\right)\rightsquigarrow\left(rev\,p'\right)\left(rev\,p\right)}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{\,}{inTC_{i}\,\left(p\,p'\right)\rightsquigarrow\left(inTC_{i}\,p'\right)\left(inTC_{i}\,p\right)}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{\,}{inC_{i}\,\left(p\,p'\right)\rightsquigarrow\left(inC_{i}\,p'\right)\left(inC_{i}\,p\right)}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{\,}{inTC_{i}\,refl\rightsquigarrow refl}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{\,}{inC_{i}\,refl\rightsquigarrow refl}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{\overline{a}_{i}=a'\;\overline{c}_{i}=c'\;\overline{b}_{i}=b'}{inTC_{i}\,\left(D\,\overline{a}_{\ell.D\,\overline{c}}D\,\overline{b}\right)\rightsquigarrow a'_{\ell.c'}b'}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{\,}{inC_{i}\,\left(\left(a::A\right)_{\ell.c}b\right)\rightsquigarrow inC_{i}\,\left(a_{\ell.c}b\right)}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{\,}{inC_{i}\,\left(a_{\ell.c}\left(b::B\right)\right)\rightsquigarrow inC_{i}\,\left(a_{\ell.c}b\right)}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{\,}{inC_{i}\,\left(a_{\ell.\left(c::C\right)}b\right)\rightsquigarrow inC_{i}\,\left(a_{\ell.c}b\right)}
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-\frac{\overline{a}_{i}=a'\;\overline{c}_{i}=c'\;\overline{b}_{i}=b'}{inTC_{i}\,\left(d\,\overline{a}_{\ell.d\,\overline{c}}d\,\overline{b}\right)\rightsquigarrow a'_{\ell.c'}b'}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{\,}{a::_{A,p\,refl,x.C}B\rightsquigarrow a::_{A,p,x.C}B}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{\,}{\begin{array}{c}
-a::_{A,p\,A'_{\ell.C''}B',x.C}B\rightsquigarrow\\
-a::_{A,p,x.C}C\left[x\coloneqq A'\right]::_{\ell.C\left[x\coloneqq C''\right]}C\left[x\coloneqq B'\right]
-\end{array}c}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-c?
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{\,}{\left(a::_{A,p,x.C}C\right)\sim_{\ell o}b\rightsquigarrow a\sim_{\ell o}b}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{\,}{a\sim_{\ell o}\left(b::_{B,p,x.C}C\right)\rightsquigarrow a\sim_{\ell o}b}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Part
-Elaborating Eliminations
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-% elaboration unification
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-
-To make the overall system behave as expected we do not want to expose users
- to equality patterns, or force them to manually do the path bookkeeping.
- To work around this we extend a standard unification algorithm to cast
- patterns with instrumentation to remember paths that were required for
- the solution.
- Then if pattern matching is satisfiable, compile additional casts into
- the branch based on its assignments.
- Unlisted patterns can be checked to confirm they are unsatisfiable.
- If the pattern is unsatisfiable then elaboration can use the proof of unsatisfi
-ability to construct explicit blame.
- If an unlisted pattern cannot be proven 
-\begin_inset Quotes eld
-\end_inset
-
-unreachable
-\begin_inset Quotes erd
-\end_inset
-
- then we could warn the user, and like most functional programming languages,
- blame the incomplete match if that pattern ever occurs.
-\end_layout
-
-\begin_layout Standard
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-"
-\end_layout
-
-\end_inset
-
-can
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-"
-\end_layout
-
-\end_inset
-
-, 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-"
-\end_layout
-
-\end_inset
-
-could
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-"
-\end_layout
-
-\end_inset
-
-, weasel word until implemented
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-add rules of unification? the rules as implemented are standard, needing
- extended normalization is weird
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-We found that our normalization procedure (Figure 
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "fig:data-red"
-plural "false"
-caps "false"
-noprefix "false"
-
-\end_inset
-
-) unexpectedly blocked unification.
- This is because the normalization is conservative about throwing away casts
- that could later lead to errors.
- For instance, with normalization, unification will get stuck on terms like
- 
-\begin_inset Formula $x::_{\mathbb{N}}\mathbb{N}=5$
-\end_inset
-
-.
- Thus we employ a more optimistic normalization procedure that will collapse
- casts that are equivalent
-\begin_inset Flex TODO Note (Margin)
-status open
-
-\begin_layout Plain Layout
-the exact equivalence is unprincipled and hacky.
- But all of dependent pattern matching is unprincipled and hacky.
- I can't actually contrive a situation where this could be an issue, but
- feel like it needs to be mentioned.
-\end_layout
-
-\end_inset
-
- Thus 
-\begin_inset Formula $x::_{\mathbb{N}}\mathbb{N}\overset{::}{\rightsquigarrow}x$
-\end_inset
-
- allows us to solve the unification problem and assign 
-\begin_inset Formula $x:=5$
-\end_inset
-
-.
- This approach has worked well so far.
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-% more modifications
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-
-In order to make the additional casts generated from unification we further
- extend the cast construct so it supports congruence.
- For instance, if 
-\begin_inset Formula $x$
-\end_inset
-
- has type 
-\begin_inset Formula $Vec\,y\,z$
-\end_inset
-
- and the unification procedure established 
-\begin_inset Formula $y:=Bool$
-\end_inset
-
- and 
-\begin_inset Formula $z:=5$
-\end_inset
-
- then we should cast 
-\begin_inset Formula $x::Vec\,Bool\,5$
-\end_inset
-
-.
- Unlike in Section 3 this requires that we use evidence to inject a cast
- within a type.
- This can be done inherently by adding an 
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-"
-\end_layout
-
-\end_inset
-
-untyped
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-"
-\end_layout
-
-\end_inset
-
- component to the cast annotation.
- The syntax that achieves this can be seen in 
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "fig:cast-data"
-plural "false"
-caps "false"
-noprefix "false"
-
-\end_inset
-
-.
 \end_layout
 
 \begin_layout Standard
@@ -6771,7 +4326,20 @@ literal "false"
 
 \end_inset
 
- 
+ is an extention to ECC that specifies a scheme to define strictly positive
+ data types by way of a logical framework defined in MLTT.
+ This scheme generates primative recursors, and does not iunherently support
+ pattern matching.
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+finish reading this
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -6785,7 +4353,20 @@ literal "false"
 \end_inset
 
 , though it uses a different style of biderectionality then discussed here
- to maintain compatibility with the existing Galina grammar.
+ to maintain compatibility with the existing Galina language.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+CTT, higher inductive types, qoatent types
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
@@ -6931,33 +4512,12 @@ options "alpha"
 TODO
 \end_layout
 
-\begin_layout Itemize
-review chapter 9 of file:///Users/stephaniesavir/Downloads/Computation-and-Reaso
-ning.dependently
-\end_layout
-
 \begin_layout List of TODOs
 
 \end_layout
 
 \begin_layout Section
 notes
-\end_layout
-
-\begin_layout Standard
-there are several simpler systems that can be worked through: eliminator
- style patterns, cast patterns, but to bring it all together we need congruence
- over functions.
-\end_layout
-
-\begin_layout Standard
-adding paths and path variables means that constructs can still fail at
- runtime, but they can blame the actually problematic components
-\end_layout
-
-\begin_layout Standard
-validating the K axiom, not that equalities are unique, merely that we don't
- care which one of the unique equalities is used.
 \end_layout
 
 \begin_layout Standard
