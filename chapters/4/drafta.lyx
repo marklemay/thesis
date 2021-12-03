@@ -116,7 +116,7 @@ Mark Lemay
 status open
 
 \begin_layout Plain Layout
-for the perposes of this draft seperating the 
+for the purposes of this draft separating the 
 \begin_inset Quotes eld
 \end_inset
 
@@ -124,7 +124,9 @@ conventional stuff
 \begin_inset Quotes erd
 \end_inset
 
- from the new stuff? should it be recombined?
+ from the new stuff.
+ this chapter is the conventional stuff.
+ should it be recombined?
 \end_layout
 
 \end_inset
@@ -141,7 +143,7 @@ Introduction
 status open
 
 \begin_layout Plain Layout
-clean up!
+Revise
 \end_layout
 
 \end_inset
@@ -190,16 +192,12 @@ color
 \end_inset
 
  of a node in a red-black-tree.
- The church encoded data form Chapter 2 is unrealistically inconvenient
- and is especially implausible for an 
-\begin_inset Quotes eld
-\end_inset
+ The church encoded data form Chapter 2 is unrealistically inconvenient.
+\end_layout
 
-easy to use
-\begin_inset Quotes erd
-\end_inset
-
- dependently typed programming language.
+\begin_layout Standard
+Since ease of use is the overriding concern for the language developed in
+ this thesis, Church encoding is especially unrealistic.
  
 \begin_inset ERT
 status open
@@ -247,9 +245,9 @@ status open
 \end_layout
 
 \begin_layout Standard
-A data definition is formed by a type constructor indexed by arguments,
- and a set of constructors that tag data and characterize their arguments.
- See Figure 
+A data type is defined by a type constructor indexed by arguments, and a
+ set of data constructors that tag data and characterize their arguments.
+ Several standard data types are defined in Figure 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:data-defs"
@@ -259,10 +257,20 @@ noprefix "false"
 
 \end_inset
 
- for the definitions of several standard data types.
- Data defined in this style is easy to build and reason about, since data
+.
+ For example, the data type Nat is is defined with the type constructor
+ Nat (which has no type arguments), the data constructors Z which takes
+ no further information and the data constructor S which is formed with
+ one prior number.
+ The data type Vec has two type arguments corresponding to the the type
+ contained in the vector and its length, it has two data constructors that
+ allow building an empty vector, or add an element to an existing vector.
+\end_layout
+
+\begin_layout Standard
+Data defined in this style is easy to build and reason about, since data
  can only be created from its constructors.
- Unfortunately data elimination is more murky.
+ Unfortunately details of data elimination is a little more involved.
 \end_layout
 
 \begin_layout Standard
@@ -324,7 +332,17 @@ data Nat : * {
 
 \begin_layout Plain Layout
 
--- Syntactic sugar expands decimal numbers
+three : Nat;
+\end_layout
+
+\begin_layout Plain Layout
+
+three = S (S (S Z)));
+\end_layout
+
+\begin_layout Plain Layout
+
+-- Syntactic sugar expands number literals
 \end_layout
 
 \begin_layout Plain Layout
@@ -367,6 +385,20 @@ data Vec : (A : *) -> Nat -> * {
 
 \begin_layout Plain Layout
 
+someBools : Vec Bool 2;
+\end_layout
+
+\begin_layout Plain Layout
+
+someBools = Cons Bool True 1 (Cons Bool False 0 (Nil Bool));
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
 data Id : (A : *) -> A -> A -> * {
 \end_layout
 
@@ -378,6 +410,20 @@ data Id : (A : *) -> A -> A -> * {
 \begin_layout Plain Layout
 
 };
+\end_layout
+
+\begin_layout Plain Layout
+
+threeEqThree : Id Nat three three;
+\end_layout
+
+\begin_layout Plain Layout
+
+threeEqThree = refl Nat three;
+\end_layout
+
+\begin_layout Plain Layout
+
 \end_layout
 
 \end_inset
@@ -486,15 +532,15 @@ Data and direct elimination
 \end_layout
 
 \begin_layout Standard
-How should data be used? Since the term of a given type can only be created
- from one of a few constructors, we can completely handle data of a type
- if each sonstructor is acconted for.
+How should a program observe data? Since the term of a given type can only
+ be created from one of a few constructors, we can completely handle data
+ of a type if each constructor is accounted for.
  For instance, Nat has the two constructors Z and S (which holds the preceding
- number), so teh expression 
+ number), so the expression 
 \begin_inset Formula $\mathsf{case}\,n\,\left\{ |\,Z\Rightarrow Z\,|\,S\,x\Rightarrow x\right\} $
 \end_inset
 
- will extract teh preceeding number from 
+ will extract the proceeding number from 
 \begin_inset Formula $n$
 \end_inset
 
@@ -507,32 +553,20 @@ How should data be used? Since the term of a given type can only be created
 \end_inset
 
 ).
- In this light, boolean case eleimination is corresponds to an if-then-else
+ In this light, boolean case elimination is corresponds to an if-then-else
  expression.
- This style of case elimination is pervasive in ML style langugaes and has
- become popular in more mainstrame languages such as Python and Java
-\begin_inset Flex TODO Note (Margin)
-status open
-
-\begin_layout Plain Layout
-double check and perhaps not restricitons
-\end_layout
-
-\end_inset
-
-.
+ 
 \end_layout
 
 \begin_layout Standard
-We will need to extend the syntax above to support realistic dependent type
- checking.
+We will need to extend the syntax above to support dependent type checking.
  Specifically, we will need to add a motive that allows the type checker
  to compute the output type of the branches if the very in terms of the
  input.
- For insance, recursively generating a vector of a given length.
- We may also want to use some values of teh type level argument to calculate
+ For instance, recursively generating a vector of a given length.
+ We may also want to use some values of the type level argument to calculate
  the motive, and type the branches.
- this will be allowed with additional bindings in the motive and in each
+ This will be allowed with additional bindings in the motive and in each
  branch
 \begin_inset Foot
 status open
@@ -560,7 +594,7 @@ noprefix "false"
 
 \end_inset
 
- .
+.
  This direct eliminator scheme, is similar to how Coq handles data in it's
  core language.
 \begin_inset Float figure
@@ -1103,7 +1137,7 @@ contexts,
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\Gamma,\mathsf{data}\,D\,:\,\Delta\rightarrow*\,\left\{ \overline{|\,d\,:\,\varTheta\rightarrow D\overline{m}}\right\} $
+\begin_inset Formula $\Gamma,\mathsf{data}\,D\,:\,\Delta\rightarrow\star\,\left\{ \overline{|\,d\,:\,\varTheta\rightarrow D\overline{m}}\right\} $
 \end_inset
 
 
@@ -1144,7 +1178,7 @@ data def extension
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\Gamma,\mathsf{data}\,D\,:\,\Delta\rightarrow*$
+\begin_inset Formula $\Gamma,\mathsf{data}\,D\,:\,\Delta\rightarrow\star$
 \end_inset
 
 
@@ -1581,63 +1615,12 @@ name "fig:surface-data-min"
 \end_layout
 
 \begin_layout Standard
-\begin_inset Flex TODO Note (Margin)
-status open
-
-\begin_layout Plain Layout
-ebnf? if reinventing it underline
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
 \begin_inset Flex TODO Note (inline)
 status open
 
 \begin_layout Plain Layout
-differentiate identifiers with font
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-motive should not need to insist on the type info of the binder? grey out?
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-Grey out things that are surface syntax but not needed for theory
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-Make identifiers consistent with chapter 2, and locations in chapter 3
+motive should not need to insist on the type info of the binder? grey out?Grey
+ out things that are surface syntax but not needed for theory?
 \end_layout
 
 \end_inset
@@ -1647,9 +1630,13 @@ Make identifiers consistent with chapter 2, and locations in chapter 3
 
 \begin_layout Standard
 The case eliminator first takes the explicit type arguments, followed by
- a scrutinee of correct type.
+ a 
+\series bold
+scrutinee
+\series default
+ of correct type.
  Then optionally a motive that characterizes the output type of each branch
- with all the type arguments and scrutiny abstracted and in scope.
+ with all the type arguments and scrutinee abstracted and in scope.
  For instance, this case expression checks if a vector 
 \begin_inset Formula $x$
 \end_inset
@@ -1670,44 +1657,17 @@ x:Vec\,\mathbb{B}\,1\vdash\mathsf{case}\,\mathbb{B},1,x\,\left\langle y\Rightarr
 
 \begin_layout Standard
 Additionally we define telescopes, which generalize 0 or more typed bindings.
- This allows us to set up data definitnions in a clean way.
+ This allows us to specify data definitions in a clean way.
  Also we define syntactic lists, when syntax is listed it can be used to
- generalize dependent pairs, this becomes helpfule wehn we need to extract
- the applide arguments of a constructor.
+ generalize dependent pairs, this becomes helpful in several situations,
+ but especially when we need work with the listed arguments of the data
+ type constructor.
 \end_layout
 
 \begin_layout Standard
-In the presence of general recursion this form of case eliminator is very
- expressive.
+In the presence of general recursion this form of case eliminator is powerful.
  Well-founded recursion can be used to make structurally inductive computations
- that can be interperted as proofs.
-\end_layout
-
-\begin_layout Standard
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-abbreviate away dumb arrows, unstated separator is a space, also usual syntax
- (:*)? also shorthands for telescopes
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-define a closed context
-\end_layout
-
-\end_inset
-
-
+ that can be interpreted as proofs.
 \end_layout
 
 \begin_layout Standard
@@ -1735,18 +1695,29 @@ x:\mathbb{N}\vdash\mathsf{case}\,x\,\left\langle s:\mathbb{N}\Rightarrow\mathbb{
 \end_layout
 
 \begin_layout Standard
-this match will get stuck if 
+This match will get stuck if 
 \begin_inset Formula $0$
 \end_inset
 
- is substitutted for 
+ is substituted for 
 \begin_inset Formula $x$
 \end_inset
 
 .
- Because it is easy to ensure all constructors are matched, the surface
- language type assignment system will require cases to be exhuastive.
+ Recall that the key theorem of the surface language is type soundness,
  
+\begin_inset Quotes eld
+\end_inset
+
+well typed terms don't get stuck
+\begin_inset Quotes erd
+\end_inset
+
+.
+ The surface language type assignment system will require cases to be exhaustive
+, since verifying this is relatively easy.
+ This is in contrast to most programming languages, which do allow incomplete
+ patterns, though usually a warning is given.
 \end_layout
 
 \begin_layout Standard
@@ -1763,7 +1734,7 @@ well behaved
 \begin_inset Quotes erd
 \end_inset
 
- failure it is usually only a warning in other programming languges.
+ failure
 \end_layout
 
 \end_inset
@@ -1772,8 +1743,8 @@ well behaved
 \end_layout
 
 \begin_layout Standard
-When we get to the cast language, we will allow in-exhaustive data to ber
- reported as an elaboration warning and that will allow 
+When we get to the cast language, we will allow non-exhaustive data to be
+ reported as a warning and that will allow 
 \begin_inset Quotes eld
 \end_inset
 
@@ -1795,11 +1766,69 @@ A more subtle concern is posed by data definitions that are not strictly
 \end_layout
 
 \begin_layout Standard
-\begin_inset Flex TODO Note (inline)
+\begin_inset listings
+lstparams "basicstyle={\ttfamily\small}"
+inline false
 status open
 
 \begin_layout Plain Layout
-Example!
+
+data Bad : * {
+\end_layout
+
+\begin_layout Plain Layout
+
+| C : (Bad -> Bad) -> Bad
+\end_layout
+
+\begin_layout Plain Layout
+
+};
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+selfApply : Bad -> Bad;
+\end_layout
+
+\begin_layout Plain Layout
+
+selfApply = 
+\backslash
+ b =>
+\end_layout
+
+\begin_layout Plain Layout
+
+  case b {
+\end_layout
+
+\begin_layout Plain Layout
+
+    | C f => f b
+\end_layout
+
+\begin_layout Plain Layout
+
+  };
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+loop : Bad;
+\end_layout
+
+\begin_layout Plain Layout
+
+loop = selfApply (C selfApply)
 \end_layout
 
 \end_inset
@@ -1808,51 +1837,256 @@ Example!
 \end_layout
 
 \begin_layout Standard
-This data can cause unexpected non-termination.
- Dependent types usually requires a strictness check to eliminate this possiblit
-y.
- However this would block usfule constructions like higher order abstract
- synax, and co-inductive uses of data.
+This data can cause non-termination, independent of the two other sources
+ of non-termination already considered (general recursion and type-in-type).
+ Dependent type systems usually require a strictness check on data definitions
+ to avoid data where this is a possibility.
+ However this would block useful constructions like higher order abstract
+ syntax.
  Additionally since non-termination is already allowed in the surface TAS,
- we will not restrict ourselves to strictly positive date.
+ we will not restrict the surface language to strictly positive date.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% co-inductive uses of data.e
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
-Specification
+Typing
+\end_layout
+
+\begin_layout Standard
+Before the typing rules for data can be considered added, first some meta
+ rules must be added that will allow the simultaneous type-checking of lists
+ and telescopes.
+ These rules are listed in 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:surface-data-meta-ty"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, and are standard.
+ Telescopes are well formed when they extend the context in a well formed
+ way.
+ Lists of expressions can be said to have the type of the telescope if every
+ expression has the appropriate type.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+Cite De Bruijn for telescopes?
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+\frac{\Gamma\,\mathbf{ok}}{\Gamma\vdash.\,\mathbf{ok}}\operatorname{ok-Tel-empty}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+\frac{\Gamma\vdash M:\star\quad\Gamma,x:M\vdash\Delta\,\mathbf{ok}}{\Gamma\vdash x:M,\Delta\,\mathbf{ok}}\operatorname{ok-Tel-ext}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+\frac{\Gamma\,\mathbf{ok}}{\Gamma\vdash\lozenge:.}\operatorname{ty-ls-empty}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+\frac{\Gamma,x:M\vdash\Delta\quad\Gamma\vdash m:M\quad\Gamma\vdash\overline{n,}\left[x\coloneqq m\right]:\Delta\left[x\coloneqq m\right]}{\Gamma\vdash m\overline{,n}\,:\,\left(x:M\right),\Delta}\operatorname{ty-ls-ext}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Meta rules
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:surface-data-meta-ty"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
 The type assignment system must be extended with the rules in 
-\begin_inset Flex TODO Note (Margin)
-status open
-
-\begin_layout Plain Layout
-TODO
-\end_layout
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:surface-data-ty"
+plural "false"
+caps "false"
+noprefix "false"
 
 \end_inset
 
 .
- 
+ These rules make use of several convenient shorthands: 
+\begin_inset Formula $\mathsf{data}\,D\,\Delta\in\Gamma$
+\end_inset
+
+ extracts the constructor definitions from the context.
+ We will allow telescopes to be interpreted as function types.
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+The motive requires checking in the case of empty data
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
-telescopes are well formed
-\end_layout
+\begin_inset Float figure
+wide false
+sideways false
+status open
 
-\begin_layout Standard
+\begin_layout Plain Layout
 \begin_inset Formula 
 \[
-\frac{\Gamma\,\mathbf{ok}}{\Gamma\vdash.\,\mathbf{ok}}\,...
+\frac{\Gamma\,\mathbf{ok}\quad\mathsf{data}\,D\,\Delta\in\Gamma}{\Gamma\vdash D\,:\,\Delta\rightarrow\star}\operatorname{ty-TDCon}
 \]
 
 \end_inset
 
 
+\end_layout
+
+\begin_layout Plain Layout
 \begin_inset Formula 
 \[
-\frac{\Gamma\vdash M:\star\quad\Gamma,x:M\vdash\Delta\,\mathbf{ok}}{\Gamma\vdash x:M,\Delta\,\mathbf{ok}}\,...
+\frac{\Gamma\,\mathbf{ok}\quad d\,:\,\varTheta\rightarrow D\overline{m}\in\Gamma}{\Gamma\vdash d\,:\,\varTheta\rightarrow D\overline{m}}\operatorname{ty-TDCon}
 \]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+\frac{\begin{array}{c}
+\mathsf{data}\,D\,\Delta\in\Gamma\\
+\Gamma\vdash n:D\overline{N}\\
+\Gamma,\overline{x}:\Delta,z:D\,\overline{x}\vdash M:\star\\
+\forall\:d\,:\,\varTheta\rightarrow D\overline{o}\in\Gamma.\quad\Gamma,\overline{y}_{d}:\varTheta\vdash m_{d}\left[\overline{x}\coloneqq\overline{o}\right]:M\left[\overline{x}\coloneqq\overline{o}\right]
+\end{array}}{\begin{array}{c}
+\Gamma\vdash\mathsf{case}\,\overline{N,}n\,\left\langle \overline{x\Rightarrow}z:D\,\overline{x}\Rightarrow M\right\rangle \left\{ \overline{|\,\overline{x\Rightarrow}(d\,\overline{y}_{d})\Rightarrow m_{d}}\right\} \\
+:M\left[\overline{x}\coloneqq\overline{N},z\coloneqq n\right]
+\end{array}}\operatorname{ty-}\mathsf{case}<>
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+\frac{\begin{array}{c}
+\mathsf{data}\,D\,\Delta\in\Gamma\\
+\Gamma\vdash n:D\overline{N}\\
+\Gamma,\overline{x}:\Delta,z:D\,\overline{x}\vdash M:\star\\
+\forall\:d\,:\,\varTheta\rightarrow D\overline{o}\in\Gamma.\quad\Gamma,\overline{y}_{d}:\varTheta\vdash m_{d}\left[\overline{x}\coloneqq\overline{o}\right]:M\left[\overline{x}\coloneqq\overline{o}\right]
+\end{array}}{\begin{array}{c}
+\Gamma\vdash\mathsf{case}\,\overline{N,}n\,\left\{ \overline{|\,\overline{x\Rightarrow}(d\,\overline{y}_{d})\Rightarrow m_{d}}\right\} \\
+:M\left[\overline{x}\coloneqq\overline{N},z\coloneqq n\right]
+\end{array}}\operatorname{ty-}\mathsf{case}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Surface Language Data Typing
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:surface-data-ty"
+
+\end_inset
+
+
+\end_layout
 
 \end_inset
 
@@ -1864,52 +2098,8 @@ telescopes are well formed
 status open
 
 \begin_layout Plain Layout
-suspect this also hinges on regularity
+suspect this also hinges on regularity, which should be addressed more directly
 \end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{\Gamma\,\mathbf{ok}}{\Gamma\vdash\lozenge:.}\,...
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{\Gamma,x:M\vdash\Delta\quad\Gamma\vdash m:M\quad\Gamma\vdash\overline{n}\left[x\coloneqq m\right]:\Delta\left[x\coloneqq m\right]}{\Gamma\vdash m,\overline{n}\,:\,\left(x:M\right),\Delta}\,...
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{\Gamma\,\mathbf{ok}\quad\mathsf{data}\,D\,\Delta\in\Gamma}{\Gamma\vdash D\,:\,\Delta\rightarrow*}\,...
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{\Gamma\,\mathbf{ok}\quad d\,:\,\varTheta\rightarrow D\overline{m}\in\Gamma}{\Gamma\vdash d\,:\,\varTheta\rightarrow D\overline{m}}\,...
-\]
 
 \end_inset
 
@@ -1938,7 +2128,7 @@ define these
 \begin_inset Formula $\in$
 \end_inset
 
-
+ more?
 \end_layout
 
 \end_inset
@@ -1947,189 +2137,33 @@ define these
 \end_layout
 
 \begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{\begin{array}{c}
-\mathsf{data}\,D\,\Delta\in\Gamma\\
-\Gamma\vdash n:D\overline{N}\\
-\Gamma,\overline{x}:\Delta,z:D\,\overline{x}\vdash M:\star\\
-\forall\:d\,:\,\varTheta\rightarrow D\overline{m}\in\Gamma.\quad\Gamma,\overline{x}:\Delta,\overline{y}_{d}:\varTheta\vdash m_{d}:M
-\end{array}}{\begin{array}{c}
-\Gamma\vdash\mathsf{case}\,\overline{N,}n\,\left\{ \overline{|\,\overline{x\Rightarrow}(d\,\overline{y}_{d})\Rightarrow m_{d}}\right\} \\
-:M\left[\overline{x}\coloneqq\overline{N},z\coloneqq n\right]
-\end{array}}\,...
-\]
+Extensions to the parallel reduction rules are listed in 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:surface-data-red"
+plural "false"
+caps "false"
+noprefix "false"
 
 \end_inset
 
+.
+ They follow the scheme of parallel reductions laid out in chapter 2.
+ The 
+\begin_inset Formula $\textrm{\Rrightarrow-\mathsf{case}<>-red}$
+\end_inset
 
+ rule removes the motive annotation, much like the annotation rule in Chapter
+ 2.
 \end_layout
 
 \begin_layout Standard
-\begin_inset Flex TODO Note (inline)
+\begin_inset Float figure
+wide false
+sideways false
 status open
 
 \begin_layout Plain Layout
-
-\family roman
-\series medium
-\shape up
-\size normal
-\emph off
-\bar no
-\strikeout off
-\xout off
-\uuline off
-\uwave off
-\noun off
-\color none
-don't need 
-\begin_inset Formula $\Gamma\vdash\overline{N}:\Delta$
-\end_inset
-
-?
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{\begin{array}{c}
-\mathsf{data}\,D\,\Delta\in\Gamma\\
-\Gamma\vdash\overline{N}:\Delta\quad\Gamma\vdash n:D\overline{N}\\
-\Gamma,\overline{x}:\Delta,z:D\,\overline{x}\vdash M:\star\\
-\forall\:d\,:\,\varTheta\rightarrow D\overline{m}\in\Gamma.\quad\Gamma,\overline{x}:\Delta,\overline{y}_{d}:\varTheta\vdash m_{d}:M
-\end{array}}{\begin{array}{c}
-\Gamma\vdash\mathsf{case}\,\overline{N,}n\,\left\langle \overline{x\Rightarrow}z:D\,\overline{x}\Rightarrow M\right\rangle \left\{ \overline{|\,\overline{x\Rightarrow}(d\,\overline{y}_{d})\Rightarrow m_{d}}\right\} \\
-:M\left[\overline{x}\coloneqq\overline{N},z\coloneqq n\right]
-\end{array}}\,...
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-may not need scrut wf check? oh but what about the empty types!
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{\Gamma\vdash\Delta\,\mathbf{ok}}{\Gamma\vdash\mathsf{data}\,D\,\Delta\,\mathbf{ok}}\,...
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{\Gamma\vdash\mathsf{data}\,D\,\Delta\,\mathbf{ok}\quad\forall d.\Gamma,\mathsf{data}\,D\,\Delta\vdash\varTheta_{d}\,\mathbf{ok}\quad\forall d.\:\Gamma,\mathsf{data}\,D\,\Delta,\varTheta_{d}\vdash\overline{m}_{d}:\Delta}{\Gamma\vdash\mathsf{data}\,D\,:\,\Delta\left\{ \overline{|\,d\,:\,\varTheta_{d}\rightarrow D\overline{m}_{d}}\right\} \,\mathbf{ok}}\,...
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-
-\family roman
-\series medium
-\shape up
-\size normal
-\emph off
-\bar no
-\strikeout off
-\xout off
-\uuline off
-\uwave off
-\noun off
-\color none
-to ensure regularity
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{\Gamma\vdash\mathsf{data}\,D\,\Delta\,\mathbf{ok}}{\Gamma,\mathsf{data}\,D\,\Delta\,\mathbf{ok}}\,...
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{\Gamma\vdash\mathsf{data}\,D\,:\,\Delta\left\{ \overline{|\,d\,:\,\varTheta\rightarrow D\overline{m}}\right\} \,\mathbf{ok}}{\Gamma,\mathsf{data}\,D\,:\,\Delta\left\{ \overline{|\,d\,:\,\varTheta\rightarrow D\overline{m}}\right\} \,\mathbf{ok}}\,...
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-red
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{\begin{array}{c}
-\overline{N}\Rrightarrow\overline{N'}\quad\overline{m}\Rrightarrow\overline{m'}\\
-\forall\overline{x\Rightarrow}(d\,\overline{y}_{d})\Rightarrow m_{d}\in\left\{ \overline{|\,\overline{\Rightarrow x}\Rightarrow(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} .\:m_{d}\Rrightarrow m_{d}'\\
-m_{d}\Rrightarrow m_{d}'
-\end{array}}{\mathsf{case}\,\overline{N,}\,d\overline{m}\,\left\langle ...\right\rangle \left\{ \overline{|\,\overline{\Rightarrow x}\Rightarrow(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} \Rrightarrow\mathsf{case}\,\overline{N',}\,d\overline{m'}\left\{ \overline{|\,\overline{\Rightarrow x}\Rightarrow(d'\,\overline{y}_{d'})\Rightarrow m_{d'}'}\right\} }\,\textrm{\Rrightarrow-\mathsf{case}<>-red}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-it's actually kind of fine discriminating between non converting motives?
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
 \begin_inset Formula 
 \[
 \frac{\begin{array}{c}
@@ -2144,11 +2178,22 @@ m_{d}\Rrightarrow m_{d}'
 
 \end_layout
 
-\begin_layout Standard
-structural reductions
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+\frac{\begin{array}{c}
+\overline{N}\Rrightarrow\overline{N'}\quad m\Rrightarrow m'\\
+\forall\overline{x\Rightarrow}(d\,\overline{y}_{d})\Rightarrow m_{d}\in\left\{ \overline{|\,\overline{\Rightarrow x}\Rightarrow(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} .\:m_{d}\Rrightarrow m_{d}'\\
+m_{d}\Rrightarrow m_{d}'
+\end{array}}{\mathsf{case}\,\overline{N,}\,m\,\left\langle ...\right\rangle \left\{ \overline{|\,\overline{\Rightarrow x}\Rightarrow(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} \Rrightarrow\mathsf{case}\,\overline{N',}\,m'\left\{ \overline{|\,\overline{\Rightarrow x}\Rightarrow(d'\,\overline{y}_{d'})\Rightarrow m_{d'}'}\right\} }\,\textrm{\Rrightarrow-\mathsf{case}<>-red}
+\]
+
+\end_inset
+
+
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 \begin_inset Formula 
 \[
 \frac{\begin{array}{c}
@@ -2167,26 +2212,7 @@ m_{d}\Rrightarrow m_{d}'
 
 \end_layout
 
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{\begin{array}{c}
-\overline{N}\Rrightarrow\overline{N'}\quad m\Rrightarrow m'\\
-M\Rrightarrow M'\\
-\forall d.\:\overline{\Rightarrow x}\Rightarrow(d\,\overline{y}_{d})\Rightarrow m_{d}\in\left\{ \overline{|\,\overline{\Rightarrow x}\Rightarrow(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} \\
-m_{d}\Rrightarrow m_{d}'
-\end{array}}{\begin{array}{c}
-\mathsf{case}\,\overline{N,}\,m\,\left\{ \overline{|\,\overline{\Rightarrow x}\Rightarrow(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} \Rrightarrow\\
-\mathsf{case}\,\overline{N,}\,m'\,\left\{ \overline{|\,\overline{\Rightarrow x}\Rightarrow(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} 
-\end{array}}\,\textrm{\Rrightarrow-\mathsf{case}<>}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
+\begin_layout Plain Layout
 \begin_inset Formula 
 \[
 \frac{\overline{m}\Rrightarrow\overline{m'}}{D\overline{m}\Rrightarrow D\overline{m'}}\,...
@@ -2199,6 +2225,30 @@ m_{d}\Rrightarrow m_{d}'
 \[
 \frac{\overline{m}\Rrightarrow\overline{m'}}{d\overline{m}\Rrightarrow d\overline{m'}}\,...
 \]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Surface Language Data Reduction
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:surface-data-red"
+
+\end_inset
+
+
+\end_layout
 
 \end_inset
 
@@ -2219,10 +2269,33 @@ extend reductions over lists
 \end_layout
 
 \begin_layout Standard
-cbv
+We are now in a position to select a sub relation of 
+\begin_inset Formula $\Rrightarrow$
+\end_inset
+
+ reductions that will be used to characterize call-by-value evaluation.
+ This relation could be used used for the purposes of type safety, and is
+ close to the reduction used in the implementation.
+ The rules are listed in 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:surface-data-cbv"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
 \begin_inset Formula 
 \[
 \frac{\,}{\mathsf{case}\,\overline{N,}\,n\,\left\langle ...\right\rangle \left\{ \overline{|\,\overline{\Rightarrow x}\Rightarrow(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} \rightsquigarrow\mathsf{case}\,\overline{N,}\,n\left\{ \overline{|\,\overline{\Rightarrow x}\Rightarrow(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} }...
@@ -2233,7 +2306,7 @@ cbv
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 \begin_inset Formula 
 \[
 \frac{\exists\overline{x\Rightarrow}(d\,\overline{y}_{d})\Rightarrow m_{d}\in\left\{ \overline{|\,\overline{x\Rightarrow}(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} }{\mathsf{case}\,\overline{V,}\,d\overline{v}\,\left\{ \overline{|\,\overline{x\Rightarrow}(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} \rightsquigarrow m_{d}\left[\overline{x}\coloneqq\overline{V},\overline{y}_{d}\coloneqq\overline{v}\right]}\,\textrm{\Rrightarrow-\mathsf{case}-red}
@@ -2244,7 +2317,7 @@ cbv
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 \begin_inset Formula 
 \[
 \frac{\overline{n}\rightsquigarrow\overline{n'}}{\mathsf{case}\,\overline{V,}\,d\overline{n}\,\left\{ \overline{|\,\overline{x\Rightarrow}(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} \rightsquigarrow\mathsf{case}\,\overline{V,}\,d\overline{n'}\,\left\{ \overline{|\,\overline{x\Rightarrow}(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} }\,
@@ -2255,7 +2328,7 @@ cbv
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 \begin_inset Formula 
 \[
 \frac{\overline{N}\rightsquigarrow\overline{N'}}{\mathsf{case}\,\overline{N,}\,d\overline{n}\,\left\{ \overline{|\,\overline{x\Rightarrow}(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} \rightsquigarrow\mathsf{case}\,\overline{N',}\,d\overline{n}\,\left\{ \overline{|\,\overline{x\Rightarrow}(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} }\,
@@ -2266,76 +2339,46 @@ cbv
 
 \end_layout
 
-\begin_layout Standard
-structural reductions
-\end_layout
-
-\begin_layout Standard
+\begin_layout Plain Layout
 \begin_inset Formula 
 \[
-\frac{\begin{array}{c}
-\overline{N}\Rrightarrow\overline{N'}\quad m\Rrightarrow m'\\
-M\Rrightarrow M'\\
-\forall d.\:\overline{\Rightarrow x}\Rightarrow(d\,\overline{y}_{d})\Rightarrow m_{d}\in\left\{ \overline{|\,\overline{\Rightarrow x}\Rightarrow(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} \\
-m_{d}\Rrightarrow m_{d}'
-\end{array}}{\begin{array}{c}
-\mathsf{case}\,\overline{N,}\,m\,\left\langle \overline{x\Rightarrow}z:D\,\overline{x}\Rightarrow M\right\rangle \left\{ \overline{|\,\overline{\Rightarrow x}\Rightarrow(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} \Rrightarrow\\
-\mathsf{case}\,\overline{N,}\,m'\,\left\langle \overline{x\Rightarrow}z:D\,\overline{x}\Rightarrow M'\right\rangle \left\{ \overline{|\,\overline{\Rightarrow x}\Rightarrow(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} 
-\end{array}}\,\textrm{\Rrightarrow-\mathsf{case}<>}
+\frac{\overline{m}\rightsquigarrow\overline{m'}}{D\overline{m}\rightsquigarrow D\overline{m'}}
 \]
 
 \end_inset
 
 
 \end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{\begin{array}{c}
-\overline{N}\Rrightarrow\overline{N'}\quad m\Rrightarrow m'\\
-\forall d.\:\overline{\Rightarrow x}\Rightarrow(d\,\overline{y}_{d})\Rightarrow m_{d}\in\left\{ \overline{|\,\overline{\Rightarrow x}\Rightarrow(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} \\
-m_{d}\Rrightarrow m_{d}'
-\end{array}}{\begin{array}{c}
-\mathsf{case}\,\overline{N,}\,m\,\left\{ \overline{|\,\overline{\Rightarrow x}\Rightarrow(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} \Rrightarrow\\
-\mathsf{case}\,\overline{N,}\,m'\,\left\{ \overline{|\,\overline{\Rightarrow x}\Rightarrow(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} 
-\end{array}}\,\textrm{\Rrightarrow-\mathsf{case}<>}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{\overline{m}\rightsquigarrow\overline{m'}}{D\overline{m}\rightsquigarrow D\overline{m'}}\,...
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Flex TODO Note (inline)
-status open
 
 \begin_layout Plain Layout
-what about D? how much of a value should it be?
-\end_layout
+\begin_inset Formula 
+\[
+\frac{\overline{m}\rightsquigarrow\overline{m'}}{D\overline{m}\rightsquigarrow D\overline{m'}}
+\]
 
 \end_inset
 
 
 \end_layout
 
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{\overline{m}\rightsquigarrow\overline{m'}}{D\overline{m}\rightsquigarrow D\overline{m'}}\,...
-\]
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Surface Language Data CBV
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:surface-data-cbv"
+
+\end_inset
+
+
+\end_layout
 
 \end_inset
 
@@ -2356,17 +2399,123 @@ extend step over lists
 \end_layout
 
 \begin_layout Standard
-While similar systems are explored in 
-\begin_inset Flex TODO Note (Margin)
+Finally we characterize what data is well formed, and what it means for
+ a context to be empty in the presence of data in 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:surface-data-ok"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
 status open
 
 \begin_layout Plain Layout
-Cite
+\begin_inset Formula 
+\[
+\frac{\Gamma\vdash\Delta\,\mathbf{ok}}{\Gamma\vdash\mathsf{data}\,D\,\Delta\,\mathbf{ok}}\operatorname{\mathbf{ok}-abs-data}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{\Gamma\vdash\mathsf{data}\,D\,\Delta\,\mathbf{ok}\quad\forall d.\Gamma,\mathsf{data}\,D\,\Delta\vdash\varTheta_{d}\,\mathbf{ok}\quad\forall d.\:\Gamma,\mathsf{data}\,D\,\Delta,\varTheta_{d}\vdash\overline{m}_{d}:\Delta}{\Gamma\vdash\mathsf{data}\,D\,:\,\Delta\left\{ \overline{|\,d\,:\,\varTheta_{d}\rightarrow D\overline{m}_{d}}\right\} \,\mathbf{ok}}\operatorname{\mathbf{ok}-data}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+\frac{\Gamma\vdash\mathsf{data}\,D\,\Delta\,\mathbf{ok}}{\Gamma,\mathsf{data}\,D\,\Delta\,\mathbf{ok}}\operatorname{\mathbf{ok}-data-ext}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+\frac{\Gamma\vdash\mathsf{data}\,D\,:\,\Delta\left\{ \overline{|\,d\,:\,\varTheta\rightarrow D\overline{m}}\right\} \,\mathbf{ok}}{\Gamma,\mathsf{data}\,D\,:\,\Delta\left\{ \overline{|\,d\,:\,\varTheta\rightarrow D\overline{m}}\right\} \,\mathbf{ok}}\operatorname{\mathbf{ok}-data-ext}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+\frac{\ }{\lozenge\,\mathbf{Empty}}\operatorname{Empty-ctx}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+\frac{\Gamma\,\mathbf{Empty}\quad\Gamma\vdash\mathsf{data}\,D\,:\,\Delta\left\{ \overline{|\,d\,:\,\varTheta_{d}\rightarrow D\overline{m}_{d}}\right\} \,\mathbf{ok}}{\Gamma,\mathsf{data}\,D\,:\,\Delta\left\{ \overline{|\,d\,:\,\varTheta_{d}\rightarrow D\overline{m}_{d}}\right\} \,\mathbf{Empty}}\operatorname{Empty-ctx}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Surface Language Data ok
 \end_layout
 
 \end_inset
 
-, we will not prove the Type soundness of the system here.
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:surface-data-ok"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+While a similar system is fully explored in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "sjoberg2012irrelevance"
+literal "false"
+
+\end_inset
+
+, we will not prove the type soundness of the system here.
  For clarity we will list it as a conjecture.
 \end_layout
 
@@ -2375,7 +2524,7 @@ Cite
 \series bold
 Conjecture 
 \series default
-the data aextention to the surface langugae is type sound.
+the surface language extended with data and elimination is type sound.
 \end_layout
 
 \begin_layout Section
@@ -2390,7 +2539,7 @@ A bidirectional interpretation exists over the type assignment rules listed
 \begin_layout Standard
 \begin_inset Formula 
 \[
-\frac{\mathsf{data}\,D\,\Delta\in\Gamma}{\Gamma\vdash D\overrightarrow{\,:\,}\Delta\rightarrow*}\,...
+\frac{\mathsf{data}\,D\,\Delta\in\Gamma}{\Gamma\vdash D\overrightarrow{\,:\,}\Delta\rightarrow*}
 \]
 
 \end_inset
@@ -2401,7 +2550,7 @@ A bidirectional interpretation exists over the type assignment rules listed
 \begin_layout Standard
 \begin_inset Formula 
 \[
-\frac{d\,:\,\varTheta\rightarrow D\overline{m}\in\Gamma}{\Gamma\vdash d\overrightarrow{\,:\,}\varTheta\rightarrow D\overline{m}}\,...
+\frac{d\,:\,\varTheta\rightarrow D\overline{m}\in\Gamma}{\Gamma\vdash d\overrightarrow{\,:\,}\varTheta\rightarrow D\overline{m}}
 \]
 
 \end_inset
@@ -2421,7 +2570,7 @@ bidirectional non-dependent elimination
 \Gamma\vdash n\overrightarrow{\,:\,}D\overline{N}\\
 \Gamma,\overline{x}:\Delta,z:D\,\overline{x}\vdash M\overleftarrow{\,:\,}\star\\
 \forall\:d\,:\,\varTheta\rightarrow D\overline{m}\in\Gamma.\quad\Gamma,\overline{x}:\Delta,\overline{y}_{d}:\varTheta\vdash m_{d}\overleftarrow{\,:\,}M
-\end{array}}{\Gamma\vdash\mathsf{case}\,n\,\left\{ \overline{|\,(d\,\overline{y}_{d})\Rightarrow m_{d}}\right\} \overleftarrow{\,:\,}M}\,...
+\end{array}}{\Gamma\vdash\mathsf{case}\,n\,\left\{ \overline{|\,(d\,\overline{y}_{d})\Rightarrow m_{d}}\right\} \overleftarrow{\,:\,}M}
 \]
 
 \end_inset
@@ -2448,7 +2597,7 @@ bidirectional dependent elimination
 \end{array}}{\begin{array}{c}
 \Gamma\vdash\mathsf{case}\,\overline{,N},n\,\left\langle \overline{x\Rightarrow}z:D\,\overline{x}\Rightarrow M\right\rangle \left\{ \overline{|\,\overline{x\Rightarrow}(d\,\overline{y}_{d})\Rightarrow m_{d}}\right\} \\
 \overrightarrow{\,:\,}M\left[\overline{x}\coloneqq\overline{N},z\coloneqq n\right]
-\end{array}}\,...
+\end{array}}
 \]
 
 \end_inset
@@ -2461,12 +2610,10 @@ information flows from the inside out
 \end_layout
 
 \begin_layout Standard
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-may not need scrut wf check? oh but what about the empty types!
-\end_layout
+\begin_inset Formula 
+\[
+\frac{\Gamma\vdash\Delta\,\overleftarrow{\mathbf{ok}}}{\Gamma\vdash\mathsf{data}\,D\,\Delta\,\overleftarrow{\mathbf{ok}}}
+\]
 
 \end_inset
 
@@ -2476,7 +2623,7 @@ may not need scrut wf check? oh but what about the empty types!
 \begin_layout Standard
 \begin_inset Formula 
 \[
-\frac{\Gamma\vdash\Delta\,\overleftarrow{\mathbf{ok}}}{\Gamma\vdash\mathsf{data}\,D\,\Delta\,\overleftarrow{\mathbf{ok}}}\,...
+\frac{\Gamma\vdash\mathsf{data}\,D\,\Delta\quad\forall d.\Gamma,\mathsf{data}\,D\,\Delta\vdash\varTheta_{d}\quad\forall d.\:\Gamma,\mathsf{data}\,D\,\Delta,\varTheta_{d}\vdash\overline{m}_{d}:\Delta}{\Gamma\vdash\mathsf{data}\,D\,:\,\Delta\left\{ \overline{|\,d\,:\,\varTheta_{d}\rightarrow D\overline{m}_{d}}\right\} }
 \]
 
 \end_inset
@@ -2489,230 +2636,8 @@ may not need scrut wf check? oh but what about the empty types!
 status open
 
 \begin_layout Plain Layout
-abuse of notation...
+talk about or formalize the more subtle inference in the actual system
 \end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-ok?
-\begin_inset Formula $\Gamma\vdash\Delta\overleftarrow{\,:\,}\overline{\star}$
-\end_inset
-
-, perhaps 
-\family roman
-\series medium
-\shape up
-\size normal
-\emph off
-\bar no
-\strikeout off
-\xout off
-\uuline off
-\uwave off
-\noun off
-\color none
-
-\begin_inset Formula $\Gamma\vdash\Delta\,wf$
-\end_inset
-
- and
-\family default
-\series default
-\shape default
-\size default
-\emph default
-\bar default
-\strikeout default
-\xout default
-\uuline default
-\uwave default
-\noun default
-\color inherit
- 
-\family roman
-\series medium
-\shape up
-\size normal
-\emph off
-\bar no
-\strikeout off
-\xout off
-\uuline off
-\uwave off
-\noun off
-\color none
-
-\begin_inset Formula $\Gamma\vdash\Delta\,\overleftarrow{wf}$
-\end_inset
-
- .
- or
-\family default
-\series default
-\shape default
-\size default
-\emph default
-\bar default
-\strikeout default
-\xout default
-\uuline default
-\uwave default
-\noun default
-\color inherit
- 
-\family roman
-\series medium
-\shape up
-\size normal
-\emph off
-\bar no
-\strikeout off
-\xout off
-\uuline off
-\uwave off
-\noun off
-\color none
-
-\begin_inset Formula $\Gamma\vdash\Delta\,\mathbf{ok}$
-\end_inset
-
- 
-\family default
-\series default
-\shape default
-\size default
-\emph default
-\bar default
-\strikeout default
-\xout default
-\uuline default
-\uwave default
-\noun default
-\color inherit
-...
-\family roman
-\series medium
-\shape up
-\size normal
-\emph off
-\bar no
-\strikeout off
-\xout off
-\uuline off
-\uwave off
-\noun off
-\color none
-or
-\family default
-\series default
-\shape default
-\size default
-\emph default
-\bar default
-\strikeout default
-\xout default
-\uuline default
-\uwave default
-\noun default
-\color inherit
- 
-\family roman
-\series medium
-\shape up
-\size normal
-\emph off
-\bar no
-\strikeout off
-\xout off
-\uuline off
-\uwave off
-\noun off
-\color none
-
-\begin_inset Formula $\Gamma\vdash\Delta\,\vdash$
-\end_inset
-
- 
-\family default
-\series default
-\shape default
-\size default
-\emph default
-\bar default
-\strikeout default
-\xout default
-\uuline default
-\uwave default
-\noun default
-\color inherit
-...
- 
-\family roman
-\series medium
-\shape up
-\size normal
-\emph off
-\bar no
-\strikeout off
-\xout off
-\uuline off
-\uwave off
-\noun off
-\color none
-or 
-\begin_inset Formula $\Gamma\,\mathbf{context}$
-\end_inset
-
- , 
-\begin_inset Formula $\Delta\,\mathbf{telescope}$
-\end_inset
-
- as in 
-\family default
-\series default
-\shape default
-\size default
-\emph default
-\bar default
-\strikeout default
-\xout default
-\uuline default
-\uwave default
-\noun default
-\color inherit
-
-\begin_inset CommandInset citation
-LatexCommand cite
-key "cockx_devriese_2018"
-literal "false"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-abuse of notation...
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{\Gamma\vdash\mathsf{data}\,D\,\Delta\quad\forall d.\Gamma,\mathsf{data}\,D\,\Delta\vdash\varTheta_{d}\quad\forall d.\:\Gamma,\mathsf{data}\,D\,\Delta,\varTheta_{d}\vdash\overline{m}_{d}:\Delta}{\Gamma\vdash\mathsf{data}\,D\,:\,\Delta\left\{ \overline{|\,d\,:\,\varTheta_{d}\rightarrow D\overline{m}_{d}}\right\} }\,...
-\]
 
 \end_inset
 
@@ -2724,7 +2649,7 @@ abuse of notation...
 \series bold
 Conjecture 
 \series default
-the data extention to the bidirectional surface langugae is type sound.
+the data extension to the bidirectional surface language is type sound.
 \end_layout
 
 \begin_layout Standard
@@ -2732,8 +2657,8 @@ the data extention to the bidirectional surface langugae is type sound.
 \series bold
 Conjecture 
 \series default
-the data extention to the bidirectional surface langugae is weakly annotatatable
- from the data extention of the surface langugae.
+the data extension to the bidirectional surface language is weakly annotatable
+ from the data extension of the surface language.
 \end_layout
 
 \begin_layout Part
@@ -2756,7 +2681,7 @@ status collapsed
 \end_inset
 
  Unfortunately, the eliminator style is cumbersome for programmers to deal
- with directly.
+ with.
  For instance, in figure 
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -2767,7 +2692,7 @@ noprefix "false"
 
 \end_inset
 
- we show how 
+ shows how 
 \begin_inset Formula $\mathtt{Vec}$
 \end_inset
 
@@ -2781,11 +2706,23 @@ noprefix "false"
 \end_inset
 
  function needs to redirect impossible inputs to a dummy type and requires
- several copies of the same variable that are not identified automatically
- by eliminators.
- Pattern matching is much more ergonomic than a direct eliminator, where
- variables will be assigned their definitions as needed, and unreachable
- branches can be omitted from code.
+ several copies of the same 
+\begin_inset Formula $A$
+\end_inset
+
+ variable that are not identified automatically by the eliminator described
+ in the last section.
+ The usual solution is to extend case elimination with 
+\series bold
+Pattern matching.
+\end_layout
+
+\begin_layout Standard
+Pattern matching is much more ergonomic than a direct eliminator, case nested
+ constructor matching is now possible.
+ When pattern matching is extended to dependent types variables will be
+ assigned their definitions as needed, and unreachable branches can be omitted
+ from code.
  For this reason, pattern matching has been considered an 
 \begin_inset Quotes eld
 \end_inset
@@ -2803,6 +2740,22 @@ literal "false"
 \end_inset
 
  and is implemented in Agda and the user facing language of Coq.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% This style of case elimination is pervasive in ML style languages and
+ has become popular in more mainstream languages such as Python and Java
+ (double check and perhaps not restrictions)
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -2953,19 +2906,6 @@ clean when I get motive inference working
 \end_inset
 
 
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-syntax highlighting would be bomb
-\end_layout
-
-\end_inset
-
-
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
@@ -3016,27 +2956,12 @@ noprefix "false"
 \end_inset
 
  shows the extensions to the surface language for data and pattern matching.
- The syntax of data constructors and data type constructors is standard.
  Our case eliminators match a tuple of expressions, allowing us to be very
  precise about the typing of branches.
  Additionally this style allows for syntactic sugar for easy definitions
  of functions by cases.
- 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-% For instance, we can simulate direct elimination by quantifying over every
- type constructor argument.
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-
+ The syntax of the eliminator style cases was designed to be a special case
+ of pattern matching.
  
 \begin_inset Float figure
 wide false
@@ -3340,7 +3265,7 @@ name "fig:surface-data"
 Patterns correspond to a specific form of expression syntax.
  When an expression matches a pattern it will choose the appropriate branch
  to reduce.
- For instance,
+ For instance, the expession
 \end_layout
 
 \begin_layout Standard
@@ -3354,18 +3279,18 @@ Patterns correspond to a specific form of expression syntax.
 will match the patterns
 \end_layout
 
-\begin_layout Standard
+\begin_layout Itemize
 \begin_inset Formula $x$
 \end_inset
 
  where 
-\begin_inset Formula $x$
+\begin_inset Formula $x=Cons\,\mathbb{B}\,true\,\left(S\left(S\left(S\left(Z\right)\right)\right)\right)\,\left(Cons\,\mathbb{B}\,false\,\left(S\left(S\left(Z\right)\right)\right)\,y'\right)$
 \end_inset
 
- is equal to the full expression
+ 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Itemize
 \begin_inset Formula $Cons\,w\,x\,y\,z$
 \end_inset
 
@@ -3427,7 +3352,7 @@ will match the patterns
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Itemize
 \begin_inset Formula $Cons\,-\,x\,-\,\left(Cons\,-\,y\,-\,-\right)$
 \end_inset
 
@@ -3456,7 +3381,7 @@ will match the patterns
 \end_layout
 
 \begin_layout Standard
-so the expression 
+Therefore the expression 
 \end_layout
 
 \begin_layout Standard
@@ -3476,11 +3401,28 @@ so the expression
 \uwave off
 \noun off
 \color none
-reduces to 
+r
+\end_layout
+
+\begin_layout Standard
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+educes to 
 \begin_inset Formula $false$
 \end_inset
 
-
+.
 \end_layout
 
 \begin_layout Standard
@@ -3494,7 +3436,11 @@ noprefix "false"
 
 \end_inset
 
-.
+, where 
+\begin_inset Formula $\sigma$
+\end_inset
+
+ will hold a possibly empty set of assignments.
 \end_layout
 
 \begin_layout Standard
@@ -3563,17 +3509,15 @@ name "fig:surface-data-match"
 \end_layout
 
 \begin_layout Standard
-It is now possible for branches to overlap, which could allow nondeterministic
- reduction.
- There are several pluasable ways to handle this, such as reuiring each
- branch to have independent patterns, or requireing patterns have the same
- behavour when tehy oeverlap 
-\begin_inset Flex TODO Note (Margin)
-status open
-
-\begin_layout Plain Layout
-cite
-\end_layout
+It is now possible for case branches to overlap, which could allow nondeterminis
+tic reduction.
+ There are several plausible ways to handle this, such as requiring each
+ branch to have independent patterns, or requiring patterns have the same
+ behavior when they overlap 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "10.1007/978-3-642-54833-8_6"
+literal "false"
 
 \end_inset
 
@@ -3620,21 +3564,18 @@ status collapsed
 While pattern matching is an extremely practical feature, typing these expressio
 ns tends to be messy.
  To implement dependently typed pattern matching, a procedure is needed
- to resolve the equational constraints that arise on each branch, and to
- confirm the impossibility of unwritten branches.
- There is no 
-\begin_inset Quotes eld
-\end_inset
+ to resolve the equational constraints that arise within each pattern, and
+ to confirm the impossibility of unwritten branches.
+\end_layout
 
-optimal
-\begin_inset Quotes erd
-\end_inset
-
- strategy to handle these equational constraints, since the constraints
- are undecidable in general, since arbitrary computation can be embedded
- in the arguments of a type constructor.
- Any approach will have to be an aproxomation that performs well in practice.
- Several options are explored in 
+\begin_layout Standard
+Since arbitrary computation can be embedded in the arguments of a type construct
+or (in a full spectrum theory), the equational constraints are undecidable
+ in general.
+ Any approach to constraint solving will have to be an approximation that
+ performs well enough in practice.
+ In practice this procedure usually takes the form of a first order unification.
+ Several variations are explored in 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "cockx_devriese_2018"
@@ -3643,7 +3584,21 @@ literal "false"
 \end_inset
 
 .
- In practice this procedure usually takes the form of a first order unification.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+%Similarly it is undecidable when a given pattern cannot be inhabited, so
+ coverage checking will also necessarily be a conservative approximation.
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -3682,60 +3637,17 @@ status collapsed
 
 \end_layout
 
-\begin_layout Standard
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-there is a lot of jenkyness about unification in general, but I think the
- additional points lose focus?
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-%Parentheses are used to distinguish between matching a single variable
- and a constructor that takes no arguments
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-uniquness of match.
- or better yet, any determinitic way to resolve paths
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
 \begin_layout Section
 First Order Unification
 \end_layout
 
 \begin_layout Standard
-When type checing the branches of the a case expression, teh patterns are
- interperted as epressions under bindings for each variable used in teh
+When type checking the branches of the a case expression, the patterns are
+ interpreted as expressions under bindings for each variable used in the
  pattern.
- If thses equations can be unified, then the brach will typecheck under
- the variable assignments, with teh additional typing information.
- For insatnce, the pattern
+ If these equations can be unified, then the brach will type-check under
+ the variable assignments, with the additional typing information.
+ For instance, the pattern
 \end_layout
 
 \begin_layout Standard
@@ -3773,12 +3685,13 @@ which in turn imply the equalities
 \end_layout
 
 \begin_layout Standard
-note that this is a ver simple example, in the worst case we may have equations
+Note that this is a very simple example, in the worst case we may have equations
  in the form 
 \begin_inset Formula $m\,n=m'\,n'$
 \end_inset
 
- which are hard to solve (until an assignment of 
+ which are hard to solve directly (but may become easy to solve if assignment
+ of 
 \begin_inset Formula $m=\lambda x.x$
 \end_inset
 
@@ -3786,24 +3699,18 @@ note that this is a ver simple example, in the worst case we may have equations
 \begin_inset Formula $m'=\lambda-.0$
 \end_inset
 
- are solved).
+ are discovered).
 \end_layout
 
 \begin_layout Standard
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-uniquness of unificaiton solution
-\end_layout
-
-\end_inset
-
-
+One advantage of the first order unification approach is that if the algorithm
+ succeeds, it will succeed with a unique, most general solution.
+ Since assignments are maximal, we are sure that a unified pattern will
+ still be able to match any well typed syntax.
 \end_layout
 
 \begin_layout Standard
-A simplified version of a typical unifiaction procedure is listed in 
+A simplified version of a typical unification procedure is listed in 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:surface-data-unification"
@@ -3814,13 +3721,15 @@ noprefix "false"
 \end_inset
 
 .
- The unifiacation does not exclude teh possibly cyclic assingnemtns that
- could occur 
+ Unification is not guaranteed to terminate since it relies on definitional
+ equalities, which are undecidable in the surface language.
+ The unification procedure does not exclude the possibly cyclic assignments
+ that could occur, such as 
 \begin_inset Formula $x=S\,x$
 \end_inset
 
 
-\begin_inset Flex TODO Note (inline)
+\begin_inset Flex TODO Note (Margin)
 status open
 
 \begin_layout Plain Layout
@@ -3830,8 +3739,7 @@ as a threat to soundness this should be corrected?
 \end_inset
 
 .
- Unification is not guarenteed to terminate since it relies on definitional
- equaliteis.
+ 
 \end_layout
 
 \begin_layout Standard
@@ -3843,7 +3751,7 @@ status open
 \begin_layout Plain Layout
 \begin_inset Formula 
 \[
-\frac{\,}{U\left(\emptyset,\emptyset\right)}\,...
+\frac{\,}{U\left(\emptyset,\emptyset\right)}
 \]
 
 \end_inset
@@ -3854,7 +3762,7 @@ status open
 \begin_layout Plain Layout
 \begin_inset Formula 
 \[
-\frac{U\left(E,a\right)\quad m\equiv m'}{U\left(\left\{ m\sim m'\right\} \cup E,a\right)}\,...
+\frac{U\left(E,a\right)\quad m\equiv m'}{U\left(\left\{ m\sim m'\right\} \cup E,a\right)}
 \]
 
 \end_inset
@@ -3865,7 +3773,7 @@ status open
 \begin_layout Plain Layout
 \begin_inset Formula 
 \[
-\frac{U\left(E\left[x\coloneqq m\right],a\left[x\coloneqq m\right]\right)}{U\left(\left\{ x\sim m\right\} \cup E,\left\{ a,x\coloneqq m\right\} \right)}\,...
+\frac{U\left(E\left[x\coloneqq m\right],a\left[x\coloneqq m\right]\right)}{U\left(\left\{ x\sim m\right\} \cup E,\left\{ a,x\coloneqq m\right\} \right)}
 \]
 
 \end_inset
@@ -3876,7 +3784,7 @@ status open
 \begin_layout Plain Layout
 \begin_inset Formula 
 \[
-\frac{U\left(E\left[x\coloneqq m\right],a\left[x\coloneqq m\right]\right)}{U\left(\left\{ m\sim x\right\} \cup E,a\cup\left\{ x\coloneqq m\right\} \right)}\,...
+\frac{U\left(E\left[x\coloneqq m\right],a\left[x\coloneqq m\right]\right)}{U\left(\left\{ m\sim x\right\} \cup E,a\cup\left\{ x\coloneqq m\right\} \right)}
 \]
 
 \end_inset
@@ -3887,7 +3795,7 @@ status open
 \begin_layout Plain Layout
 \begin_inset Formula 
 \[
-\frac{U\left(\overline{m}\sim\overline{m'}\cup E,a\right)\quad n\equiv d\overline{m}\quad n'\equiv d\overline{m'}}{U\left(\left\{ n\sim n'\right\} \cup E,a\right)}\,...
+\frac{U\left(\overline{m}\sim\overline{m'}\cup E,a\right)\quad n\equiv d\overline{m}\quad n'\equiv d\overline{m'}}{U\left(\left\{ n\sim n'\right\} \cup E,a\right)}
 \]
 
 \end_inset
@@ -3898,7 +3806,7 @@ status open
 \begin_layout Plain Layout
 \begin_inset Formula 
 \[
-\frac{U\left(\overline{m}\sim\overline{m'}\cup E,a\right)\quad N\equiv D\overline{m}\quad N'\equiv D\overline{m'}}{U\left(\left\{ N\sim N'\right\} \cup E,a\right)}\,...
+\frac{U\left(\overline{m}\sim\overline{m'}\cup E,a\right)\quad N\equiv D\overline{m}\quad N'\equiv D\overline{m'}}{U\left(\left\{ N\sim N'\right\} \cup E,a\right)}
 \]
 
 \end_inset
@@ -3910,7 +3818,7 @@ status open
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-Surface Language Unificaiton
+Surface Language Unification
 \end_layout
 
 \end_inset
@@ -3931,38 +3839,48 @@ name "fig:surface-data-unification"
 \end_layout
 
 \begin_layout Standard
-After the branches have typechecked we should makes sure that they are exhastive.
-again tehre are several possible strategies.
- In general it is undecidabel wether any given pattern is impossible or
- not, so a practical approxomation must be chosen.
- At least programmers have the ability to manually include non bovous branches
- and prove thier imposiblity, or direct those branches to dummy outputs.
- Thoudh there is a real risk that the unification procedure gets stuck in
- ways that are not clear to the programmer, and a clean error messafge may
- be very dificult.
+After the branches have type checked we should makes sure that they are
+ exhaustive, such that every possible branch will be covered.
+ There are several possible strategies.
+ In general it is undecidable wether any given pattern is impossible or
+ not, so a practical approximation must be chosen.
+ At least programmers have the ability to manually include non-obviously
+ unreachable branches and prove their unreachability, (or direct those branches
+ to dummy outputs).
+ Though there is a real risk that the unification procedure gets stuck in
+ ways that are not clear to the programmer, and a clean error message may
+ be very difficult.
 \end_layout
 
 \begin_layout Standard
-Ususally this priomative impossiblility is tied to a contrediction of the
- unificaiton procedure.
- but there is still a matter of generating patterns that cover all the unmatched
- cases.
- Again there is no clear best way to do this since a more fine devision
- of patterns may allow enough aditional dffinitional information to show
- unsatisfiablity, while a more coarse devision of patterns may be more efficient.
- Agda uses a tree branching approach, that is efficincent but generates
- course patterns.
- The current experemental implementation of the language in this thesis
- generates patterns by a system of complements, this system seams slightly
- eaiser to implement, more uniform, and generates a much finer system of
- pattterns then the case trees used in agda.
- However this aproach is exponentially less performant then Agda in the
+Usually a branch is characterized as unreachable if a contradiction is found
+ in the unification procedure.
+ But that pattern or patterns must still be generated, given the explicit
+ branches the programmer introduced.
+ There is no clear 
+\begin_inset Quotes eld
+\end_inset
+
+best way
+\begin_inset Quotes erd
+\end_inset
+
+ to do this since a more fine devision of patterns may allow enough additional
+ definitional information to show unsatisfiability, while a more coarse
+ devision of patterns will be more efficient.
+ Agda uses a tree branching approach, that is efficient, but generates course
+ patterns.
+ The implementation of the language in this thesis generates patterns by
+ a system of complements, this system seams slightly easier to implement,
+ more uniform, and generates a much finer system of patterns then the case
+ trees used in Agda.
+ However this approach is exponentially less performant then Agda in the
  worse case.
 \end_layout
 
 \begin_layout Standard
-All told we can extend the bidriectional system with rules that look like
- 
+The bidirectional system can be extended with pattern matching with rules
+ that look like 
 \end_layout
 
 \begin_layout Standard
@@ -4004,8 +3922,8 @@ where
 \begin_inset Formula $\Gamma\vdash\overline{pat}:_{E}?\Delta$
 \end_inset
 
- is shorthad for a set of equations that allow a list of patterns to typecheck
- under 
+ is shorthand for a set of equations that allow a list of patterns to type
+ check under 
 \begin_inset Formula $\Delta$
 \end_inset
 
@@ -4014,7 +3932,7 @@ where
 \begin_inset Formula $\Gamma\vdash\overline{\overline{pat}}:\Delta\ \mathbf{complete}$
 \end_inset
 
- is shorthand for teh exuastiveness check.
+ is shorthand for the exhaustiveness check.
  
 \end_layout
 
@@ -4028,12 +3946,12 @@ Their exists a suitable
 status open
 
 \begin_layout Plain Layout
-supporting at least subject reduction, type soundnes, and regularity
+supporting at least subject reduction, type soundness, and regularity
 \end_layout
 
 \end_inset
 
- extention to the surface language TAS that supports patten matching style
+ extension to the surface language TAS that supports patten matching style
  elimination
 \end_layout
 
@@ -4042,16 +3960,17 @@ supporting at least subject reduction, type soundnes, and regularity
 \series bold
 Conjecture 
 \series default
-The bidirecitonal extention listed here is weakly anotatable with that extention
- to teh surface language.
+The bidirectional extension listed here is weakly annotatable with that
+ extension to the surface language.
 \end_layout
 
 \begin_layout Standard
-Additionally, it makessense to allow some additional type annotations in
- the motive and for these annotations to swich the the type inference of
- teh scrutinee into a type-check.
- Along with a full syntax of modules, and even mutually defined data types.
- For simplicity these have been excluded from teh formal presentation.
+Additionally, it makes sense to allow some additional type annotations in
+ the motive and for these annotations to switch the the type inference of
+ the scrutinee into a type-check.
+ The implementation includes this along with a simple syntax for modules,
+ and even mutually defined data types.
+ For simplicity these have been excluded from the formal presentation.
 \end_layout
 
 \begin_layout Section
@@ -4067,60 +3986,75 @@ Even without dependent types, pattern matching is a strange feature.
  How important is it that patterns correspond exactly to a subset expression
  syntax? What about capture annotations or side conditions? Restricting
  patterns to constructors and variable means that it is hard to encapsulate
- functionality, a fact noticed by wadler as early as 
+ functionality, a fact noticed by Wadler as early as 
 \begin_inset Flex TODO Note (Margin)
 status open
 
 \begin_layout Plain Layout
-cite
+\begin_inset Quotes eld
+\end_inset
+
+Views: A Way for Pattern Matching to Cohabit with Data Abstraction
+\begin_inset Quotes erd
+\end_inset
+
+ review
 \end_layout
 
 \end_inset
 
 .
- This has lead to making pattern behavior override-able in Scala.
+ This has lead to making pattern behavior override-able in Scala via Extractor
+ Objects.
  An extension in GHC allows some computations to happen within a pattern
- match
+ match via the 
+\begin_inset Formula $ViewPatterns$
+\end_inset
+
+ extension 
 \begin_inset Flex TODO Note (Margin)
 status open
 
 \begin_layout Plain Layout
-Which
+lots of prior work https://gitlab.haskell.org/ghc/ghc/-/wikis/view-patterns
 \end_layout
 
 \end_inset
 
 .
- It seems unreasonable to extend patterns to arbitrary computation (thought
- this is exactly what teh Curry language does as a way to make use of it's
- logical programming features).
+ It seems unreasonable to extend patterns to arbitrary computation (though
+ this is allowed in the Curry language
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+https://curry.pages.ps.informatik.uni-kiel.de/curry-lang.org/
+\end_layout
+
+\end_inset
+
+ as a syntax for its logical programming features).
  
 \end_layout
 
 \begin_layout Standard
-In the presence of full-spectrum dependent types, the perspective shifts.
- Any terminating typing procedure will necessarily exclude some typable
- patterns and be unable to exclude some reachable branches.
- Since dependent patterns are already attacking a much more difficult problem
- then in the non-dependent case but also only considering data values (no
- functions), it may make sense to extend the notion of pattern matching
- to include other useful but difficult features.
+In the presence of full-spectrum dependent types, the perspective dramatically
+ shifts.
+ Any terminating typing procedure will necessarily exclude some type-able
+ patterns and be unable to exclude some unreachable branches.
+ Even though only data values are considered, dependent patterns are already
+ attacking a much more difficult problem then in the non-dependent case.
+ It may make sense to extend the notion of pattern matching to include other
+ useful but difficult features.
  To some extent this is similar to the with syntax of 
-\begin_inset Flex TODO Note (Margin)
-status open
-
-\begin_layout Plain Layout
-cite
-\end_layout
+\begin_inset CommandInset citation
+LatexCommand cite
+key "mcbride_mckinna_2004"
+literal "false"
 
 \end_inset
 
 .
- In principle it seems that dependent case expressions could be extended
- with uniqueness side conditions, arbitrary computation or some amount of
- constraint solving, without being any theoretically worse than usual unificatio
-n.
- 
 \end_layout
 
 \begin_layout Standard
@@ -4133,16 +4067,27 @@ Epigram
 
 \end_inset
 
-, Agda and Idris attempt to deal with these issues using 
+, Agda and Idris make pattern matching more powerful using 
 \series bold
 with
 \series default
- syntaxx that allows further branging based on teh computation of each branch.
- This is justifed as syntactic sugar that corresponds to several halper
- functions that can be apropriately typed.
+ syntax that allows further pattern based branching by attaching a computation
+ to a branch.
+ This is justified as syntactic sugar that corresponds to several helper
+ functions that can be appropriately typed and elaborated.
  The language described in this thesis does not use the with side condition
- since nested case expressions carry the same compuatational behavour, and
- the elaboration to the cast langugae will allow possibly questionable typing.
+ since nested case expressions carry the same computational behavior, and
+ the elaboration to the cast language will allow possibly questionable typing
+ anyway.
+\end_layout
+
+\begin_layout Standard
+More aggressive choices should be explored beyond the with construct.
+ In principle it seems that dependent case expressions could be extended
+ with relevant proof search, arbitrary computation or some amount of constraint
+ solving, without being any theoretically worse than usual first order unificati
+on.
+ 
 \end_layout
 
 \begin_layout Standard
@@ -4150,7 +4095,7 @@ with
 status open
 
 \begin_layout Plain Layout
-ATS
+Discus how stratified type systems like ATS handle things
 \end_layout
 
 \end_inset
@@ -4159,31 +4104,78 @@ ATS
 \end_layout
 
 \begin_layout Standard
-How should overlapping branches be handled? partial evaluation of case expressio
-ns can change the definitional nature of the theory.
- 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% There are other questions that How should overlapping branches be handled?
+ (think this got covered)
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
-the details of pattern matching chang e the logical character of the system.
- Since non-ermination is allowed in the langugae described here the logical
- issues are less of a concern.
+The details of pattern matching change the logical character of the system
+\begin_inset CommandInset citation
+LatexCommand cite
+key "cockx_devriese_2018"
+literal "false"
+
+\end_inset
+
+.
+ Since non-termination is allowed in the language described here, the logical
+ issues that arise from pattern are less of a concern then the immediate
+ logical unsoundness that was discussed in chapter 2.
  However it is worth noting that pattern matching as described here validates
- axiom k and thus apears unsuatable for Hott or CTT developments.
+ axiom k and thus appears unsuitable for Hott or CTT developments.
 \end_layout
 
 \begin_layout Standard
-We have glossed over the definitional behavior of case branches in this
- chapter since we plan sidestep the issue with the cast langauge.
- Though it is still worth noting that their are several ways to set up the
- definitional reductions.
- Agda style case trees may result in unpredicatble definitional equalities
- (in so far as definitional behavour is ever predicatable)
+This chapter has glossed over the definitional behavior of 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $\mathsf{case}$
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+s, since we plan to sidestep the issue with the cast language.
+ It is worth noting that their are several ways to set up the definitional
+ reductions.
+ Agda style case trees may result in unpredictable definitional equalities
+ (in so far as definitional behavior is ever predictable) 
 \begin_inset Flex TODO Note (Margin)
 status open
 
 \begin_layout Plain Layout
-cite
+cite: Overlapping and Order-Independent Patterns review
 \end_layout
 
 \end_inset
@@ -4194,60 +4186,99 @@ cite
 status open
 
 \begin_layout Plain Layout
-cite
+cite: Overlapping and Order-Independent Patterns review
 \end_layout
 
 \end_inset
 
- advocates for a more conservative aproach that makes function definitionas
- be cases defintiional (wich is nice in that it respectes the surface langauge
- euqality, but shifts teh dificulties to overlapping branches and does not
- allow shadowinf behavior programmers are used to).
- another extream would be to only allowredcutions at fully computed scrutinee
- valuess, as in trellies worke)
+ advocates for a more conservative approach that makes function definitions
+ by cases definitional (but shifts the difficulties to overlapping branches
+ and does not allow the 
+\begin_inset Quotes eld
+\end_inset
+
+first match
+\begin_inset Quotes erd
+\end_inset
+
+ behavior programmers are used to).
+ Another extreme would be to only allow reductions at fully computed scrutinee
+ values, as in trellies work 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "sjoberg2012irrelevance"
+literal "false"
+
+\end_inset
+
+
 \begin_inset Flex TODO Note (Margin)
 status open
 
 \begin_layout Plain Layout
-cite
+confirm
 \end_layout
 
 \end_inset
 
 .
  Alternatively a partial reduction is possible, such that branches are eliminate
-d as they are found unreachable and substituations made as that are availible.
- This last aproach is experimantally implemented in the implementation.
+d as they are found unreachable and substitutions made as they are available.
+ This last approach is experimentally implemented for the language defined
+ here.
 \end_layout
 
 \begin_layout Standard
 This complicates the simple story from chapter 2, where the bidirectional
- system made the TAS system tractable by only adding annotations (and having
+ system made the TAS system checkable by only adding annotations (and having
  annotatability).
- We have only conjectured the existnace of a saitable TAS system.
- If the definitinoal equality that feeds the TAS is generated by a system
- of reductions, any of the reduction strategies from the last section will
- generate a different TAS with subtly different characteristics.
+ We have only conjectured the existence of a suitable TAS system for pattern
+ matching.
+ If the definitional equality that feeds the TAS is generated by a system
+ of reductions, any of the reduction strategies will generate a different
+ TAS with subtly different characteristics.
  For instance, insisting on a call-by-value case reduction will leave many
- equivelent computiaitons unassociated.
+ equivalent computations unassociated.
  If the TAS system uses partial reductions it will need to inspect the construct
-ors of the scrutinee in order to preserve typeing over reduction.
+ors of the scrutinee in order to preserve typing when reduction eliminates
+ branches.
  Agda style reductions need to extend syntax under reduction to account
  for side conditions.
- For this reason it is rare to see a fully formailized account of pattern
- matching.
+ 
 \end_layout
 
 \begin_layout Standard
-Ideally the typeing rule for pattern matching case expression in teh TAS
- should not use the notion of pattern matching at all.
- Instead the rule should characterize the behavour that is required directly
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% For this reason it is rare to see a fully formailized account of pattern
+ matching.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Ideally the typing rule for pattern matching case expression in the TAS
+ should not use the notion of unification at all.
+ Instead the rule should characterize the behavior that is required directly
  and formally
 \begin_inset Foot
 status open
 
 \begin_layout Plain Layout
-Cite has a good imformal description
+\begin_inset CommandInset citation
+LatexCommand cite
+key "coquand1992pattern"
+literal "false"
+
+\end_inset
+
+ has a good informal description
 \end_layout
 
 \end_inset
@@ -4314,11 +4345,48 @@ Minimal data with Sigma and Unit
 \end_layout
 
 \begin_layout Standard
-ML W types
+Many systems that target data formalize only a representative collection
+ of data types, expecting the scheme to be noted and inferred.
+ This data usually covers Nats (for recursion) dependent pairs (for type
+ constructor arguments) and unit to end a chain of dependent pairs.
+ For example, Martin Lof's original paper treated data this way
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+confirm, cite
+\end_layout
+
+\end_inset
+
+, and is still a common approach tp data (for instance in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "jia2010dependent"
+literal "false"
+
+\end_inset
+
+).
 \end_layout
 
 \begin_layout Standard
-UTT
+Martin Lof generalized the notion of data to W types of well founded trees
+ 
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+confirm, cite
+\end_layout
+
+\end_inset
+
+ and this still serves as a theoretical justification for data.
+\end_layout
+
+\begin_layout Standard
+Unified Type Theory (UTT)
 \begin_inset CommandInset citation
 LatexCommand cite
 key "luo1990extended,luo1994computation"
@@ -4326,11 +4394,11 @@ literal "false"
 
 \end_inset
 
- is an extention to ECC that specifies a scheme to define strictly positive
+ is an extension to ECC that specifies a scheme to define strictly positive
  data types by way of a logical framework defined in MLTT.
- This scheme generates primative recursors, and does not iunherently support
- pattern matching.
-\begin_inset Flex TODO Note (inline)
+ This scheme generates primitive recursors for schematized data, and does
+ not inherently support pattern matching.
+\begin_inset Flex TODO Note (Margin)
 status open
 
 \begin_layout Plain Layout
@@ -4343,7 +4411,37 @@ finish reading this
 \end_layout
 
 \begin_layout Standard
-I am unaware of any clear, complete account of CIC in English.
+The Calculus of Inductive Constructions (CiC) is an extension to the calculus
+ of constructions that includes a system of first class data.
+ It was first presented in 
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+\begin_inset Quotes eld
+\end_inset
+
+Inductive definitions in the system Coq rules and properties
+\begin_inset Quotes erd
+\end_inset
+
+ confirm
+\end_layout
+
+\end_inset
+
+ , but the most complete up to date formulation is maintained as part of
+ the Coq manual 
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+https://coq.github.io/doc/v8.9/refman/language/cic.html
+\end_layout
+
+\end_inset
+
+.
  A bidirectional account of CIC is given in 
 \begin_inset CommandInset citation
 LatexCommand cite
@@ -4352,8 +4450,8 @@ literal "false"
 
 \end_inset
 
-, though it uses a different style of biderectionality then discussed here
- to maintain compatibility with the existing Galina language.
+, though it uses a different style of bidirectionally then discussed here
+ to maintain compatibility with the existing Coq system.
 \end_layout
 
 \begin_layout Standard
@@ -4361,7 +4459,7 @@ literal "false"
 status open
 
 \begin_layout Plain Layout
-CTT, higher inductive types, qoatent types
+CTT, higher inductive types, quotient types
 \end_layout
 
 \end_inset
@@ -4371,6 +4469,19 @@ CTT, higher inductive types, qoatent types
 
 \begin_layout Section
 Pattern matching
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+Clean up this section
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -4510,6 +4621,45 @@ options "alpha"
 
 \begin_layout Part
 TODO
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+differentiate identifiers with font, font stuff with code
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+Make identifiers consistent with chapter 2, and locations in chapter 3
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+syntax highlighting
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout List of TODOs

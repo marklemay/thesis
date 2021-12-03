@@ -3514,12 +3514,10 @@ tic reduction.
  There are several plausible ways to handle this, such as requiring each
  branch to have independent patterns, or requiring patterns have the same
  behavior when they overlap 
-\begin_inset Flex TODO Note (Margin)
-status open
-
-\begin_layout Plain Layout
-cite: Overlapping and Order-Independent Patterns
-\end_layout
+\begin_inset CommandInset citation
+LatexCommand cite
+key "10.1007/978-3-642-54833-8_6"
+literal "false"
 
 \end_inset
 
@@ -3988,19 +3986,20 @@ Even without dependent types, pattern matching is a strange feature.
  How important is it that patterns correspond exactly to a subset expression
  syntax? What about capture annotations or side conditions? Restricting
  patterns to constructors and variable means that it is hard to encapsulate
- functionality, a fact noticed by Wadler as early as 
+ functionality, a fact noticed by Wadler as early as
+\begin_inset CommandInset citation
+LatexCommand cite
+key "10.1145/41625.41653"
+literal "false"
+
+\end_inset
+
+ 
 \begin_inset Flex TODO Note (Margin)
 status open
 
 \begin_layout Plain Layout
-\begin_inset Quotes eld
-\end_inset
-
-Views: A Way for Pattern Matching to Cohabit with Data Abstraction
-\begin_inset Quotes erd
-\end_inset
-
- review
+review
 \end_layout
 
 \end_inset
@@ -4173,23 +4172,29 @@ s, since we plan to sidestep the issue with the cast language.
  reductions.
  Agda style case trees may result in unpredictable definitional equalities
  (in so far as definitional behavior is ever predictable) 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "10.1007/978-3-642-54833-8_6"
+literal "false"
+
+\end_inset
+
+ 
 \begin_inset Flex TODO Note (Margin)
 status open
 
 \begin_layout Plain Layout
-cite: Overlapping and Order-Independent Patterns review
+review
 \end_layout
 
 \end_inset
 
 .
  
-\begin_inset Flex TODO Note (Margin)
-status open
-
-\begin_layout Plain Layout
-cite: Overlapping and Order-Independent Patterns review
-\end_layout
+\begin_inset CommandInset citation
+LatexCommand cite
+key "10.1007/978-3-642-54833-8_6"
+literal "false"
 
 \end_inset
 
@@ -4331,19 +4336,6 @@ Related work
 
 \begin_layout Section
 Systems with Data
-\end_layout
-
-\begin_layout Standard
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-Minimal data with Sigma and Unit
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Standard

@@ -21,16 +21,18 @@ all work related to my thesis document, will eventually become public
   - [x] Produce some larger examples
 - [x] October
   - [x] draft Surface Language chapter
-## Plan
-- [ ] November
+- [x] November
   - [x] draft Cast Language chapter
-  - [ ] draft Data chapter
+  - [x] draft Surface Data chapter
+## Plan
+- [ ] December
+  - [ ] draft Cast Data chapter
   - [ ] Rework symbolic execution to work in the cast language
   - [ ] draft testing chapter
   - [ ] draft runtime proof search chapter
-- [ ] December
   - [ ] draft introduction
   - [ ] draft conclusion
+- [ ] Jan
   - [ ] finalize thesis
   - [ ] Send to commitee (at least 2 weeks before defense)
   - [ ] Defend
