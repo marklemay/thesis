@@ -238,7 +238,7 @@ How should these new syntaxes interact with each-other? Since every term
 status open
 
 \begin_layout Plain Layout
-rearange
+rearrange
 \end_layout
 
 \end_inset
@@ -374,7 +374,7 @@ if the vector is inhabited by an incorrect type, it will return 3:: Bool
 status open
 
 \begin_layout Plain Layout
-rearange
+rearrange
 \end_layout
 
 \end_inset
@@ -591,6 +591,32 @@ have 2::InTc0(p) be indestinguishable from 2 except for blame derived from
 
 \begin_layout Standard
 of these the additional constructor sounds easiest to deal with.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+Example, casting up to motive
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+Example, bad casts from unification that need to be removed
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
@@ -1722,7 +1748,7 @@ remove
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $castL_{kcast}\,p$
+\begin_inset Formula $castL_{kcast}$
 \end_inset
 
 
@@ -1763,7 +1789,7 @@ remove
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $castR_{kcast}\,p$
+\begin_inset Formula $castR_{kcast}$
 \end_inset
 
 
@@ -2500,6 +2526,17 @@ circ p
 \end_layout
 
 \begin_layout Standard
+\begin_inset Formula $uncastL_{kcast}\,p$
+\end_inset
+
+ as repeted 
+\begin_inset Formula $castL_{kcast}\,p$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 ...
 \end_layout
 
@@ -2582,19 +2619,6 @@ not actually this more restictions
 \begin_layout Standard
 ..
  extracted from each sensable place
-\end_layout
-
-\begin_layout Standard
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-remove path value restrictions
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Standard
@@ -2687,6 +2711,52 @@ remove path value restrictions
 \[
 \frac{\ }{inC_{i}\left(p\circ Assert_{k\Rightarrow d\overline{A}}\right)\rightsquigarrow inC_{i}\left(p\right)\circ Assert_{k\Rightarrow A_{i}}}
 \]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{kcast\rightsquigarrow kcast'}{castL_{kcast}\rightsquigarrow castL_{kcast'}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\ }{inTC_{i}\left(p\circ castL_{refl}\right)\rightsquigarrow inTC_{i}\left(p\right)}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\ }{inC_{i}\left(p\circ castL_{D...}\right)\rightsquigarrow inTC_{i}\left(p\right)}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+remove
+\end_layout
 
 \end_inset
 
@@ -3117,9 +3187,36 @@ is this ok?
 \end_layout
 
 \begin_layout Plain Layout
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+A ok.
+ A type is too restrictive
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
 \begin_inset Formula 
 \[
-\frac{HK\vdash p:A\thickapprox B\quad HK\vdash p':B\thickapprox C}{HK\vdash p\,p':A\thickapprox C}
+\frac{HK\vdash p:A\thickapprox B\quad HK\vdash q:B\thickapprox C}{HK\vdash p\,q:A\thickapprox C}
 \]
 
 \end_inset
@@ -3132,7 +3229,55 @@ is this ok?
 status open
 
 \begin_layout Plain Layout
-allow norm at midpoint? or conv the ends?
+needs to conv the ends
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+\frac{HK\vdash p:b\thickapprox b\quad H,K\vdash b:B\quad H,K\vdash b':B\quad H,x:B,K\vdash A}{HK\vdash cong_{x\Rightarrow a}p:a\left[x\coloneqq b\right]\thickapprox a\left[x\coloneqq b'\right]}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+\frac{}{HK\vdash castL_{kcast}:A::kcast\thickapprox A}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+A ok
 \end_layout
 
 \end_inset
@@ -3167,6 +3312,19 @@ allow norm at midpoint? or conv the ends?
 \[
 \frac{HK\vdash p:d\,\overline{a}\thickapprox d\,\overline{b}}{HK\vdash inC_{i}\,p:a_{i}\thickapprox b_{i}}
 \]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+remove these rules
+\end_layout
 
 \end_inset
 

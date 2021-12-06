@@ -238,7 +238,7 @@ How should these new syntaxes interact with each-other? Since every term
 status open
 
 \begin_layout Plain Layout
-rearange
+rearrange
 \end_layout
 
 \end_inset
@@ -374,7 +374,7 @@ if the vector is inhabited by an incorrect type, it will return 3:: Bool
 status open
 
 \begin_layout Plain Layout
-rearange
+rearrange
 \end_layout
 
 \end_inset
@@ -591,6 +591,32 @@ have 2::InTc0(p) be indestinguishable from 2 except for blame derived from
 
 \begin_layout Standard
 of these the additional constructor sounds easiest to deal with.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+Example, casting up to motive
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+Example, 
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section

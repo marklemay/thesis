@@ -1,3 +1,8 @@
+admin
+* intent to graduate form
+* follow up with GRS spring semester extention
+
+
 library request
 * ~~https://link.springer.com/book/10.1007/978-1-4471-0963-1~~
 * print https://link-springer-com.ezproxy.bu.edu/content/pdf/10.1007%2FBFb0037116.pdf
@@ -56,3 +61,11 @@ Send to people for review
 * CH2 Zach
 * almost done Luara
 * Eric's friends
+* Chapter 5, Fuzzing person 
+* internet
+
+
+defence 
+* 1 page cheatsheet
+  * protocal (1 hour talk, questions, private meetings with candidate, private with comitte, ...)
+  * syntax, formulas

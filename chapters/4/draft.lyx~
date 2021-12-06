@@ -233,6 +233,366 @@ How should these new syntaxes interact with each-other? Since every term
  Then we can commute equivalences in a plausible way.
 \end_layout
 
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+rearange
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For instance if the user case matches the head of 
+\begin_inset Formula $x$
+\end_inset
+
+ where 
+\begin_inset Formula $x$
+\end_inset
+
+ has type 
+\begin_inset Formula $Vec\,A\,(Sn)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "basicstyle={\ttfamily\small}"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+case x <_:Vec Bool (S n) => Bool> {
+\end_layout
+
+\begin_layout Plain Layout
+
+| Cons _ a _ _ => a
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+What can go wron in the presence of casts?
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $x$
+\end_inset
+
+ a fualt cast assumtion may have made 
+\begin_inset Formula $x$
+\end_inset
+
+ apear to be a Vector even when it is not.
+ for instance True:: Vec Bool 3
+\end_layout
+
+\begin_layout Itemize
+the vector may be empty but cast to look like it is inhabited.
+ for instance Nil Bool :: Vec Bool 5
+\end_layout
+
+\begin_layout Itemize
+the vector may have a type that is not Bool.
+ for instance Cons Nat 3 ...
+ ...
+ :: Vec Bool 5
+\end_layout
+
+\begin_layout Standard
+elaboration will perform unification resulting in the term
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "basicstyle={\ttfamily\small}"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+case x {
+\end_layout
+
+\begin_layout Plain Layout
+
+| Cons _ a _ _ :: p => a::InTc0(p)
+\end_layout
+
+\begin_layout Plain Layout
+
+| Nil _ :: p => !InTc1(p)
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+if the case tries to eliminate True:: Vec Bool 3, teh constructor is not
+ mached so the fualty assumption can be blamed
+\end_layout
+
+\begin_layout Itemize
+if teh scrutinee is empty, we will fall into the Nil branch, which will
+ reflect the underlieig fualty assumption, via the explicit blame syntax
+\end_layout
+
+\begin_layout Itemize
+if the vector is inhabited by an incorrect type, it will return 3:: Bool
+ with the a cast that rests on the faulty assumption of Vec Nat 5=Vec Bool
+ 5.
+ if checking is extended to CBV it will fail imediately, If checking is
+ not done by name, the blame will be discoverd whenever the result is matched.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+rearange
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Consider the more involved example that sums the first 2 numbers of a vector
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "basicstyle={\ttfamily\small}"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+case x <_:Vec Nat 2 => Nat> {
+\end_layout
+
+\begin_layout Plain Layout
+
+| Cons _ i _ (Cons _ j _ _) => i+j
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+the elaboration procedure will produce
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "basicstyle={\ttfamily\small}"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+case x {
+\end_layout
+
+\begin_layout Plain Layout
+
+| (Cons Nat' i n' (Cons Nat'' j n'' rest):: p1):: p2 => i::InTc0(p2) + j::(InTc0
+(p1).InTc0(p2))
+\end_layout
+
+\begin_layout Plain Layout
+
+| (Nil Nat') :: p => !InTc1(p)
+\end_layout
+
+\begin_layout Plain Layout
+
+| (Cons Nat' i n' (Nil Nat''):: p1):: p2 => !InTc1(p1).InTc1(p2) 
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+in the first branch we have, p1 : Vec Nat'' (S n'') = Vec Nat' n', p2 :
+ Vec Nat' (S n') = Vec Nat 2, i:Nat', j:Nat''
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+this means we can deduce InTc0(p2) : Nat' = Nat, and InTc0(p1) InTc0(p2)
+ : Nat'' = Nat
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+in teh 2nd branch, p : Vec Nat' 0 = Vec Nat' 2
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+wich is unsatisifable, by InTc1(p) : 0 = 2
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+in teh 3rd branch, p1 : Vec Nat'' 0 = Vec Nat' n', p2 : Vec Nat' (S n')
+ = Vec Nat 2
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+wich is unsatisfiable by InTc1(p1) InTc1(p2) : 0 = 2.
+ We don't need to know which path is problematic beforehand, only that the
+ combination cuases trouble.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+We know from unification what the type and value of ever tem is suposed
+ to be, so casts can be injected using evidence from the pattern
+\end_layout
+
+\begin_layout Standard
+But there are more complicated possiblities consider
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "basicstyle={\ttfamily\small}"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+case x <_:Id Nat 2 2 => Vec Nat 2> {
+\end_layout
+
+\begin_layout Plain Layout
+
+| refl _ a => rep a Nat 9
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+this will elaborate to
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "basicstyle={\ttfamily\small}"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+case x {
+\end_layout
+
+\begin_layout Plain Layout
+
+| (refl Nat' a)::p => (rep (a::InTc0(p))):: Cong (?) x=> (A : *) -> A ->
+ Vec Nat x
+\end_layout
+
+\begin_layout Plain Layout
+
+   Nat 9
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+since we have p: Id Nat' a a = Nat 2 2, 
+\end_layout
+
+\begin_layout Standard
+(a::InTc0(p)) casts a to a Nat but then we need to ecidence that (A : *)
+ -> A -> Vec Nat (a::InTc0(p)) = (A : *) -> A -> Vec Nat 2
+\end_layout
+
+\begin_layout Standard
+this means we fisr need congurence to select the portion of intrest .
+ Ideally we would have a path from (a::InTc0(p)) = 2, but we only have a
+ path (InTc1(p)): a = 2 .
+ It is unclear how best to handle this
+\end_layout
+
+\begin_layout Itemize
+have 2::InTc0(p) = 2 hold definitionally, but this is dubous becueas p can
+ contain additional failures
+\end_layout
+
+\begin_layout Itemize
+allow a different path constructor that allows casts to endpoints
+\end_layout
+
+\begin_layout Itemize
+have 2::InTc0(p) be indestinguishable from 2 except for blame derived from
+ p
+\end_layout
+
+\begin_layout Standard
+of these the additional constructor sounds easiest to deal with.
+\end_layout
+
 \begin_layout Section
 Cast
 \end_layout
@@ -583,6 +943,45 @@ Extending the syntax in this way complicates the type system and the reduction
 \end_layout
 
 \begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+Conruence
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+dangly bits
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+sumstution
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 \begin_inset Float figure
 wide false
 sideways false
@@ -590,7 +989,7 @@ status open
 
 \begin_layout Plain Layout
 \begin_inset Tabular
-<lyxtabular version="3" rows="32" columns="4">
+<lyxtabular version="3" rows="34" columns="4">
 <features tabularvalignment="middle">
 <column alignment="left" valignment="top">
 <column alignment="center" valignment="top">
@@ -1253,7 +1652,7 @@ concatinated paths
 \begin_inset Text
 
 \begin_layout Plain Layout
-
+remove
 \end_layout
 
 \end_inset
@@ -1283,6 +1682,88 @@ concatinated paths
 
 \begin_layout Plain Layout
 \begin_inset Formula $uncastR_{kcast}\,p$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+remove
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+|
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $castL_{kcast}\,p$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+|
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $castR_{kcast}\,p$
 \end_inset
 
 
@@ -1952,6 +2433,9 @@ extend H ctxs
 \end_inset
 
 
+\end_layout
+
+\begin_layout Plain Layout
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
@@ -2082,6 +2566,22 @@ not actually this more restictions
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{a\:\mathbf{whnf}\quad b\:\mathbf{whnf}\quad\mathbf{head}\,a\neq\mathbf{head}\,b}{\textbf{Blame}\:\ensuremath{\ell}\,o\,\left\{ a\sim_{k,o,\ell}b\right\} }
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+..
+ extracted from each sensable place
 \end_layout
 
 \begin_layout Standard
@@ -2257,7 +2757,18 @@ TODO review this
 \begin_layout Standard
 \begin_inset Formula 
 \[
-\frac{remove\,k=left\,casts\quad a\:\mathbf{whnf}}{uncastL\,\left(Assert_{k\Rightarrow a::\overline{\overline{kin,}p;}}\right)\rightsquigarrow Assert_{k\Rightarrow a::\overline{\overline{kin',}p';}}}
+\frac{remove\,k=left\,casts\quad a\:\mathbf{whnf}}{uncastL_{kcast}\,\left(Assert_{k\Rightarrow a::kcast'}\right)\rightsquigarrow Assert_{k\Rightarrow a::kcast''}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{remove\,k=left\,casts\quad a\:\mathbf{whnf}}{castL_{kcast}\,\left(Assert_{k\Rightarrow a::kcast'}\right)\rightsquigarrow Assert_{k\Rightarrow a::kcast''}}
 \]
 
 \end_inset
@@ -2309,13 +2820,43 @@ probly need to modify substution
 \end_layout
 
 \begin_layout Standard
-TODO review this
+assumption reductions
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
 \[
-\frac{\ }{uncastL\,\left(refl\right)\rightsquigarrow?}
+\frac{p\rightsquigarrow p'}{\begin{array}{c}
+kcast\\
+\overline{kin,}p;\\
+kcast'
+\end{array}\rightsquigarrow\begin{array}{c}
+kcast\\
+\overline{kin,}p';\\
+kcast'
+\end{array}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{a\rightsquigarrow a'}{a::kcast\rightsquigarrow a'::kcast}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{kcast\rightsquigarrow kcast'}{a::kcast\rightsquigarrow a::kcast'}
 \]
 
 \end_inset
@@ -2338,7 +2879,15 @@ term redcutions
 \begin_layout Standard
 \begin_inset Formula 
 \[
-\frac{\,}{\left\{ a::\overline{\overline{kin,}p;}\overline{kin,}q\,Assert_{k\Rightarrow C};\overline{\overline{kin',}p';}\sim_{k,o,\ell}b\right\} \rightsquigarrow\left\{ a::\overline{\overline{kin,}p;}\overline{kin,}q;\overline{\overline{kin',}p';}\sim_{k,o,\ell}b\right\} ::\overline{kin,}k=left\,Assert_{k\Rightarrow C};}
+\frac{\,}{\left\{ a::\begin{array}{l}
+kcast\\
+\overline{kin,}p\circ Assert_{k\Rightarrow C};\\
+kcast'
+\end{array}\sim_{k,o,\ell}b\right\} \rightsquigarrow\left\{ a::\begin{array}{c}
+kcast\\
+\overline{kin,}p;\\
+kcast'
+\end{array}\sim_{k,o,\ell}b\right\} ::\overline{kin,}k=left\,Assert_{k\Rightarrow C};}
 \]
 
 \end_inset
@@ -2653,6 +3202,30 @@ status open
 \begin_layout Plain Layout
 how to best remove teh cast
 \end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+remove this questionable thing?
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+\frac{HK\vdash p:\ b\thickapprox a\quad HK\vdash a:A\quad HK\vdash kcast:\ A\thickapprox A\quad}{HK\vdash castR_{kcast}\,p:B\thickapprox A::kcast}
+\]
 
 \end_inset
 

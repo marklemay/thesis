@@ -3514,12 +3514,10 @@ tic reduction.
  There are several plausible ways to handle this, such as requiring each
  branch to have independent patterns, or requiring patterns have the same
  behavior when they overlap 
-\begin_inset Flex TODO Note (Margin)
-status open
-
-\begin_layout Plain Layout
-cite: Overlapping and Order-Independent Patterns
-\end_layout
+\begin_inset CommandInset citation
+LatexCommand cite
+key "10.1007/978-3-642-54833-8_6"
+literal "false"
 
 \end_inset
 
