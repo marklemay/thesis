@@ -2157,10 +2157,10 @@ noprefix "false"
 \end_inset
 
  checks a full data definition with an abstract reference to a data definition
- in context, which allows recursive data definitions such as Nat.
+ in context, which allows recursive data definitions such as Nat which needs
+ Nat to be in scope to define the S constructor.
  This thesis does not formalize the module system that adds data to context,
- it is taken for granted that any amount of well formed data in context
- is fine.
+ it is taken for granted that any well formed data in context is fine.
  This presentation of data largely follows 
 \begin_inset CommandInset citation
 LatexCommand cite
@@ -2260,8 +2260,89 @@ noprefix "false"
 \begin_inset Formula $\mathsf{data}\,D\,\Delta\in\Gamma$
 \end_inset
 
- extracts the constructor definitions from the context.
- The motive requires checking in the case of empty data
+ and 
+\begin_inset Formula $d\,:\,\varTheta\rightarrow D\overline{m}\in\Gamma$
+\end_inset
+
+ extract the type constructor definitions and data constructor definitions
+ from the context respectively.
+ 
+\begin_inset Formula $\operatorname{ty-TCon}$
+\end_inset
+
+ and 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $\operatorname{ty-Con}$
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+ allow type and data constructors to be used as functions of appropriate
+ type.
+ The 
+\begin_inset Formula $\operatorname{ty-}\mathsf{case}<>$
+\end_inset
+
+ rule types a case expression by ensuring that the correct data definition
+ for 
+\begin_inset Formula $D$
+\end_inset
+
+ is in context, the scrutinee 
+\begin_inset Formula $n$
+\end_inset
+
+ has the correct type, the motive 
+\begin_inset Formula $M$
+\end_inset
+
+ is well formed under the type arguments and the scrutinee, 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% The motive requires checking in the case of empty data
+\end_layout
+
+\end_inset
+
+ finally every data constructor is verified to have a corresponding branch.
+ 
+\begin_inset Formula $\operatorname{ty-}\mathsf{case}$
+\end_inset
+
+ allows for the same typing logic, but does not require the motive be annotated
+ in syntax.
+ In both rules we allow telescopes to rename their variables with the shorthand
+ 
+\begin_inset Formula $\overline{x}:\Delta$
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
@@ -2273,7 +2354,7 @@ status open
 \begin_layout Plain Layout
 \begin_inset Formula 
 \[
-\frac{\Gamma\,\mathbf{ok}\quad\mathsf{data}\,D\,\Delta\in\Gamma}{\Gamma\vdash D\,:\,\Delta\rightarrow\star}\operatorname{ty-TDCon}
+\frac{\Gamma\,\mathbf{ok}\quad\mathsf{data}\,D\,\Delta\in\Gamma}{\Gamma\vdash D\,:\,\Delta\rightarrow\star}\operatorname{ty-TCon}
 \]
 
 \end_inset
@@ -2284,7 +2365,7 @@ status open
 \begin_layout Plain Layout
 \begin_inset Formula 
 \[
-\frac{\Gamma\,\mathbf{ok}\quad d\,:\,\varTheta\rightarrow D\overline{m}\in\Gamma}{\Gamma\vdash d\,:\,\varTheta\rightarrow D\overline{m}}\operatorname{ty-TDCon}
+\frac{\Gamma\,\mathbf{ok}\quad d\,:\,\varTheta\rightarrow D\overline{m}\in\Gamma}{\Gamma\vdash d\,:\,\varTheta\rightarrow D\overline{m}}\operatorname{ty-Con}
 \]
 
 \end_inset
@@ -2299,9 +2380,9 @@ status open
 \mathsf{data}\,D\,\Delta\left\{ ...\right\} \in\Gamma\\
 \Gamma\vdash n:D\overline{N}\\
 \Gamma,\overline{x}:\Delta,z:D\,\overline{x}\vdash M:\star\\
-\forall\:d\,:\,\varTheta\rightarrow D\overline{o}\in\Gamma.\quad\Gamma,\overline{y}_{d}:\varTheta\vdash m_{d}\left[\overline{x}\coloneqq\overline{o}\right]:M\left[\overline{x}\coloneqq\overline{o}\right]
+\forall\:d\,:\,\varTheta\rightarrow D\overline{o}\in\Gamma.\quad\Gamma,\overline{y}_{d}:\varTheta\vdash m_{d}\left[\overline{x}\coloneqq\overline{o}\right]:M\left[\overline{x}\coloneqq\overline{o},z\coloneqq d\,\overline{y}_{d}\right]
 \end{array}}{\begin{array}{c}
-\Gamma\vdash\mathsf{case}\,\overline{N,}n\,\left\langle \overline{x\Rightarrow}z:D\,\overline{x}\Rightarrow M\right\rangle \left\{ \overline{|\,\overline{x\Rightarrow}(d\,\overline{y}_{d})\Rightarrow m_{d}}\right\} \\
+\Gamma\vdash\mathsf{case}\,\overline{N,}n\,\left\langle \overline{x\Rightarrow}z:D\,\overline{x}\Rightarrow M\right\rangle \left\{ \overline{|\,\overline{x\Rightarrow}\,d\overline{y}_{d}\,\Rightarrow m_{d}}\right\} \\
 :M\left[\overline{x}\coloneqq\overline{N},z\coloneqq n\right]
 \end{array}}\operatorname{ty-}\mathsf{case}<>
 \]
@@ -2312,15 +2393,58 @@ status open
 \end_layout
 
 \begin_layout Plain Layout
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+no duplicate branches
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+reparam 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+o in 
+\begin_inset Formula $\left[\overline{x}\coloneqq\overline{o}\right]$
+\end_inset
+
+ also
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
 \begin_inset Formula 
 \[
 \frac{\begin{array}{c}
 \mathsf{data}\,D\,\Delta\left\{ ...\right\} \in\Gamma\\
 \Gamma\vdash n:D\overline{N}\\
 \Gamma,\overline{x}:\Delta,z:D\,\overline{x}\vdash M:\star\\
-\forall\:d\,:\,\varTheta\rightarrow D\overline{o}\in\Gamma.\quad\Gamma,\overline{y}_{d}:\varTheta\vdash m_{d}\left[\overline{x}\coloneqq\overline{o}\right]:M\left[\overline{x}\coloneqq\overline{o}\right]
+\forall\:d\,:\,\varTheta\rightarrow D\overline{o}\in\Gamma.\quad\Gamma,\overline{y}_{d}:\varTheta\vdash m_{d}\left[\overline{x}\coloneqq\overline{o}\right]:M\left[\overline{x}\coloneqq\overline{o},z\coloneqq d\,\overline{y}_{d}\right]
 \end{array}}{\begin{array}{c}
-\Gamma\vdash\mathsf{case}\,\overline{N,}n\,\left\{ \overline{|\,\overline{x\Rightarrow}(d\,\overline{y}_{d})\Rightarrow m_{d}}\right\} \\
+\Gamma\vdash\mathsf{case}\,\overline{N,}n\,\left\{ \overline{|\,\overline{x\Rightarrow}\,d\overline{y}_{d}\,\Rightarrow m_{d}}\right\} \\
 :M\left[\overline{x}\coloneqq\overline{N},z\coloneqq n\right]
 \end{array}}\operatorname{ty-}\mathsf{case}
 \]
@@ -2411,11 +2535,43 @@ noprefix "false"
 .
  They follow the scheme of parallel reductions laid out in chapter 2.
  The 
+\begin_inset Formula $\textrm{\Rrightarrow-\mathsf{case}-red}$
+\end_inset
+
+ rule reduces a case expression by choosing the appropriate branch
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Also called Iota reduction
+\end_layout
+
+\end_inset
+
+ .
+ The 
 \begin_inset Formula $\textrm{\Rrightarrow-\mathsf{case}<>-red}$
 \end_inset
 
  rule removes the motive annotation, much like the annotation rule in Chapter
  2.
+ The rules 
+\begin_inset Formula $\textrm{\Rrightarrow-\mathsf{case}<>}$
+\end_inset
+
+, 
+\begin_inset Formula $\textrm{\Rrightarrow-}D$
+\end_inset
+
+, and 
+\begin_inset Formula $\textrm{\Rrightarrow-}d$
+\end_inset
+
+ keep the 
+\begin_inset Formula $\Rrightarrow$
+\end_inset
+
+ relation reflexive.
 \end_layout
 
 \begin_layout Standard
@@ -2431,7 +2587,7 @@ status open
 \overline{N}\Rrightarrow\overline{N'}\quad\overline{m}\Rrightarrow\overline{m'}\\
 \exists\overline{x\Rightarrow}(d\,\overline{y}_{d})\Rightarrow m_{d}\in\left\{ \overline{|\,\overline{x\Rightarrow}(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} \\
 m_{d}\Rrightarrow m_{d}'
-\end{array}}{\mathsf{case}\,\overline{N,}\,d\overline{m}\,\left\{ \overline{|\,\overline{x\Rightarrow}(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} \Rrightarrow m_{d}'\left[\overline{x}\coloneqq\overline{N'},\overline{y}_{d}\coloneqq\overline{m'}\right]}\,\textrm{\Rrightarrow-\mathsf{case}-red}
+\end{array}}{\mathsf{case}\,\overline{N,}\,d\overline{m}\,\left\{ \overline{|\,\overline{x\Rightarrow}(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} \Rrightarrow m_{d}\left[\overline{x}\coloneqq\overline{N'},\overline{y}_{d}\coloneqq\overline{m'}\right]}\,\textrm{\Rrightarrow-\mathsf{case}-red}
 \]
 
 \end_inset
@@ -2444,8 +2600,7 @@ m_{d}\Rrightarrow m_{d}'
 \[
 \frac{\begin{array}{c}
 \overline{N}\Rrightarrow\overline{N'}\quad m\Rrightarrow m'\\
-\forall\overline{x\Rightarrow}(d\,\overline{y}_{d})\Rightarrow m_{d}\in\left\{ \overline{|\,\overline{\Rightarrow x}\Rightarrow(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} .\:m_{d}\Rrightarrow m_{d}'\\
-m_{d}\Rrightarrow m_{d}'
+\forall\overline{x\Rightarrow}(d\,\overline{y}_{d})\Rightarrow m_{d}\in\left\{ \overline{|\,\overline{\Rightarrow x}\Rightarrow(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} .\:m_{d}\Rrightarrow m_{d}'
 \end{array}}{\mathsf{case}\,\overline{N,}\,m\,\left\langle ...\right\rangle \left\{ \overline{|\,\overline{\Rightarrow x}\Rightarrow(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} \Rrightarrow\mathsf{case}\,\overline{N',}\,m'\left\{ \overline{|\,\overline{\Rightarrow x}\Rightarrow(d'\,\overline{y}_{d'})\Rightarrow m_{d'}'}\right\} }\,\textrm{\Rrightarrow-\mathsf{case}<>-red}
 \]
 
@@ -2460,11 +2615,10 @@ m_{d}\Rrightarrow m_{d}'
 \frac{\begin{array}{c}
 \overline{N}\Rrightarrow\overline{N'}\quad m\Rrightarrow m'\\
 M\Rrightarrow M'\\
-\forall d.\:\overline{\Rightarrow x}\Rightarrow(d\,\overline{y}_{d})\Rightarrow m_{d}\in\left\{ \overline{|\,\overline{\Rightarrow x}\Rightarrow(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} \\
-m_{d}\Rrightarrow m_{d}'
+\forall\overline{x\Rightarrow}(d'\,\overline{y}_{d'})\Rightarrow m_{d'}\in\left\{ \overline{|\,\overline{\Rightarrow x}\Rightarrow(d\,\overline{y}_{d})\Rightarrow m_{d}}\right\} .\:m_{d'}\Rrightarrow m'_{d'}
 \end{array}}{\begin{array}{c}
-\mathsf{case}\,\overline{N,}\,m\,\left\langle \overline{x\Rightarrow}z:D\,\overline{x}\Rightarrow M\right\rangle \left\{ \overline{|\,\overline{\Rightarrow x}\Rightarrow(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} \Rrightarrow\\
-\mathsf{case}\,\overline{N,}\,m'\,\left\langle \overline{x\Rightarrow}z:D\,\overline{x}\Rightarrow M'\right\rangle \left\{ \overline{|\,\overline{\Rightarrow x}\Rightarrow(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} 
+\mathsf{case}\,\overline{N,}\,m\,\left\langle \overline{x\Rightarrow}z:D\,\overline{x}\Rightarrow M\right\rangle \left\{ \overline{|\,\overline{\Rightarrow x}\Rightarrow(d\,\overline{y}_{d})\Rightarrow m_{d}}\right\} \Rrightarrow\\
+\mathsf{case}\,\overline{N,}\,m'\,\left\langle \overline{x\Rightarrow}z:D\,\overline{x}\Rightarrow M'\right\rangle \left\{ \overline{|\,\overline{\Rightarrow x}\Rightarrow(d\,\overline{y}_{d})\Rightarrow m'_{d}}\right\} 
 \end{array}}\,\textrm{\Rrightarrow-\mathsf{case}<>}
 \]
 
@@ -2476,7 +2630,7 @@ m_{d}\Rrightarrow m_{d}'
 \begin_layout Plain Layout
 \begin_inset Formula 
 \[
-\frac{\overline{m}\Rrightarrow\overline{m'}}{D\overline{m}\Rrightarrow D\overline{m'}}\,...
+\frac{\,}{D\Rrightarrow D}\,\textrm{\Rrightarrow-}D
 \]
 
 \end_inset
@@ -2484,7 +2638,7 @@ m_{d}\Rrightarrow m_{d}'
 
 \begin_inset Formula 
 \[
-\frac{\overline{m}\Rrightarrow\overline{m'}}{d\overline{m}\Rrightarrow d\overline{m'}}\,...
+\frac{\,}{d\Rrightarrow d}\,\textrm{\Rrightarrow-}d
 \]
 
 \end_inset
@@ -2535,8 +2689,8 @@ We are now in a position to select a sub relation of
 \end_inset
 
  reductions that will be used to characterize call-by-value evaluation.
- This relation could be used used for the purposes of type safety, and is
- close to the reduction used in the implementation.
+ This relation could be used used to prove type safety, and is close to
+ the reduction used in the implementation.
  The rules are listed in 
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -2559,7 +2713,7 @@ status open
 \begin_layout Plain Layout
 \begin_inset Formula 
 \[
-\frac{\,}{\mathsf{case}\,\overline{N,}\,n\,\left\langle ...\right\rangle \left\{ \overline{|\,\overline{\Rightarrow x}\Rightarrow(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} \rightsquigarrow\mathsf{case}\,\overline{N,}\,n\left\{ \overline{|\,\overline{\Rightarrow x}\Rightarrow(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} }...
+\frac{\,}{\mathsf{case}\,\overline{N,}\,n\,\left\langle ...\right\rangle \left\{ \overline{|\,\overline{\Rightarrow x}\Rightarrow(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} \rightsquigarrow\mathsf{case}\,\overline{N,}\,n\left\{ \overline{|\,\overline{\Rightarrow x}\Rightarrow(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} }\textrm{\rightsquigarrow-\mathsf{case}<>}
 \]
 
 \end_inset
@@ -2570,7 +2724,7 @@ status open
 \begin_layout Plain Layout
 \begin_inset Formula 
 \[
-\frac{\exists\overline{x\Rightarrow}(d\,\overline{y}_{d})\Rightarrow m_{d}\in\left\{ \overline{|\,\overline{x\Rightarrow}(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} }{\mathsf{case}\,\overline{V,}\,d\overline{v}\,\left\{ \overline{|\,\overline{x\Rightarrow}(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} \rightsquigarrow m_{d}\left[\overline{x}\coloneqq\overline{V},\overline{y}_{d}\coloneqq\overline{v}\right]}\,\textrm{\Rrightarrow-\mathsf{case}-red}
+\frac{\exists\overline{x\Rightarrow}(d\,\overline{y}_{d})\Rightarrow m_{d}\in\left\{ \overline{|\,\overline{x\Rightarrow}(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} }{\mathsf{case}\,\overline{V,}\,d\overline{v}\,\left\{ \overline{|\,\overline{x\Rightarrow}(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} \rightsquigarrow m_{d}\left[\overline{x}\coloneqq\overline{V},\overline{y}_{d}\coloneqq\overline{v}\right]}\,\textrm{\rightsquigarrow-\mathsf{case}-red}
 \]
 
 \end_inset
@@ -2581,7 +2735,7 @@ status open
 \begin_layout Plain Layout
 \begin_inset Formula 
 \[
-\frac{\overline{n}\rightsquigarrow\overline{n'}}{\mathsf{case}\,\overline{V,}\,d\overline{n}\,\left\{ \overline{|\,\overline{x\Rightarrow}(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} \rightsquigarrow\mathsf{case}\,\overline{V,}\,d\overline{n'}\,\left\{ \overline{|\,\overline{x\Rightarrow}(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} }\,
+\frac{\overline{N}\rightsquigarrow\overline{N'}}{\mathsf{case}\,\overline{N,}\,n\,\left\{ \overline{|\,\overline{x\Rightarrow}(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} \rightsquigarrow\mathsf{case}\,\overline{N',}\,n\,\left\{ \overline{|\,\overline{x\Rightarrow}(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} }\,
 \]
 
 \end_inset
@@ -2592,29 +2746,7 @@ status open
 \begin_layout Plain Layout
 \begin_inset Formula 
 \[
-\frac{\overline{N}\rightsquigarrow\overline{N'}}{\mathsf{case}\,\overline{N,}\,d\overline{n}\,\left\{ \overline{|\,\overline{x\Rightarrow}(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} \rightsquigarrow\mathsf{case}\,\overline{N',}\,d\overline{n}\,\left\{ \overline{|\,\overline{x\Rightarrow}(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} }\,
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Formula 
-\[
-\frac{\overline{m}\rightsquigarrow\overline{m'}}{D\overline{m}\rightsquigarrow D\overline{m'}}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Formula 
-\[
-\frac{\overline{m}\rightsquigarrow\overline{m'}}{D\overline{m}\rightsquigarrow D\overline{m'}}
+\frac{n\rightsquigarrow n'}{\mathsf{case}\,\overline{V,}\,n\,\left\{ \overline{|\,\overline{x\Rightarrow}(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} \rightsquigarrow\mathsf{case}\,\overline{V,}\,n'\,\left\{ \overline{|\,\overline{x\Rightarrow}(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} }\,
 \]
 
 \end_inset
@@ -2744,6 +2876,66 @@ literal "false"
 \series bold
 Conjecture 
 \series default
+the surface language extended with data and elimination preserves types
+ over reduction.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Conjecture 
+\series default
+the surface language extended with data and elimination has progress if
+ 
+\begin_inset Formula $\Gamma\,\mathbf{Empty}$
+\end_inset
+
+, 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $\Gamma\vdash m:M$
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+, then 
+\begin_inset Formula $m$
+\end_inset
+
+ is a value, or 
+\begin_inset Formula $m\rightsquigarrow m'$
+\end_inset
+
+ .
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Conjecture 
+\series default
 the surface language extended with data and elimination is type sound.
 \end_layout
 
@@ -2753,10 +2945,30 @@ Bidirectional extension
 
 \begin_layout Standard
 A bidirectional interpretation exists over the type assignment rules listed
- above
+ above.
+ An outline of these rules is in 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:surface-data-empty"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ The type of data constructors and type constructors can always be inferred.
+ If the motive does not depend on the scrutinee or type arguments, it can
+ be used to check against the type of the branches.
 \end_layout
 
 \begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
 \begin_inset Formula 
 \[
 \frac{\mathsf{data}\,D\,\Delta\in\Gamma}{\Gamma\vdash D\overrightarrow{\,:\,}\Delta\rightarrow*}
@@ -2767,7 +2979,7 @@ A bidirectional interpretation exists over the type assignment rules listed
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 \begin_inset Formula 
 \[
 \frac{d\,:\,\varTheta\rightarrow D\overline{m}\in\Gamma}{\Gamma\vdash d\overrightarrow{\,:\,}\varTheta\rightarrow D\overline{m}}
@@ -2778,90 +2990,150 @@ A bidirectional interpretation exists over the type assignment rules listed
 
 \end_layout
 
-\begin_layout Standard
-bidirectional non-dependent elimination
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{\begin{array}{c}
-\mathsf{data}\,D\,\Delta\in\Gamma\\
-\Gamma\vdash n\overrightarrow{\,:\,}D\overline{N}\\
-\Gamma,\overline{x}:\Delta,z:D\,\overline{x}\vdash M\overleftarrow{\,:\,}\star\\
-\forall\:d\,:\,\varTheta\rightarrow D\overline{m}\in\Gamma.\quad\Gamma,\overline{x}:\Delta,\overline{y}_{d}:\varTheta\vdash m_{d}\overleftarrow{\,:\,}M
-\end{array}}{\Gamma\vdash\mathsf{case}\,n\,\left\{ \overline{|\,(d\,\overline{y}_{d})\Rightarrow m_{d}}\right\} \overleftarrow{\,:\,}M}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-tying information flows outside in.
-\end_layout
-
-\begin_layout Standard
-bidirectional dependent elimination
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{\begin{array}{c}
-\mathsf{data}\,D\,\Delta\in\Gamma\\
-\Gamma\vdash\overline{N}\overleftarrow{\,:\,}\Delta\quad\Gamma\vdash n\overleftarrow{\,:\,}D\overline{N}\\
-\Gamma,\overline{x}:\Delta,z:D\,\overline{x}\vdash M\overleftarrow{\,:\,}\star\\
-\forall\:d\,:\,\varTheta\rightarrow D\overline{m}\in\Gamma.\quad\Gamma,\overline{x}:\Delta,\overline{y}_{d}:\varTheta\vdash m_{d}\overleftarrow{\,:\,}M
-\end{array}}{\begin{array}{c}
-\Gamma\vdash\mathsf{case}\,\overline{,N},n\,\left\langle \overline{x\Rightarrow}z:D\,\overline{x}\Rightarrow M\right\rangle \left\{ \overline{|\,\overline{x\Rightarrow}(d\,\overline{y}_{d})\Rightarrow m_{d}}\right\} \\
-\overrightarrow{\,:\,}M\left[\overline{x}\coloneqq\overline{N},z\coloneqq n\right]
-\end{array}}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-information flows from the inside out
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{\Gamma\vdash\Delta\,\overleftarrow{\mathbf{ok}}}{\Gamma\vdash\mathsf{data}\,D\,\Delta\,\overleftarrow{\mathbf{ok}}}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{\Gamma\vdash\mathsf{data}\,D\,\Delta\quad\forall d.\Gamma,\mathsf{data}\,D\,\Delta\vdash\varTheta_{d}\quad\forall d.\:\Gamma,\mathsf{data}\,D\,\Delta,\varTheta_{d}\vdash\overline{m}_{d}:\Delta}{\Gamma\vdash\mathsf{data}\,D\,:\,\Delta\left\{ \overline{|\,d\,:\,\varTheta_{d}\rightarrow D\overline{m}_{d}}\right\} }
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
+\begin_layout Plain Layout
 \begin_inset Flex TODO Note (inline)
 status open
 
 \begin_layout Plain Layout
-talk about or formalize the more subtle inference in the actual system
+names
 \end_layout
 
 \end_inset
 
 
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+\frac{\begin{array}{c}
+\mathsf{data}\,D\,\Delta\left\{ ...\right\} \in\Gamma\\
+\Gamma\vdash\overline{N}\overleftarrow{\,:\,}\Delta\quad\Gamma\vdash n\overrightarrow{\,:\,}D\overline{N}\\
+\Gamma\vdash M\overleftarrow{\,:\,}\star\\
+\forall\:d\,:\,\varTheta\rightarrow D\overline{o}\in\Gamma.\quad\Gamma,\overline{y}_{d}:\varTheta\vdash m_{d}\left[\overline{x}\coloneqq\overline{o}\right]\overleftarrow{\,:\,}M
+\end{array}}{\Gamma\vdash\mathsf{case}\,\overline{N,}n\,\left\{ \overline{|\overline{x\Rightarrow}\,(d\,\overline{y}_{d})\Rightarrow m_{d}}\right\} \overleftarrow{\,:\,}M}\operatorname{\overleftarrow{ty}-}\mathsf{case}<>
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+\frac{\begin{array}{c}
+\mathsf{data}\,D\,\Delta\left\{ ...\right\} \in\Gamma\\
+\Gamma\vdash\overline{N}\overleftarrow{\,:\,}\Delta\quad\Gamma\vdash n\overleftarrow{\,:\,}D\overline{N}\\
+\Gamma,\overline{x}:\Delta,z:D\,\overline{x}\vdash M\overleftarrow{\,:\,}\star\\
+\forall\:d\,:\,\varTheta\rightarrow D\overline{o}\in\Gamma.\quad\Gamma,\overline{y}_{d}:\varTheta\vdash m_{d}\left[\overline{x}\coloneqq\overline{o}\right]\overleftarrow{\,:\,}M\left[\overline{x}\coloneqq\overline{o},z\coloneqq d\,\overline{y}_{d}\right]
+\end{array}}{\begin{array}{c}
+\Gamma\vdash\mathsf{case}\,\overline{,N},n\,\left\langle \overline{x\Rightarrow}z:D\,\overline{x}\Rightarrow M\right\rangle \left\{ \overline{|\,\overline{x\Rightarrow}(d\,\overline{y}_{d})\Rightarrow m_{d}}\right\} \\
+\overrightarrow{\,:\,}M\left[\overline{x}\coloneqq\overline{N},z\coloneqq n\right]
+\end{array}}\operatorname{\overrightarrow{ty}-}\mathsf{case}<>
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+reparam 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+o in 
+\begin_inset Formula $\left[\overline{x}\coloneqq\overline{o}\right]$
+\end_inset
+
+ also
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Surface Language Empty
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:surface-data-bi-ty"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+As noted in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "10.1145/3450952"
+literal "false"
+
+\end_inset
+
+, in general the bidirectional rules are open to some interpretation.
+ The dependent case simplifies the analysis slightly by having an unmotivated
+ case be a check, and having a motivated case be an infer.
+\end_layout
+
+\begin_layout Standard
+This is a minimal (and somewhat crude) accounting of bidirectional data.
+ It is possible to imagine syntactic sugar that doesn't require the 
+\begin_inset Formula $\overline{N,}$
+\end_inset
+
+ and 
+\begin_inset Formula $\overline{x\Rightarrow}\,$
+\end_inset
+
+ the in case expression of the 
+\begin_inset Formula $\operatorname{\overleftarrow{ty}-}\mathsf{case}<>$
+\end_inset
+
+ rule.
+ In the dependent rule 
+\begin_inset Formula $\operatorname{\overrightarrow{ty}-}\mathsf{case}<>$
+\end_inset
+
+ it is also also possible to imagine some type constructor arguments being
+ inferred.
+ These features and more will be subsumed by the dependent pattern matching
+ of the next section, though this will complicate the meta-theory.
+\end_layout
+
+\begin_layout Standard
+We can confidently conjecture that the desired bidirectional properties
+ hold.
 \end_layout
 
 \begin_layout Standard
@@ -2883,6 +3155,19 @@ the data extension to the bidirectional surface language is weakly annotatable
 
 \begin_layout Part
 Pattern Matching
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+explicitly talk about how pattern matching subsumes the previous sections
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -3126,6 +3411,22 @@ clean when I get motive inference working
 \end_inset
 
 
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+example def by cases
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
@@ -3863,6 +4164,19 @@ status collapsed
 
 \begin_layout Plain Layout
 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+talk about or formalize the more subtle inference in the actual system
 \end_layout
 
 \end_inset
@@ -4888,6 +5202,28 @@ Coq and Lean trace their core theory back to the Calculus of Constructions.
 
 \begin_layout Section
 unused
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\Gamma\vdash\Delta\,\overleftarrow{\mathbf{ok}}}{\Gamma\vdash\mathsf{data}\,D\,\Delta\,\overleftarrow{\mathbf{ok}}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\Gamma\vdash\mathsf{data}\,D\,\Delta\quad\forall d.\Gamma,\mathsf{data}\,D\,\Delta\vdash\varTheta_{d}\quad\forall d.\:\Gamma,\mathsf{data}\,D\,\Delta,\varTheta_{d}\vdash\overline{m}_{d}:\Delta}{\Gamma\vdash\mathsf{data}\,D\,:\,\Delta\left\{ \overline{|\,d\,:\,\varTheta_{d}\rightarrow D\overline{m}_{d}}\right\} }
+\]
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard

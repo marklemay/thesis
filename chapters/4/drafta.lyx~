@@ -139,35 +139,23 @@ Introduction
 \end_layout
 
 \begin_layout Standard
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-Revise
-\end_layout
-
-\end_inset
-
-
+User defined data is an important part of a realistic programming language.
+ Programmers need to be able to define concrete types that are meaningful
+ for the the problems they are trying to solve.
 \end_layout
 
 \begin_layout Standard
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-% why data?
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
+Dependent data types allow these user defined types, while also unifying
+ over many types that are handled as special cases in most mainstream languages.
+ For instance, 
+\begin_inset Quotes eld
 \end_inset
 
-User defined data is a core feature of a realistic programming language.
- Simple data types like 
+primitive
+\begin_inset Quotes erd
+\end_inset
+
+ data types like 
 \begin_inset Formula $\mathtt{Nat}$
 \end_inset
 
@@ -175,9 +163,9 @@ User defined data is a core feature of a realistic programming language.
 \begin_inset Formula $\mathtt{Bool}$
 \end_inset
 
- are essential for organizing readable programs.
- In dependently typed languages, dependent data can represent mathematical
- predicates like equality.
+ are essential for organizing readable programs, and are a degenerate forms
+ of dependent data.
+ Dependent data can represent mathematical predicates like equality.
  Dependent data can also be used to preserve invariants, like the length
  of a list in 
 \begin_inset Formula $\mathtt{Vec}$
@@ -192,12 +180,21 @@ color
 \end_inset
 
  of a node in a red-black-tree.
- The church encoded data form Chapter 2 is unrealistically inconvenient.
 \end_layout
 
 \begin_layout Standard
-Since ease of use is the overriding concern for the language developed in
- this thesis, Church encoding is especially unrealistic.
+The church encoded data form Chapter 2 could handle all of these cases.
+ However church encoded data is inconvenient in practice.
+ Since 
+\begin_inset Quotes eld
+\end_inset
+
+ease of use
+\begin_inset Quotes erd
+\end_inset
+
+ is the overriding concern for the language developed in this thesis, Church
+ encoding are an unrealistic way yo handle data.
  
 \begin_inset ERT
 status open
@@ -245,8 +242,8 @@ status open
 \end_layout
 
 \begin_layout Standard
-A data type is defined by a type constructor indexed by arguments, and a
- set of data constructors that tag data and characterize their arguments.
+A dependent data type is defined by a type constructor indexed by arguments,
+ and a set of data constructors that tag data and characterize their arguments.
  Several standard data types are defined in Figure 
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -258,19 +255,36 @@ noprefix "false"
 \end_inset
 
 .
- For example, the data type Nat is is defined with the type constructor
- Nat (which has no type arguments), the data constructors Z which takes
- no further information and the data constructor S which is formed with
- one prior number.
- The data type Vec has two type arguments corresponding to the the type
- contained in the vector and its length, it has two data constructors that
- allow building an empty vector, or add an element to an existing vector.
+ For example, the data type 
+\begin_inset Formula $\mathtt{Nat}$
+\end_inset
+
+ is is defined with the type constructor 
+\begin_inset Formula $\mathtt{Nat}$
+\end_inset
+
+ (which has no type arguments), the data constructors 
+\begin_inset Formula $\mathtt{Z}$
+\end_inset
+
+ which takes no further information and the data constructor 
+\begin_inset Formula $\mathtt{S}$
+\end_inset
+
+ which is formed with the prior number.
+ The data type 
+\begin_inset Formula $\mathtt{Vec}$
+\end_inset
+
+ has two type arguments corresponding to the the type contained in the vector
+ and its length, it has two data constructors that allow building an empty
+ vector, or to add an element to the front of an existing vector.
 \end_layout
 
 \begin_layout Standard
 Data defined in this style is easy to build and reason about, since data
  can only be created from its constructors.
- Unfortunately details of data elimination is a little more involved.
+ Unfortunately the details of data elimination are a little more involved.
 \end_layout
 
 \begin_layout Standard
@@ -414,6 +428,10 @@ data Id : (A : *) -> A -> A -> * {
 
 \begin_layout Plain Layout
 
+\end_layout
+
+\begin_layout Plain Layout
+
 threeEqThree : Id Nat three three;
 \end_layout
 
@@ -528,15 +546,26 @@ name "fig:data-defs"
 \end_layout
 
 \begin_layout Part
-Data and direct elimination
+Data and Direct Elimination
 \end_layout
 
 \begin_layout Standard
 How should a program observe data? Since the term of a given type can only
- be created from one of a few constructors, we can completely handle data
- of a type if each constructor is accounted for.
- For instance, Nat has the two constructors Z and S (which holds the preceding
- number), so the expression 
+ be created from one of the constructors from its definition, we can completely
+ handle a data expression if each possible constructor is accounted for.
+ For instance, 
+\begin_inset Formula $\mathtt{Nat}$
+\end_inset
+
+ has the two constructors 
+\begin_inset Formula $\mathtt{Z}$
+\end_inset
+
+ and 
+\begin_inset Formula $\mathtt{S}$
+\end_inset
+
+ (which holds the preceding number), so the expression 
 \begin_inset Formula $\mathsf{case}\,n\,\left\{ |\,Z\Rightarrow Z\,|\,S\,x\Rightarrow x\right\} $
 \end_inset
 
@@ -553,23 +582,46 @@ How should a program observe data? Since the term of a given type can only
 \end_inset
 
 ).
- In this light, boolean case elimination is corresponds to an if-then-else
- expression.
+ In this light, boolean case elimination corresponds to the if-then-else
+ expression found in many mainstream languages.
  
 \end_layout
 
 \begin_layout Standard
 We will need to extend the syntax above to support dependent type checking.
- Specifically, we will need to add a motive that allows the type checker
- to compute the output type of the branches if the very in terms of the
- input.
- For instance, recursively generating a vector of a given length.
+ Specifically, we will need to add a 
+\series bold
+motive
+\series default
+ annotation that allows the type checker to compute the output type of the
+ branches if they vary in terms of the input.
+ For instance, recursively generating a vector of a given length
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+give explicit example, not the motive
+\end_layout
+
+\end_inset
+
+.
  We may also want to use some values of the type level argument to calculate
  the motive, and type the branches.
  This will be allowed with additional bindings in the motive and in each
  branch
-\begin_inset Foot
+\begin_inset Flex TODO Note (Margin)
 status open
+
+\begin_layout Plain Layout
+give explicit of data eliminations that uses these annotations
+\end_layout
+
+\end_inset
+
+
+\begin_inset Foot
+status collapsed
 
 \begin_layout Plain Layout
 This slightly awkward case eliminator syntax is designed to be forward compatibl
@@ -580,6 +632,9 @@ e with the pattern matching system defined in the rest of this chapter,
 \end_inset
 
 .
+ In general, motive annotations will be treated like the typing annotations
+ in Chapter 2, in that the TAS will confirm that any given motive is correct
+ in a well typed term, and that the motive will be definitionally irrelevant.
 \end_layout
 
 \begin_layout Standard
@@ -595,8 +650,8 @@ noprefix "false"
 \end_inset
 
 .
- This direct eliminator scheme, is similar to how Coq handles data in it's
- core language.
+ This direct eliminator scheme, is roughly similar to how Coq handles data
+ in it's core language.
 \begin_inset Float figure
 wide false
 sideways false
@@ -1387,7 +1442,7 @@ data elim.
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\mathsf{case}\,\overline{N,}n\,\left\langle \overline{x\Rightarrow}y:D\,\overline{x}\Rightarrow M\right\rangle \left\{ \overline{|\overline{x\Rightarrow}(d\,\overline{y})\Rightarrow m}\right\} $
+\begin_inset Formula $\mathsf{case}\,\overline{N,}n\,\left\langle \overline{x\Rightarrow}\,y:D\,\overline{x}\Rightarrow M\right\rangle \left\{ \overline{|\overline{x\Rightarrow}(d\,\overline{y})\Rightarrow m}\right\} $
 \end_inset
 
 
@@ -1582,7 +1637,7 @@ values,
 status open
 
 \begin_layout Plain Layout
-short hands
+shorthands!
 \end_layout
 
 \end_inset
@@ -1633,6 +1688,18 @@ The case eliminator first takes the explicit type arguments, followed by
  a 
 \series bold
 scrutinee
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+also 
+\series bold
+discriminee
+\end_layout
+
+\end_inset
+
+
 \series default
  of correct type.
  Then optionally a motive that characterizes the output type of each branch
@@ -1656,23 +1723,95 @@ x:Vec\,\mathbb{B}\,1\vdash\mathsf{case}\,\mathbb{B},1,x\,\left\langle y\Rightarr
 \end_layout
 
 \begin_layout Standard
-Additionally we define telescopes, which generalize 0 or more typed bindings.
+Additionally we define telescopes, which generalize zero or more typed bindings.
  This allows us to specify data definitions in a clean way.
- Also we define syntactic lists, when syntax is listed it can be used to
- generalize dependent pairs, this becomes helpful in several situations,
- but especially when we need work with the listed arguments of the data
- type constructor.
+ Also we define syntactic lists that allow zero or more pieces of syntax.
+ Expressions in a list can be used to generalize dependent pairs, and can
+ be type checked against a telescope.
+ For instance, the list 
+\begin_inset Formula $\mathtt{Nat},2,2,refl\,\mathtt{Nat}\,2$
+\end_inset
+
+ type checks against 
+\begin_inset Formula $\left(x:\star\right),\left(y:\mathtt{Nat}\right),\left(z:\mathtt{Nat}\right),\left(-:Id\ x\,y\,z\right)$
+\end_inset
+
+.
+ This becomes helpful in several situations, but especially when we need
+ work with the listed arguments of the data type constructor.
+ We will allow several syntactic puns, such as treating telescopes as prefixes
+ for function types.
+ For instance, if 
+\begin_inset Formula $\Delta=\left(x:\star\right),\left(y:\mathtt{Nat}\right),\left(z:\mathtt{Nat}\right),\left(-:Id\ x\,y\,z\right)$
+\end_inset
+
+ then writing 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $f:\Delta\rightarrow\mathtt{Nat}$
+\end_inset
+
+ will be short hand for 
+\begin_inset Formula $f:\left(x:\star\right)\rightarrow\left(y:\mathtt{Nat}\right)\rightarrow\left(z:\mathtt{Nat}\right)\rightarrow Id\ x\,y\,z\rightarrow\mathtt{Nat}$
+\end_inset
+
+.
+ 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+move this down to the typing section?
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
-In the presence of general recursion this form of case eliminator is powerful.
+In the presence of general recursion case elimination is powerful.
  Well-founded recursion can be used to make structurally inductive computations
  that can be interpreted as proofs.
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+say with rep example
+\end_layout
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
 Adding data allows for two additional sources of bad behavior.
- In-exhaustive matches, and non strictly positive data.
+ In-exhaustive matches, and nontermination from non-strictly positive data.
 \end_layout
 
 \begin_layout Section
@@ -1714,10 +1853,11 @@ well typed terms don't get stuck
 \end_inset
 
 .
- The surface language type assignment system will require cases to be exhaustive
-, since verifying this is relatively easy.
+ Since verifying every constructor has a branch is relatively easy, the
+ surface language TAS will require cases to be exhaustive to type check.
  This is in contrast to most programming languages, which do allow incomplete
- patterns, though usually a warning is given.
+ patterns, though usually a warning is given, and a runtime error if scrutinee
+ cannot be matched.
 \end_layout
 
 \begin_layout Standard
@@ -1743,8 +1883,10 @@ well behaved
 \end_layout
 
 \begin_layout Standard
-When we get to the cast language, we will allow non-exhaustive data to be
- reported as a warning and that will allow 
+This thesis already has a system for handling warnings and errors in the
+ cast language.
+ When we get to the cast language, we will allow non-exhaustive data to
+ be reported as a warning and that will allow 
 \begin_inset Quotes eld
 \end_inset
 
@@ -1848,12 +1990,25 @@ This data can cause non-termination, independent of the two other sources
 \end_layout
 
 \begin_layout Standard
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+who cam up with this first? Martin Lof?
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 \begin_inset ERT
 status open
 
 \begin_layout Plain Layout
 
-% co-inductive uses of data.e
+% co-inductive uses of data
 \end_layout
 
 \end_inset
@@ -1866,8 +2021,8 @@ Typing
 \end_layout
 
 \begin_layout Standard
-Before the typing rules for data can be considered added, first some meta
- rules must be added that will allow the simultaneous type-checking of lists
+Before the typing rules for data can be considered , first some meta rules
+ must be presented that will allow the simultaneous type-checking of lists
  and telescopes.
  These rules are listed in 
 \begin_inset CommandInset ref
@@ -3485,6 +3640,19 @@ status open
 \end_layout
 
 \begin_layout Plain Layout
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+Make consistent with other section
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
@@ -4618,43 +4786,22 @@ options "alpha"
 TODO
 \end_layout
 
-\begin_layout Standard
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
+\begin_layout Itemize
 differentiate identifiers with font, font stuff with code
 \end_layout
 
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
+\begin_deeper
+\begin_layout Itemize
 Make identifiers consistent with chapter 2, and locations in chapter 3
 \end_layout
 
-\end_inset
-
-
+\end_deeper
+\begin_layout Itemize
+definition package?
 \end_layout
 
-\begin_layout Standard
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
+\begin_layout Itemize
 syntax highlighting
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout List of TODOs
