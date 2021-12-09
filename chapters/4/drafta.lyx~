@@ -2046,7 +2046,7 @@ noprefix "false"
 status open
 
 \begin_layout Plain Layout
-Cite De Bruijn for telescopes?
+Cite De Bruijn for telescopes
 \end_layout
 
 \end_inset
@@ -2129,6 +2129,122 @@ name "fig:surface-data-meta-ty"
 \end_layout
 
 \begin_layout Standard
+Data definitions can be added to contexts if all of their constituents are
+ well typed and 
+\series bold
+ok
+\series default
+.
+ The rules are listed in 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:surface-data-ok"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ The 
+\begin_inset Formula $\operatorname{\mathbf{ok}-abs-data}$
+\end_inset
+
+ rule allows data to be considered abstractly if it is formed with a plausible
+ telescope.
+ 
+\begin_inset Formula $\operatorname{\mathbf{ok}-data}$
+\end_inset
+
+ checks a full data definition with an abstract reference to a data definition
+ in context, which allows recursive data definitions such as Nat.
+ This thesis does not formalize the module system that adds data to context,
+ it is taken for granted that any amount of well formed data in context
+ is fine.
+ This presentation of data largely follows 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "sjoberg2012irrelevance"
+literal "false"
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+\frac{\Gamma\vdash\Delta\,\mathbf{ok}}{\Gamma\vdash\mathsf{data}\,D\,\Delta\,\mathbf{ok}}\operatorname{\mathbf{ok}-abs-data}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+\frac{\Gamma\vdash\mathsf{data}\,D\,\Delta\,\mathbf{ok}}{\Gamma,\mathsf{data}\,D\,\Delta\,\mathbf{ok}}\operatorname{\mathbf{ok}-data-ext}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{\Gamma\vdash\mathsf{data}\,D\,\Delta\,\mathbf{ok}\quad\forall d.\Gamma,\mathsf{data}\,D\,\Delta\vdash\varTheta_{d}\,\mathbf{ok}\quad\forall d.\:\Gamma,\mathsf{data}\,D\,\Delta,\varTheta_{d}\vdash\overline{m}_{d}:\Delta}{\Gamma\vdash\mathsf{data}\,D\,:\,\Delta\left\{ \overline{|\,d\,:\,\varTheta_{d}\rightarrow D\overline{m}_{d}}\right\} \,\mathbf{ok}}\operatorname{\mathbf{ok}-data}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+\frac{\Gamma\vdash\mathsf{data}\,D\,:\,\Delta\left\{ \overline{|\,d\,:\,\varTheta\rightarrow D\overline{m}}\right\} \,\mathbf{ok}}{\Gamma,\mathsf{data}\,D\,:\,\Delta\left\{ \overline{|\,d\,:\,\varTheta\rightarrow D\overline{m}}\right\} \,\mathbf{ok}}\operatorname{\mathbf{ok}-data-ext}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Surface Language Data ok
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:surface-data-ok"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 The type assignment system must be extended with the rules in 
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -2145,17 +2261,7 @@ noprefix "false"
 \end_inset
 
  extracts the constructor definitions from the context.
- We will allow telescopes to be interpreted as function types.
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-The motive requires checking in the case of empty data
-\end_layout
-
-\end_inset
-
-
+ The motive requires checking in the case of empty data
 \end_layout
 
 \begin_layout Standard
@@ -2190,7 +2296,7 @@ status open
 \begin_inset Formula 
 \[
 \frac{\begin{array}{c}
-\mathsf{data}\,D\,\Delta\in\Gamma\\
+\mathsf{data}\,D\,\Delta\left\{ ...\right\} \in\Gamma\\
 \Gamma\vdash n:D\overline{N}\\
 \Gamma,\overline{x}:\Delta,z:D\,\overline{x}\vdash M:\star\\
 \forall\:d\,:\,\varTheta\rightarrow D\overline{o}\in\Gamma.\quad\Gamma,\overline{y}_{d}:\varTheta\vdash m_{d}\left[\overline{x}\coloneqq\overline{o}\right]:M\left[\overline{x}\coloneqq\overline{o}\right]
@@ -2209,7 +2315,7 @@ status open
 \begin_inset Formula 
 \[
 \frac{\begin{array}{c}
-\mathsf{data}\,D\,\Delta\in\Gamma\\
+\mathsf{data}\,D\,\Delta\left\{ ...\right\} \in\Gamma\\
 \Gamma\vdash n:D\overline{N}\\
 \Gamma,\overline{x}:\Delta,z:D\,\overline{x}\vdash M:\star\\
 \forall\:d\,:\,\varTheta\rightarrow D\overline{o}\in\Gamma.\quad\Gamma,\overline{y}_{d}:\varTheta\vdash m_{d}\left[\overline{x}\coloneqq\overline{o}\right]:M\left[\overline{x}\coloneqq\overline{o}\right]
@@ -2558,7 +2664,7 @@ Finally we characterize what data is well formed, and what it means for
  a context to be empty in the presence of data in 
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "fig:surface-data-ok"
+reference "fig:surface-data-empty"
 plural "false"
 caps "false"
 noprefix "false"
@@ -2573,47 +2679,6 @@ noprefix "false"
 wide false
 sideways false
 status open
-
-\begin_layout Plain Layout
-\begin_inset Formula 
-\[
-\frac{\Gamma\vdash\Delta\,\mathbf{ok}}{\Gamma\vdash\mathsf{data}\,D\,\Delta\,\mathbf{ok}}\operatorname{\mathbf{ok}-abs-data}
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-\frac{\Gamma\vdash\mathsf{data}\,D\,\Delta\,\mathbf{ok}\quad\forall d.\Gamma,\mathsf{data}\,D\,\Delta\vdash\varTheta_{d}\,\mathbf{ok}\quad\forall d.\:\Gamma,\mathsf{data}\,D\,\Delta,\varTheta_{d}\vdash\overline{m}_{d}:\Delta}{\Gamma\vdash\mathsf{data}\,D\,:\,\Delta\left\{ \overline{|\,d\,:\,\varTheta_{d}\rightarrow D\overline{m}_{d}}\right\} \,\mathbf{ok}}\operatorname{\mathbf{ok}-data}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Formula 
-\[
-\frac{\Gamma\vdash\mathsf{data}\,D\,\Delta\,\mathbf{ok}}{\Gamma,\mathsf{data}\,D\,\Delta\,\mathbf{ok}}\operatorname{\mathbf{ok}-data-ext}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Formula 
-\[
-\frac{\Gamma\vdash\mathsf{data}\,D\,:\,\Delta\left\{ \overline{|\,d\,:\,\varTheta\rightarrow D\overline{m}}\right\} \,\mathbf{ok}}{\Gamma,\mathsf{data}\,D\,:\,\Delta\left\{ \overline{|\,d\,:\,\varTheta\rightarrow D\overline{m}}\right\} \,\mathbf{ok}}\operatorname{\mathbf{ok}-data-ext}
-\]
-
-\end_inset
-
-
-\end_layout
 
 \begin_layout Plain Layout
 \begin_inset Formula 
@@ -2641,7 +2706,7 @@ status open
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-Surface Language Data ok
+Surface Language Empty
 \end_layout
 
 \end_inset
@@ -2649,7 +2714,7 @@ Surface Language Data ok
 
 \begin_inset CommandInset label
 LatexCommand label
-name "fig:surface-data-ok"
+name "fig:surface-data-empty"
 
 \end_inset
 
