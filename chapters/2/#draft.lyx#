@@ -3632,11 +3632,18 @@ When is an expression reasonable? The expression
 \begin_inset Formula $\star\star\star\star$
 \end_inset
 
- is allowed by the grammar of the language, but seems dubious since 
-\begin_inset Formula $\star$
+ is allowed by the grammar of the language, but seems dubious
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% since  is not a function, so has no way of being given an input by application
+\end_layout
+
 \end_inset
 
- is not a function, so has no way of being given an input by application.
+.
  Type systems can disallow 
 \begin_inset Quotes eld
 \end_inset
@@ -4126,30 +4133,11 @@ automatically
 definitional equality
 \series default
 
-\begin_inset Foot
-status collapsed
-
-\begin_layout Plain Layout
-also called 
-\begin_inset Quotes eld
-\end_inset
-
-judgmental equality
-\begin_inset Quotes erd
-\end_inset
-
- since it is defined via judgment
-\end_layout
-
-\end_inset
-
-
-\begin_inset ERT
+\begin_inset Flex TODO Note (Margin)
 status open
 
 \begin_layout Plain Layout
-
-%TODO is that actually why?
+is that actually why?
 \end_layout
 
 \end_inset
@@ -4157,7 +4145,7 @@ status open
 .
  Usually it is desirable to make the definitional equality relation as large
  as possible, though we will not do that in this chapter.
- Chapter 3 will pose an alternative way to handle Definitional equalities.
+ Chapter 3 will pose an alternative way to avoid definitional equalities.
 \end_layout
 
 \begin_layout Standard
@@ -4277,17 +4265,42 @@ is closed under substitution if
 
 \begin_layout Itemize
 distinguishes type constructors, if they are stable under reduction.
- For instance 
-\begin_inset Formula $\left(x:N\right)\rightarrow M\Rrightarrow\left(x:N'\right)\rightarrow M'$
-\end_inset
-
-, and 
-\begin_inset Formula $\star\Rrightarrow\star$
-\end_inset
-
- 
+ For instance, if
 \end_layout
 
+\begin_deeper
+\begin_layout Itemize
+\begin_inset Formula $\forall NM.\left(x:N\right)\rightarrow M\Rrightarrow P$
+\end_inset
+
+ implies 
+\begin_inset Formula $P=\left(x:N'\right)\rightarrow M'$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+and 
+\begin_inset Formula $\star\Rrightarrow P$
+\end_inset
+
+ implies 
+\begin_inset Formula $P=\star$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+then 
+\begin_inset Formula $\left(x:N\right)\rightarrow M\cancel{\equiv}\star$
+\end_inset
+
+
+\end_layout
+
+\end_deeper
 \begin_layout Standard
 \begin_inset Float figure
 wide false
@@ -4456,8 +4469,8 @@ While this is a simple presentation of
 \series default
 definitional equality, others variants of the relation are possible.
  For instance it is possible to extend the relation with contextual information,
- type information, explicit proofs of equality as in Extensional Type Theory,
- uncomputable relations as in 
+ type information, explicit proofs of equality (as in Extensional Type Theory),
+ uncomputable relations (as in 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "jia2010dependent"
@@ -4465,7 +4478,7 @@ literal "false"
 
 \end_inset
 
-.
+).
  
 \begin_inset ERT
 status open

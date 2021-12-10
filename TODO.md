@@ -1,6 +1,6 @@
 admin
-* intent to graduate form
 * follow up with GRS spring semester extention
+* ask Alley to chair
 
 
 library request

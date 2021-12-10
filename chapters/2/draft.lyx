@@ -116,25 +116,13 @@ Surface language
 \end_layout
 
 \begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-%% TODO completely rewite this with a positive
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
 Despite the usability issues this thesis hopes to correct, dependent type
- systems are still one of the most promising formal methods technology.
+ systems are still one of the most promising technologies for correctness
+ in programming.
  Since proofs and programs are associated there is no additional syntax
- to learn.
- The systems is predictable from the perspective of a functional programmer.
+ for programmers to learn.
+ The proof systems is predictable from the perspective of a functional programme
+r.
 \end_layout
 
 \begin_layout Standard
@@ -142,7 +130,7 @@ The
 \series bold
 surface language
 \series default
- presented in this chapter fully specifies a minimal dependent type system.
+ presented in this chapter specifies a minimal dependent type system.
  The semantics are intended to be as simple as possible and compatible with
  other well studied intentional dependent type theories.
  It has several (but not all) of the standard properties of dependent type
@@ -198,13 +186,12 @@ should cite as [HOTT13]
 
 \end_inset
 
- 
-\begin_inset ERT
+
+\begin_inset Flex TODO Note (Margin)
 status open
 
 \begin_layout Plain Layout
-
-%TODO Martin Loff/Hoff (TODO pr notation) 
+Martin Loff/Hoff (TODO pr notation)
 \end_layout
 
 \end_inset
@@ -216,8 +203,8 @@ status open
 \begin_layout Standard
 The surface language will serve both as foundation for later chapters and
  a self contained technical introduction to dependent types.
- By design, the machinery of later chapters should be transparent to the
- programers that use the full system.
+ By design, the machinery of later chapters should be invisible to programers
+ that use the full system.
  They should only need to think about the surface language.
  Everything presented in later chapters is designed to reinforce an understandin
 g of the surface type system, and make it easier to use.
@@ -250,19 +237,18 @@ The surface language deviates from a standard dependent type theory to include
 
 \begin_layout Standard
 Though similar systems have been studied over the last few decades this
- chapter aims to give a self contained presentation, along with many examples.
- The surface language has been an excellent platform to conduct research
- into full spectrum dependent type theory, and hopefully this exposition
- will be helpful introduction for other researchers.
+ chapter aims to give a self contained presentation, along with examples.
+ The surface language has been an good platform to conduct research into
+ full spectrum dependent type theory, and hopefully this exposition will
+ be helpful introduction for other researchers.
 \end_layout
 
 \begin_layout Standard
-\begin_inset ERT
+\begin_inset Flex TODO Note (Margin)
 status open
 
 \begin_layout Plain Layout
-
-% name the lang
+is there a better name then surface lang?
 \end_layout
 
 \end_inset
@@ -301,7 +287,7 @@ noprefix "false"
 
 .
  The syntax supports: variables, type annotations, a single type universe,
- dependent function types, dependent recursive functions, and function applicati
+ dependent function types, recursive dependent functions, and function applicati
 ons.
  Type annotations are written with two colons to differentiate it from the
  formal typing judgments that will appear more frequently in this text,
@@ -795,7 +781,7 @@ name "fig:surface-pre-syntax"
 \end_layout
 
 \begin_layout Standard
-Several convenient abbreviations are listed in 
+Several standard abbreviations are listed in 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:surface-pre-syntax-abrev"
@@ -805,7 +791,7 @@ noprefix "false"
 
 \end_inset
 
-.
+ for convenience.
 \end_layout
 
 \begin_layout Standard
@@ -1105,8 +1091,8 @@ noprefix "false"
 \end_inset
 
 .
- I abuse turnstile notion slightly so that examples can be indexed by other
- expressions that obey type rules.
+ Turnstile notion is abused slightly so that examples can be indexed by
+ other expressions that obey type rules.
  For instance, we can say 
 \begin_inset Formula $refl_{2_{c}:\mathbb{N}_{c}}\ :\ 2_{c}\doteq_{\mathbb{N}_{c}}2_{c}$
 \end_inset
@@ -2496,6 +2482,20 @@ symmetry
 \end_layout
 
 \begin_layout Plain Layout
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+turn .
+ to => in exists?
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
 \begin_inset ERT
 status open
 
@@ -2723,8 +2723,8 @@ Church encodings provide a theoretically light weight way of working with
  work with.
  For instance, the predecessor function on natural numbers is not straight
  forward.
- To make the system easier for programmers, data types will be added in
- Chapter 4.
+ To make the system easier for programmers, data types will be addressed
+ in Chapter 4.
 \end_layout
 
 \begin_layout Subsection
@@ -2733,7 +2733,7 @@ Proposition encodings
 
 \begin_layout Standard
 In general we associate the truth value of a proposition with the inhabitation
- of a type.
+ of a type by a meaningful value.
  So, 
 \begin_inset Formula $\perp_{c}$
 \end_inset
@@ -2930,7 +2930,7 @@ observations
 
 
 \begin_inset Foot
-status collapsed
+status open
 
 \begin_layout Plain Layout
 The identification of indiscernibles is called 
@@ -3039,8 +3039,8 @@ status open
 \end_layout
 
 \begin_layout Standard
-It is useful for a type to depend specifically on a term, this is called
- 
+It is useful for a type to depend specifically on term level data, this
+ is called 
 \series bold
 large elimination
 \series default
@@ -3199,7 +3199,7 @@ For instance,
 \begin_inset Formula $\mathbb{B}_{c}$
 \end_inset
 
- term into it's corresponding logical type, 
+ term into its corresponding logical type, 
 \begin_inset Formula $toLogic\,true_{c}\equiv Unit_{c}$
 \end_inset
 
@@ -3632,15 +3632,34 @@ When is an expression reasonable? The expression
 \begin_inset Formula $\star\star\star\star$
 \end_inset
 
- is allowed by the grammar of the language, but seems dubious.
- Type systems can disregard bad terms and avoid bad runtime behavior.
+ is allowed by the grammar of the language, but seems dubious
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% since  is not a function, so has no way of being given an input by application
+\end_layout
+
+\end_inset
+
+.
+ Type systems can disallow 
+\begin_inset Quotes eld
+\end_inset
+
+bad terms
+\begin_inset Quotes erd
+\end_inset
+
+ like these which in turn avoids bad runtime behavior.
 \end_layout
 
 \begin_layout Standard
 We will present our our type system as a type assignment system.
  Practically this means that the type assignment system may need to infer
- an unrealistic amount of information from a term and its context for typing.
- This means that terms do not necessarily have unique typings.
+ an impractical amount of information from a term and its context for typing.
+ This also means that terms do not necessarily have unique typings.
  For instance 
 \begin_inset Formula $\vdash\lambda x\Rightarrow x:\mathbb{N}_{c}\rightarrow\mathbb{N}_{c}$
 \end_inset
@@ -3744,6 +3763,19 @@ status open
 \[
 \frac{\Gamma\vdash m\,:\,M\quad M\equiv M'}{\Gamma\vdash m\,:\,M'}\,\textrm{ty-conv}
 \]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+font stuff
+\end_layout
 
 \end_inset
 
