@@ -3360,7 +3360,7 @@ status open
 \begin_layout Plain Layout
 \begin_inset Formula 
 \[
-\frac{\mathsf{data}\,D\,\Delta\in\Gamma}{\Gamma\vdash D\overrightarrow{\,:\,}\Delta\rightarrow*}\operatorname{\overrightarrow{ty}-TCon}
+\frac{\mathsf{data}\,D\,\Delta\in\Gamma}{\Gamma\vdash D\overrightarrow{\,:\,}\Delta\rightarrow*}
 \]
 
 \end_inset
@@ -3371,7 +3371,7 @@ status open
 \begin_layout Plain Layout
 \begin_inset Formula 
 \[
-\frac{d\,:\,\varTheta\rightarrow D\overline{m}\in\Gamma}{\Gamma\vdash d\overrightarrow{\,:\,}\varTheta\rightarrow D\overline{m}}\operatorname{\overrightarrow{ty}-Con}
+\frac{d\,:\,\varTheta\rightarrow D\overline{m}\in\Gamma}{\Gamma\vdash d\overrightarrow{\,:\,}\varTheta\rightarrow D\overline{m}}
 \]
 
 \end_inset
@@ -3397,13 +3397,10 @@ names
 \[
 \frac{\begin{array}{c}
 \mathsf{data}\,D\,\Delta\left\{ ...\right\} \in\Gamma\\
-\Gamma\vdash\overline{N}\overleftarrow{\,:\,}\Delta\quad\Gamma\vdash n\overleftarrow{\,:\,}D\overline{N}\\
-\Gamma,\overline{x}:\Delta,z:D\,\overline{x}\vdash M\overleftarrow{\,:\,}\star\\
-\forall\:d\,:\,\varTheta\rightarrow D\overline{o}\in\Gamma.\quad\Gamma,\overline{y}_{d}:\varTheta\vdash m_{d}\left[\overline{x}\coloneqq\overline{o}\right]\overleftarrow{\,:\,}M\left[\overline{x}\coloneqq\overline{o},z\coloneqq d\,\overline{y}_{d}\right]
-\end{array}}{\begin{array}{c}
-\Gamma\vdash\mathsf{case}\,\overline{,N},n\,\left\langle \overline{x\Rightarrow}z:D\,\overline{x}\Rightarrow M\right\rangle \left\{ \overline{|\,\overline{x\Rightarrow}(d\,\overline{y}_{d})\Rightarrow m_{d}}\right\} \\
-\overrightarrow{\,:\,}M\left[\overline{x}\coloneqq\overline{N},z\coloneqq n\right]
-\end{array}}\operatorname{\overrightarrow{ty}-}\mathsf{case}<>
+\Gamma\vdash\overline{N}\overleftarrow{\,:\,}\Delta\quad\Gamma\vdash n\overrightarrow{\,:\,}D\overline{N}\\
+\Gamma\vdash M\overleftarrow{\,:\,}\star\\
+\forall\:d\,:\,\varTheta\rightarrow D\overline{o}\in\Gamma.\quad\Gamma,\overline{y}_{d}:\varTheta\vdash m_{d}\left[\overline{x}\coloneqq\overline{o}\right]\overleftarrow{\,:\,}M
+\end{array}}{\Gamma\vdash\mathsf{case}\,\overline{N,}n\,\left\{ \overline{|\overline{x\Rightarrow}\,(d\,\overline{y}_{d})\Rightarrow m_{d}}\right\} \overleftarrow{\,:\,}M}\operatorname{\overleftarrow{ty}-}\mathsf{case}<>
 \]
 
 \end_inset
@@ -3416,10 +3413,13 @@ names
 \[
 \frac{\begin{array}{c}
 \mathsf{data}\,D\,\Delta\left\{ ...\right\} \in\Gamma\\
-\Gamma\vdash\overline{N}\overleftarrow{\,:\,}\Delta\quad\Gamma\vdash n\overrightarrow{\,:\,}D\overline{N}\\
-\Gamma\vdash M\overleftarrow{\,:\,}\star\\
-\forall\:d\,:\,\varTheta\rightarrow D\overline{o}\in\Gamma.\quad\Gamma,\overline{y}_{d}:\varTheta\vdash m_{d}\left[\overline{x}\coloneqq\overline{o}\right]\overleftarrow{\,:\,}M
-\end{array}}{\Gamma\vdash\mathsf{case}\,\overline{N,}n\,\left\{ \overline{|\overline{x\Rightarrow}\,(d\,\overline{y}_{d})\Rightarrow m_{d}}\right\} \overleftarrow{\,:\,}M}\operatorname{\overleftarrow{ty}-}\mathsf{case}<>
+\Gamma\vdash\overline{N}\overleftarrow{\,:\,}\Delta\quad\Gamma\vdash n\overleftarrow{\,:\,}D\overline{N}\\
+\Gamma,\overline{x}:\Delta,z:D\,\overline{x}\vdash M\overleftarrow{\,:\,}\star\\
+\forall\:d\,:\,\varTheta\rightarrow D\overline{o}\in\Gamma.\quad\Gamma,\overline{y}_{d}:\varTheta\vdash m_{d}\left[\overline{x}\coloneqq\overline{o}\right]\overleftarrow{\,:\,}M\left[\overline{x}\coloneqq\overline{o},z\coloneqq d\,\overline{y}_{d}\right]
+\end{array}}{\begin{array}{c}
+\Gamma\vdash\mathsf{case}\,\overline{,N},n\,\left\langle \overline{x\Rightarrow}z:D\,\overline{x}\Rightarrow M\right\rangle \left\{ \overline{|\,\overline{x\Rightarrow}(d\,\overline{y}_{d})\Rightarrow m_{d}}\right\} \\
+\overrightarrow{\,:\,}M\left[\overline{x}\coloneqq\overline{N},z\coloneqq n\right]
+\end{array}}\operatorname{\overrightarrow{ty}-}\mathsf{case}<>
 \]
 
 \end_inset
@@ -3490,7 +3490,7 @@ literal "false"
 
 \end_inset
 
-, in general the bidirectional rules around data are open to some interpretation.
+, in general the bidirectional rules are open to some interpretation.
  The dependent case simplifies the analysis slightly by having an unmotivated
  case be a check, and having a motivated case be an infer.
 \end_layout

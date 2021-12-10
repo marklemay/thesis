@@ -165,7 +165,8 @@ primitive
 
  are essential for organizing readable programs, and are a degenerate forms
  of dependent data.
- Dependent data can represent mathematical predicates like equality.
+ Dependent data can represent mathematical predicates like equality or the
+ evenness of a number.
  Dependent data can also be used to preserve invariants, like the length
  of a list in 
 \begin_inset Formula $\mathtt{Vec}$
@@ -194,7 +195,7 @@ ease of use
 \end_inset
 
  is the overriding concern for the language developed in this thesis, Church
- encoding are an unrealistic way yo handle data.
+ encoding are an unrealistic way to use data.
  
 \begin_inset ERT
 status open
@@ -298,6 +299,25 @@ status open
 lstparams "basicstyle={\ttfamily\small}"
 inline false
 status open
+
+\begin_layout Plain Layout
+
+data Unit : * {
+\end_layout
+
+\begin_layout Plain Layout
+
+| tt : Unit
+\end_layout
+
+\begin_layout Plain Layout
+
+};
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
 
 \begin_layout Plain Layout
 
@@ -600,7 +620,7 @@ motive
 status open
 
 \begin_layout Plain Layout
-give explicit example, not the motive
+give explicit example, note the motive
 \end_layout
 
 \end_inset
@@ -615,18 +635,6 @@ status open
 
 \begin_layout Plain Layout
 give explicit of data eliminations that uses these annotations
-\end_layout
-
-\end_inset
-
-
-\begin_inset Foot
-status collapsed
-
-\begin_layout Plain Layout
-This slightly awkward case eliminator syntax is designed to be forward compatibl
-e with the pattern matching system defined in the rest of this chapter,
- which in turn allows function definition by cases.
 \end_layout
 
 \end_inset
@@ -659,138 +667,12 @@ status open
 
 \begin_layout Plain Layout
 \begin_inset Tabular
-<lyxtabular version="3" rows="23" columns="4">
+<lyxtabular version="3" rows="21" columns="4">
 <features tabularvalignment="middle">
 <column alignment="left" valignment="top">
 <column alignment="center" valignment="top">
 <column alignment="left" valignment="top">
 <column alignment="left" valignment="top">
-<row>
-<cell multicolumn="1" alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-telescope,
-\end_layout
-
-\end_inset
-</cell>
-<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell multicolumn="2" alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell multicolumn="2" alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\Delta,\varTheta$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\Coloneqq$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $.$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-empty telescope
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-|
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $x:M,\,\Delta$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-extend telescope
-\end_layout
-
-\end_inset
-</cell>
-</row>
 <row>
 <cell multicolumn="1" alignment="left" valignment="top" usebox="none">
 \begin_inset Text
@@ -838,7 +720,7 @@ list of
 </cell>
 </row>
 <row>
-<cell alignment="left" valignment="top" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -866,11 +748,11 @@ list of
 
 \end_inset
 </cell>
-<cell alignment="left" valignment="top" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $s$
+\begin_inset Formula $.$
 \end_inset
 
 
@@ -878,7 +760,7 @@ list of
 
 \end_inset
 </cell>
-<cell alignment="left" valignment="top" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -924,6 +806,66 @@ empty list
 
 \begin_layout Plain Layout
 extend list
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\Delta,\varTheta$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\Coloneqq$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\begin_inset Formula $\overline{\left(x:M\right)\rightarrow}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+telescope
 \end_layout
 
 \end_inset
@@ -1633,19 +1575,6 @@ values,
 \end_layout
 
 \begin_layout Plain Layout
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-shorthands!
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
@@ -1658,6 +1587,499 @@ Surface Language Data
 \begin_inset CommandInset label
 LatexCommand label
 name "fig:surface-data-min"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Tabular
+<lyxtabular version="3" rows="4" columns="10">
+<features tabularvalignment="middle">
+<column alignment="left" valignment="top">
+<column alignment="left" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="left" valignment="top">
+<column alignment="left" valignment="top">
+<column alignment="left" valignment="top">
+<column alignment="left" valignment="top">
+<column alignment="left" valignment="top">
+<column alignment="left" valignment="top">
+<column alignment="left" valignment="top">
+<row>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+leading separator
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $sO\overline{sO}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+written
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $O\overline{sO}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="none" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+when
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+clear from context
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+for example
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $,1,2,3$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+written
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1,2,3$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+trailing separator
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\overline{sO}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+written
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\overline{sO}s$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+when
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+clarifies intent
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+for example
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\left(x\rightarrow y\rightarrow z\right)Id\,x\,y\,z$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+written
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $x\rightarrow y\rightarrow z\rightarrow Id\,x\,y\,z$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+non dependent telescope binder
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\left(x:M\right)\rightarrow$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+written
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $M\rightarrow$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+when
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $x$
+\end_inset
+
+is not intended to bind 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+for example
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\left(x:Nat\right)\rightarrow\left(y:IsEven\,x\right)\rightarrow Nat$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+written
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\left(x:Nat\right)\rightarrow IsEven\,x\rightarrow Nat$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+repeated application
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $m\,n_{0}\,n_{1}\,...$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+written
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $m\,\overline{n}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+when
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\begin_inset Formula $\overline{n}=n_{0}\,n_{1}\,...$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+review if there are more abbreviations around?
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Surface Language Abbreviations
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:surface-pre-syntax-abrev"
 
 \end_inset
 
@@ -1723,6 +2145,22 @@ x:Vec\,\mathbb{B}\,1\vdash\mathsf{case}\,\mathbb{B},1,x\,\left\langle y\Rightarr
 \end_layout
 
 \begin_layout Standard
+We include a little more syntax then is strictly necessary, since the 
+\begin_inset Formula $\mathbb{B},1,$
+\end_inset
+
+ list could be inferred and the 
+\begin_inset Formula $y\Rightarrow z\Rightarrow$
+\end_inset
+
+ binders are not needed in the branch.
+ This slightly verbose case eliminator syntax is designed to be forward
+ compatible with the pattern matching system defined in the rest of this
+ chapter.
+ Which in turn allows for syntactic sugar of function definition by cases.
+\end_layout
+
+\begin_layout Standard
 Additionally we define telescopes, which generalize zero or more typed bindings.
  This allows us to specify data definitions in a clean way.
  Also we define syntactic lists that allow zero or more pieces of syntax.
@@ -1733,7 +2171,7 @@ Additionally we define telescopes, which generalize zero or more typed bindings.
 \end_inset
 
  type checks against 
-\begin_inset Formula $\left(x:\star\right),\left(y:\mathtt{Nat}\right),\left(z:\mathtt{Nat}\right),\left(-:Id\ x\,y\,z\right)$
+\begin_inset Formula $\left(x:\star\right)\rightarrow\left(y:\mathtt{Nat}\right)\rightarrow\left(z:\mathtt{Nat}\right)\rightarrow\left(-:Id\ x\,y\,z\right)$
 \end_inset
 
 .
@@ -1742,7 +2180,7 @@ Additionally we define telescopes, which generalize zero or more typed bindings.
  We will allow several syntactic puns, such as treating telescopes as prefixes
  for function types.
  For instance, if 
-\begin_inset Formula $\Delta=\left(x:\star\right),\left(y:\mathtt{Nat}\right),\left(z:\mathtt{Nat}\right),\left(-:Id\ x\,y\,z\right)$
+\begin_inset Formula $\Delta=\left(x:\star\right)\rightarrow\left(y:\mathtt{Nat}\right)\rightarrow\left(z:\mathtt{Nat}\right)\rightarrow\left(-:Id\ x\,y\,z\right)$
 \end_inset
 
  then writing 
@@ -1854,7 +2292,17 @@ well typed terms don't get stuck
 
 .
  Since verifying every constructor has a branch is relatively easy, the
- surface language TAS will require cases to be exhaustive to type check.
+ surface language TAS will require every constructor to be matched
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+exactly once
+\end_layout
+
+\end_inset
+
+ in order to type check type check.
  This is in contrast to most programming languages, which do allow incomplete
  patterns, though usually a warning is given, and a runtime error if scrutinee
  cannot be matched.
@@ -1883,8 +2331,8 @@ well behaved
 \end_layout
 
 \begin_layout Standard
-This thesis already has a system for handling warnings and errors in the
- cast language.
+This thesis already has a system for handling warnings and runtime errors
+ in the cast language.
  When we get to the cast language, we will allow non-exhaustive data to
  be reported as a warning and that will allow 
 \begin_inset Quotes eld
@@ -2021,7 +2469,7 @@ Typing
 \end_layout
 
 \begin_layout Standard
-Before the typing rules for data can be considered , first some meta rules
+Before the typing rules for data can be considered, first some meta rules
  must be presented that will allow the simultaneous type-checking of lists
  and telescopes.
  These rules are listed in 
@@ -2074,7 +2522,7 @@ status open
 \begin_layout Plain Layout
 \begin_inset Formula 
 \[
-\frac{\Gamma\vdash M:\star\quad\Gamma,x:M\vdash\Delta\,\mathbf{ok}}{\Gamma\vdash x:M,\Delta\,\mathbf{ok}}\operatorname{ok-Tel-ext}
+\frac{\Gamma\vdash M:\star\quad\Gamma,x:M\vdash\Delta\,\mathbf{ok}}{\Gamma\vdash\left(x:M\right)\rightarrow\Delta\,\mathbf{ok}}\operatorname{ok-Tel-ext}
 \]
 
 \end_inset
@@ -2085,7 +2533,7 @@ status open
 \begin_layout Plain Layout
 \begin_inset Formula 
 \[
-\frac{\Gamma\,\mathbf{ok}}{\Gamma\vdash\lozenge:.}\operatorname{ty-ls-empty}
+\frac{\Gamma\,\mathbf{ok}}{\Gamma\vdash,:.}\operatorname{ty-ls-empty}
 \]
 
 \end_inset
@@ -2096,7 +2544,7 @@ status open
 \begin_layout Plain Layout
 \begin_inset Formula 
 \[
-\frac{\Gamma,x:M\vdash\Delta\quad\Gamma\vdash m:M\quad\Gamma\vdash\overline{n,}\left[x\coloneqq m\right]:\Delta\left[x\coloneqq m\right]}{\Gamma\vdash m\overline{,n}\,:\,\left(x:M\right),\Delta}\operatorname{ty-ls-ext}
+\frac{\Gamma,x:M\vdash\Delta\quad\Gamma\vdash m:M\quad\Gamma\vdash\overline{n,}\left[x\coloneqq m\right]:\Delta\left[x\coloneqq m\right]}{\Gamma\vdash m\overline{,n}\,:\,\left(x:M\right)\rightarrow\Delta}\operatorname{ty-ls-ext}
 \]
 
 \end_inset
@@ -2158,7 +2606,15 @@ noprefix "false"
 
  checks a full data definition with an abstract reference to a data definition
  in context, which allows recursive data definitions such as Nat which needs
- Nat to be in scope to define the S constructor.
+ 
+\begin_inset Formula $\mathtt{Nat}$
+\end_inset
+
+ to be in scope to define the 
+\begin_inset Formula $\mathtt{S}$
+\end_inset
+
+ constructor.
  This thesis does not formalize the module system that adds data to context,
  it is taken for granted that any well formed data in context is fine.
  This presentation of data largely follows 
@@ -2380,55 +2836,13 @@ status open
 \mathsf{data}\,D\,\Delta\left\{ ...\right\} \in\Gamma\\
 \Gamma\vdash n:D\overline{N}\\
 \Gamma,\overline{x}:\Delta,z:D\,\overline{x}\vdash M:\star\\
-\forall\:d\,:\,\varTheta\rightarrow D\overline{o}\in\Gamma.\quad\Gamma,\overline{y}_{d}:\varTheta\vdash m_{d}\left[\overline{x}\coloneqq\overline{o}\right]:M\left[\overline{x}\coloneqq\overline{o},z\coloneqq d\,\overline{y}_{d}\right]
+\forall\:d\,:\,\varTheta\rightarrow D\overline{o}\in\Gamma.\quad\Gamma,\overline{y}_{d}:\varTheta\vdash m_{d}\left[\overline{x}\coloneqq\overline{o}\left[\varTheta\coloneqq\overline{y}_{d}\right]\right]:M\left[\overline{x}\coloneqq\overline{o}\left[\varTheta\coloneqq\overline{y}_{d}\right],z\coloneqq d\,\overline{y}_{d}\right]\\
+\mathrm{No\ duplicate\ branches}
 \end{array}}{\begin{array}{c}
 \Gamma\vdash\mathsf{case}\,\overline{N,}n\,\left\langle \overline{x\Rightarrow}z:D\,\overline{x}\Rightarrow M\right\rangle \left\{ \overline{|\,\overline{x\Rightarrow}\,d\overline{y}_{d}\,\Rightarrow m_{d}}\right\} \\
 :M\left[\overline{x}\coloneqq\overline{N},z\coloneqq n\right]
 \end{array}}\operatorname{ty-}\mathsf{case}<>
 \]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-no duplicate branches
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-reparam 
-\family roman
-\series medium
-\shape up
-\size normal
-\emph off
-\bar no
-\strikeout off
-\xout off
-\uuline off
-\uwave off
-\noun off
-\color none
-o in 
-\begin_inset Formula $\left[\overline{x}\coloneqq\overline{o}\right]$
-\end_inset
-
- also
-\end_layout
 
 \end_inset
 
@@ -2442,7 +2856,7 @@ o in
 \mathsf{data}\,D\,\Delta\left\{ ...\right\} \in\Gamma\\
 \Gamma\vdash n:D\overline{N}\\
 \Gamma,\overline{x}:\Delta,z:D\,\overline{x}\vdash M:\star\\
-\forall\:d\,:\,\varTheta\rightarrow D\overline{o}\in\Gamma.\quad\Gamma,\overline{y}_{d}:\varTheta\vdash m_{d}\left[\overline{x}\coloneqq\overline{o}\right]:M\left[\overline{x}\coloneqq\overline{o},z\coloneqq d\,\overline{y}_{d}\right]
+\forall\:d\,:\,\varTheta\rightarrow D\overline{o}\in\Gamma.\quad\Gamma,\overline{y}_{d}:\varTheta\vdash m_{d}\left[\overline{x}\coloneqq\overline{o}\left[\varTheta\coloneqq\overline{y}_{d}\right]\right]:M\left[\overline{x}\coloneqq\overline{o}\left[\varTheta\coloneqq\overline{y}_{d}\right],z\coloneqq d\,\overline{y}_{d}\right]
 \end{array}}{\begin{array}{c}
 \Gamma\vdash\mathsf{case}\,\overline{N,}n\,\left\{ \overline{|\,\overline{x\Rightarrow}\,d\overline{y}_{d}\,\Rightarrow m_{d}}\right\} \\
 :M\left[\overline{x}\coloneqq\overline{N},z\coloneqq n\right]
@@ -2492,36 +2906,6 @@ suspect this also hinges on regularity, which should be addressed more directly
 \end_layout
 
 \begin_layout Standard
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-define these 
-\family roman
-\series medium
-\shape up
-\size normal
-\emph off
-\bar no
-\strikeout off
-\xout off
-\uuline off
-\uwave off
-\noun off
-\color none
-
-\begin_inset Formula $\in$
-\end_inset
-
- more?
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
 Extensions to the parallel reduction rules are listed in 
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -2543,12 +2927,16 @@ noprefix "false"
 status open
 
 \begin_layout Plain Layout
-Also called Iota reduction
+Also called 
+\begin_inset Formula $\iota$
+\end_inset
+
+, Iota reduction
 \end_layout
 
 \end_inset
 
- .
+.
  The 
 \begin_inset Formula $\textrm{\Rrightarrow-\mathsf{case}<>-red}$
 \end_inset
@@ -2792,8 +3180,8 @@ extend step over lists
 \end_layout
 
 \begin_layout Standard
-Finally we characterize what data is well formed, and what it means for
- a context to be empty in the presence of data in 
+Finally we characterize what it means for a context to be empty in the presence
+ of data in 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:surface-data-empty"
@@ -2859,7 +3247,8 @@ name "fig:surface-data-empty"
 \end_layout
 
 \begin_layout Standard
-While a similar system is fully explored in 
+While a system with a similar presentation fully proves their meta-theory
+ in
 \begin_inset CommandInset citation
 LatexCommand cite
 key "sjoberg2012irrelevance"
@@ -2868,7 +3257,7 @@ literal "false"
 \end_inset
 
 , we will not prove the type soundness of the system here.
- For clarity we will list it as a conjecture.
+ For clarity we will list the important properties as conjectures.
 \end_layout
 
 \begin_layout Standard
@@ -2971,7 +3360,7 @@ status open
 \begin_layout Plain Layout
 \begin_inset Formula 
 \[
-\frac{\mathsf{data}\,D\,\Delta\in\Gamma}{\Gamma\vdash D\overrightarrow{\,:\,}\Delta\rightarrow*}
+\frac{\mathsf{data}\,D\,\Delta\in\Gamma}{\Gamma\vdash D\overrightarrow{\,:\,}\Delta\rightarrow*}\operatorname{\overrightarrow{ty}-TCon}
 \]
 
 \end_inset
@@ -2982,7 +3371,7 @@ status open
 \begin_layout Plain Layout
 \begin_inset Formula 
 \[
-\frac{d\,:\,\varTheta\rightarrow D\overline{m}\in\Gamma}{\Gamma\vdash d\overrightarrow{\,:\,}\varTheta\rightarrow D\overline{m}}
+\frac{d\,:\,\varTheta\rightarrow D\overline{m}\in\Gamma}{\Gamma\vdash d\overrightarrow{\,:\,}\varTheta\rightarrow D\overline{m}}\operatorname{\overrightarrow{ty}-Con}
 \]
 
 \end_inset
@@ -3008,10 +3397,13 @@ names
 \[
 \frac{\begin{array}{c}
 \mathsf{data}\,D\,\Delta\left\{ ...\right\} \in\Gamma\\
-\Gamma\vdash\overline{N}\overleftarrow{\,:\,}\Delta\quad\Gamma\vdash n\overrightarrow{\,:\,}D\overline{N}\\
-\Gamma\vdash M\overleftarrow{\,:\,}\star\\
-\forall\:d\,:\,\varTheta\rightarrow D\overline{o}\in\Gamma.\quad\Gamma,\overline{y}_{d}:\varTheta\vdash m_{d}\left[\overline{x}\coloneqq\overline{o}\right]\overleftarrow{\,:\,}M
-\end{array}}{\Gamma\vdash\mathsf{case}\,\overline{N,}n\,\left\{ \overline{|\overline{x\Rightarrow}\,(d\,\overline{y}_{d})\Rightarrow m_{d}}\right\} \overleftarrow{\,:\,}M}\operatorname{\overleftarrow{ty}-}\mathsf{case}<>
+\Gamma\vdash\overline{N}\overleftarrow{\,:\,}\Delta\quad\Gamma\vdash n\overleftarrow{\,:\,}D\overline{N}\\
+\Gamma,\overline{x}:\Delta,z:D\,\overline{x}\vdash M\overleftarrow{\,:\,}\star\\
+\forall\:d\,:\,\varTheta\rightarrow D\overline{o}\in\Gamma.\quad\Gamma,\overline{y}_{d}:\varTheta\vdash m_{d}\left[\overline{x}\coloneqq\overline{o}\right]\overleftarrow{\,:\,}M\left[\overline{x}\coloneqq\overline{o},z\coloneqq d\,\overline{y}_{d}\right]
+\end{array}}{\begin{array}{c}
+\Gamma\vdash\mathsf{case}\,\overline{,N},n\,\left\langle \overline{x\Rightarrow}z:D\,\overline{x}\Rightarrow M\right\rangle \left\{ \overline{|\,\overline{x\Rightarrow}(d\,\overline{y}_{d})\Rightarrow m_{d}}\right\} \\
+\overrightarrow{\,:\,}M\left[\overline{x}\coloneqq\overline{N},z\coloneqq n\right]
+\end{array}}\operatorname{\overrightarrow{ty}-}\mathsf{case}<>
 \]
 
 \end_inset
@@ -3024,13 +3416,10 @@ names
 \[
 \frac{\begin{array}{c}
 \mathsf{data}\,D\,\Delta\left\{ ...\right\} \in\Gamma\\
-\Gamma\vdash\overline{N}\overleftarrow{\,:\,}\Delta\quad\Gamma\vdash n\overleftarrow{\,:\,}D\overline{N}\\
-\Gamma,\overline{x}:\Delta,z:D\,\overline{x}\vdash M\overleftarrow{\,:\,}\star\\
-\forall\:d\,:\,\varTheta\rightarrow D\overline{o}\in\Gamma.\quad\Gamma,\overline{y}_{d}:\varTheta\vdash m_{d}\left[\overline{x}\coloneqq\overline{o}\right]\overleftarrow{\,:\,}M\left[\overline{x}\coloneqq\overline{o},z\coloneqq d\,\overline{y}_{d}\right]
-\end{array}}{\begin{array}{c}
-\Gamma\vdash\mathsf{case}\,\overline{,N},n\,\left\langle \overline{x\Rightarrow}z:D\,\overline{x}\Rightarrow M\right\rangle \left\{ \overline{|\,\overline{x\Rightarrow}(d\,\overline{y}_{d})\Rightarrow m_{d}}\right\} \\
-\overrightarrow{\,:\,}M\left[\overline{x}\coloneqq\overline{N},z\coloneqq n\right]
-\end{array}}\operatorname{\overrightarrow{ty}-}\mathsf{case}<>
+\Gamma\vdash\overline{N}\overleftarrow{\,:\,}\Delta\quad\Gamma\vdash n\overrightarrow{\,:\,}D\overline{N}\\
+\Gamma\vdash M\overleftarrow{\,:\,}\star\\
+\forall\:d\,:\,\varTheta\rightarrow D\overline{o}\in\Gamma.\quad\Gamma,\overline{y}_{d}:\varTheta\vdash m_{d}\left[\overline{x}\coloneqq\overline{o}\right]\overleftarrow{\,:\,}M
+\end{array}}{\Gamma\vdash\mathsf{case}\,\overline{N,}n\,\left\{ \overline{|\overline{x\Rightarrow}\,(d\,\overline{y}_{d})\Rightarrow m_{d}}\right\} \overleftarrow{\,:\,}M}\operatorname{\overleftarrow{ty}-}\mathsf{case}<>
 \]
 
 \end_inset
@@ -3101,7 +3490,7 @@ literal "false"
 
 \end_inset
 
-, in general the bidirectional rules are open to some interpretation.
+, in general the bidirectional rules around data are open to some interpretation.
  The dependent case simplifies the analysis slightly by having an unmotivated
  case be a check, and having a motivated case be an infer.
 \end_layout
@@ -3201,18 +3590,22 @@ noprefix "false"
 \begin_inset Formula $\mathtt{Vec}$
 \end_inset
 
- data can be directly eliminated in the definition of 
+ data can be directly eliminated to extract the first element of a non-empty
+ list in the definition of 
 \begin_inset Formula $\mathtt{head'}$
 \end_inset
 
-.
+ .
  The 
 \begin_inset Formula $\mathtt{head'}$
 \end_inset
 
- function needs to redirect impossible inputs to a dummy type and requires
- several copies of the same 
-\begin_inset Formula $A$
+ function needs to redirect unreachable vector inputs to a dummy type (
+\begin_inset Formula $\mathtt{Unit}$
+\end_inset
+
+ ) and requires several copies of the same 
+\begin_inset Formula $\mathtt{A}$
 \end_inset
 
  variable that are not identified automatically by the eliminator described
@@ -3401,6 +3794,22 @@ status open
 \end_inset
 
 
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+match the single eliminator syntax
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
 \begin_inset Flex TODO Note (inline)
 status open
 
@@ -3484,6 +3893,16 @@ noprefix "false"
  The syntax of the eliminator style cases was designed to be a special case
  of pattern matching.
  
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+Example of why it was needed
+\end_layout
+
+\end_inset
+
+
 \begin_inset Float figure
 wide false
 sideways false
