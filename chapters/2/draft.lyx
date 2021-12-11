@@ -346,12 +346,11 @@ status open
 \end_layout
 
 \begin_layout Standard
-\begin_inset ERT
+\begin_inset Flex TODO Note (Margin)
 status open
 
 \begin_layout Plain Layout
-
-% TODO: recursive f?
+more about f being recursive?
 \end_layout
 
 \end_inset
@@ -367,7 +366,7 @@ status open
 
 \begin_layout Plain Layout
 \begin_inset Tabular
-<lyxtabular version="3" rows="9" columns="4">
+<lyxtabular version="3" rows="11" columns="4">
 <features tabularvalignment="middle">
 <column alignment="left" valignment="top">
 <column alignment="center" valignment="top">
@@ -375,6 +374,85 @@ status open
 <column alignment="left" valignment="top">
 <row>
 <cell multicolumn="1" alignment="none" valignment="top" usebox="none" special="l">
+\begin_inset Text
+
+\begin_layout Plain Layout
+variable identifier,
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell multicolumn="1" alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $x,y,z,f$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell multicolumn="1" alignment="left" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -1083,7 +1161,7 @@ The surface system is extremely expressive.
  Several example surface language constructions can be found in 
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "fig:surface-exemples"
+reference "fig:surface-examples"
 plural "false"
 caps "false"
 noprefix "false"
@@ -2560,7 +2638,7 @@ Example Surface Language Expressions
 
 \begin_inset CommandInset label
 LatexCommand label
-name "fig:surface-exemples"
+name "fig:surface-examples"
 
 \end_inset
 
@@ -4133,30 +4211,11 @@ automatically
 definitional equality
 \series default
 
-\begin_inset Foot
-status collapsed
-
-\begin_layout Plain Layout
-also called 
-\begin_inset Quotes eld
-\end_inset
-
-judgmental equality
-\begin_inset Quotes erd
-\end_inset
-
- since it is defined via judgment
-\end_layout
-
-\end_inset
-
-
-\begin_inset ERT
+\begin_inset Flex TODO Note (Margin)
 status open
 
 \begin_layout Plain Layout
-
-%TODO is that actually why?
+is that actually why?
 \end_layout
 
 \end_inset
@@ -4164,7 +4223,7 @@ status open
 .
  Usually it is desirable to make the definitional equality relation as large
  as possible, though we will not do that in this chapter.
- Chapter 3 will pose an alternative way to handle Definitional equalities.
+ Chapter 3 will pose an alternative way to avoid definitional equalities.
 \end_layout
 
 \begin_layout Standard
@@ -4284,17 +4343,42 @@ is closed under substitution if
 
 \begin_layout Itemize
 distinguishes type constructors, if they are stable under reduction.
- For instance 
-\begin_inset Formula $\left(x:N\right)\rightarrow M\Rrightarrow\left(x:N'\right)\rightarrow M'$
-\end_inset
-
-, and 
-\begin_inset Formula $\star\Rrightarrow\star$
-\end_inset
-
- 
+ For instance, if
 \end_layout
 
+\begin_deeper
+\begin_layout Itemize
+\begin_inset Formula $\forall NM.\left(x:N\right)\rightarrow M\Rrightarrow P$
+\end_inset
+
+ implies 
+\begin_inset Formula $P=\left(x:N'\right)\rightarrow M'$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+and 
+\begin_inset Formula $\star\Rrightarrow P$
+\end_inset
+
+ implies 
+\begin_inset Formula $P=\star$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+then 
+\begin_inset Formula $\left(x:N\right)\rightarrow M\cancel{\equiv}\star$
+\end_inset
+
+
+\end_layout
+
+\end_deeper
 \begin_layout Standard
 \begin_inset Float figure
 wide false
@@ -4457,14 +4541,14 @@ noprefix "false"
 \end_layout
 
 \begin_layout Standard
-While this is a simple presentation of
+While this is a sufficient presentation of
 \series bold
  
 \series default
 definitional equality, others variants of the relation are possible.
  For instance it is possible to extend the relation with contextual information,
- type information, explicit proofs of equality as in Extensional Type Theory,
- uncomputable relations as in 
+ type information, explicit proofs of equality (as in Extensional Type Theory),
+ uncomputable relations (as in 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "jia2010dependent"
@@ -4472,7 +4556,7 @@ literal "false"
 
 \end_inset
 
-.
+).
  
 \begin_inset ERT
 status open
@@ -4585,33 +4669,30 @@ The following rule is admissible for every substitution
 \end_layout
 
 \begin_layout Standard
-\begin_inset ERT
+\begin_inset Flex TODO Note (Margin)
 status open
 
 \begin_layout Plain Layout
-
-% TODO define substitutions, what properties are needed over substitutions?
- 
+define substitutions, what properties are needed over substitutions?
 \end_layout
 
 \end_inset
 
- 
+
 \end_layout
 
 \begin_layout Standard
-\begin_inset ERT
+\begin_inset Flex TODO Note (Margin)
 status open
 
 \begin_layout Plain Layout
-
-% TODO is this lemma needed or is it jsut to accomodate stupid binding stuff
- in coq 
+is this lemma needed or is it just to accommodate stupid binding stuff in
+ coq?
 \end_layout
 
 \end_inset
 
- 
+
 \end_layout
 
 \begin_layout Standard
@@ -13857,7 +13938,7 @@ status open
  In fact, every example in 
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "fig:surface-exemples"
+reference "fig:surface-examples"
 plural "false"
 caps "false"
 noprefix "false"
@@ -15871,7 +15952,7 @@ alt bidirectional formalization (with strict regularity)
 \begin_layout Standard
 \begin_inset Formula 
 \[
-\frac{\Gamma\overset{\leftarrow}{\vdash}\quad x:M\in\Gamma}{\Gamma\vdash x\overrightarrow{\,:\,}M}\operatorname{\overrightarrow{ty}-var}
+\frac{\Gamma\overset{\leftarrow}{ok}\quad x:M\in\Gamma}{\Gamma\vdash x\overrightarrow{\,:\,}M}\operatorname{\overrightarrow{ty}-var}
 \]
 
 \end_inset
@@ -15879,7 +15960,7 @@ alt bidirectional formalization (with strict regularity)
 
 \begin_inset Formula 
 \[
-\frac{\Gamma\overset{\leftarrow}{\vdash}}{\Gamma\vdash\star\overrightarrow{\,:\,}\star}\operatorname{\overrightarrow{ty}-\star}
+\frac{\Gamma\overset{\leftarrow}{ok}}{\Gamma\vdash\star\overrightarrow{\,:\,}\star}\operatorname{\overrightarrow{ty}-\star}
 \]
 
 \end_inset

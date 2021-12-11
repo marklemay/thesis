@@ -3576,7 +3576,7 @@ status collapsed
 
  Unfortunately, the eliminator style is cumbersome for programmers to deal
  with.
- For instance, in figure 
+ For instance, figure 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:data-eliminators"
@@ -3590,18 +3590,22 @@ noprefix "false"
 \begin_inset Formula $\mathtt{Vec}$
 \end_inset
 
- data can be directly eliminated in the definition of 
+ data can be directly eliminated to extract the first element of a non-empty
+ list in the definition of 
 \begin_inset Formula $\mathtt{head'}$
 \end_inset
 
-.
+ .
  The 
 \begin_inset Formula $\mathtt{head'}$
 \end_inset
 
- function needs to redirect impossible inputs to a dummy type and requires
- several copies of the same 
-\begin_inset Formula $A$
+ function needs to redirect unreachable vector inputs to a dummy type (
+\begin_inset Formula $\mathtt{Unit}$
+\end_inset
+
+ ) and requires several copies of the same 
+\begin_inset Formula $\mathtt{A}$
 \end_inset
 
  variable that are not identified automatically by the eliminator described
@@ -3612,8 +3616,8 @@ Pattern matching.
 \end_layout
 
 \begin_layout Standard
-Pattern matching is much more ergonomic than a direct eliminator, case nested
- constructor matching is now possible.
+Pattern matching is much more ergonomic than a direct eliminator case.
+ Nested constructor matching is now possible.
  When pattern matching is extended to dependent types variables will be
  assigned their definitions as needed, and unreachable branches can be omitted
  from code.
@@ -3882,13 +3886,23 @@ noprefix "false"
 \end_inset
 
  shows the extensions to the surface language for data and pattern matching.
- Our case eliminators match a tuple of expressions, allowing us to be very
+ Our case expression match a list of scrutinees, allowing us to be very
  precise about the typing of branches.
  Additionally this style allows for syntactic sugar for easy definitions
  of functions by cases.
  The syntax of the eliminator style cases was designed to be a special case
  of pattern matching.
  
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+Example of why it was needed
+\end_layout
+
+\end_inset
+
+
 \begin_inset Float figure
 wide false
 sideways false
@@ -4327,24 +4341,7 @@ Therefore the expression
 \uwave off
 \noun off
 \color none
-r
-\end_layout
-
-\begin_layout Standard
-
-\family roman
-\series medium
-\shape up
-\size normal
-\emph off
-\bar no
-\strikeout off
-\xout off
-\uuline off
-\uwave off
-\noun off
-\color none
-educes to 
+reduces to 
 \begin_inset Formula $false$
 \end_inset
 
@@ -4378,31 +4375,7 @@ status open
 \begin_layout Plain Layout
 \begin_inset Formula 
 \[
-\frac{\ }{x\sim_{\left\{ x\coloneqq m\right\} }m}\,...
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-\frac{\overline{pat}\sim_{\sigma}\overline{m}}{d\overline{pat}\sim_{\sigma}d\overline{m}}\,...
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-\frac{pat'\sim_{\sigma}n\quad\overline{pat}\sim_{\sigma'}\overline{m}}{pat',\overline{pat}\sim_{\sigma\cup\sigma'}n,\overline{m}}\,...
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-\frac{\,}{.\sim_{\emptyset}.}\,...
+\frac{\,}{x\ \mathbf{Match}_{\left\{ x\coloneqq m\right\} }\ m}
 \]
 
 \end_inset
@@ -4411,12 +4384,29 @@ status open
 \end_layout
 
 \begin_layout Plain Layout
-\begin_inset Flex TODO Note (inline)
-status open
+\begin_inset Formula 
+\[
+\frac{\overline{pat}\ \mathbf{Match}_{\sigma}\ \overline{m}}{d\overline{pat}\ \mathbf{Match}_{\sigma}\ d\overline{m}}
+\]
+
+\end_inset
+
+
+\end_layout
 
 \begin_layout Plain Layout
-Make consistent with other section
-\end_layout
+\begin_inset Formula 
+\[
+\frac{pat'\ \mathbf{Match}_{\sigma'}\ n\quad\overline{pat}\ \mathbf{Match}_{\sigma}\ \overline{m}}{pat',\overline{pat}\ \mathbf{Match}_{\sigma'\cup\sigma}\ n,\overline{m}}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{\,}{.\,\mathbf{Match}_{\emptyset}\,.}
+\]
 
 \end_inset
 
@@ -4651,7 +4641,7 @@ Note that this is a very simple example, in the worst case we may have equations
 \begin_inset Formula $m'=\lambda-.0$
 \end_inset
 
- are discovered).
+ are derived).
 \end_layout
 
 \begin_layout Standard
@@ -4846,7 +4836,7 @@ The bidirectional system can be extended with pattern matching with rules
 \end{array}}{\begin{array}{c}
 \Gamma\vdash\mathsf{case}\,\overline{n,}\,\left\langle \Delta_{?}\Rightarrow M\right\rangle \left\{ \overline{|\,\overline{pat\Rightarrow}m}\right\} \\
 \overrightarrow{\,:\,}M\left[\Delta_{?}\coloneqq\overline{n}\right]
-\end{array}}\,...
+\end{array}}
 \]
 
 \end_inset
@@ -4861,7 +4851,7 @@ The bidirectional system can be extended with pattern matching with rules
 \Gamma\vdash\overline{n}\overrightarrow{\,:\,}\ \Delta\\
 \forall\:i\,\left(\Gamma\vdash\overline{pat}_{i}:_{E}?\Delta\quad U\left(E,\sigma\right)\quad\sigma\left(\Gamma,|\overline{pat}_{i}|\right)\vdash\sigma m\overleftarrow{\,:\,}\sigma\left(M\right)\right)\\
 \Gamma\vdash\overline{\overline{pat}}:\Delta\ \mathbf{complete}
-\end{array}}{\Gamma\vdash\mathsf{case}\,\overline{n,}\,\left\{ \overline{|\,\overline{pat\Rightarrow}m}\right\} \overleftarrow{\,:\,}M}\,...
+\end{array}}{\Gamma\vdash\mathsf{case}\,\overline{n,}\,\left\{ \overline{|\,\overline{pat\Rightarrow}m}\right\} \overleftarrow{\,:\,}M}
 \]
 
 \end_inset
@@ -4938,7 +4928,7 @@ Even without dependent types, pattern matching is a strange feature.
  How important is it that patterns correspond exactly to a subset expression
  syntax? What about capture annotations or side conditions? Restricting
  patterns to constructors and variable means that it is hard to encapsulate
- functionality, a fact noticed by Wadler as early as
+ functionality, a problem noticed as early as
 \begin_inset CommandInset citation
 LatexCommand cite
 key "10.1145/41625.41653"
@@ -5021,17 +5011,72 @@ Epigram
 \end_inset
 
 , Agda and Idris make pattern matching more powerful using 
-\series bold
-with
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $\mathsf{with}$
+\end_inset
+
+
+\family default
 \series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
  syntax that allows further pattern based branching by attaching a computation
  to a branch.
- This is justified as syntactic sugar that corresponds to several helper
- functions that can be appropriately typed and elaborated.
- The language described in this thesis does not use the with side condition
- since nested case expressions carry the same computational behavior, and
- the elaboration to the cast language will allow possibly questionable typing
- anyway.
+ This is justified as syntactic sugar that corresponds to helper functions
+ that can be appropriately elaborated and typed.
+ The language described in this thesis does not use the 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $\mathsf{with}$
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+ side condition since nested case expressions carry the same computational
+ behavior, and the elaboration to the cast language will allow possibly
+ questionable typing anyway.
 \end_layout
 
 \begin_layout Standard
@@ -5266,21 +5311,7 @@ literal "false"
 \begin_layout Standard
 last condition is optional if you're willing to modify type soundness to
  allow pattern match errors (again, they are no worse then the non-termination
- already allowed, and much better behaved).
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-% TODO example axiom k?
-\end_layout
-
-\end_inset
-
-
+ already allowed, and better behaved).
 \end_layout
 
 \begin_layout Part
@@ -5292,8 +5323,8 @@ Systems with Data
 \end_layout
 
 \begin_layout Standard
-Many systems that target data formalize only a representative collection
- of data types, expecting the scheme to be noted and inferred.
+Many systems that target data only formalize a representative collection
+ of data types, expecting the reader to be able to generalize the scheme.
  This data usually covers Nats (for recursion) dependent pairs (for type
  constructor arguments) and unit to end a chain of dependent pairs.
  For example, Martin Lof's original paper treated data this way
@@ -5586,6 +5617,14 @@ definition package?
 
 \begin_layout Itemize
 syntax highlighting
+\end_layout
+
+\begin_layout Itemize
+additional equations al la ATS +trellis
+\end_layout
+
+\begin_layout Itemize
+allowing equality matching (based on typeclass?)
 \end_layout
 
 \begin_layout List of TODOs

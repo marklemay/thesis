@@ -236,7 +236,7 @@ For instance if the user case matches the head of
 \end_inset
 
  has type 
-\begin_inset Formula $Vec\,A\,(Sn)$
+\begin_inset Formula $\mathtt{Vec}\,A\,(\mathtt{S}n)$
 \end_inset
 
  in the surface language,
@@ -279,7 +279,7 @@ a faulty cast assumption may have made
 
  appear to be a Vector even when it is not.
  For instance, 
-\begin_inset Formula $True::Vec\,Bool\,3$
+\begin_inset Formula $\mathtt{True}::\mathtt{Vec}\,\mathtt{Bool}\,3$
 \end_inset
 
 
@@ -288,7 +288,7 @@ a faulty cast assumption may have made
 \begin_layout Itemize
 the vector may be empty but cast to look like it is inhabited.
  For instance 
-\begin_inset Formula $Nil\,Bool::Vec\,Bool\,5$
+\begin_inset Formula $\mathtt{Nil}\,\mathtt{Bool}\,::\mathtt{Vec}\,\mathtt{Bool}\,5$
 \end_inset
 
 
@@ -297,7 +297,7 @@ the vector may be empty but cast to look like it is inhabited.
 \begin_layout Itemize
 the vector may have a type that is not Bool.
  For instance 
-\begin_inset Formula $Cons\,Nat\,3\,...\,...::Vec\,Bool\,5$
+\begin_inset Formula $\mathtt{Cons}\,\mathtt{Nat}\,3\,...\,...::\mathtt{Vec}\,\mathtt{Bool}\,5$
 \end_inset
 
 
@@ -316,17 +316,17 @@ status open
 
 \begin_layout Plain Layout
 
-case x {
+case x <_:Vec Bool (S n) => Bool> {
 \end_layout
 
 \begin_layout Plain Layout
 
-| (Cons _ a _ _) :: p => a::InTc0(p)
+| (Cons A a y _) :: p => a::InTCon0(p)
 \end_layout
 
 \begin_layout Plain Layout
 
-| (Nil _ ) :: p => !InTc1(p)
+| (Nil A) :: p => !InTc1(p)
 \end_layout
 
 \begin_layout Plain Layout
@@ -339,32 +339,124 @@ case x {
 
 \end_layout
 
-\begin_layout Itemize
-if the case tries to eliminate 
-\begin_inset Formula $True::Vec\,Bool\,3$
+\begin_layout Standard
+In the fist branch 
+\begin_inset Formula $A:\star$
 \end_inset
 
-, the constructor is not matched so the faulty assumption can be blamed
-\end_layout
-
-\begin_layout Itemize
-if the scrutinee is empty, we will fall into the Nil branch, which will
- reflect the underling faulty assumption, via the explicit blame syntax
-\end_layout
-
-\begin_layout Itemize
-if the vector is inhabited by an incorrect type, it will return 
-\begin_inset Formula $3::Bool$
+, 
+\begin_inset Formula $a:A$
 \end_inset
 
- with the a cast that rests on the faulty assumption of 
-\begin_inset Formula $Vec\,Nat\,5=Vec\,Bool\,5$
+, 
+\begin_inset Formula $y:\mathtt{Nat}$
+\end_inset
+
+, while 
+\begin_inset Formula $p$
+\end_inset
+
+is a path variable 
+\begin_inset Formula $p:\mathtt{Vec}\ A\ (\mathtt{S}\,y)\approx\mathtt{Vec}\,\mathtt{Bool}\,(\mathtt{S}\,n)$
+\end_inset
+
+ that contains evidence that the 2 types have been asserted to be the same.
+ 
+\begin_inset Formula $InT_{0}p$
+\end_inset
+
+ extracts the 0th argument from the type constructor 
+\begin_inset Formula $p:\mathtt{Vec}\ \underline{A}\ (\mathtt{S}\,y)\approx\mathtt{Vec}\,\underline{\mathtt{Bool}}\,(\mathtt{S}\,n)$
+\end_inset
+
+ resulting in the type 
+\begin_inset Formula $InT_{0}p:A\approx\mathtt{Bool}$
 \end_inset
 
 .
- If checking is extended to CBV it will fail immediately, if checking is
- not done by name, the blame will be discovered whenever the result is eliminate
-d.
+ The body of the branch casts 
+\begin_inset Formula $a$
+\end_inset
+
+along 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $InT_{0}p$
+\end_inset
+
+ to 
+\begin_inset Formula $\mathtt{Bool}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+In the the second branch, 
+\begin_inset Formula $A:\star$
+\end_inset
+
+, 
+\begin_inset Formula $p:\mathtt{Vec}\ A\ \mathtt{Z}\approx\mathtt{Vec}\,\mathtt{Bool}\,(\mathtt{S}\,y)$
+\end_inset
+
+ .
+ The body of the branch encodes the contradiction observed by noting 
+\begin_inset Formula $\mathtt{Z}\neq\mathtt{S}\,y$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Consider the ways 
+\begin_inset Formula $x$
+\end_inset
+
+could go wrong,
+\end_layout
+
+\begin_layout Itemize
+If the case tries to eliminate 
+\begin_inset Formula $\mathtt{True}::\mathtt{Vec}\,\mathtt{Bool}\,3$
+\end_inset
+
+, the type constructor is not matched so the faulty assumption can be blamed
+\end_layout
+
+\begin_layout Itemize
+If the scrutinee is empty, we will fall into the 
+\begin_inset Formula $\mathtt{Nil}$
+\end_inset
+
+ branch, which will reflect the underling faulty assumption, via the explicit
+ blame syntax
+\end_layout
+
+\begin_layout Itemize
+If the vector is inhabited by an incorrect type, it will return 
+\begin_inset Formula $3::\mathtt{Bool}$
+\end_inset
+
+ with the a cast that rests on the faulty assumption of 
+\begin_inset Formula $\mathtt{Vec}\,\mathtt{Nat}\,5=\mathtt{Vec}\,\mathtt{Bool}\,\,5$
+\end_inset
+
+.
+ If checking is done aggressively this will produce blame immediately.
+ If minimal checking is done, the blame will be discovered whenever the
+ result is eliminated.
 \end_layout
 
 \begin_layout Subsection
@@ -372,7 +464,7 @@ Sum
 \end_layout
 
 \begin_layout Standard
-Consider the more involved example that sums the first 2 numbers of a vector
+Consider the more involved example that sums the 2 numbers in a vector
 \end_layout
 
 \begin_layout Standard
@@ -413,7 +505,7 @@ status open
 
 \begin_layout Plain Layout
 
-case x {
+case x <_:Vec Nat 2 => Nat> {
 \end_layout
 
 \begin_layout Plain Layout
@@ -487,7 +579,7 @@ assignment at the type level
 \end_layout
 
 \begin_layout Standard
-But there are more complicated possibilities to consider
+There are more complicated possibilities to consider
 \end_layout
 
 \begin_layout Standard
@@ -528,7 +620,7 @@ status open
 
 \begin_layout Plain Layout
 
-case x {
+case x <_:Id Nat 2 2 => Vec Bool 2> {
 \end_layout
 
 \begin_layout Plain Layout
@@ -559,24 +651,56 @@ case x {
 \end_layout
 
 \begin_layout Standard
-since we have p: Id Nat' a a = Nat 2 2, 
-\end_layout
+where 
+\begin_inset Formula $Nat':\star$
+\end_inset
 
-\begin_layout Standard
-(a::InTc0(p)) casts a to a Nat but then we need to evidence that (A : *)
- -> A -> Vec Nat (a::InTc0(p)) = (A : *) -> A -> Vec Nat 2
-\end_layout
+, 
+\begin_inset Formula $a:Nat'$
+\end_inset
 
-\begin_layout Standard
-this means we fist need congruence to select the portion of interest .
- Ideally we would have a path from (a::InTc0(p)) = 2, but we only have a
- path (InTc1(p)): a = 2 .
- we will use the meta operation 
+, and 
+\begin_inset Formula $p:\mathtt{Id}\ Nat'\ a\ a\approx\mathtt{Id}\ \mathtt{Nat}\ 2\ 2$
+\end_inset
+
+.
+ Since we have 
+\begin_inset Formula $p:\mathtt{Id}\ Nat'\ a\ a\approx\mathtt{Id}\ \mathtt{Id}\ 2\ 2$
+\end_inset
+
+, 
+\begin_inset Formula $(a::InTC_{0}(p))$
+\end_inset
+
+ casts 
+\begin_inset Formula $a$
+\end_inset
+
+ to a 
+\begin_inset Formula $\mathtt{Nat}$
+\end_inset
+
+ but then we need to evidence that 
+\begin_inset Formula $(A:\star)\rightarrow A\rightarrow\mathtt{Vec}\,\mathtt{Nat}\,(a::InTC_{0}(p))\approx(A:\star)\rightarrow A\rightarrow\mathtt{Vec}\,\mathtt{Nat}\,2$
+\end_inset
+
+.
+ This means we fist need congruence to select the portion of interest.
+ Ideally we would have a path from 
+\begin_inset Formula $(a::InTC_{0}(p))\approx2$
+\end_inset
+
+, but we only have a path 
+\begin_inset Formula $(InTC_{1}(p)):a\approx2$
+\end_inset
+
+ .
+ We will use the meta operation 
 \begin_inset Formula $CastL$
 \end_inset
 
  to produce the path 
-\begin_inset Formula $CastL_{InTC_{0}(p)}\left(InTC_{1}p\right):(a::InTc0(p))\approx2$
+\begin_inset Formula $CastL_{InTC_{0}(p)}\left(InTC_{1}p\right):(a::InTC_{0}p))\approx2$
 \end_inset
 
  .
@@ -644,7 +768,7 @@ case v <_: Vec A (S x) => A > {
 
 \begin_layout Plain Layout
 
-| (Cons A' a' (Z)::q rest) :: p => a' :: rev(TCon1(p))
+| (Cons A' a' (Z)::q rest) :: p => a' :: rev(inTC1(p))
 \end_layout
 
 \begin_layout Plain Layout
@@ -3852,7 +3976,7 @@ This runtime error is conventional in ML style languages, and is even how
 \begin_inset Float figure
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \begin_inset Formula 
@@ -3906,7 +4030,7 @@ name "fig:cast-data-NoMatch"
 \begin_inset Float figure
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \begin_inset Formula 
@@ -4093,7 +4217,7 @@ noprefix "false"
 \begin_inset Float figure
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
 path reductions
@@ -4609,7 +4733,33 @@ noprefix "false"
 \begin_inset Float figure
 wide false
 sideways false
-status collapsed
+status open
+
+\begin_layout Plain Layout
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+swap, pattern on the left?
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+record substitutions
+\end_layout
+
+\end_inset
+
+
+\end_layout
 
 \begin_layout Plain Layout
 \begin_inset Formula 
@@ -4941,7 +5091,7 @@ noprefix "false"
 \begin_inset Float figure
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \begin_inset Formula 
@@ -4994,7 +5144,7 @@ does A=A'?
 \begin_layout Plain Layout
 \begin_inset Formula 
 \[
-\frac{HK\vdash p:A\thickapprox B\quad HK\vdash q:B\thickapprox C}{HK\vdash p\,q:A\thickapprox C}
+\frac{HK\vdash p:A\thickapprox B\quad HK\vdash q:B\thickapprox C}{HK\vdash p\circ q:A\thickapprox C}
 \]
 
 \end_inset
@@ -6621,11 +6771,6 @@ options "alpha"
 
 \begin_layout Part
 TODO
-\end_layout
-
-\begin_layout Standard
-chapter 4a additional equations al la ATS +trellis, allowing equality matching
- (based on typeclass?)
 \end_layout
 
 \begin_layout List of TODOs

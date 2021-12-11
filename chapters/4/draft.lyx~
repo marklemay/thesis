@@ -136,10 +136,10 @@ Surprisingly, the cast system can be extended with a pattern matching construct
 
 \begin_layout Standard
 Consider the normal forms of data terms.
- While in standard dependent type theory a normal form of data, in a closed
- context, must have the data constructor in head position (justifying the
- pattern syntax), in the cast language the normal form of data will have
- a stack of 0 or more casts applied to a value.
+ While in standard type theory a normal form of data, in a closed context,
+ must have the data constructor in head position (justifying the pattern
+ syntax), in the cast language the normal form of data will have a stack
+ of 0 or more casts applied to a value.
  Casts will be wrapped around constructors during the elaboration procedure,
  and will accumulate during evaluation.
  If the cast language is extended with a path variable that can represent
@@ -160,13 +160,26 @@ If we hope to target the properties of Chapter 3 we need the cast language
 cast sound
 \series default
 .
- Elaboration should satisfy the 
-\series bold
+ Elaboration should satisfy the additional correctness
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+\begin_inset Quotes eld
+\end_inset
+
 gradual correctness
-\series default
+\begin_inset Quotes erd
+\end_inset
+
+?
+\end_layout
+
+\end_inset
+
  properties relative to a type assignment system and bidirectional system.
- In this case we will targeted the previously described TAS with a first
- order unification style pattern matching.
+ In this case we will target the previously described TAS with a first order
+ unification style pattern matching.
  
 \end_layout
 
@@ -209,17 +222,8 @@ During elaboration, after a pattern is unified, we will inject the proofs
 Examples
 \end_layout
 
-\begin_layout Standard
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-rearrange
-\end_layout
-
-\end_inset
-
-
+\begin_layout Subsection
+Head
 \end_layout
 
 \begin_layout Standard
@@ -232,10 +236,10 @@ For instance if the user case matches the head of
 \end_inset
 
  has type 
-\begin_inset Formula $Vec\,A\,(Sn)$
+\begin_inset Formula $\mathtt{Vec}\,A\,(\mathtt{S}n)$
 \end_inset
 
-
+ in the surface language,
 \end_layout
 
 \begin_layout Standard
@@ -275,7 +279,7 @@ a faulty cast assumption may have made
 
  appear to be a Vector even when it is not.
  For instance, 
-\begin_inset Formula $True::Vec\,Bool\,3$
+\begin_inset Formula $\mathtt{True}::\mathtt{Vec}\,\mathtt{Bool}\,3$
 \end_inset
 
 
@@ -284,7 +288,7 @@ a faulty cast assumption may have made
 \begin_layout Itemize
 the vector may be empty but cast to look like it is inhabited.
  For instance 
-\begin_inset Formula $Nil\,Bool::Vec\,Bool\,5$
+\begin_inset Formula $\mathtt{Nil}\,\mathtt{Bool}\,::\mathtt{Vec}\,\mathtt{Bool}\,5$
 \end_inset
 
 
@@ -293,7 +297,7 @@ the vector may be empty but cast to look like it is inhabited.
 \begin_layout Itemize
 the vector may have a type that is not Bool.
  For instance 
-\begin_inset Formula $Cons\,Nat\,3\,...\,...::Vec\,Bool\,5$
+\begin_inset Formula $\mathtt{Cons}\,\mathtt{Nat}\,3\,...\,...::\mathtt{Vec}\,\mathtt{Bool}\,5$
 \end_inset
 
 
@@ -312,17 +316,17 @@ status open
 
 \begin_layout Plain Layout
 
-case x {
+case x <_:Vec Bool (S n) => Bool> {
 \end_layout
 
 \begin_layout Plain Layout
 
-| (Cons _ a _ _) :: p => a::InTc0(p)
+| (Cons A a y _) :: p => a::InTCon0(p)
 \end_layout
 
 \begin_layout Plain Layout
 
-| (Nil _ ) :: p => !InTc1(p)
+| (Nil A) :: p => !InTc1(p)
 \end_layout
 
 \begin_layout Plain Layout
@@ -335,9 +339,89 @@ case x {
 
 \end_layout
 
+\begin_layout Standard
+In the fist branch 
+\begin_inset Formula $A:\star$
+\end_inset
+
+, 
+\begin_inset Formula $a:A$
+\end_inset
+
+, 
+\begin_inset Formula $y:\mathtt{Nat}$
+\end_inset
+
+, while 
+\begin_inset Formula $p$
+\end_inset
+
+is a path variable 
+\begin_inset Formula $p:\mathtt{Vec}\ A\ (\mathtt{S}\,y)\approx\mathtt{Vec}\,\mathtt{Bool}\,(\mathtt{S}\,n)$
+\end_inset
+
+ that contains evidence that the 2 types have been asserted to be the same.
+ 
+\begin_inset Formula $InT_{0}p$
+\end_inset
+
+ extracts the 0th argument from the type constructor 
+\begin_inset Formula $p:\mathtt{Vec}\ \underline{A}\ (\mathtt{S}\,y)\approx\mathtt{Vec}\,\underline{\mathtt{Bool}}\,(\mathtt{S}\,n)$
+\end_inset
+
+ resulting in the type 
+\begin_inset Formula $InT_{0}p:A\approx\mathtt{Bool}$
+\end_inset
+
+.
+ The body of the branch casts 
+\begin_inset Formula $a$
+\end_inset
+
+along 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $InT_{0}p$
+\end_inset
+
+ to 
+\begin_inset Formula $\mathtt{Bool}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+In the the second branch, 
+\begin_inset Formula $A:\star$
+\end_inset
+
+, 
+\begin_inset Formula $p:\mathtt{Vec}\ A\ \mathtt{Z}\approx\mathtt{Vec}\,\mathtt{Bool}\,(\mathtt{S}\,y)$
+\end_inset
+
+ .
+ The body of the branch encodes the contradiction observed by noting 
+\begin_inset Formula $\mathtt{Z}\neq\mathtt{S}\,y$
+\end_inset
+
+.
+\end_layout
+
 \begin_layout Itemize
 if the case tries to eliminate 
-\begin_inset Formula $True::Vec\,Bool\,3$
+\begin_inset Formula $\mathtt{True}::\mathtt{Vec}\,\mathtt{Bool}\,3$
 \end_inset
 
 , the constructor is not matched so the faulty assumption can be blamed
@@ -359,21 +443,12 @@ if the vector is inhabited by an incorrect type, it will return
 
 .
  If checking is extended to CBV it will fail immediately, if checking is
- not done by name, the blame will be discovered whenever the result is eleminate
+ not done by name, the blame will be discovered whenever the result is eliminate
 d.
 \end_layout
 
-\begin_layout Standard
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-rearrange
-\end_layout
-
-\end_inset
-
-
+\begin_layout Subsection
+Sum
 \end_layout
 
 \begin_layout Standard
@@ -418,7 +493,7 @@ status open
 
 \begin_layout Plain Layout
 
-case x {
+case x <_:Vec Nat 2 => Nat> {
 \end_layout
 
 \begin_layout Plain Layout
@@ -487,17 +562,8 @@ We know from unification what the type and value of every term is supposed
  to be, so casts can be injected using evidence from the pattern
 \end_layout
 
-\begin_layout Standard
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-rearrange
-\end_layout
-
-\end_inset
-
-
+\begin_layout Subsection
+assignment at the type level
 \end_layout
 
 \begin_layout Standard
@@ -573,6 +639,10 @@ case x {
 \end_layout
 
 \begin_layout Standard
+MORE ECPLINATION
+\end_layout
+
+\begin_layout Standard
 since we have p: Id Nat' a a = Nat 2 2, 
 \end_layout
 
@@ -596,17 +666,8 @@ this means we fist need congruence to select the portion of interest .
  .
 \end_layout
 
-\begin_layout Standard
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-Example, Remove cast
-\end_layout
-
-\end_inset
-
-
+\begin_layout Subsection
+need to remove a cast
 \end_layout
 
 \begin_layout Standard
@@ -632,7 +693,7 @@ case v <_: Vec A (S x) => A > {
 
 \begin_layout Plain Layout
 
-| Cons A a (Z) _ => a
+| Cons _ a (Z) _ => a
 \end_layout
 
 \begin_layout Plain Layout
@@ -667,7 +728,7 @@ case v <_: Vec A (S x) => A > {
 
 \begin_layout Plain Layout
 
-| (Cons A' a' (Z)::q rest) :: p => a' :: rev(TCon1(p))
+| (Cons A' a' (Z)::q rest) :: p => a' :: rev(inTC1(p))
 \end_layout
 
 \begin_layout Plain Layout
@@ -815,288 +876,6 @@ Cast Language
 \end_layout
 
 \begin_layout Standard
-\begin_inset Float figure
-wide false
-sideways false
-status collapsed
-
-\begin_layout Plain Layout
-\begin_inset listings
-lstparams "basicstyle={\ttfamily\small}"
-inline false
-status open
-
-\begin_layout Plain Layout
-
--- standard data in normal form, 3
-\end_layout
-
-\begin_layout Plain Layout
-
-S (S (S 0))
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\begin_layout Plain Layout
-
--- cast data in normal form
-\end_layout
-
-\begin_layout Plain Layout
-
-S (S (S 0) :: Nat ) :: Nat :: Nat :: Nat
-\end_layout
-
-\begin_layout Plain Layout
-
-S (S (S 0) :: Nat ) :: Bool :: Nat
-\end_layout
-
-\begin_layout Plain Layout
-
-True :: Nat
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\begin_layout Plain Layout
-
--- cast pattern matching
-\end_layout
-
-\begin_layout Plain Layout
-
-case x <_ => Bool> {
-\end_layout
-
-\begin_layout Plain Layout
-
-| (Z :: _) => True
-\end_layout
-
-\begin_layout Plain Layout
-
-| (S (Z :: _) :: _) => True
-\end_layout
-
-\begin_layout Plain Layout
-
-| (S (S :: _) :: _) => False
-\end_layout
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\begin_layout Plain Layout
-
--- extract specific blame,
-\end_layout
-
-\begin_layout Plain Layout
-
--- c is a path from Bool~Nat
-\end_layout
-
-\begin_layout Plain Layout
-
-case x <_ => Nat> {
-\end_layout
-
-\begin_layout Plain Layout
-
-| (S ((true::c)::_) :: _) =>
-\end_layout
-
-\begin_layout Plain Layout
-
- add (false :: c) 2
-\end_layout
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\begin_layout Plain Layout
-
--- can reconstitute any term,
-\end_layout
-
-\begin_layout Plain Layout
-
--- not always possible with unification
-\end_layout
-
-\begin_layout Plain Layout
-
--- based pattern matching
-\end_layout
-
-\begin_layout Plain Layout
-
-case x <_:Nat => Nat> {
-\end_layout
-
-\begin_layout Plain Layout
-
-| (Z :: c) => Z :: c
-\end_layout
-
-\begin_layout Plain Layout
-
-| (S x :: c) => S x :: c
-\end_layout
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\begin_layout Plain Layout
-
--- direct blame
-\end_layout
-
-\begin_layout Plain Layout
-
-case x <_ => Nat> {
-\end_layout
-
-\begin_layout Plain Layout
-
-| (S (true::c) :: _) => Bool =/=c Nat
-\end_layout
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\begin_layout Plain Layout
-
-peek x =
-\end_layout
-
-\begin_layout Plain Layout
-
-case x <_: Id Nat 0 1 => Nat> {
-\end_layout
-
-\begin_layout Plain Layout
-
-  | (refl x :: _) => x
-\end_layout
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\begin_layout Plain Layout
-
-peek (refl 4 :: Id Nat 0 1) = 4
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-to stylize consistently, should use math font, or like a nice image
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-break into smaller more relevant examples
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Caption Standard
-
-\begin_layout Plain Layout
-Cast Pattern Matching
-\end_layout
-
-\end_inset
-
-
-\begin_inset CommandInset label
-LatexCommand label
-name "fig:cast-pattern-matching"
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-Mention that we only add casts to preserve erasure
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
 Pattern matching across dependent data types will allow for observations
  that were impossible before.
  We can now observe specific arguments in type constructors and term constructor
@@ -1122,7 +901,7 @@ noprefix "false"
 \begin_inset Float figure
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \begin_inset Tabular
@@ -2587,63 +2366,222 @@ name "fig:cast-data"
 \end_layout
 
 \begin_layout Standard
-We will additionally assume that every cast is maximally expanded over every
- possible k.
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Tabular
+<lyxtabular version="3" rows="3" columns="5">
+<features tabularvalignment="middle">
+<column alignment="left" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="left" valignment="top">
+<column alignment="left" valignment="top">
+<column alignment="left" valignment="top">
+<row>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+(the empty path)
 \end_layout
 
-\begin_layout Standard
-abbreviations, 
-\end_layout
-
-\begin_layout Standard
-empty path 
-\family roman
-\series medium
-\shape up
-\size normal
-\emph off
-\bar no
-\strikeout off
-\xout off
-\uuline off
-\uwave off
-\noun off
-\color none
-= refl
-\end_layout
-
-\begin_layout Standard
-
-\family roman
-\series medium
-\shape up
-\size normal
-\emph off
-\bar no
-\strikeout off
-\xout off
-\uuline off
-\uwave off
-\noun off
-\color none
-p = refl 
-\backslash
-circ p
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula $uncastL_{kcast}\,p$
 \end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
 
- as repeated 
-\begin_inset Formula $castL_{kcast}\,p$
+\begin_layout Plain Layout
+written
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $refl$
 \end_inset
 
 
 \end_layout
 
-\begin_layout Standard
-...
+\end_inset
+</cell>
+<cell alignment="none" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $a::kmap,p;kmap',q;...$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+written
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $a::\begin{array}{cc}
+kmap, & p\\
+kmap', & q\\
+... & ...
+\end{array}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $a::\begin{array}{cc}
+kmap,k=left, & p\\
+kmap,k=right, & p\\
+kmap',k=left, & q\\
+kmap,k=right, & q\\
+... & ...
+\end{array}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+written
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $a::\begin{array}{cc}
+kmap, & p\\
+kmap', & q\\
+... & ...
+\end{array}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+when 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $k$
+\end_inset
+
+ is irrelevant
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Surface Language Abbreviations
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:surface-pre-syntax-abrev"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -2654,7 +2592,7 @@ In this thesis we have taken an extremely extensional perspective, terms
 \end_inset
 
  without proof, even though they are usually definitionally distinct.
- Therefore we will only blame inequality across functions if 2 functions
+ Therefore we will only blame inequality across functions if two functions
  that were asserted to be equal return different observations for 
 \begin_inset Quotes eld
 \end_inset
@@ -2686,7 +2624,7 @@ Example back to pattern matching?
 The cleanest way I could find to encode the a dynamic check functions for
  equality, was with a new term level construct
 \begin_inset Foot
-status open
+status collapsed
 
 \begin_layout Plain Layout
 it would also be possible to extend the system with meta variables, though
@@ -2708,10 +2646,10 @@ and
 \begin_inset Formula $b$
 \end_inset
 
- in parallel until a head constructor is reached on each branch, if the
- constructor is the same it will commute out of the term if the head constructor
- is different the term will get stuck with the information for the final
- blame message.
+ in parallel until a head constructor is reached on each branch.
+ If the constructor is the same it will commute out of the term.
+ If the head constructor is different the term will get stuck with the informati
+on for the final blame message.
  For instance, 
 \begin_inset Formula $\left\{ \lambda x\Rightarrow x+1\sim_{k,o,\ell}\lambda x\Rightarrow1+x\right\} \rightsquigarrow_{*}\lambda x\Rightarrow\left\{ x+1\sim_{k,o.App[x],\ell}1+x\right\} $
 \end_inset
@@ -2721,12 +2659,13 @@ and
 
 \begin_layout Standard
 Since this equational construct is already needed for functions, we will
- handle all possible observations.
+ use it to handle all equality assertions.
  For instance, 
 \begin_inset Formula $\left\{ \left(\lambda x\Rightarrow S\,x\right)Z\sim_{k,o,\ell}2+2\right\} \rightsquigarrow_{*}\left\{ S\,Z\sim_{k,o,\ell}S\,\left(1+2\right)\right\} \rightsquigarrow_{*}S\,\left\{ Z\sim_{k,o.DCon_{0},\ell}1+2\right\} \rightsquigarrow_{*}S\,\left\{ Z\sim_{k,o.DCon_{0},\ell}S\,2\right\} $
 \end_inset
 
-, we compute past the first 
+.
+ We compute past the first 
 \begin_inset Formula $S$
 \end_inset
 
@@ -2790,7 +2729,17 @@ k=left,Bool
 
 \begin_layout Standard
 where we allow syntactic sugar to summarize the cast when they are the same
- over all branches.
+ over all branches (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:surface-pre-syntax-abrev"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+).
 \end_layout
 
 \begin_layout Standard
@@ -2814,7 +2763,11 @@ To control the assumptions in scope, in a closed term every
 \begin_inset Formula $k$
 \end_inset
 
- will be bound in an 
+ will be bound in the 
+\begin_inset Formula $C$
+\end_inset
+
+ expression of an 
 \begin_inset Formula $Assert_{k\Rightarrow C}$
 \end_inset
 
@@ -2848,19 +2801,6 @@ s always uniquely map every
 \end_inset
 
 s in scope.
-\end_layout
-
-\begin_layout Standard
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-Additionally that equivalent kmaps and kcasts are definitionally equal?
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Standard
@@ -3022,7 +2962,7 @@ k=right & j=right & x_{p}
 \begin_inset Float figure
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \begin_inset Tabular
@@ -3483,7 +3423,7 @@ status collapsed
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\overline{\overline{kin,}p;}$
+\begin_inset Formula $\overline{kmap,p;}$
 \end_inset
 
 
@@ -3507,7 +3447,7 @@ status collapsed
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\overline{\overline{kin,}p\left[x\coloneqq\left\lfloor a\right\rfloor _{kin}\right];}$
+\begin_inset Formula $\overline{kmap,p\left[x\coloneqq\left\lfloor a\right\rfloor _{kmap}\right];}$
 \end_inset
 
 
@@ -3873,7 +3813,7 @@ We need to extend the notion of value, Blame and call-by-value reduction
 \begin_inset Float figure
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \begin_inset Formula 
@@ -3996,7 +3936,7 @@ This runtime error is conventional in ML style languages, and is even how
 \begin_inset Float figure
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \begin_inset Formula 
@@ -4050,7 +3990,7 @@ name "fig:cast-data-NoMatch"
 \begin_inset Float figure
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \begin_inset Formula 
@@ -4237,7 +4177,7 @@ noprefix "false"
 \begin_inset Float figure
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
 path reductions
@@ -4753,7 +4693,33 @@ noprefix "false"
 \begin_inset Float figure
 wide false
 sideways false
-status collapsed
+status open
+
+\begin_layout Plain Layout
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+swap, pattern on the left?
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+record substitutions
+\end_layout
+
+\end_inset
+
+
+\end_layout
 
 \begin_layout Plain Layout
 \begin_inset Formula 
@@ -5085,7 +5051,7 @@ noprefix "false"
 \begin_inset Float figure
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \begin_inset Formula 
@@ -5138,7 +5104,7 @@ does A=A'?
 \begin_layout Plain Layout
 \begin_inset Formula 
 \[
-\frac{HK\vdash p:A\thickapprox B\quad HK\vdash q:B\thickapprox C}{HK\vdash p\,q:A\thickapprox C}
+\frac{HK\vdash p:A\thickapprox B\quad HK\vdash q:B\thickapprox C}{HK\vdash p\circ q:A\thickapprox C}
 \]
 
 \end_inset
@@ -6767,11 +6733,6 @@ options "alpha"
 TODO
 \end_layout
 
-\begin_layout Standard
-chapter 4a additional equations al la ATS +trellis, allowing equality matching
- (based on typeclass?)
-\end_layout
-
 \begin_layout List of TODOs
 
 \end_layout
@@ -6798,6 +6759,275 @@ validating the K axiom, not that equalities are unique, merely that we don't
 
 \begin_layout Section
 unused
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset listings
+lstparams "basicstyle={\ttfamily\small}"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+-- standard data in normal form, 3
+\end_layout
+
+\begin_layout Plain Layout
+
+S (S (S 0))
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+-- cast data in normal form
+\end_layout
+
+\begin_layout Plain Layout
+
+S (S (S 0) :: Nat ) :: Nat :: Nat :: Nat
+\end_layout
+
+\begin_layout Plain Layout
+
+S (S (S 0) :: Nat ) :: Bool :: Nat
+\end_layout
+
+\begin_layout Plain Layout
+
+True :: Nat
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+-- cast pattern matching
+\end_layout
+
+\begin_layout Plain Layout
+
+case x <_ => Bool> {
+\end_layout
+
+\begin_layout Plain Layout
+
+| (Z :: _) => True
+\end_layout
+
+\begin_layout Plain Layout
+
+| (S (Z :: _) :: _) => True
+\end_layout
+
+\begin_layout Plain Layout
+
+| (S (S :: _) :: _) => False
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+-- extract specific blame,
+\end_layout
+
+\begin_layout Plain Layout
+
+-- c is a path from Bool~Nat
+\end_layout
+
+\begin_layout Plain Layout
+
+case x <_ => Nat> {
+\end_layout
+
+\begin_layout Plain Layout
+
+| (S ((true::c)::_) :: _) =>
+\end_layout
+
+\begin_layout Plain Layout
+
+ add (false :: c) 2
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+-- can reconstitute any term,
+\end_layout
+
+\begin_layout Plain Layout
+
+-- not always possible with unification
+\end_layout
+
+\begin_layout Plain Layout
+
+-- based pattern matching
+\end_layout
+
+\begin_layout Plain Layout
+
+case x <_:Nat => Nat> {
+\end_layout
+
+\begin_layout Plain Layout
+
+| (Z :: c) => Z :: c
+\end_layout
+
+\begin_layout Plain Layout
+
+| (S x :: c) => S x :: c
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+-- direct blame
+\end_layout
+
+\begin_layout Plain Layout
+
+case x <_ => Nat> {
+\end_layout
+
+\begin_layout Plain Layout
+
+| (S (true::c) :: _) => Bool =/=c Nat
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+peek x =
+\end_layout
+
+\begin_layout Plain Layout
+
+case x <_: Id Nat 0 1 => Nat> {
+\end_layout
+
+\begin_layout Plain Layout
+
+  | (refl x :: _) => x
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+peek (refl 4 :: Id Nat 0 1) = 4
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+to stylize consistently, should use math font, or like a nice image
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+break into smaller more relevant examples
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Cast Pattern Matching
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:cast-pattern-matching"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
