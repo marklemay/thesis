@@ -47,9 +47,9 @@ the design of CastCIC."
 
 
 Formatting
-* validity/regularity
 * department
 * nice looking multi tabbed proof format?
+* validity/regularity
 * note on equality
 * make rule names conistent, match fonts
 * Consider experemantal presentations
@@ -69,3 +69,4 @@ defence
 * 1 page cheatsheet
   * protocal (1 hour talk, questions, private meetings with candidate, private with comitte, ...)
   * syntax, formulas
+* mic check remote comitee members

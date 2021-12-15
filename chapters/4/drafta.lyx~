@@ -4845,6 +4845,19 @@ The bidirectional system can be extended with pattern matching with rules
 \end_layout
 
 \begin_layout Standard
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+more detail
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 \begin_inset Formula 
 \[
 \frac{\begin{array}{c}

@@ -574,6 +574,20 @@ We know from unification what the type and value of every term is supposed
  to be, so casts can be injected using evidence from the pattern
 \end_layout
 
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+Example of a var out of scope that gets set, would require cong in all situation
+s
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsection
 assignment at the type level
 \end_layout
@@ -903,7 +917,7 @@ unreachable
 status open
 
 \begin_layout Plain Layout
-Example, translate out to motive
+Example: transitivity, translate out to motive
 \end_layout
 
 \end_inset
@@ -6771,6 +6785,10 @@ options "alpha"
 
 \begin_layout Part
 TODO
+\end_layout
+
+\begin_layout Standard
+check by value
 \end_layout
 
 \begin_layout List of TODOs

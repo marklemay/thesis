@@ -38,7 +38,7 @@ all work related to my thesis document, will eventually become public
   - [ ] Defend
 
 ## Submodules
-need to pull with
+need to pull bibliography in with
 ```
 git submodule foreach git pull origin master
 ```

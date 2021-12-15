@@ -419,32 +419,44 @@ In the the second branch,
 .
 \end_layout
 
+\begin_layout Standard
+Consider the ways 
+\begin_inset Formula $x$
+\end_inset
+
+could go wrong,
+\end_layout
+
 \begin_layout Itemize
-if the case tries to eliminate 
+If the case tries to eliminate 
 \begin_inset Formula $\mathtt{True}::\mathtt{Vec}\,\mathtt{Bool}\,3$
 \end_inset
 
-, the constructor is not matched so the faulty assumption can be blamed
+, the type constructor is not matched so the faulty assumption can be blamed
 \end_layout
 
 \begin_layout Itemize
-if the scrutinee is empty, we will fall into the Nil branch, which will
- reflect the underling faulty assumption, via the explicit blame syntax
+If the scrutinee is empty, we will fall into the 
+\begin_inset Formula $\mathtt{Nil}$
+\end_inset
+
+ branch, which will reflect the underling faulty assumption, via the explicit
+ blame syntax
 \end_layout
 
 \begin_layout Itemize
-if the vector is inhabited by an incorrect type, it will return 
-\begin_inset Formula $3::Bool$
+If the vector is inhabited by an incorrect type, it will return 
+\begin_inset Formula $3::\mathtt{Bool}$
 \end_inset
 
  with the a cast that rests on the faulty assumption of 
-\begin_inset Formula $Vec\,Nat\,5=Vec\,Bool\,5$
+\begin_inset Formula $\mathtt{Vec}\,\mathtt{Nat}\,5=\mathtt{Vec}\,\mathtt{Bool}\,\,5$
 \end_inset
 
 .
- If checking is extended to CBV it will fail immediately, if checking is
- not done by name, the blame will be discovered whenever the result is eliminate
-d.
+ If checking is done aggressively this will produce blame immediately.
+ If minimal checking is done, the blame will be discovered whenever the
+ result is eliminated.
 \end_layout
 
 \begin_layout Subsection
@@ -452,7 +464,7 @@ Sum
 \end_layout
 
 \begin_layout Standard
-Consider the more involved example that sums the first 2 numbers of a vector
+Consider the more involved example that sums the 2 numbers in a vector
 \end_layout
 
 \begin_layout Standard
@@ -562,12 +574,26 @@ We know from unification what the type and value of every term is supposed
  to be, so casts can be injected using evidence from the pattern
 \end_layout
 
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+Example of a var out of scope that gets set, would require cong in all situation
+s
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsection
 assignment at the type level
 \end_layout
 
 \begin_layout Standard
-But there are more complicated possibilities to consider
+There are more complicated possibilities to consider
 \end_layout
 
 \begin_layout Standard
@@ -608,7 +634,7 @@ status open
 
 \begin_layout Plain Layout
 
-case x {
+case x <_:Id Nat 2 2 => Vec Bool 2> {
 \end_layout
 
 \begin_layout Plain Layout
@@ -639,28 +665,56 @@ case x {
 \end_layout
 
 \begin_layout Standard
-MORE ECPLINATION
-\end_layout
+where 
+\begin_inset Formula $Nat':\star$
+\end_inset
 
-\begin_layout Standard
-since we have p: Id Nat' a a = Nat 2 2, 
-\end_layout
+, 
+\begin_inset Formula $a:Nat'$
+\end_inset
 
-\begin_layout Standard
-(a::InTc0(p)) casts a to a Nat but then we need to evidence that (A : *)
- -> A -> Vec Nat (a::InTc0(p)) = (A : *) -> A -> Vec Nat 2
-\end_layout
+, and 
+\begin_inset Formula $p:\mathtt{Id}\ Nat'\ a\ a\approx\mathtt{Id}\ \mathtt{Nat}\ 2\ 2$
+\end_inset
 
-\begin_layout Standard
-this means we fist need congruence to select the portion of interest .
- Ideally we would have a path from (a::InTc0(p)) = 2, but we only have a
- path (InTc1(p)): a = 2 .
- we will use the meta operation 
+.
+ Since we have 
+\begin_inset Formula $p:\mathtt{Id}\ Nat'\ a\ a\approx\mathtt{Id}\ \mathtt{Id}\ 2\ 2$
+\end_inset
+
+, 
+\begin_inset Formula $(a::InTC_{0}(p))$
+\end_inset
+
+ casts 
+\begin_inset Formula $a$
+\end_inset
+
+ to a 
+\begin_inset Formula $\mathtt{Nat}$
+\end_inset
+
+ but then we need to evidence that 
+\begin_inset Formula $(A:\star)\rightarrow A\rightarrow\mathtt{Vec}\,\mathtt{Nat}\,(a::InTC_{0}(p))\approx(A:\star)\rightarrow A\rightarrow\mathtt{Vec}\,\mathtt{Nat}\,2$
+\end_inset
+
+.
+ This means we fist need congruence to select the portion of interest.
+ Ideally we would have a path from 
+\begin_inset Formula $(a::InTC_{0}(p))\approx2$
+\end_inset
+
+, but we only have a path 
+\begin_inset Formula $(InTC_{1}(p)):a\approx2$
+\end_inset
+
+ .
+ We will use the meta operation 
 \begin_inset Formula $CastL$
 \end_inset
 
  to produce the path 
-\begin_inset Formula $CastL_{InTC_{0}(p)}\left(InTC_{1}p\right):(a::InTc0(p))\approx2$
+\begin_inset Formula $CastL_{InTC_{0}(p)}\left(InTC_{1}p\right):(a::InTC_{0}p))\approx2$
 \end_inset
 
  .
