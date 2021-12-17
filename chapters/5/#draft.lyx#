@@ -104,7 +104,7 @@ todonotes
 \begin_body
 
 \begin_layout Title
-Chapter 5 (draft): Symbolic Execution
+Chapter 5 (draft): Plausible Symbolic Reduction
 \end_layout
 
 \begin_layout Author
@@ -116,7 +116,7 @@ Mark Lemay
 status open
 
 \begin_layout Plain Layout
-Not yest implemanted (earlier version was, but this contains substantial
+Not yet implemanted (earlier version was, but this contains substantial
  changes)
 \end_layout
 
@@ -130,33 +130,34 @@ Symbolic Execution
 \end_layout
 
 \begin_layout Standard
-one of the vlaues of type checking is the imeduacy of feedback.
- We have outlined here a system that will give warning messages immedialy,
+One of the values of type checking is the immediacy of feedback.
+ We have outlined here a system that will give warning messages immediacy,
  but requires evaluation to give the detailed error messages that are most
  helpful to correct a program.
- This is especially important if the user wants to use the system as a (clasical
-) proof language, and will not generally exicute thier proofs.
- The symbolic evaluation sytem recaptures some of that qiucker feed back,
- by specifing a system that passively tries to find errors.
+ This is especially important if the user wants to use the system as a proof
+ language, and will not generally execute their proofs.
+ The symbolic evaluation system recaptures some of that quicker feed back,
+ by specifying a system that passively tries to find errors.
 \end_layout
 
 \begin_layout Standard
-This process is semidecidable in general (by testing against all well typed
+This process is semi-decidable in general (by testing against all well typed
  syntax).
- But this is infeasably inefficient for Type syntax and function syntax,
- So we will present a procesure that treats elements of those types extentionall
-y.
- Additionally we can again reduce the search space by only engaging with
- values of data type instead of all expressions.
+ But enumerating every term is infeasibly inefficient for type syntax and
+ function syntax, So we will present a procedure that generates plausible
+ partial functions and types.
+ Additionally the search space can be reduced by only engaging with values
+ of data type instead of all expressions.
+ Finally, we present a scheme to handle path variables.
 \end_layout
 
 \begin_layout Standard
-Additionally since this preocedure operates over the cast langauge, we must
- decide what is a reonsable exicution of code
+Since this procedure operates over the cast language, we must decide what
+ constitutes a reasonable testing environment
 \end_layout
 
 \begin_layout Itemize
-on one extreame, our testing code could introduce new blame that is exercied
+on one extreme, our testing code could introduce new blame that is exercised
 \end_layout
 
 \begin_layout Itemize
@@ -168,14 +169,2710 @@ the testing code could insist that no blame is possible
 \end_layout
 
 \begin_layout Standard
-we will attempt to use the middle ground criterion.
+we will attempt to use the middle ground criterion, since that will allow
+ us to test with terms such as 
+\begin_inset Formula $Id\ \left(Nat\rightarrow Nat\right)\ f\ g$
+\end_inset
+
+ as long as 
+\begin_inset Formula $fx=gx$
+\end_inset
+
+ when relevant.
 \end_layout
 
 \begin_layout Standard
-Since the procedure remains semidecidable, we intend to run it incrementally,
- with whatever resources aer availible.
- The procedure is inteded to be run durring the continous integration phase
+Since the procedure remains semi-decidable, we intend to run it incrementally,
+ with whatever resources are available.
+ The procedure is intended to be run during the continuous integration phase
  of standard software development.
+\end_layout
+
+\begin_layout Standard
+We call our method plausible symbolic execution.
+ Though plausible symbolic execution is an approximation (it is possible
+ to flag errors that are not reachable in code) and is in some ways inefficient.
+ It appears to be the first symbolic execution framework to deal with fully
+ typed higher order functions, and certainly is the procedure of it's kind
+ to deal with dependent types.
+\end_layout
+
+\begin_layout Part
+The functional fragment
+\end_layout
+
+\begin_layout Section
+Environments and Observations
+\end_layout
+
+\begin_layout Standard
+The function fragment of the cast language defined in Chapter 3, already
+ provides a rich language to consider for symbolic execution.
+ Most of the issues can be highlighted in that setting.
+ So we will first define symbolic execution for that fragment.
+\end_layout
+
+\begin_layout Standard
+Figure
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:sym-env-obs"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ lists the environment and allowed observations.
+ To explore well cast terms, we will allow an environment to take on partial
+ assumptions about how undefined variables might evaluate.
+ Pure observations are used internally by the environment and blame observations
+ are used to unpack the term under consideration.
+ By construction, environments cannot omit blame.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Tabular
+<lyxtabular version="3" rows="20" columns="4">
+<features tabularvalignment="middle">
+<column alignment="left" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="left" valignment="top">
+<column alignment="left" valignment="top">
+<row>
+<cell multicolumn="1" alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+environment,
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="none" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $I$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\Coloneqq$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\lozenge$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+|
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $I,X:\star$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+|
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $I,X=\star$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+|
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $I,X=\left(x:Y\right)\rightarrow Fx$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+|
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $I,f:\left(x:A\right)\rightarrow B$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+|
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $I,fa=y$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell multicolumn="1" alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+pure observations
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $e$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\Coloneqq$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\lozenge$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+|
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $e$
+\end_inset
+
+
+\begin_inset Formula $.App[a]$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+|
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $e$
+\end_inset
+
+
+\begin_inset Formula $.Bod[a]$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+|
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $e.Arg$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell multicolumn="1" alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+blame observations
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $o$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\Coloneqq$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\lozenge$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+|
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $o.App[a]$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+|
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $o.Bod[a]$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+|
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $o.Arg$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+|
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\begin_inset Formula $Inspect$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+look at input
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell multicolumn="1" alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Environmental judgment,
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell multicolumn="1" alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $I\boxempty a:A\ o\vartriangleright b:B$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+ape lambda syntax with 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $fa\Rightarrow x$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Environments and Observations
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:sym-env-obs"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The environment assignments are restrictive by design, each assignment allowed
+ the least possible output.
+ However this is notationally cumbersome, so we will make heavy use of the
+ abbreviations in 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:sym-env-obs-abbiv"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ We will summarize a 
+\begin_inset Quotes eld
+\end_inset
+
+hard error
+\begin_inset Quotes erd
+\end_inset
+
+ of !! out of the existing blamable casts.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Tabular
+<lyxtabular version="3" rows="7" columns="5">
+<features tabularvalignment="middle">
+<column alignment="left" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="left" valignment="top">
+<column alignment="left" valignment="top">
+<column alignment="left" valignment="top">
+<row>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $fa=g,ga'=h$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+written
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $f\,a\,a'=h$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="none" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $X=\left(x:Y\right)\rightarrow\star,Y=a$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+written
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $X=\left(x:a\right)\rightarrow\star$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $X=\left(x:Y\right)\rightarrow Fx,Y=a$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+written
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $X=\left(x:a\right)\rightarrow Fx$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $f:\left(x:Y\right)\rightarrow Fx,Y=a$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+written
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $f:\left(x:a\right)\rightarrow Fx$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $X=\left(x:Y\right)\rightarrow Fx,Fa=h$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+written
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $X.Bod[a]=h$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+(?)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $X=\left(x:Y\right)\rightarrow Fx,Y=h$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+written
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $X.Arg=h$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+(?)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\star::\left(\star\rightarrow\star\right)::A$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+written
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+!!
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+blame that can inhabit any type
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+need to properly abbreviate 
+\begin_inset Formula $e$
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+colorize errors?
+\end_layout
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Environments and Observations
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:sym-env-obs-abbiv"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Examples
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+turn this into a table? clean up the realizability to use a context
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Consider some examples before continuing,
+\end_layout
+
+\begin_layout Standard
+if we have 
+\begin_inset Formula $\lambda x\Rightarrow!!\quad:\star\rightarrow\star$
+\end_inset
+
+, we can unwrap the blamable 
+\begin_inset Formula $!!$
+\end_inset
+
+ by applying a freely assumed element of type 
+\begin_inset Formula $\star$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $x:\star\boxempty\lambda x\Rightarrow!!\quad:\star\rightarrow\star.app[x]\vartriangleright!!\quad:\star$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+in this case, the environment can be realized by 
+\begin_inset Formula $x=\star$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+If we have 
+\begin_inset Formula $\lambda f\Rightarrow f\,!!\quad:\left(\star\rightarrow\star\right)\rightarrow\star$
+\end_inset
+
+, we can apply the free function 
+\begin_inset Formula $f$
+\end_inset
+
+ and then observe it's argument
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $f:\star\rightarrow\star\boxempty\lambda f\Rightarrow f\,!!\quad:\left(\star\rightarrow\star\right)\rightarrow\star.app[f].Inspect\vartriangleright!!\quad:\star$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+in this case the environment could be realized by 
+\begin_inset Formula $f=\lambda x\Rightarrow x$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+We can opportunistically pick values for casts to induce errors.
+ For instance, 
+\begin_inset Formula $\lambda X\Rightarrow\star::_{\star}X\quad:\left(X:\star\right)\rightarrow X$
+\end_inset
+
+, will reach blame when
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $X:\star,X=-\rightarrow-\boxempty\lambda X\Rightarrow\star::_{\star}X\quad:\left(X:\star\right)\rightarrow X.app[X]\vartriangleright\star::_{\star}-\rightarrow-\quad:-\rightarrow-$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+which is realizable with 
+\begin_inset Formula $X=\star\rightarrow\star$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We may be in a situation were casts need to be resolved in order to reach
+ underlying terms 
+\begin_inset Formula $\lambda X\Rightarrow\left(\lambda x\Rightarrow\,!!\right)::_{\star\rightarrow\star}X\quad:\star\rightarrow\star$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $X:\star,X=\star\boxempty\lambda X\Rightarrow\left(\lambda x\Rightarrow\,!!\right)::_{\star\rightarrow\star}X\quad:\star\rightarrow\star.app[X]\vartriangleright\left(\lambda x\Rightarrow\,!!\right)::_{\star\rightarrow\star}\star\quad:\star$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+is blamable by itself but we may still want to see that 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+!! is reachable
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $X:\star,X=\star\rightarrow\star,x:\star\boxempty\lambda X\Rightarrow\left(\lambda x\Rightarrow\,!!\right)::_{\star\rightarrow\star}X\quad:\star\rightarrow\star.app[X].app[x]\vartriangleright!!::_{\star}\star\quad:\star$
+\end_inset
+
+
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+double check abbreviations here
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In general the procedure will search into the term only if it possible for
+ blame to reside their.
+ We may also privilege the search in favor of locations that have not yet
+ been blamed.
+\end_layout
+
+\begin_layout Standard
+Additionally we allow indexing into types to extract blame.
+ For instance, 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $!!\rightarrow\star\quad:\star$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\boxempty!!\rightarrow\star\quad:\star.Arg\vartriangleright!!\quad:\star$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+note that this additional extraction is needed since the blame relation
+ does not directly allow extraction from types.
+\end_layout
+
+\begin_layout Standard
+This blame be realizable with 
+\begin_inset Formula $\left(\star::!!\rightarrow\star::\star\rightarrow\star\right)\star$
+\end_inset
+
+
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+double check
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Similarly we will allow extraction from the dependent body of a function
+ type 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $\left(b:\mathbb{B}_{c}\right)\rightarrow b\,\star\,!!\,\star\quad:\star$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $b:\mathbb{B}_{c},b\,\star=y\boxempty\left(b:\mathbb{B}_{c}\right)\rightarrow b\,\star\,!!\,\star\quad:\star.Bod[b].Inspect\vartriangleright!!\quad:\star$
+\end_inset
+
+ 
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+figure out how to realize this
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Symbolic Reduction
+\end_layout
+
+\begin_layout Standard
+The rules for symbolic reduction are listed in 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:sym-env-Sym"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ The first 4 rules simplify the well cast term being inspected.
+ The next 3 rules allow free substitutions of assignments from the context
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+The notion of substitution must be extended and work over the definitional
+ equivalence class to perform substitution along spines.
+ For instance, 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $h\,(f\,2)\,[f\,(1+1)\coloneqq3]=h\,3$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+.
+ The final rule allows normal call by value steps.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+\frac{I\boxempty c:C\ o\vartriangleright b:\left(x:A\right)\rightarrow B\quad I\vdash a:A}{I\boxempty c:C\ o.app[a]\vartriangleright b\,a:B\left[x\coloneqq a\right]}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+\frac{I\boxempty c:C\ o\vartriangleright\left(x:A\right)\rightarrow B:\star}{I\boxempty c:C\ o.Arg\vartriangleright A:\star}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+\frac{I\boxempty c:C\ o\vartriangleright\left(x:A\right)\rightarrow B:\star\quad I\vdash a:A}{I\boxempty c:C\ o.Bod[a]\vartriangleright B\left[x\coloneqq a\right]:\star}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+\frac{I\boxempty c:C\ o\vartriangleright fa:C'\quad I\vdash a:A}{I\boxempty c:C\ o.Inspect\vartriangleright a:A}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+\frac{I\boxempty c:C\ o\vartriangleright a:A\quad x\equiv\star\in I}{I\boxempty c:C\ o\vartriangleright a\left[x\coloneqq\star\right]:A\left[x\coloneqq\star\right]}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+\frac{I\boxempty c:C\ o\vartriangleright a:A'\quad x\equiv\left(y:A\right)\rightarrow B\in I}{I\boxempty c:C\ o\vartriangleright a\left[x\coloneqq\left(y:A\right)\rightarrow B\right]:A'\left[x\coloneqq\left(y:A\right)\rightarrow B\right]}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+\frac{I\boxempty c:C\ o\vartriangleright a:A'\quad xb\equiv y\in I}{I\boxempty c:C\ o\vartriangleright a\left[xb\coloneqq y\right]:A'\left[xa\coloneqq b\right]}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+\frac{I\boxempty c:C\ o\vartriangleright a:A\quad a\rightsquigarrow a'}{I\boxempty c:C\ o\vartriangleright a':A}
+\]
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Symbolic reduction
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:sym-env-Sym"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We are left to characterize what makes a reasonable environment.
+ We would like that we can only form environments that can be realized as
+ program terms, but this seems too difficult.
+ So we will instead remove the large classes of bad contexts that can be
+ removed in a simple way.
+ 
+\end_layout
+
+\begin_layout Standard
+In 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:sym-ty"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ environments must obey the typing rules.
+ The judgment 
+\begin_inset Formula $-=y\cancel{\in}I$
+\end_inset
+
+ ensures that y was not assigned already and removes the possibility of
+ bad dependencies that could arise.
+ For instance, 
+\begin_inset Formula $f1_{c}=y$
+\end_inset
+
+, 
+\begin_inset Formula $f2_{c}=y$
+\end_inset
+
+ over specifies 
+\begin_inset Formula $f$
+\end_inset
+
+ and couples the 2 inputs, which should only be possible on individual operation
+s
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+This may be unneeded since as a derivation the better assignment can be
+ chosen, if it is needed a similar issue crops up in 
+\begin_inset Formula $X=\left(x:Y\right)\rightarrow Fx$
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+\frac{\ }{.\ \mathbf{ty}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+\frac{I\,\mathbf{ty}}{I,X:\star\ \mathbf{ty}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+\frac{I\,\mathbf{ty}\quad I\vdash X:\star}{I,X=\star\ \mathbf{ty}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+\frac{I\,\mathbf{ty}\quad I\vdash\left(x:Y\right)\rightarrow Fx\ :\star}{I,X=\left(x:Y\right)\rightarrow Fx\ \mathbf{ty}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+\frac{I\,\mathbf{ty}\quad I\vdash\left(x:A\right)\rightarrow B\ :\star}{I,f:\left(x:A\right)\rightarrow B\ \mathbf{ty}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+\frac{I\,\mathbf{ty}\quad f:\left(x:A\right)\rightarrow B\in I\quad I\vdash a:A\quad I\vdash y:B\left[x\coloneqq a\right]\quad-=y\cancel{\in}I}{I,fa=y\ \mathbf{ty}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Environment type checking
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:sym-ty"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Type checking alone does not make the system consistent.
+ It is possible for a well typed context to contradict itself.
+ For instance, 
+\begin_inset Formula $X:\star,X=\star,X=-\rightarrow-$
+\end_inset
+
+ is well typed but inconsistent.
+ So we extend it with the plausibility constraint listed in 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:sym-plauasability"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+\frac{\begin{array}{c}
+I\,\mathbf{ty}\\
+\forall f\overline{e}=b\in I,\forall f\overline{e'}=b\in I.\quad b\neq b'\supset\exists i.I\vdash e_{i}\neq e'_{i}
+\end{array}}{I\ \mathbf{plausible}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+\frac{\,}{\left(x:A\right)\rightarrow B\neq\star}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+\frac{\,}{\star\neq\left(x:A\right)\rightarrow B}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+\frac{I\vdash ae\neq a'e}{I\vdash a\neq a'}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Environment plausibility
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:sym-plauasability"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The plausibility constraint insists that if a difference can be observed
+ in a functions output, there must be a difference observed in the functions
+ input.
+ This simulates the call graph of the partially defined higher order function
+ while not needing to fully realize syntax.
+ Specifically the environment may need to make further assignments so that
+ partially defined elements get further definition.
+ For instance,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $F:\mathbb{B}_{c}\rightarrow\star,b:\mathbb{B}_{c},F\,true_{c}=-\rightarrow-,F\,b=\star$
+\end_inset
+
+ is not plausible since it is possible 
+\begin_inset Formula $b=true_{c}$
+\end_inset
+
+.
+ Recall that 
+\begin_inset Formula $\mathbb{B}_{c}\coloneqq\left(X:\star\right)\rightarrow X\rightarrow X\rightarrow X$
+\end_inset
+
+ and 
+\begin_inset Formula $true_{c}\coloneqq\lambda-\,then\,-\Rightarrow then$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+If we give an assignment that differentiates 
+\begin_inset Formula $b$
+\end_inset
+
+ from 
+\begin_inset Formula $true_{c}$
+\end_inset
+
+ then this assignment can be made plausible.
+ For instance, 
+\begin_inset Formula $b\,\star\,\left(\star\rightarrow\star\right)\,\star=\star$
+\end_inset
+
+
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Incidentally 
+\begin_inset Formula $false_{c}\,\star\,\left(\star\rightarrow\star\right)\,\star=\star$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+, therefore 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $I=F:\mathbb{B}_{c}\rightarrow\star,b:\mathbb{B}_{c},F\,true_{c}=-\rightarrow-,F\,b=\star,b\,\star\,\left(\star\rightarrow\star\right)\,\star=\star$
+\end_inset
+
+ is plausible since the pair 
+\begin_inset Formula $F\,true_{c}=-\rightarrow-$
+\end_inset
+
+ and 
+\begin_inset Formula $F\,b=\star$
+\end_inset
+
+ can differentiate their arguments by 
+\begin_inset Formula $I\vdash b\,\star\,\left(\star\rightarrow\star\right)\,\star\neq true_{c}\,\star\,\left(\star\rightarrow\star\right)\,\star$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+The plausibility constraint naturally handles self reference that may occur
+ over free variables.
+ For instance,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $F:\star\rightarrow\star,F\,\left(\star\rightarrow\star\right)=-\rightarrow-,F\,\left(F\,\star\right)=\star$
+\end_inset
+
+ is implausible since it is not clear that 
+\begin_inset Formula $\left(\star\rightarrow\star\right)\neq\left(F\,\star\right)$
+\end_inset
+
+, this can be made plausible by the further assignment 
+\begin_inset Formula $F\,\star=\star$
+\end_inset
+
+, thus 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $I=F:\star\rightarrow\star,F\,\left(\star\rightarrow\star\right)=-\rightarrow-,F\,\left(F\,\star\right)=\star,F\,\star=\star$
+\end_inset
+
+ since 
+\begin_inset Formula $I\vdash\left(F\,\star\right)=\star\neq\left(\star\rightarrow\star\right)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Additionally it is possible to partially account for dependent types by
+ redirecting them to functions.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+clean up this example
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $I=F:\star\rightarrow\star,F\,\star=\star,f:\left(x:\star\right)\rightarrow F\,x,f\star=\left(x:\star\right)\rightarrow-$
+\end_inset
+
+ since 
+\begin_inset Formula $I\vdash\left(F\,\star\right)=\star\neq\left(\star\rightarrow\star\right)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This is a relatively lightweight constraint, especially when a function
+ has taken on few assignments.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+run through one more substantial example
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+phrase as counter examples
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+However since there is no way for a terms within the cast language to 
+\begin_inset Quotes eld
+\end_inset
+
+observe
+\begin_inset Quotes erd
+\end_inset
+
+ a distinction between the type formers plausible environments cannot always
+ be realized back to a term that would witness the bad behavior.
+ For instance, the environment 
+\begin_inset Formula $F:\star\rightarrow\star,F\,\star=\star\rightarrow\star,F\,\left(\star\rightarrow\star\right)=\star$
+\end_inset
+
+ , which might be needed to explore the term 
+\begin_inset Formula $\lambda F\Rightarrow...::\star::F\left(\star\rightarrow\star\right)......::\left(\star\rightarrow\star\right)::F\,\star\ :\left(\star\rightarrow\star\right)\rightarrow...$
+\end_inset
+
+, cannot be realized as a closed term.
+ In this way the environment is stronger then the cast language.
+ The environment reflects a term language that has a type case construct
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+cite
+\end_layout
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+add non termination as a source of unrealizability
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+add por as a source of unrealizability
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+It is unclear that this over aggressive behavior is a problem in practice.
+ The user must have already failed the standard type check, and the error
+ does point out a concrete place that the type information does not line
+ up.
+ Recall that the parametricity properties of the cast language are already
+ weakened 
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+make sure this is mentioned in chapter 3
+\end_layout
+
+\end_inset
+
+ so that many of the environments where this could not be realized in the
+ surface language can be realized in the cast language with blame, for instance
+ 
+\begin_inset Formula $F:Unit_{c},F\,\star\,\star=\left(\star\rightarrow\star\right)$
+\end_inset
+
+ can be realized by 
+\begin_inset Formula $\lambda X-\Rightarrow\left(\star\rightarrow\star\right)::X$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Section
+Related work
+\end_layout
+
+\begin_layout Subsection
+Testing
+\end_layout
+
+\begin_layout Standard
+Many of the testing strategies for typed functional programming trace their
+ heritage to 
+\series bold
+property based
+\series default
+ testing in QuickCheck 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "quickcheck"
+literal "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+QuickChick 
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+https://github.com/QuickChick/QuickChick
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "denes2014quickchick"
+literal "false"
+
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "lampropoulos2017generating,lampropoulos2017beginner,lampropoulos2018random"
+literal "false"
+
+\end_inset
+
+ uses type-level predicates to construct generators with soundness and completen
+ess properties, but without support for higher order functions.
+ Current work in this area uses coverage guided teqniqes in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "lampropoulos2019coverage"
+literal "false"
+
+\end_inset
+
+ like those in symbolic execution.
+ More recently Bengerman Peirce has used Afl on compiled Coq code as a way
+ to generate counter examples
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset citation
+LatexCommand cite
+key "dybjer2003combining"
+literal "false"
+
+\end_inset
+
+ added QuickCheck style testing to Agda 1.
+\end_layout
+
+\begin_layout Subsection
+Symbolic Execution
+\end_layout
+
+\begin_layout Standard
+Symbolic evaluation is a technique to efficiently extract errors from programs.
+ Usually this happens in the context of an imperative language with the
+ assistance of an SMT solver.
+ Symbolic evaluation can be supplemented with other techniques and a rich
+ literature exists on the topic.
+ 
+\end_layout
+
+\begin_layout Standard
+The situation described in this chapter is unusual from the perspective
+ of symbolic execution.
+ But symbolic execution is probably still a good description
+\end_layout
+
+\begin_layout Itemize
+the number of blamable source positions is limited by the location tags.
+ Thus the search is error guided, rather then coverage guided.
+\end_layout
+
+\begin_layout Itemize
+The language is dependently typed.
+ Often the language under test is untyped.
+\end_layout
+
+\begin_layout Itemize
+The language needs higher order execution.
+ often the research in this area focuses on base types that are efficiently
+ handleable with an SMT solver.
+\end_layout
+
+\begin_layout Standard
+This limits the prior work to relatively few papers
+\end_layout
+
+\begin_layout Itemize
+A Symbolic execution engine for Haskell is presented in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "10.1145/3314221.3314618"
+literal "false"
+
+\end_inset
+
+, but at the time of publication it did not support higher order functions.
+\end_layout
+
+\begin_layout Itemize
+A system for handling higher order functions is presented in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "nguyen2017higher"
+literal "false"
+
+\end_inset
+
+, however the system is designed for Racket and is untyped.
+ Additionally it seems that there might be a state space explosion in the
+ presence of higher order functions.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset citation
+LatexCommand cite
+key "10.1007/978-3-030-72019-3_23"
+literal "false"
+
+\end_inset
+
+ extended and corrected some issues with 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "nguyen2017higher"
+literal "false"
+
+\end_inset
+
+, but still works in a untyped environment.
+ The authors note that there is still a lot of room to improve performance.
+\end_layout
+
+\begin_layout Itemize
+Closest to the goal here, 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "lin_et_al:LIPIcs:2020:12349"
+literal "false"
+
+\end_inset
+
+ uses game semantics to build a symbolic execution engine for a subset of
+ ML with some nice theoretical properties.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+That crazy stuff B.P.
+ was up to
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Discussion
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+move this into the section above
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The goal of this chapter has been to describe a procedure that is suitable
+ for implementation.
+ To accomplish this several areas of meta-theory have been ignored.
+ This approach suggests two desirable properties
+\end_layout
+
+\begin_layout Enumerate
+Every error that could be caused by the program can be observed via symbolic
+ execution
+\end_layout
+
+\begin_layout Enumerate
+Every error in observed by symbolic executions can be realized as a program
+ (no error is spurious)
+\end_layout
+
+\begin_layout Standard
+We strongly conjecture the first property to hold 
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+time permitting prove, via logging
+\end_layout
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+The 2nd property is more subtle.
+ We have not described evaluation contexts sufficiently, this is to maintain
+ compatibility with modules that have not been formalized.
+ For instance,
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+f : * ;
+\end_layout
+
+\begin_layout Plain Layout
+
+f = (x : Bool) -> (Nat :: Bool) ;
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+will not be able to induce a term level error, since no term level observation
+ can observe the type cast
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+this isn't exactly right f can be applied in a weird way
+\end_layout
+
+\end_inset
+
+.
+ However we want to observe errors here because f could be exported through
+ the module system and used in an unforeseen type annotation where an error
+ could be observed.
+\end_layout
+
+\begin_layout Part
+The Full Language
 \end_layout
 
 \begin_layout Section
@@ -230,7 +2927,7 @@ f h = h (
 status open
 
 \begin_layout Plain Layout
-functions consitent
+functions consistent
 \end_layout
 
 \end_inset
@@ -273,7 +2970,7 @@ f h =
 status open
 
 \begin_layout Plain Layout
-and all varients
+and all variants
 \end_layout
 
 \end_inset
@@ -520,15 +3217,1030 @@ handle the k binders
 
 \end_layout
 
-\begin_layout Part
-The functional fragment
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Tabular
+<lyxtabular version="3" rows="18" columns="4">
+<features tabularvalignment="middle">
+<column alignment="left" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="left" valignment="top">
+<column alignment="left" valignment="top">
+<row>
+<cell multicolumn="1" alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+reachability constraint,
 \end_layout
 
-\begin_layout Standard
-\begin_inset Formula $I\boxempty a:A\ \overline{obs}\vartriangleright b:B$
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $I$
 \end_inset
 
 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\Coloneqq$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\lozenge$
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="none" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+| 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $X:\star$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+| 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $X=\star$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+| 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $X=Y\rightarrow\star$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+| 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $X=\left(x:Y\right)\rightarrow Fx$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+| 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $X=D\overline{y}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+?
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+| 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $x:X$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+abstract element?
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+| 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $x:D\overline{y}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+| 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $x=d\overline{y}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+concrete element
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+| 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $f:\left(x:Y\right)\rightarrow Fx$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+| 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $fa=y$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+| 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $x_{p}:A\thickapprox B$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+|
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\begin_inset Formula $x_{p}=refl$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+| 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $x_{p}=cong$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+lookup syntax
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+| 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $x_{p}=InTC$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+| 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $x_{p}=InC$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+|
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $A=B$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+arbitrary constraint(?)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Cast Language Syntax
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:cast-pre-syntax"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+the key here being that when paths are inspected the constraints must hold
+ to be plausible 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+just define eval ctx?
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+in addition to the rules listed above
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{I\boxempty c:C\ o\vartriangleright D\overline{a}\quad I\vdash a_{i}:A}{I\boxempty c:C\ o.InTC_{i}\vartriangleright a_{i}:A}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+fully applied
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{I\boxempty c:C\ o\vartriangleright d\overline{a}\quad I\vdash a_{i}:A}{I\boxempty c:C\ o.InC_{i}\vartriangleright a_{i}:A}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+fully applied
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Discussion and Future Work
+\end_layout
+
+\begin_layout Standard
+The goal of this chapter has been to describe a procedure that is suitable
+ for implementation.
+ To accomplish this several areas of meta-theory have been ignored.
+ This approach suggests two desirable properties
+\end_layout
+
+\begin_layout Enumerate
+Every error that could be caused by the program can be observed via symbolic
+ execution
+\end_layout
+
+\begin_layout Enumerate
+Every error in observed by symbolic executions can be realized as a program
+ (no error is spurious)
+\end_layout
+
+\begin_layout Standard
+We strongly conjecture the first property to hold 
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+time permitting prove, via logging
+\end_layout
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+The 2nd property is more subtle.
+ We have not described evaluation contexts sufficiently, this is to maintain
+ compatibility with modules that have not been formalized.
+ For instance,
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+f : * ;
+\end_layout
+
+\begin_layout Plain Layout
+
+f = (x : Bool) -> (Nat :: Bool) ;
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+will not be able to induce a term level error, since no term level observation
+ can observe the type cast
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+this isn't exactly right f can be applied in a weird way
+\end_layout
+
+\end_inset
+
+.
+ However we want to observe errors here because f could be exported through
+ the module system and used in an unforeseen type annotation where an error
+ could be observed.
+\end_layout
+
+\begin_layout Standard
+More subtle is that the procedure described here will allow f to observe
+ parallel or, even though parallel or cannot be constructed within the language.
+ This hints that the approach presented here could be revised in terms of
+ games semantics (perhaps along lines like 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "lin_et_al:LIPIcs:2020:12349"
+literal "false"
+
+\end_inset
+
+).
+ Though game semantics for dependent types is a complicated subject in and
+ of itself 
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+cite
+\end_layout
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+btprint "btPrintCited"
+bibfiles "/Users/stephaniesavir/thesis/bibliography/dtest"
+options "alpha"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Part
+Alternative formulations
+\end_layout
+
+\begin_layout Section
+function fragment (inconsistent functions)
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+enforce that the observer never leaks a cast
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $I$
+\end_inset
+
+ is a 
+\begin_inset Quotes eld
+\end_inset
+
+thin ctx
+\begin_inset Quotes erd
+\end_inset
+
+ may need to add an evaluation context
 \end_layout
 
 \begin_layout Standard
@@ -584,6 +4296,47 @@ a little abuse of notation
 \end_layout
 
 \begin_layout Standard
+from ctx
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{I\boxempty c:C\ o\vartriangleright a:A'\quad x\equiv\star\in I}{I\boxempty c:C\ o\vartriangleright a\left[x\coloneqq a\right]:A\left[x\coloneqq a\right]}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{I\boxempty c:C\ o\vartriangleright a:A'\quad x\equiv\left(y:A\right)\rightarrow B\in I}{I\boxempty c:C\ o\vartriangleright a\left[x\coloneqq\left(y:A\right)\rightarrow B\right]:A\left[x\coloneqq\left(y:A\right)\rightarrow B\right]}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{I\boxempty c:C\ o\vartriangleright a:A'\quad xb\equiv y\in I}{I\boxempty c:C\ o\vartriangleright a\left[xb\coloneqq y\right]:A\left[xa\coloneqq b\right]}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+like conv
+\end_layout
+
+\begin_layout Standard
 \begin_inset Formula 
 \[
 \frac{I\boxempty c:C\ o\vartriangleright a:A\quad a\rightsquigarrow a'}{I\boxempty c:C\ o\vartriangleright a':A}
@@ -595,9 +4348,50 @@ a little abuse of notation
 \end_layout
 
 \begin_layout Standard
+the goal is to reach a location with blame
+\end_layout
+
+\begin_layout Standard
+need probes still
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+need to run an example with Leb.
+ Id (
+\backslash
+x=>x+1) (
+\backslash
+x=>1+x)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Reachability contexts are not necessarily consistent.
+ For instance, 
+\begin_inset Formula $X:\star,X=\star,X=\star\rightarrow\star$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+To prune some, but not all of these unsatisfiable constraints we will define
+ a judgments that will tell when reachability contexts are plausible.
+ 
+\end_layout
+
+\begin_layout Standard
 \begin_inset Formula 
 \[
-\frac{I\boxempty c:C\ o\vartriangleright fa:C'\quad x\equiv\star\in I}{I\boxempty c:C\ o.Inspect\vartriangleright a:A}
+\frac{\ }{.\ \mathbf{plausible}}
 \]
 
 \end_inset
@@ -606,157 +4400,167 @@ a little abuse of notation
 \end_layout
 
 \begin_layout Standard
-the goal is to reach a location with blame
-\end_layout
+\begin_inset Formula 
+\[
+\frac{I\,\mathbf{plausible}}{I,X:\star\ \mathbf{plausible}}
+\]
 
-\begin_layout Section
-Related work
-\end_layout
+\end_inset
 
-\begin_layout Subsection
-Testing
+
 \end_layout
 
 \begin_layout Standard
-many of the testinf strategies for typed functional programming trace their
- heritage to property based testing in QuickCheck 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "quickcheck"
-literal "false"
+\begin_inset Formula 
+\[
+\frac{I\,\mathbf{plausible}\quad X:\star\in I\quad X\,\mathbf{unasigned}\,I}{I,X=\star\ \mathbf{plausible}}
+\]
 
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{I\,\mathbf{plausible}\quad X:\star\in I\quad X\,\mathbf{unasigned}\,I\quad I\vdash\left(x:A\right)\rightarrow B:\star}{I,X=\left(x:A\right)\rightarrow B\ \mathbf{plausible}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{I\,\mathbf{plausible}\quad X:\star\in I\quad X\,\mathbf{unasigned}\,I\quad I\vdash\left(x:A\right)\rightarrow B:\star}{I,X=\left(x:A\right)\rightarrow B\ \mathbf{plausible}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{I\,\mathbf{plausible}\quad I\vdash\left(x:A\right)\rightarrow B:\star}{I,F:\left(x:A\right)\rightarrow B\ \mathbf{plausible}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{I\,\mathbf{plausible}\quad f:\left(x:A\right)\rightarrow B\in I\quad I\vdash a:A\quad I\vdash b:B\left[x\coloneqq a\right]}{I,fa=b\ \mathbf{plausible}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+note that for the sake of simplicity, there is no condition that 
+\begin_inset Formula $f\,a\,\mathbf{unasigned}\,I$
+\end_inset
+
+ since it is hard to characterize equality over the function sublanguage.
+ Specifically this allows
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $F:\star\rightarrow\star,F\star=\star,F\star=\star\rightarrow\star\ \mathbf{plausible}$
 \end_inset
 
 .
 \end_layout
 
-\begin_layout Itemize
-QuickChick 
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-https://github.com/QuickChick/QuickChick
-\end_layout
-
-\end_inset
-
- 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "denes2014quickchick"
-literal "false"
-
-\end_inset
-
-
-\begin_inset CommandInset citation
-LatexCommand cite
-key "lampropoulos2017generating,lampropoulos2017beginner,lampropoulos2018random"
-literal "false"
-
-\end_inset
-
- uses type-level predicates to construct generators with soundness and completen
-ess properties, but without support for higher order functions.
-\end_layout
-
-\begin_layout Itemize
-\begin_inset CommandInset citation
-LatexCommand cite
-key "dybjer2003combining"
-literal "false"
-
-\end_inset
-
- added QuickCheck style testing to Agda 1
-\end_layout
-
-\begin_layout Subsection
-Symbolic Exicution
-\end_layout
-
 \begin_layout Standard
-Symbolic evaluation is a technique to efficiently extract errors from programs.
- Usually this happens in the context of an imperative language with the
- assistance of an SMT solver.
- Symbolic evaluation can be suplemented with other teqniques and a rich
- literature existes on teh topic.
- 
-\end_layout
-
-\begin_layout Standard
-The situration described in this chapter is unuasual from the perspective
- of symbolic exicution.
- But symbolic exicution is probly still a good description
-\end_layout
-
-\begin_layout Itemize
-the number of bvlamable source positions is limited by the location tags.
- Thus the search is error guided, rather then civerage guided.
-\end_layout
-
-\begin_layout Itemize
-The laguage is dependently typed.
- Often teh language under test is untyped.
-\end_layout
-
-\begin_layout Itemize
-The language needs higher order exicution.
- often the reasurch in this area focuses on base types taht are efficiently
- handlable with an SMT solver.
-\end_layout
-
-\begin_layout Standard
-This limits the proir work to relatively few papers
-\end_layout
-
-\begin_layout Itemize
-A Symbolic exicution engine for haskell is presented in 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "10.1145/3314221.3314618"
-literal "false"
-
-\end_inset
-
-, but at teh time of publication it did not supert higher order functions.
-\end_layout
-
-\begin_layout Itemize
-A scheme for handling higher order functions is presented in 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "nguyen2017higher"
-literal "false"
-
-\end_inset
-
-, however the system is designed for Racket and is untyped.
- Addtionally it seems that there might be a state space explosion in teh
- presnes of higher order functions.
-\end_layout
-
-\begin_layout Itemize
-Closest to the goal here, 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "lin_et_al:LIPIcs:2020:12349"
-literal "false"
-
-\end_inset
-
- uses game semantics to build a symvbolic execution engine for a subset
- of ML with some nice theoretical properties.
-\end_layout
-
-\begin_layout Itemize
 \begin_inset Flex TODO Note (inline)
 status open
 
 \begin_layout Plain Layout
-That crazy stuff B.P.
- was up to
+\begin_inset Formula $I\vdash b$
+\end_inset
+
+ abbreviation is a little sketchy in terms of partially defined functions
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+consider restricting this, which would formally give the environment typecase
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Control flow is degenerate in this setting, since all control flow would
+ be handled through church encodings.
+ For instance,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\lambda n\Rightarrow n\,\mathbb{B}_{c}\,true_{c}\,\left(\lambda x\Rightarrow bad\right)\,:\mathbb{N}_{c}\rightarrow\mathbb{B}_{c}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Is an encoding of a loop with bad behavior in its body.
+ but since control follow is complete delegated to the higher order n, the
+ environment is free to inspect each input independently in it's own environment.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+handle bad inputs that fall out via call by value?ned to work directly against
+ the blame judgment
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Unlike with the full language there is little reason to calculate the specific
+ output of a given term.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\lambda n\Rightarrow n\,\mathbb{B}_{c}\,true_{c}\,false_{c}\,:\mathbb{N}_{c}\rightarrow\mathbb{B}_{c}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+justify this since type inhabitation is HARD
 \end_layout
 
 \end_inset
@@ -765,61 +4569,1006 @@ That crazy stuff B.P.
 \end_layout
 
 \begin_layout Section
-Discussion and Future Work
+function fragment (global check)
 \end_layout
 
 \begin_layout Standard
-The goal of this chapter has been to describe a procedure that is suitable
- for implementation.
- To accomplish this several areas of meta-theory have been ignored.
- This approach suggests two desirable properties
+\begin_inset Tabular
+<lyxtabular version="3" rows="11" columns="4">
+<features tabularvalignment="middle">
+<column alignment="left" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="left" valignment="top">
+<column alignment="left" valignment="top">
+<row>
+<cell multicolumn="1" alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+reachability constraint,
 \end_layout
 
-\begin_layout Enumerate
-Every error that could be caused by the program can be observed via symbolic
- execution
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
 \end_layout
 
-\begin_layout Enumerate
-Every error in observed by symbolic executions can be realized as a program
- (no error is spurious)
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $I$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\Coloneqq$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\lozenge$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="none" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+environment
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+|
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $X:\star$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+|
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $X=\star$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+|
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $X=\left(x:Y\right)\rightarrow Fx$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+|
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $F:Y\rightarrow\star$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+|
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $f:\left(x:Y\right)\rightarrow Fx$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+? Think it should be 
+\begin_inset Formula $f:\left(x:A\right)\rightarrow B$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+|
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $fa=y$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+e
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\Coloneqq$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $a$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+|
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $.Bod[a]$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+|
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $.Arg$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
-We strongly conjecture the first property to hold 
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+ape lambda syntax with 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $\Rightarrow$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+by construction, environments cannot omit blame
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="6" columns="5">
+<features tabularvalignment="middle">
+<column alignment="left" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="left" valignment="top">
+<column alignment="left" valignment="top">
+<column alignment="left" valignment="top">
+<row>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $fa=g,ga'=h$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+written
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $f\,a\,a'=h$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="none" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $X=\left(x:Y\right)\rightarrow\star,Y=a$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+written
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $X=\left(x:a\right)\rightarrow\star$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $X=\left(x:Y\right)\rightarrow Fx,Y=a$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+written
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $X=\left(x:a\right)\rightarrow Fx$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $f:\left(x:Y\right)\rightarrow Fx,Y=a$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+written
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $f:\left(x:a\right)\rightarrow Fx$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $X=\left(x:Y\right)\rightarrow Fx,Fa=h$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+written
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $X.Bod[a]=h$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+(?)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $X=\left(x:Y\right)\rightarrow Fx,Y=h$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+written
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $X.Arg=h$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+(?)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\ }{.\ \mathbf{ty}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{I\,\mathbf{ty}}{I,X:\star\ \mathbf{ty}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{I\,\mathbf{ty}\quad X:\star\in I}{I,X=\star\ \mathbf{ty}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{I\,\mathbf{ty}\quad X:\star\in I\quad I\vdash Y\rightarrow\star\ :\star}{I,X=Y\rightarrow\star\ \mathbf{ty}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{I\,\mathbf{ty}\quad X:\star\in I\quad I\vdash\left(x:Y\right)\rightarrow Fx\ :\star}{I,X=\left(x:Y\right)\rightarrow Fx\ \mathbf{ty}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{I\,\mathbf{ty}\quad f:\left(x:A\right)\rightarrow B\in I\quad I\vdash a:A\quad I\vdash y:B\left[x\coloneqq a\right]\quad-=y\cancel{\in}I}{I,fa=y\ \mathbf{ty}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\begin{array}{c}
+I\,\mathbf{ty}\\
+\forall f\overline{e}=b\in I,\forall f\overline{e'}=b\in I.\quad b\neq b'\supset\exists i.I\vdash e_{i}\neq e'_{i}
+\end{array}}{I\ \mathbf{plausible}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\,}{\left(x:A\right)\rightarrow B\neq\star}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\,}{\star\neq\left(x:A\right)\rightarrow B}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{I\vdash a\overline{e}\neq a'\overline{e}}{I\vdash a\neq a'}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The judgment 
+\begin_inset Formula $-=y\cancel{\in}I$
+\end_inset
+
+ ensures that y was not assigned already and removes the possibility of
+ bad dependencies that could arise.
+ For instance, 
+\begin_inset Formula $f1_{c}=y$
+\end_inset
+
+, 
+\begin_inset Formula $f2_{c}=y$
+\end_inset
+
+ over specifies 
+\begin_inset Formula $f$
+\end_inset
+
+ and couples the 2 inputs, which should only be possible on individual operation
+s
 \begin_inset Flex TODO Note (Margin)
 status open
 
 \begin_layout Plain Layout
-time permitteing prove, via logging
+This may be unneeded since as a derivation the better assignment can be
+ chosen
 \end_layout
 
 \end_inset
 
-.
- 
+
 \end_layout
 
 \begin_layout Standard
-The 2nd property is more subtle.
- We have not described evaluaiton contexts sufficiently, this is to maintian
- compatability with modules that have not been formalized.
- For insatnce,
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-inline false
+\begin_inset Flex TODO Note (inline)
 status open
 
 \begin_layout Plain Layout
-
-f : * ;
-\end_layout
-
-\begin_layout Plain Layout
-
-f = (x : Bool) -> (Nat :: Bool) ;
+explain how the plausibility constraint might induce more assignments
 \end_layout
 
 \end_inset
@@ -828,38 +5577,209 @@ f = (x : Bool) -> (Nat :: Bool) ;
 \end_layout
 
 \begin_layout Standard
-will not be able to induce a term level error, since no term level observation
- can observe the type cast
-\begin_inset Flex TODO Note (Margin)
-status open
-
-\begin_layout Plain Layout
-this isn't exactlye right f can be aplied in a wierd way
+The plausibility constraint insists that if a difference can be observed
+ in a functions output, there must be a difference observed in the functions
+ input.
+ This simulates the call graph of the partially defined higher order function
+ while making as few commitments as possible.
+ Specifically the environment may need to make further assignments so that
+ partially defined elements get further definition.
+ For instance,
 \end_layout
 
+\begin_layout Standard
+\begin_inset Formula $F:\mathbb{B}_{c}\rightarrow\star,b:\mathbb{B}_{c},F\,true_{c}=-\rightarrow-,F\,b=\star$
+\end_inset
+
+ is not plausible since it is possible 
+\begin_inset Formula $b=true_{c}$
 \end_inset
 
 .
- However we want to obseve errors here becuase f could be exported through
- the module system and used in an unforseen type annotation where an error
- could be observed.
+ Recall that 
+\begin_inset Formula $\mathbb{B}_{c}\coloneqq\left(X:\star\right)\rightarrow X\rightarrow X\rightarrow X$
+\end_inset
+
+ and 
+\begin_inset Formula $true_{c}\coloneqq\lambda-\,then\,-\Rightarrow then$
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
-More subtle is that the procedure described here will allow f to observe
- parellel or, even though parellel or cannot be constructed within the language.
- This hints that the aproach presented here could be revised in terms of
- games semantics (perhaps along lines like 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "lin_et_al:LIPIcs:2020:12349"
-literal "false"
+If we give an assignment that differentiates 
+\begin_inset Formula $b$
+\end_inset
+
+ from 
+\begin_inset Formula $true_{c}$
+\end_inset
+
+ then this assignment can be made plausible.
+ For instance, 
+\begin_inset Formula $b\,\star\,\left(\star\rightarrow\star\right)\,\star=\star$
+\end_inset
+
+
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Incidentally 
+\begin_inset Formula $false_{c}\,\star\,\left(\star\rightarrow\star\right)\,\star=\star$
+\end_inset
+
+
+\end_layout
 
 \end_inset
 
-).
- Though game semantics for dependent types is a complicated subject in and
- of isteslf 
+, therefore 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $I=F:\mathbb{B}_{c}\rightarrow\star,b:\mathbb{B}_{c},F\,true_{c}=-\rightarrow-,F\,b=\star,b\,\star\,\left(\star\rightarrow\star\right)\,\star=\star$
+\end_inset
+
+ is plausible since the pair 
+\begin_inset Formula $F\,true_{c}=-\rightarrow-$
+\end_inset
+
+ and 
+\begin_inset Formula $F\,b=\star$
+\end_inset
+
+ can differentiate their arguments by 
+\begin_inset Formula $I\vdash b\,\star\,\left(\star\rightarrow\star\right)\,\star\neq true_{c}\,\star\,\left(\star\rightarrow\star\right)\,\star$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+The plausibility constraint naturally handles self reference that may occur
+ over free variables.
+ For instance,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $F:\star\rightarrow\star,F\,\left(\star\rightarrow\star\right)=-\rightarrow-,F\,\left(F\,\star\right)=\star$
+\end_inset
+
+ is implausible since it is not clear that 
+\begin_inset Formula $\left(\star\rightarrow\star\right)\neq\left(F\,\star\right)$
+\end_inset
+
+, this can be made plausible by the further assignment 
+\begin_inset Formula $F\,\star=\star$
+\end_inset
+
+, thus 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $I=F:\star\rightarrow\star,F\,\left(\star\rightarrow\star\right)=-\rightarrow-,F\,\left(F\,\star\right)=\star,F\,\star=\star$
+\end_inset
+
+ since 
+\begin_inset Formula $I\vdash\left(F\,\star\right)=\star\neq\left(\star\rightarrow\star\right)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Additionally it is possible to partially account for dependent types by
+ redirecting them to functions.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+clean up this example
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $I=F:\star\rightarrow\star,F\,\star=\star,f:\left(x:\star\right)\rightarrow F\,x,f\star=\left(x:\star\right)\rightarrow-$
+\end_inset
+
+ since 
+\begin_inset Formula $I\vdash\left(F\,\star\right)=\star\neq\left(\star\rightarrow\star\right)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This is a relatively lightweight constraint, especially when a function
+ has taken on few assignments.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+run through one more substantial example
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+phrase as counter examples 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+add non termination as a source of unsoundness
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+However since there is no way for a term to 
+\begin_inset Quotes eld
+\end_inset
+
+observe
+\begin_inset Quotes erd
+\end_inset
+
+ a distinction between the type formers plausible environments cannot always
+ be realized back to a term that would witness the bad behavior.
+ For instance, the environment 
+\begin_inset Formula $F:\star\rightarrow\star,F\,\star=\star\rightarrow\star,F\,\left(\star\rightarrow\star\right)=\star$
+\end_inset
+
+ cannot be realized as a closed term.
+ In this way the symbolic environment is stronger then the cast language.
+ The environment reflects a term language that has a type case construct
 \begin_inset Flex TODO Note (Margin)
 status open
 
@@ -871,10 +5791,173 @@ cite
 
 .
  
+\begin_inset Formula $\lambda F\Rightarrow...::\star::F\left(\star\rightarrow\star\right)......::\left(\star\rightarrow\star\right)::F\,\star\ :\left(\star\rightarrow\star\right)\rightarrow...$
+\end_inset
+
+
 \end_layout
 
-\begin_layout Part
-The Full Language
+\begin_layout Standard
+It is unclear that this over aggressive warning is a problem in practice.
+ The user must have already failed the standard type check, and the error
+ does point out a concrete place that the type information does not line
+ up.
+ Recall that the parametricity properties of the cast language are already
+ weakened 
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+make sure this is mentioned in chapter 3
+\end_layout
+
+\end_inset
+
+ so that many of the environments where this could not be realized in the
+ surface language can be realized in the cast language with blame, for instance
+ 
+\begin_inset Formula $F:Unit_{c},F\,\star\,\star=\left(\star\rightarrow\star\right)$
+\end_inset
+
+ can be realized by 
+\begin_inset Formula $\lambda X-\Rightarrow\left(\star\rightarrow\star\right)::X$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+bad example
+\end_layout
+
+\begin_layout Standard
+consider the more intricate example that would arise if the user implicitly
+ assumed the equality of 
+\begin_inset Formula $\lambda x\Rightarrow x+_{c}1_{c}$
+\end_inset
+
+ and 
+\begin_inset Formula $\lambda x\Rightarrow1_{c}+_{c}x$
+\end_inset
+
+.
+ After elaboration we might be left with a term such as
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $D=\lambda C\Rightarrow\left(\lambda x\Rightarrow\star\right)::_{\left(x:C\left(\lambda x\Rightarrow1_{c}+_{c}x\right)\right)\rightarrow\star}\left(x:C\left(\lambda x\Rightarrow x+_{c}1_{c}\right)\right)\rightarrow\star\quad:\left(C:\left(\mathbb{N}_{c}\rightarrow\mathbb{N}_{c}\right)\rightarrow\star\right)\rightarrow C\left(\lambda x\Rightarrow x+_{c}1_{c}\right)\rightarrow\star$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The goal is to find a plausible 
+\begin_inset Formula $I$
+\end_inset
+
+ and 
+\begin_inset Formula $o$
+\end_inset
+
+ such that 
+\begin_inset Formula $a$
+\end_inset
+
+can be blamed
+\end_layout
+
+\begin_layout Standard
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\begin_inset Formula $I\boxempty D\ o\vartriangleright a$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The procedure can see that a possible error can be exercised within the
+ body of the function.
+ Since the terms is a function it can only be applied
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $I=C:\left(\left(\mathbb{N}_{c}\rightarrow\mathbb{N}_{c}\right)\rightarrow\star\right)...$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+leaving the simpler problem
+\end_layout
+
+\begin_layout Standard
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\begin_inset Formula $I\boxempty D\ App[C]\vartriangleright\left(\lambda x\Rightarrow\star\right)::_{\left(x:C\left(\lambda x\Rightarrow1_{c}+_{c}x\right)\right)\rightarrow\star}\left(x:C\left(\lambda x\Rightarrow x+_{c}1_{c}\right)\right)\rightarrow\star$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Again procedure can see that a possible error can be exercised within the
+ body of the function, under casts that agree it is a function
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $I=C:\left(\left(\mathbb{N}_{c}\rightarrow\mathbb{N}_{c}\right)\rightarrow\star\right),x:C\left(\lambda x\Rightarrow x+_{c}1_{c}\right)...$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\begin_inset Formula $I\boxempty D\ App[C].App[x]\vartriangleright\star::_{\star}\star$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+bad example
 \end_layout
 
 \begin_layout Standard
@@ -882,7 +5965,150 @@ The Full Language
 status open
 
 \begin_layout Plain Layout
-all thos other papers about symbolic exicution for functions
+Bool or even type example
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+consider the more intricate example that would arise if the user implicitly
+ assumed the equality of 
+\begin_inset Formula $\lambda x\Rightarrow x+_{c}1_{c}$
+\end_inset
+
+ and 
+\begin_inset Formula $\lambda x\Rightarrow1_{c}+_{c}x$
+\end_inset
+
+.
+ after elaboration we would explore the term
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $refl_{\lambda x\Rightarrow x+_{c}1_{c}:\mathbb{N}_{c}\rightarrow\mathbb{N}_{c}}::_{\left(\lambda x\Rightarrow x+_{c}1_{c}\right)\doteq_{\mathbb{N}_{c}\rightarrow\mathbb{N}_{c}}\left(\lambda x\Rightarrow x+_{c}1_{c}\right)}\left(\lambda x\Rightarrow x+_{c}1_{c}\right)\doteq_{\mathbb{N}_{c}\rightarrow\mathbb{N}_{c}}\left(\lambda x\Rightarrow1_{c}+_{c}x\right)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+Recall the definitions in Chapter 2
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\left(\lambda x\Rightarrow x+_{c}1_{c}\right)\doteq_{\mathbb{N}_{c}\rightarrow\mathbb{N}_{c}}\left(\lambda x\Rightarrow1_{c}+_{c}x\right)=\left(C:\left(\left(\mathbb{N}_{c}\rightarrow\mathbb{N}_{c}\right)\rightarrow\star\right)\right)\rightarrow C\,\left(\lambda x\Rightarrow x+_{c}1_{c}\right)\rightarrow C\,\left(\lambda x\Rightarrow1_{c}+_{c}x\right)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\left(\lambda x\Rightarrow x+_{c}1_{c}\right)\doteq_{\mathbb{N}_{c}\rightarrow\mathbb{N}_{c}}\left(\lambda x\Rightarrow x+_{c}1_{c}\right)=\left(C:\left(\left(\mathbb{N}_{c}\rightarrow\mathbb{N}_{c}\right)\rightarrow\star\right)\right)\rightarrow C\,\left(\lambda x\Rightarrow x+_{c}1_{c}\right)\rightarrow C\,\left(\lambda x\Rightarrow x+_{c}1_{c}\right)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $refl_{\lambda x\Rightarrow x+_{c}1_{c}:\mathbb{N}_{c}\rightarrow\mathbb{N}_{c}}=\lambda-\,cx\Rightarrow cx$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The goal is to find an 
+\begin_inset Formula $I$
+\end_inset
+
+ and 
+\begin_inset Formula $o$
+\end_inset
+
+ such that 
+\begin_inset Formula $a$
+\end_inset
+
+can be blamed
+\end_layout
+
+\begin_layout Standard
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\begin_inset Formula $I\boxempty refl_{\lambda x\Rightarrow x+_{c}1_{c}:\mathbb{N}_{c}\rightarrow\mathbb{N}_{c}}::_{\left(\lambda x\Rightarrow x+_{c}1_{c}\right)\doteq_{\mathbb{N}_{c}\rightarrow\mathbb{N}_{c}}\left(\lambda x\Rightarrow x+_{c}1_{c}\right)}\left(\lambda x\Rightarrow x+_{c}1_{c}\right)\doteq_{\mathbb{N}_{c}\rightarrow\mathbb{N}_{c}}\left(\lambda x\Rightarrow1_{c}+_{c}x\right)\ o\vartriangleright a$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+since 
+\begin_inset Formula $refl$
+\end_inset
+
+ is a function, and the type constructor on the 
+\begin_inset Formula $\doteq$
+\end_inset
+
+ match apply free variable to all the arguments 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $I=C:\left(\left(\mathbb{N}_{c}\rightarrow\mathbb{N}_{c}\right)\rightarrow\star\right),C\,\left(\lambda x\Rightarrow x+_{c}1_{c}\right)...$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\begin_inset Formula $I\boxempty...\ o\vartriangleright a$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+phrase as counter example
 \end_layout
 
 \end_inset
@@ -895,7 +6121,39 @@ all thos other papers about symbolic exicution for functions
 status open
 
 \begin_layout Plain Layout
-Game semantics?
+add non termination as a source of unsoundness
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+alt function fragment (incremental plausibility)
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\begin{array}{c}
+I\,\mathbf{plausible}\quad f:\left(x:A\right)\rightarrow B\in I\\
+I\vdash a':A\quad I\vdash b':B\left[x\coloneqq a'\right]\\
+\forall f\overline{a}=b\in I.\quad b\neq b'\supset a\neq a'
+\end{array}}{I,fa'=b'\ \mathbf{plausible}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+the last line is incorrect, hard to build out a piecemeal check
 \end_layout
 
 \end_inset
@@ -904,15 +6162,34 @@ Game semantics?
 \end_layout
 
 \begin_layout Standard
-\begin_inset CommandInset bibtex
-LatexCommand bibtex
-btprint "btPrintCited"
-bibfiles "/Users/stephaniesavir/thesis/bibliography/dtest"
-options "alpha"
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+would need to define the inequality judgments
+\end_layout
 
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+Additionally since there is no way for a term to 
+\begin_inset Quotes eld
+\end_inset
+
+observe
+\begin_inset Quotes erd
+\end_inset
+
+ a distinction between types so the constraint context 
+\begin_inset Formula $F:\star\rightarrow\star,F\,\star=\perp_{c},F\,\perp_{c}=\star$
+\end_inset
+
+ cannot be realized as a closed term.
+ In this way the symbolic environment is stronger then the cast language
+ and has access to a type case construct.
 \end_layout
 
 \begin_layout Part
@@ -927,24 +6204,47 @@ TODO
 notes
 \end_layout
 
-\begin_layout Standard
-there are several simpler systems that can be worked through: eliminator
- style patterns, cast patterns, but to bring it all together we need congruence
- over functions.
-\end_layout
-
-\begin_layout Standard
-adding paths and path variables means that constructs can still fail at
- runtime, but they can blame the actually problematic components
-\end_layout
-
-\begin_layout Standard
-validating the K axiom, not that equalities are unique, merely that we don't
- care which one of the unique equalities is used.
-\end_layout
-
 \begin_layout Section
 unused
+\end_layout
+
+\begin_layout Standard
+...
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{A\neq A'}{\left(x:A\right)\rightarrow B\neq\left(x:A'\right)\rightarrow B'}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+here is the hard bit, you cannot check the inequality of a midpoint
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{B\neq B'}{\left(x:A\right)\rightarrow B\neq\left(x:A'\right)\rightarrow B'}
+\]
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard

@@ -15952,7 +15952,7 @@ alt bidirectional formalization (with strict regularity)
 \begin_layout Standard
 \begin_inset Formula 
 \[
-\frac{\Gamma\overset{\leftarrow}{\vdash}\quad x:M\in\Gamma}{\Gamma\vdash x\overrightarrow{\,:\,}M}\operatorname{\overrightarrow{ty}-var}
+\frac{\Gamma\overset{\leftarrow}{ok}\quad x:M\in\Gamma}{\Gamma\vdash x\overrightarrow{\,:\,}M}\operatorname{\overrightarrow{ty}-var}
 \]
 
 \end_inset
@@ -15960,7 +15960,7 @@ alt bidirectional formalization (with strict regularity)
 
 \begin_inset Formula 
 \[
-\frac{\Gamma\overset{\leftarrow}{\vdash}}{\Gamma\vdash\star\overrightarrow{\,:\,}\star}\operatorname{\overrightarrow{ty}-\star}
+\frac{\Gamma\overset{\leftarrow}{ok}}{\Gamma\vdash\star\overrightarrow{\,:\,}\star}\operatorname{\overrightarrow{ty}-\star}
 \]
 
 \end_inset

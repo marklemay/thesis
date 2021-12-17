@@ -2021,7 +2021,7 @@ The fully formal reduction rules are listed later, but their complete detail
  Then we use the function cast to determine a reasonable cast over the argument,
  and maintain the appropriate cast over the resulting computation.
  This distribution is similar to the way higher order contracts invert the
- polarity of blame for the arguments of higher order funcitons 
+ polarity of blame for the arguments of higher order functions 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "10.1145/581478.581484"
