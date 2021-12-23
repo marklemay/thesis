@@ -104,7 +104,7 @@ todonotes
 \begin_body
 
 \begin_layout Title
-Chapter 4a (draft): Data and Pattern Matching in the Surface Language
+Chapter 4 (draft): Data and Pattern Matching in the Surface Language
 \end_layout
 
 \begin_layout Author
@@ -127,6 +127,17 @@ conventional stuff
  from the new stuff.
  this chapter is the conventional stuff.
  should it be recombined?
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Quotes eld
+\end_inset
+
+not handle data types in a rigorous way.
+\begin_inset Quotes erd
+\end_inset
+
+
 \end_layout
 
 \end_inset
@@ -4205,7 +4216,7 @@ name "fig:surface-data"
 Patterns correspond to a specific form of expression syntax.
  When an expression matches a pattern it will choose the appropriate branch
  to reduce.
- For instance, the expession
+ For instance, the expression
 \end_layout
 
 \begin_layout Standard
@@ -5011,6 +5022,23 @@ literal "false"
 \end_inset
 
 .
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+discuss stuck state of unification explicitly, x = f a vs.
+ f a = g b, and how it for instance makes it so you can't prove transitivity
+ of ID fa gb, ID gb hc -> ID fa hc.
+ also calls into quesiton preservation entirely.
+ 
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard

@@ -104,7 +104,7 @@ todonotes
 \begin_body
 
 \begin_layout Title
-Chapter 4a (draft): Data and Pattern Matching in the Surface Language
+Chapter 4 (draft): Data and Pattern Matching in the Surface Language
 \end_layout
 
 \begin_layout Author
@@ -116,17 +116,14 @@ Mark Lemay
 status open
 
 \begin_layout Plain Layout
-for the purposes of this draft separating the 
 \begin_inset Quotes eld
 \end_inset
 
-conventional stuff
+not handle data types in a rigorous way.
 \begin_inset Quotes erd
 \end_inset
 
- from the new stuff.
- this chapter is the conventional stuff.
- should it be recombined?
+
 \end_layout
 
 \end_inset
@@ -4205,7 +4202,7 @@ name "fig:surface-data"
 Patterns correspond to a specific form of expression syntax.
  When an expression matches a pattern it will choose the appropriate branch
  to reduce.
- For instance, the expession
+ For instance, the expression
 \end_layout
 
 \begin_layout Standard

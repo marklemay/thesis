@@ -1,0 +1,1756 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+\usepackage{xcolor}
+\usepackage{tikz-cd}
+\tikzcdset{%
+    triple line/.code={\tikzset{%
+        double equal sign distance, % replace by double distance = 'measure' 
+        double=\pgfkeysvalueof{/tikz/commutative diagrams/background color}}},
+    quadruple line/.code={\tikzset{%
+        double equal sign distance, % replace by double distance = 'measure'
+        double=\pgfkeysvalueof{/tikz/commutative diagrams/background color}}},
+    Rrightarrow/.code={\tikzcdset{triple line}\pgfsetarrows{tikzcd implies cap-tikzcd implies}},
+    RRightarrow/.code={\tikzcdset{quadruple line}\pgfsetarrows{tikzcd implies cap-tikzcd implies}}
+}    
+\newcommand*{\tarrow}[2][]{\arrow[Rrightarrow, #1]{#2}\arrow[dash, shorten >= 0.5pt, #1]{#2}}
+\newcommand*{\qarrow}[2][]{\arrow[RRightarrow, #1]{#2}\arrow[equal, double distance = 0.25pt, shorten >= 1.28pt, #1]{#2}}
+\end_preamble
+\use_default_options true
+\begin_modules
+todonotes
+\end_modules
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize letterpaper
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 2cm
+\topmargin 2cm
+\rightmargin 2cm
+\bottommargin 2cm
+\headheight 2cm
+\headsep 2cm
+\footskip 2cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 2
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Chapter 1 (draft): Introduction
+\end_layout
+
+\begin_layout Author
+Mark Lemay
+\end_layout
+
+\begin_layout Part
+Introduction
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+%% why dependent types
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+Writing correct programs is difficult.
+ While many formal methods approaches make some errors rare or impossible,
+ they often require programmers learn additional syntax and semantics.
+ Dependent type systems offer a simpler approach.
+ In dependent type systems, proofs and properties use the same language
+ and meaning already familiar to functional programmers.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+what is a type, what is a dependent type.
+ : In mainstream type systems, the types relate to the
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For instance, dependent type systems can prevent index-out-of-bounds error
+ when trying to read the first element a list.
+ A version of the following type checks in virtually all dependent type
+ systems:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+expand this example? perhaps at the head of a constant vector first? 
+\begin_inset Quotes eld
+\end_inset
+
+and this reasoning can be abstracted under functions
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\mathtt{Bool} & :*,\\
+\mathtt{Nat} & :*,\\
+\mathtt{Vec} & :*\rightarrow\mathtt{Nat}\rightarrow*,\\
+\mathtt{add} & :\mathtt{Nat}\rightarrow\mathtt{Nat}\rightarrow\mathtt{Nat},\\
+\mathtt{rep} & :\left(A:*\right)\rightarrow A\rightarrow\left(x:\mathtt{Nat}\right)\rightarrow\mathtt{Vec\,}A\,x,\\
+\mathtt{head} & :\left(A:*\right)\rightarrow\left(x:\mathtt{Nat}\right)\rightarrow\mathtt{Vec}\,A\,\left(\mathtt{add}\,1\,x\right)\rightarrow A
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\vdash\lambda x.\mathtt{head}\,\mathtt{Bool}\,x\,\left(\mathtt{rep}\,\mathtt{Bool}\,\mathtt{true}\,\left(\mathtt{add}\,1\,x\right)\right)\,:\,\mathtt{Nat}\rightarrow\mathtt{Bool}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+make this a 
+\begin_inset Quotes eld
+\end_inset
+
+code
+\begin_inset Quotes erd
+\end_inset
+
+ example?
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where 
+\begin_inset Formula $\mathtt{Vec}$
+\end_inset
+
+ is a length indexed by the type of element it contains and its length,
+ it is a type that depends on an term level expression for its length.
+ 
+\begin_inset Formula $\mathtt{rep}$
+\end_inset
+
+ is a dependent function that produces a list containing a type with a given
+ length, by repeating its input that number of times.
+ 
+\begin_inset Formula $\mathtt{head}$
+\end_inset
+
+ is a dependent function that expects a list of length 
+\begin_inset Formula $\mathtt{add}\,1\,x$
+\end_inset
+
+, perhaps retuning the first element of that non-empty list.
+ 
+\end_layout
+
+\begin_layout Standard
+There is no risk that 
+\begin_inset Formula $\mathtt{head}$
+\end_inset
+
+ inspects an empty list.
+ Luckily the 
+\begin_inset Formula $\mathtt{rep}$
+\end_inset
+
+ function will return a list of length 
+\begin_inset Formula $\mathtt{add}\,1\,x$
+\end_inset
+
+, exactly the type that is required.
+\end_layout
+
+\begin_layout Standard
+This example only scratches the surface of what is possible with dependent
+ types.
+ According to the Curry-Howard correspondence
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Also called...
+\end_layout
+
+\end_inset
+
+ types correspond to proposition and proofs correspond to programs.
+ This gives programmers an unrivaled degree of freedom and precision when
+ specifying and verifying their code.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+For instance
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The power of dependent types has been recognized for decades.
+ Dependent types form the back bone of several poof system, such as Coq,
+ Lean, and Agda.
+ They have have been proposed as a foundation for mathematics.
+ They are directly used in several programming languages such as ATS and
+ Idris, and dependent types have influenced many other programing languages.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+Curry-Howard
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Unfortunately, programmers often find dependent type systems difficult to
+ learn and use.
+ This resistance has limited the ability of dependent to reach their potential.
+ One of the deepest underling reasons for this frustration is the way dependent
+ type systems handle equality.
+\end_layout
+
+\begin_layout Standard
+For example, the following will not type check in any conventional dependent
+ type system with user defined addition,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\cancel{\vdash}\lambda x.\mathtt{head}\,\mathtt{Bool}\,x\,\left(\mathtt{rep}\,\mathtt{Bool}\,\mathtt{true}\,\left(\mathtt{add}\,x\,1\right)\right)\,:\,\mathtt{Nat}\rightarrow\mathtt{Bool}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+While 
+\begin_inset Quotes eld
+\end_inset
+
+obviously
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\begin_inset Formula $1+x=x+1$
+\end_inset
+
+, in the majority of dependently typed languages, 
+\begin_inset Formula $\mathtt{add}\,1\,x\equiv\mathtt{add}\,x\,1$
+\end_inset
+
+ is not 
+\begin_inset Quotes eld
+\end_inset
+
+definitionally equal
+\begin_inset Quotes erd
+\end_inset
+
+.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+Definitional equality
+\begin_inset Quotes erd
+\end_inset
+
+ is the name for the conservative approximation of equality used by dependent
+ type systems for when two types are 
+\begin_inset Quotes eld
+\end_inset
+
+obviously
+\begin_inset Quotes erd
+\end_inset
+
+ the same.
+ This prevents the use of a term of type 
+\begin_inset Formula $\mathtt{Vec}\left(\mathtt{add}\,1\,x\right)$
+\end_inset
+
+ where a term of type 
+\begin_inset Formula $\mathtt{Vec}\left(\mathtt{add}\,x\,1\right)$
+\end_inset
+
+ is expected.
+ Usually when dependent type systems encounter situations like this, they
+ will give an error message and block evaluation until the 
+\begin_inset Quotes eld
+\end_inset
+
+error
+\begin_inset Quotes erd
+\end_inset
+
+ is resolved.
+\end_layout
+
+\begin_layout Standard
+While the intent and properties of the 
+\begin_inset Formula $\mathtt{add}$
+\end_inset
+
+ function is clear from its name and type, this information is unavailable
+ to the type system.
+ If the programmer made a mistake in the definition of addition, such that
+ for some 
+\begin_inset Formula $x$
+\end_inset
+
+, 
+\begin_inset Formula $\mathtt{add}\,1\,x\,\cancel{=}\,\mathtt{add}\,x\,1$
+\end_inset
+
+, the system will not provide hints on which 
+\begin_inset Formula $x$
+\end_inset
+
+ witnesses this inequality.
+ Worse, the type system may even disallow experimenting with the 
+\begin_inset Formula $\mathtt{add}$
+\end_inset
+
+ function until the type 
+\begin_inset Quotes eld
+\end_inset
+
+error
+\begin_inset Quotes erd
+\end_inset
+
+ is removed.
+\end_layout
+
+\begin_layout Standard
+Why block programmers when there is a type 
+\begin_inset Quotes eld
+\end_inset
+
+error
+\begin_inset Quotes erd
+\end_inset
+
+?
+\end_layout
+
+\begin_layout Standard
+Usually types are justified to avoid programs that 
+\begin_inset Quotes eld
+\end_inset
+
+get stuck
+\begin_inset Quotes erd
+\end_inset
+
+.
+ If it is the case that 
+\begin_inset Formula $\mathtt{add}\,1\,x\,=\,\mathtt{add}\,x\,1$
+\end_inset
+
+ the program will never get stuck.
+ If there is a mistake in the implementation of 
+\begin_inset Formula $\mathtt{add}$
+\end_inset
+
+, we are able to stop the program execution and provide a concrete witness
+ for the inequality.
+ For instance, if the 
+\begin_inset Formula $\mathtt{add}$
+\end_inset
+
+ function incorrectly computes 
+\begin_inset Formula $\mathtt{add}\,8\,1=0$
+\end_inset
+
+ the above function will 
+\begin_inset Quotes eld
+\end_inset
+
+get stuck
+\begin_inset Quotes erd
+\end_inset
+
+ on the input 
+\begin_inset Formula $8$
+\end_inset
+
+.
+ If that application is encountered at runtime we can give an error stating
+ 
+\begin_inset Formula $\mathtt{add}\,1\,8=9\,\neq\,0=\mathtt{add}\,8\,1$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Part
+A Different Workflow
+\end_layout
+
+\begin_layout Standard
+This thesis advocates an alternative pragmatic view of types.
+ Where 
+\begin_inset Quotes eld
+\end_inset
+
+the programer is always right (until proven wrong)
+\begin_inset Quotes erd
+\end_inset
+
+.
+ I expect this slogan will go over better with programmers then the existing
+ 
+\begin_inset Quotes eld
+\end_inset
+
+Can't run programs until the type system is convinced 
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+often requiring a graduate degree and uncommon patients
+\end_layout
+
+\end_inset
+
+
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+More concretely, whenever possible, static errors should be replaced with
+ 
+\end_layout
+
+\begin_layout Itemize
+static warnings, 
+\end_layout
+
+\begin_layout Itemize
+and more concrete and clear runtime errors that correspond to one of the
+ warnings
+\end_layout
+
+\begin_layout Standard
+The ultimate goal being that
+\series bold
+ it should be easier to write programs with dependent types then without
+\series default
+.
+\end_layout
+
+\begin_layout Standard
+Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:intro-standard-workflow"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ illustrates the standard workflow from the perspective of programers in
+ most typed languages.
+ Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:intro-thesis-workflow"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ shows the workflow that is explored in this thesis.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+edit program
+\end_layout
+
+\begin_layout Plain Layout
+
+ |      ^
+\end_layout
+
+\begin_layout Plain Layout
+
+ |      | type errors
+\end_layout
+
+\begin_layout Plain Layout
+
+ v      |
+\end_layout
+
+\begin_layout Plain Layout
+
+ Type checks
+\end_layout
+
+\begin_layout Plain Layout
+
+ |
+\end_layout
+
+\begin_layout Plain Layout
+
+ | no type errors
+\end_layout
+
+\begin_layout Plain Layout
+
+ v
+\end_layout
+
+\begin_layout Plain Layout
+
+run program
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+better graphics
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Standard Typed Programming Workflow
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:intro-standard-workflow"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+edit program
+\end_layout
+
+\begin_layout Plain Layout
+
+ |      
+\end_layout
+
+\begin_layout Plain Layout
+
+ |      
+\end_layout
+
+\begin_layout Plain Layout
+
+ v
+\end_layout
+
+\begin_layout Plain Layout
+
+ Elaboration                    ^
+\end_layout
+
+\begin_layout Plain Layout
+
+ |              |               | runtime error
+\end_layout
+
+\begin_layout Plain Layout
+
+ | no warnings  | type warnings |
+\end_layout
+
+\begin_layout Plain Layout
+
+ v              v               |
+\end_layout
+
+\begin_layout Plain Layout
+
+    run program   ---------------
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+better graphics
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Workflow for this Thesis
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:intro-thesis-workflow"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The standard workflow seems sufficient for type systems in many mainstream
+ programing languages.
+ Though there is experimental evidence that even OCaml can be easier to
+ use with the proposed workflow 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "10.1145/2951913.2951915"
+literal "false"
+
+\end_inset
+
+.
+ However in the presence of dependent types the standard workflow is challenging
+ for beginners and experts alike.
+ 
+\end_layout
+
+\begin_layout Standard
+The difficulty with dependently typed languages has been reflected in the
+ consensus that dependent type errors are bad
+\begin_inset CommandInset citation
+LatexCommand cite
+key "eremondi2019framework"
+literal "false"
+
+\end_inset
+
+.
+ However the problem is likely a mismatch between the expectations of the
+ programmer and the design of the underling type theory.
+ Better worded english sentences are unlikely to bridge this gap when the
+ type system doubts x+1 = 1+x.
+\end_layout
+
+\begin_layout Standard
+By switching to the proposed workflow, type errors become type warnings,
+ and the programer is fee to run their program and experiment, while 
+\series bold
+still presented with
+\series default
+ the all 
+\series bold
+the information
+\series default
+ they would have gotten 
+\series bold
+from a type error 
+\series default
+in the form of warnings.
+ If there are no warnings, the programmer would be justified in calling
+ their program a proof.
+ If there is value in a type error message it comes from the message itself
+ and not the hard stop it puts to programming.
+\end_layout
+
+\begin_layout Standard
+The proposed workflow is further justified, since often the type system
+ is too conservative and the programmer is correct in implicitly asserting
+ an equality.
+ That the programmer may need to go outside the conservative bounds of definitio
+nal equality has been recognized since the earliest dependent type theories
+ 
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+ML
+\end_layout
+
+\end_inset
+
+.
+ Difficulties in dependently typed equality have motivated many research
+ projects 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "HoTTbook,sjoberg2015programming,cockx2021taming"
+literal "false"
+
+\end_inset
+
+.
+ However, these impressive efforts are still only used by experts.
+ Further, since program equivalence is undecidable in general, no system
+ will be able to statically verify every 
+\begin_inset Quotes eld
+\end_inset
+
+obvious
+\begin_inset Quotes erd
+\end_inset
+
+ equality for arbitrary user defined data types and functions.
+ In practice, every dependent typed language has a way to assume equalities,
+ even though these assumptions will result in computationally bad behavior
+ (the program may 
+\begin_inset Quotes eld
+\end_inset
+
+get stuck
+\begin_inset Quotes erd
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+Finally this proposed workflow is justified by: 
+\end_layout
+
+\begin_layout Itemize
+The relation between warnings and runtime errors, in that a runtime error
+ will always correspond exactly to a reported warning, always adding specificity
+ to the the warning that was presented.
+ 
+\end_layout
+
+\begin_layout Itemize
+A form of type soundness holds, programs will never 
+\begin_inset Quotes eld
+\end_inset
+
+get stuck
+\begin_inset Quotes erd
+\end_inset
+
+ unless a concrete counter example is found.
+\end_layout
+
+\begin_layout Itemize
+Programs that type check against a model type system will not have warnings,
+ and therefore cannot have errors.
+\end_layout
+
+\begin_layout Itemize
+Other then warnings and error the runtime behavior is identical to the model
+ system.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+why focus on equality?
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+why is this hard?
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Example
+\end_layout
+
+\begin_layout Standard
+While the primary benefit of this system is the ability to experiment more
+ freely with dependent types, while still getting the full feedback of a
+ dependent type system, it is also possible to encode examples that would
+ be unfeasible in existing systems.
+ This comes from accepting by warnings that are justified with external
+ mathematics or programatic intuition, while being theoretically thorny
+ in dependent type theory.
+\end_layout
+
+\begin_layout Standard
+For instance, here is an interpreter for System F
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+System F is one of the foundational systems used to study programming languages.
+ It is possible to fully encode evaluation and proofs into Agda, but it
+ is difficult if substitution computation happens in a type.
+ In our system, it is possible to start with the ideal type indexed encoding
+ and build an interpreter, without proving any properties of substitution.
+\end_layout
+
+\end_inset
+
+ that encodes the type of the term.
+ The interpreter function asserts type preservation in its function signature,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset listings
+lstparams "basicstyle={\ttfamily\tiny}"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+Var : * ;
+\end_layout
+
+\begin_layout Plain Layout
+
+Var = Nat
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+Ctx : * ;
+\end_layout
+
+\begin_layout Plain Layout
+
+Ctx = Var -> Ty;
+\end_layout
+
+\begin_layout Plain Layout
+
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+data Ty : * {
+\end_layout
+
+\begin_layout Plain Layout
+
+| tv : tVar -> Ty
+\end_layout
+
+\begin_layout Plain Layout
+
+| arr : Ty -> Ty -> Ty
+\end_layout
+
+\begin_layout Plain Layout
+
+| forall : Ty -> Ty
+\end_layout
+
+\begin_layout Plain Layout
+
+};
+\end_layout
+
+\begin_layout Plain Layout
+
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+data Term : Ctx -> Ty -> * {
+\end_layout
+
+\begin_layout Plain Layout
+
+| V : (ctx : (Var -> Ty)) -> (x : Var) ->
+\end_layout
+
+\begin_layout Plain Layout
+
+ Term ctx (ctx x)
+\end_layout
+
+\begin_layout Plain Layout
+
+| lam : (ctx : Ctx) ->
+\end_layout
+
+\begin_layout Plain Layout
+
+ (targ : Ty) -> (tbod : Ty) ->
+\end_layout
+
+\begin_layout Plain Layout
+
+ Term (ext ctx targ) tbod ->
+\end_layout
+
+\begin_layout Plain Layout
+
+ Term ctx (arr targ tbod)
+\end_layout
+
+\begin_layout Plain Layout
+
+| app : (ctx : Ctx) ->
+\end_layout
+
+\begin_layout Plain Layout
+
+ (arg : Ty) -> (bod : Ty) ->
+\end_layout
+
+\begin_layout Plain Layout
+
+ Term ctx (arr arg bod) ->
+\end_layout
+
+\begin_layout Plain Layout
+
+ Term ctx arg ->
+\end_layout
+
+\begin_layout Plain Layout
+
+ Term ctx bod
+\end_layout
+
+\begin_layout Plain Layout
+
+| tlam : (ctx : Ctx) ->
+\end_layout
+
+\begin_layout Plain Layout
+
+ (bod : Ty) ->
+\end_layout
+
+\begin_layout Plain Layout
+
+ Term ctx bod ->
+\end_layout
+
+\begin_layout Plain Layout
+
+ Term ctx (forall bod)
+\end_layout
+
+\begin_layout Plain Layout
+
+| tapp : (ctx : Ctx) ->
+\end_layout
+
+\begin_layout Plain Layout
+
+ (targ : Ty) -> (tbod : Ty) ->
+\end_layout
+
+\begin_layout Plain Layout
+
+ Term ctx (forall tbod) ->
+\end_layout
+
+\begin_layout Plain Layout
+
+ Term (tSubCtx targ ctx) (tSubt targ tbod)
+\end_layout
+
+\begin_layout Plain Layout
+
+};
+\end_layout
+
+\begin_layout Plain Layout
+
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+step : (ctx : Ctx) -> (ty : Ty) -> Term ctx ty ->
+\end_layout
+
+\begin_layout Plain Layout
+
+ Term ctx ty ;
+\end_layout
+
+\begin_layout Plain Layout
+
+step ctx ty trm =
+\end_layout
+
+\begin_layout Plain Layout
+
+case trm <_ => Term ctx ty > {
+\end_layout
+
+\begin_layout Plain Layout
+
+| (app _ targ tbod (lam _ _ _ bod) a) =>
+\end_layout
+
+\begin_layout Plain Layout
+
+  sub ctx targ a tbod bod
+\end_layout
+
+\begin_layout Plain Layout
+
+| x => x
+\end_layout
+
+\begin_layout Plain Layout
+
+};
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+clean up, write out sub?
+\end_layout
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+System F
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:ex-sysf"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+It will generate warnings like the following 
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+\begin_inset Quotes eld
+\end_inset
+
+It will generate the following warnings
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+...
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+First note that the program has assumed several of the standard properties
+ of substitution.
+ Formalizing substitution is in a dependent type theory is a substantial
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+this might be really underselling it, we are talking months of effort
+\end_layout
+
+\end_inset
+
+ task
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+cite some of the libs
+\end_layout
+
+\end_inset
+
+.
+ Informally substitution and binding is usually considered obvious and uninteres
+ting, and little explanation is usually given
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+A convention that will be followed in this thesis
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Second, the type contexts have been encoded as functions.
+ This would be a reasonable encoding in a mainstream functional language
+ since it hides the uninteresting lookup information.
+ This encoding would be unthinkable in other dependently typed languages
+ since equality over functions is so fraught.
+ Here we can rest on our intuition that functions that act the same are
+ the same.
+\end_layout
+
+\begin_layout Standard
+Finally it is perfectly possible that is a bug in the code invalidating
+ one of the assumptions.
+ There are two options for the programmer:
+\end_layout
+
+\begin_layout Itemize
+reformulate the above code so that there are no warnings, essentially formally
+ proving all the required properties (this is possible but would take prohibitiv
+e effort)
+\end_layout
+
+\begin_layout Itemize
+exercise interpreter using standard software testing techniques.
+ If there interpreter does not preserve types, then a concrete counter example
+ will be found
+\end_layout
+
+\begin_layout Standard
+The programmer is free to choose how much effort should go into removing
+ warnings.
+ But even if the programmer wanted a fully formally correct interpreter,
+ it would still be wise to test the functions first before attempting such
+ a proof.
+\end_layout
+
+\begin_layout Standard
+For instance, if the following error is introduced, 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+...
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Then it will be possible to get the runtime error 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+...
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Part
+Design Decisions
+\end_layout
+
+\begin_layout Standard
+There are many flavors of dependent types that can be explored, this thesis
+ attempts to always us the simplest and most programmer friendly formulations.
+ Specifically, 
+\end_layout
+
+\begin_layout Itemize
+The theories in this thesis is considered
+\series bold
+ full-spectrum
+\series default
+.
+ The full-spectrum approach is a popular and parsimonious approach that
+ allow computation to behave the same at the term and type level 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "10.1145/289423.289451,norell2007towards,brady2013idris,sjoberg2012irrelevance"
+literal "false"
+
+\end_inset
+
+.
+ This is contrasted with a leveled theory where terms embedded in types
+ may be limited in their behavior, this is the approach taken in ATS.
+ While the full spectrum approach offers tradeoffs (it is harder to deal
+ with effects), it seems to be the most predictable from the programmer's
+ perspective.
+\end_layout
+
+\begin_layout Itemize
+The theories presented in this thesis will allow unrestricted general recursion
+ and thus non-termination.
+ While there is some dispute about essential general recursion is
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+that mcbride paper
+\end_layout
+
+\end_inset
+
+, there is no mainstream programing language without it.
+ This removes any justification for a type universe hierarchy, so our theories
+ will have type-in-type.
+\end_layout
+
+\begin_layout Itemize
+Aside from nontermination, effects will not be considered.
+ Even though effects seem essential to standard programing they are a very
+ complicated area of active research that will not be considered here.
+ In this sense the language will be pure like Haskell.
+ 
+\end_layout
+
+\begin_layout Part
+The work in this thesis
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+Surface language (ch.
+ 2,4)
+\end_layout
+
+\begin_layout Plain Layout
+
+            {syntax {typed syntax {bidirectionally typed syntax}       
+   }              }
+\end_layout
+
+\begin_layout Plain Layout
+
+                                  |                            |       
+            |
+\end_layout
+
+\begin_layout Plain Layout
+
+elaboration  (ch.
+ 3)              |without warnings            |    with warnings  |
+\end_layout
+
+\begin_layout Plain Layout
+
+                                  |                            |       
+            |
+\end_layout
+
+\begin_layout Plain Layout
+
+                                  vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvv
+\end_layout
+
+\begin_layout Plain Layout
+
+                    {                   cast system (ch.
+ 3)                               }
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+better graphics
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Systems in This Thesis
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:intro-thesis-workflow-1"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+While apparently a simple idea, the technical details required to manage
+ runtime checks that delay until runtime in a dependently typed language
+ is fairly involved.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+This should probly be expanded
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Chapter 2 describes a dependently typed language intended to model standard
+ dependent type theories (called the
+\series bold
+ Surface Language
+\series default
+) and proves 
+\series bold
+type soundness
+\series default
+, and presents a bidirectional type checking procedure system intended to
+ model standard type checking.
+ 
+\end_layout
+
+\begin_layout Standard
+Chapter 3 describes a dependently typed language with embedded type checking,
+ called the 
+\series bold
+cast language
+\series default
+.
+ The cast language has it's own version of type soundness, called 
+\series bold
+cast soundness
+\series default
+, which is proven correct.
+ An Elaboration procedure takes most terms of the surface syntax into terms
+ in the cast language.
+ Several desirable properties for elaboration are presented and explored.
+\end_layout
+
+\begin_layout Standard
+Chapter 4 reviews how dependent data and pattern matching can be added to
+ the surface language.
+\end_layout
+
+\begin_layout Standard
+Chapter 5 shows how to extend the cast language with dependent data and
+ pattern matching.
+\end_layout
+
+\begin_layout Standard
+Versions of the proof of type soundness in Chapter 2, and the cast soundness
+ in Chapter 3 have been formally proven in Coq
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+The formalization is due to Robin, using libraries...
+ 
+\end_layout
+
+\end_inset
+
+
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+link
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Those interested in exploring the metatheory of standard dependent type
+ theory can read chapters 2 and 4.
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+btprint "btPrintCited"
+bibfiles "/Users/stephaniesavir/thesis/bibliography/dtest"
+options "alpha"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Part
+TODO
+\end_layout
+
+\begin_layout Standard
+Am I still trying to make gradual correctness a thing?
+\end_layout
+
+\begin_layout Standard
+quick thakeaways?
+\end_layout
+
+\begin_layout List of TODOs
+
+\end_layout
+
+\begin_layout Part
+notes
+\end_layout
+
+\begin_layout Part
+unused
+\end_layout
+
+\begin_layout Section
+Error msgs
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+%% problem
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+If programmers found dependent type systems easier to learn and use, software
+ could become more reliable.
+ Unfortunately, dependent type systems have yet to see widespread use in
+ industry.
+ One source of difficulty is the conservative equality checking required
+ by most dependent type systems.
+ This conservative equality is a source of some of the confusing error messages
+ dependent type systems are known for 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "eremondi2019framework"
+literal "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+This error will help the programmer fix the bug in 
+\begin_inset Formula $\mathtt{add}$
+\end_inset
+
+.
+ There is evidence that specific examples like this can help clarify the
+ type error messages in OCaml 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "10.1145/2951913.2951915"
+literal "false"
+
+\end_inset
+
+ and there has been an effort to make refinement type error messages more
+ concrete in other systems like Liquid Haskell 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "10.1145/3314221.3314618"
+literal "false"
+
+\end_inset
+
+.
+\end_layout
+
+\end_body
+\end_document

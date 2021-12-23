@@ -116,7 +116,7 @@ Mark Lemay
 status open
 
 \begin_layout Plain Layout
-Not yet implemanted (earlier version was, but this contains substantial
+Not yet implemented (earlier version was, but this contains substantial
  changes)
 \end_layout
 
@@ -130,8 +130,8 @@ Symbolic Execution
 \end_layout
 
 \begin_layout Standard
-One of the values of type checking is the immediacy of feedback.
- We have outlined here a system that will give warning messages immediacy,
+One of the advantages of type checking is the immediacy of feedback.
+ We have outlined here a system that will give warning messages immediately,
  but requires evaluation to give the detailed error messages that are most
  helpful to correct a program.
  This is especially important if the user wants to use the system as a proof
@@ -144,9 +144,10 @@ One of the values of type checking is the immediacy of feedback.
 This process is semi-decidable in general (by testing against all well typed
  syntax).
  But enumerating every term is infeasibly inefficient for type syntax and
- function syntax, So we will present a procedure that generates plausible
- partial functions and types.
- Additionally the search space can be reduced by only engaging with values
+ function syntax.
+ So we will present a procedure that generates plausible partial functions
+ and types.
+ Additionally the search space can be reduced by only engaging with constructors
  of data type instead of all expressions.
  Finally, we present a scheme to handle path variables.
 \end_layout
@@ -156,8 +157,23 @@ Since this procedure operates over the cast language, we must decide what
  constitutes a reasonable testing environment
 \end_layout
 
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+expand this with an overview of evaluation contexts, however contextual
+ equivalence will not form an equivalence class? observations will need
+ to be refined
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Itemize
-on one extreme, our testing code could introduce new blame that is exercised
+on one extreme, our testing code could introduce arbitrary new blame.
 \end_layout
 
 \begin_layout Itemize
@@ -178,14 +194,30 @@ we will attempt to use the middle ground criterion, since that will allow
 \begin_inset Formula $fx=gx$
 \end_inset
 
- when relevant.
+ when relevant, without insisting 
+\begin_inset Formula $f\equiv g$
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
 Since the procedure remains semi-decidable, we intend to run it incrementally,
- with whatever resources are available.
- The procedure is intended to be run during the continuous integration phase
- of standard software development.
+ with whatever resources are available
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+Awk, revise
+\end_layout
+
+\end_inset
+
+.
+ Unlike type checking, the process does not block the programmer from executing
+ their own code.
+ The procedure is intended to be run passively during the continuous integration
+ phase of standard software development.
 \end_layout
 
 \begin_layout Standard
@@ -193,8 +225,8 @@ We call our method plausible symbolic execution.
  Though plausible symbolic execution is an approximation (it is possible
  to flag errors that are not reachable in code) and is in some ways inefficient.
  It appears to be the first symbolic execution framework to deal with fully
- typed higher order functions, and certainly is the procedure of it's kind
- to deal with dependent types.
+ typed higher order functions, and is the first procedure of it's kind to
+ deal with dependent types.
 \end_layout
 
 \begin_layout Part
@@ -208,7 +240,7 @@ Environments and Observations
 \begin_layout Standard
 The function fragment of the cast language defined in Chapter 3, already
  provides a rich language to consider for symbolic execution.
- Most of the issues can be highlighted in that setting.
+ Most of the issues of the procedure can be highlighted in that setting.
  So we will first define symbolic execution for that fragment.
 \end_layout
 
@@ -229,6 +261,8 @@ noprefix "false"
  Pure observations are used internally by the environment and blame observations
  are used to unpack the term under consideration.
  By construction, environments cannot omit blame.
+ Finally is a judgment that shows how closed typed terms can interact with
+ the environment.
 \end_layout
 
 \begin_layout Standard
@@ -1151,8 +1185,8 @@ name "fig:sym-env-obs"
 \end_layout
 
 \begin_layout Standard
-The environment assignments are restrictive by design, each assignment allowed
- the least possible output.
+The environment assignments are restrictive by design, each assignment is
+ allowed the least possible output.
  However this is notationally cumbersome, so we will make heavy use of the
  abbreviations in 
 \begin_inset CommandInset ref
@@ -1678,7 +1712,62 @@ Consider some examples before continuing,
 \end_layout
 
 \begin_layout Standard
-if we have 
+If we have 
+\begin_inset Formula $\lambda x\Rightarrow\star::x::\star\quad:\star\rightarrow\star$
+\end_inset
+
+, then the following environment would extract a blamable term,
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+ 
+\begin_inset Formula $\star::\left(-\rightarrow-\right)::\star$
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+eval ctx?
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $x:\star,x=-\rightarrow-\boxempty\lambda x\Rightarrow\star::x::\star\quad:\star\rightarrow\star.app[x]\vartriangleright\star::\left(-\rightarrow-\right)::\star\quad:\star$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In general, if we have 
 \begin_inset Formula $\lambda x\Rightarrow!!\quad:\star\rightarrow\star$
 \end_inset
 
@@ -1732,6 +1821,17 @@ in this case the environment could be realized by
 \begin_inset Formula $f=\lambda x\Rightarrow x$
 \end_inset
 
+
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+not every observation made by inspect can be realized since, the Blame judgment
+ in chapter 3 is limited
+\end_layout
+
+\end_inset
+
 .
 \end_layout
 
@@ -1776,7 +1876,8 @@ We may be in a situation were casts need to be resolved in order to reach
 \end_layout
 
 \begin_layout Standard
-is blamable by itself but we may still want to see that 
+is blamable by itself but we may still want uncover the blame specific to
+ 
 \family roman
 \series medium
 \shape up
@@ -1789,7 +1890,11 @@ is blamable by itself but we may still want to see that
 \uwave off
 \noun off
 \color none
-!! is reachable
+!! in the body of 
+\begin_inset Formula $\lambda x\Rightarrow\,!!$
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -2075,9 +2180,19 @@ name "fig:sym-env-Sym"
 \begin_layout Standard
 We are left to characterize what makes a reasonable environment.
  We would like that we can only form environments that can be realized as
- program terms, but this seems too difficult.
- So we will instead remove the large classes of bad contexts that can be
- removed in a simple way.
+ program terms
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+well except for blame ambiguity
+\end_layout
+
+\end_inset
+
+, but this seems too difficult.
+ So we will instead restrict a large number of bad contexts that can be
+ avoided in a simple way.
  
 \end_layout
 
@@ -2092,7 +2207,7 @@ noprefix "false"
 
 \end_inset
 
- environments must obey the typing rules.
+ gives the rules for well typed environments.
  The judgment 
 \begin_inset Formula $-=y\cancel{\in}I$
 \end_inset
@@ -2234,6 +2349,11 @@ Type checking alone does not make the system consistent.
 \end_inset
 
  is well typed but inconsistent.
+ As is 
+\begin_inset Formula $F:\star\rightarrow\star,F\star=\star,F\star=-\rightarrow-$
+\end_inset
+
+.
  So we extend it with the plausibility constraint listed in 
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -2294,6 +2414,58 @@ I\,\mathbf{ty}\\
 \[
 \frac{I\vdash ae\neq a'e}{I\vdash a\neq a'}
 \]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+not carful enough, e needs to typecheck
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+circular arguments can be made?
+\end_layout
 
 \end_inset
 
@@ -2383,7 +2555,8 @@ Incidentally
 
 \end_inset
 
-, therefore 
+.
+ Therefore 
 \end_layout
 
 \begin_layout Standard
@@ -2430,7 +2603,7 @@ The plausibility constraint naturally handles self reference that may occur
 \begin_inset Formula $I=F:\star\rightarrow\star,F\,\left(\star\rightarrow\star\right)=-\rightarrow-,F\,\left(F\,\star\right)=\star,F\,\star=\star$
 \end_inset
 
- since 
+ is plausible since 
 \begin_inset Formula $I\vdash\left(F\,\star\right)=\star\neq\left(\star\rightarrow\star\right)$
 \end_inset
 
@@ -2467,8 +2640,8 @@ clean up this example
 \end_layout
 
 \begin_layout Standard
-This is a relatively lightweight constraint, especially when a function
- has taken on few assignments.
+This is a relatively lightweight constraint on the environment search, especiall
+y when a function has taken on few assignments.
 \end_layout
 
 \begin_layout Standard
@@ -2512,7 +2685,7 @@ observe
 \begin_inset Formula $F:\star\rightarrow\star,F\,\star=\star\rightarrow\star,F\,\left(\star\rightarrow\star\right)=\star$
 \end_inset
 
- , which might be needed to explore the term 
+ , which might be needed to explore the term with casts like 
 \begin_inset Formula $\lambda F\Rightarrow...::\star::F\left(\star\rightarrow\star\right)......::\left(\star\rightarrow\star\right)::F\,\star\ :\left(\star\rightarrow\star\right)\rightarrow...$
 \end_inset
 
@@ -2560,10 +2733,36 @@ add por as a source of unrealizability
 
 \begin_layout Standard
 It is unclear that this over aggressive behavior is a problem in practice.
- The user must have already failed the standard type check, and the error
- does point out a concrete place that the type information does not line
- up.
- Recall that the parametricity properties of the cast language are already
+ The user must have already failed the standard type check
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+not exactly correct without cleaning
+\end_layout
+
+\end_inset
+
+, and the error does point out a concrete place that the type information
+ does seem suspect.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+move this somewhere better
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Recall that the parametricity properties of the cast language are already
  weakened 
 \begin_inset Flex TODO Note (Margin)
 status open
@@ -2610,6 +2809,8 @@ literal "false"
 \end_inset
 
 .
+ Property based testing involves writing functions that encode the properties
+ of interest, and then randomly testing those functions.
 \end_layout
 
 \begin_layout Itemize
@@ -2641,6 +2842,37 @@ literal "false"
 
  uses type-level predicates to construct generators with soundness and completen
 ess properties, but without support for higher order functions.
+ Current work in this area uses coverage guided techniques in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "lampropoulos2019coverage"
+literal "false"
+
+\end_inset
+
+ like those in symbolic execution.
+ More recently Benjamin Pierce has used Afl on compiled Coq code as a way
+ to generate counter examples
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+https://www.youtube.com/watch?v=dfZ94N0hS4I
+\end_layout
+
+\end_inset
+
+
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+review this, maybe there's a paper or draft now?
+\end_layout
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Itemize
@@ -2669,8 +2901,7 @@ Symbolic evaluation is a technique to efficiently extract errors from programs.
 
 \begin_layout Standard
 The situation described in this chapter is unusual from the perspective
- of symbolic execution.
- But symbolic execution is probably still a good description
+ of symbolic execution:
 \end_layout
 
 \begin_layout Itemize
@@ -2750,20 +2981,6 @@ literal "false"
 
  uses game semantics to build a symbolic execution engine for a subset of
  ML with some nice theoretical properties.
-\end_layout
-
-\begin_layout Itemize
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-That crazy stuff B.P.
- was up to
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Section
@@ -4080,83 +4297,6 @@ Discussion and Future Work
 \end_layout
 
 \begin_layout Standard
-The goal of this chapter has been to describe a procedure that is suitable
- for implementation.
- To accomplish this several areas of meta-theory have been ignored.
- This approach suggests two desirable properties
-\end_layout
-
-\begin_layout Enumerate
-Every error that could be caused by the program can be observed via symbolic
- execution
-\end_layout
-
-\begin_layout Enumerate
-Every error in observed by symbolic executions can be realized as a program
- (no error is spurious)
-\end_layout
-
-\begin_layout Standard
-We strongly conjecture the first property to hold 
-\begin_inset Flex TODO Note (Margin)
-status open
-
-\begin_layout Plain Layout
-time permitting prove, via logging
-\end_layout
-
-\end_inset
-
-.
- 
-\end_layout
-
-\begin_layout Standard
-The 2nd property is more subtle.
- We have not described evaluation contexts sufficiently, this is to maintain
- compatibility with modules that have not been formalized.
- For instance,
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-f : * ;
-\end_layout
-
-\begin_layout Plain Layout
-
-f = (x : Bool) -> (Nat :: Bool) ;
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-will not be able to induce a term level error, since no term level observation
- can observe the type cast
-\begin_inset Flex TODO Note (Margin)
-status open
-
-\begin_layout Plain Layout
-this isn't exactly right f can be applied in a weird way
-\end_layout
-
-\end_inset
-
-.
- However we want to observe errors here because f could be exported through
- the module system and used in an unforeseen type annotation where an error
- could be observed.
-\end_layout
-
-\begin_layout Standard
 More subtle is that the procedure described here will allow f to observe
  parallel or, even though parallel or cannot be constructed within the language.
  This hints that the approach presented here could be revised in terms of
@@ -4198,6 +4338,64 @@ options "alpha"
 
 \begin_layout Part
 Alternative formulations
+\end_layout
+
+\begin_layout Section
+contextual blame
+\end_layout
+
+\begin_layout Standard
+Say blame can be realized for a term 
+\begin_inset Formula $a:A$
+\end_inset
+
+ if there exists a context 
+\begin_inset Formula $C[]$
+\end_inset
+
+ such that 
+\begin_inset Formula $C[a]$
+\end_inset
+
+ Blame with a location in 
+\begin_inset Formula $a$
+\end_inset
+
+and 
+\begin_inset Formula $C[a]$
+\end_inset
+
+ is well cast.
+ This is probably the best setting to target symbolic execution against.
+\end_layout
+
+\begin_layout Subsection
+contextual equivalence
+\end_layout
+
+\begin_layout Standard
+typed contextual equivalence.
+ most work is done untyped (see for example in https://subs.emis.de/LNI/Proceeding
+s/Proceedings154/gi-proc-154-264.pdf ).
+ typed languages respect untyped equalities, but also allow more equalities.
+ for instance Wvilhelm's 
+\backslash
+x.x =?= 
+\backslash
+x.x+0
+\end_layout
+
+\begin_layout Standard
+Going to be very non standard: the observations are strange, non-termination
+ ,
+\end_layout
+
+\begin_layout Standard
+overview https://www.cl.cam.ac.uk/teaching/0910/L16/semhl-15-ann.pdf
+\end_layout
+
+\begin_layout Standard
+TODO [Gordon, Lassen (1998)]
 \end_layout
 
 \begin_layout Section

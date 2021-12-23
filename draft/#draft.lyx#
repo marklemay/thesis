@@ -1,0 +1,1075 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\use_default_options true
+\begin_modules
+todonotes
+\end_modules
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Draft (old version)
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+The abstract should contain a clear and brief statement of the problem,
+ the procedure(s) and/or method(s) followed, the result(s), and the conclusion(s
+).
+ The purpose of an abstract is to help a reader decide if they want to consult
+ the complete work.
+ 11 As with the title, the abstract is searchable in many databases, including
+ ProQuest Dissertations & Theses Global.
+ Include relevant place names, full personal names, and other proper nouns,
+ which can be very useful keywords for scholars locating resources.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Abstract
+\end_layout
+
+\begin_layout Standard
+This theses follows 2 convictions that have been under explored in the type
+ theory literature:
+\end_layout
+
+\begin_layout Itemize
+It should be easier to write programs with dependent types then without
+\end_layout
+
+\begin_layout Itemize
+Whenever possible, static errors should be replaced with 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+static warnings, 
+\end_layout
+
+\begin_layout Itemize
+more concrete and clear runtime errors,
+\end_layout
+
+\begin_layout Itemize
+and testing strategies that uncover concrete runtime errors
+\end_layout
+
+\end_deeper
+\begin_layout Part
+Introduction 
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+%% TODO incorporate preposal introduction, heavily revise and sumerize
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+%% why dependent types
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+Programming is an error-filled process.
+ While different formal methods approaches can make some error rare or impossibl
+e, they burden programers with complex additional syntax and semantics that
+ can make them hard to work with.
+ Dependent type systems offer a simpler approach.
+ In a dependent type system, proofs and invariants can borrow from the syntax
+ and semantics already familiar to functional programmers.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+%% why full spectrum (only here because of the now poor title choice)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+sloppy
+\end_layout
+
+\end_inset
+
+ This promise of dependent types in a practical programming language has
+ inspired research projects for decades.
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+%%  
+\backslash
+cite{DependentMLAnapproachtopracticalprogrammingwithdependenttypes}.
+ %% TODO add more refferencesto stratified systems
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+Several approaches have now been explored.
+ The 
+\series bold
+full-spectrum
+\series default
+ approach is a popular and parsimonious approach that allow computation
+ to behave the same at the term and type level 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "10.1145/289423.289451,norell2007towards,brady2013idris,sjoberg2012irrelevance"
+literal "false"
+
+\end_inset
+
+.
+ While this approach offers tradeoffs, it seems to be the most predictable
+ from the programmer's perspective.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+%% example of dependent types
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+For instance, dependent types can prevent an out-of-bounds error when indexing
+ into a length indexed list.
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% will people know what length index means
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+The following type checks in virtually all full-spectrum dependent type
+ systems
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\mathtt{Bool} & :*,\\
+\mathtt{Nat} & :*,\\
+\mathtt{Vec} & :*\rightarrow\mathtt{Nat}\rightarrow*,\\
+\mathtt{add} & :\mathtt{Nat}\rightarrow\mathtt{Nat}\rightarrow\mathtt{Nat},\\
+\mathtt{rep} & :\left(A:*\right)\rightarrow A\rightarrow\left(x:\mathtt{Nat}\right)\rightarrow\mathtt{Vec\,}A\,x,\\
+\mathtt{head} & :\left(A:*\right)\rightarrow\left(x:\mathtt{Nat}\right)\rightarrow\mathtt{Vec}\,A\,\left(\mathtt{add}\,1\,x\right)\rightarrow A
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\vdash\lambda x.\mathtt{head}\,\mathtt{Bool}\,x\,\left(\mathtt{rep}\,\mathtt{Bool}\,\mathtt{true}\,\left(\mathtt{add}\,1\,x\right)\right)\,:\,\mathtt{Nat}\rightarrow\mathtt{Bool}
+\]
+
+\end_inset
+
+
+\begin_inset VSpace smallskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We are sure 
+\begin_inset Formula $\mathtt{head}$
+\end_inset
+
+ never inspects an empty list because the 
+\begin_inset Formula $\mathtt{rep}$
+\end_inset
+
+ function will always return a list of length 
+\begin_inset Formula $1+x$
+\end_inset
+
+.
+ In a more polished implementation many arguments would be implicit and
+ the above could be written as 
+\begin_inset Formula $\lambda x.\mathtt{head}\,\left(\mathtt{rep}\,\mathtt{true}\,\left(1+x\right)\right)\,:\,\mathtt{Nat}\rightarrow\mathtt{Bool}$
+\end_inset
+
+.
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+%% Or hidden under nice syntactic sugar, 
+\backslash
+
+\backslash
+$
+\backslash
+lambda x.
+\backslash
+left(
+\backslash
+mathtt{rep}
+\backslash
+,
+\backslash
+mathtt{true}
+\backslash
+,
+\backslash
+left(1+x
+\backslash
+right)
+\backslash
+right)
+\backslash
+left[0
+\backslash
+right]
+\backslash
+,:
+\backslash
+,
+\backslash
+mathtt{Nat}
+\backslash
+rightarrow
+\backslash
+mathtt{Bool}$.
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+%% problem
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+Unfortunately, dependent types have yet to see widespread industrial use.
+ Programmers often find dependent type systems difficult to learn and use.
+ One of the reasons for this difficulty is that conservative assumptions
+ about equality create subtle issues for users, and lead to some of the
+ confusing error messages these languages are known to produce 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "eremondi2019framework"
+literal "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+%% example of problem
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+The following will not type check in any conventional system with user defined
+ addition,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\cancel{\vdash}\lambda x.\mathtt{head}\,\mathtt{Bool}\,x\,\left(\mathtt{rep}\,\mathtt{Bool}\,\mathtt{true}\,\left(\mathtt{add}\,x\,1\right)\right)\,:\,\mathtt{Nat}\rightarrow\mathtt{Bool}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+%% explanation of example
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+sloppy
+\end_layout
+
+\end_inset
+
+ Obviously 
+\begin_inset Formula $1+x=x+1$
+\end_inset
+
+.
+ However in the majority of dependently typed programming languages, 
+\begin_inset Formula $\mathtt{add}\,1\,x\equiv\mathtt{add}\,x\,1$
+\end_inset
+
+ is not a definitional equality.
+ This means a term of type 
+\begin_inset Formula $\mathtt{Vec}\left(\mathtt{add}\,1\,x\right)$
+\end_inset
+
+ cannot be used where a term of type 
+\begin_inset Formula $\mathtt{Vec}\left(\mathtt{add}\,x\,1\right)$
+\end_inset
+
+ is expected.
+ Usually when dependent type systems encounter situations like this, they
+ will give a type error and prevent evaluation.
+ If the programmer made a mistake in the definition of addition such that
+ 
+\begin_inset Formula $\mathtt{add}\,1\,x\,\cancel{=}\,\mathtt{add}\,x\,1$
+\end_inset
+
+, no hints are given to correct the mistake.
+ This increase of friction and lack of communication are key reasons that
+ dependent types systems are not more widely used.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+%% solution
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+Instead why not sidestep static equality? We could assume the equalities
+ hold and discover a concrete witness of inequality as a runtime error.
+ Assuming there was a mistake in the implementation of 
+\begin_inset Formula $\mathtt{add}$
+\end_inset
+
+, we could instead provide a runtime error that gives an exact counter example.
+ For instance, if the 
+\begin_inset Formula $\mathtt{add}$
+\end_inset
+
+ function incorrectly computes 
+\begin_inset Formula $\mathtt{add}\,8\,1=0$
+\end_inset
+
+ the above function will 
+\begin_inset Quotes eld
+\end_inset
+
+get stuck
+\begin_inset Quotes erd
+\end_inset
+
+ on the input 
+\begin_inset Formula $8$
+\end_inset
+
+.
+ If that application is encountered at runtime we can give the error 
+\begin_inset Formula $\mathtt{add}\,1\,8=9\cancel{=}0=\mathtt{add}\,8\,1$
+\end_inset
+
+.
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+%%, a message that would have been the perfect type error.
+\end_layout
+
+\end_inset
+
+ There is some evidence that specific examples like this can help clarify
+ the type error messages in OCaml 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "10.1145/2951913.2951915"
+literal "false"
+
+\end_inset
+
+ and there has been an effort to make refinement type error messages more
+ concrete in other systems like Liquid Haskell 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "10.1145/3314221.3314618"
+literal "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+% %% more about equality
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+% Difficulties in dependently typed equality have motivated many research
+ projects.
+ %% (to name a few 
+\backslash
+cite{HoTTbook,sjoberg2015programming,cockx2021taming}).
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+% However, it is unlikely those impressive efforts are suitable for non-experts.
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+% None of these projects makes the underlying equality less complicated.
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+%% why is the solution good, for users
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+Runtime type checking leads to a different workflow than traditional type
+ systems.
+ Instead of type checking first and only then executing the program, execution
+ and type checking can both inform the programmer.
+ Users can still be warned about uncertain equalities, but the warning need
+ not block the flow of programming.
+ Since the user can gradually correct their program as errors surface, we
+ call this workflow 
+\series bold
+gradual correctness
+\series default
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+%% why is the solution good, for implementers
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+Additionally, our approach avoids fundamental issues of definitional equality.
+ No system will be able to statically verify every 
+\begin_inset Quotes eld
+\end_inset
+
+obvious
+\begin_inset Quotes erd
+\end_inset
+
+ equality for arbitrary user defined data types and functions, since general
+ program equivalence is famously undecidable.
+ By weakening the assumption that all equalities be decided statically,
+ we can experiment with other advanced features without arbitrarily committing
+ to which equalities are acceptable.
+ Finally, we expect this approach to equality is a prerequisite for other
+ desirable features such as a foreign function interface, runtime proof
+ search, and a lightweight ability to test dependent type specifications.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+%% why is the solution hard
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+Though gradual correctness is an apparently simple idea, there are several
+ subtle issues that must be dealt with.
+ While it is easy to check ground natural numbers for equality, even simply
+ typed functions have undecidable equality.
+ This means that we cannot just check types for equality at applications
+ of higher order functions.
+ Dependent functions mean that equality checks may propagate into the type
+ level.
+ Simply removing all type annotations will mean there is not enough information
+ to construct good error messages.
+ We are unaware of research that directly handles all of these concerns.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+%% outline of the solution
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+We solve these problems with a system of 2 dependently typed languages connected
+ by an elaboration procedure.
+ 
+\end_layout
+
+\begin_layout Itemize
+The surface language, a conventional full-spectrum dependently typed language
+ (section 2) 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+the untyped syntax is used directly by the programer 
+\end_layout
+
+\begin_layout Itemize
+the type theory is introduced to make formal comparisons 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+The cast language, a dependently typed language with embedded runtime checks
+ (section 3) 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+will actually be run 
+\end_layout
+
+\begin_layout Itemize
+intended to be invisible to the programer 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+An elaboration procedure that transforms untyped surface syntax into checked
+ cast language terms (section 4) 
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+%% from the programmer perspective
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+The programmer uses the untyped syntax of the surface language to write
+ programs that they intend to typecheck in the conventional dependently
+ typed surface language.
+ Programs that fail to typecheck under the conservative type theory of the
+ surface language, are elaborated into the cast language.
+ These cast language terms act exactly as typed surface language terms would,
+ unless the programmer assumed an incorrect equality.
+ If an incorrect equality is encountered, a clear runtime error message
+ is presented against the static location of the error, with a counter example.
+\end_layout
+
+\begin_layout Section
+error msgs
+\end_layout
+
+\begin_layout Standard
+...
+\end_layout
+
+\begin_layout Part
+Surface language
+\end_layout
+
+\begin_layout Standard
+see chapter draft
+\end_layout
+
+\begin_layout Part
+Dynamic and Elab
+\end_layout
+
+\begin_layout Standard
+see chapter draft
+\end_layout
+
+\begin_layout Standard
+TODO this will be symmetric with Part 2
+\end_layout
+
+\begin_layout Standard
+TODO discussion observaiontal equality, more correct or more explicit
+\end_layout
+
+\begin_layout Standard
+TODO unusual notion of errors, as far as CBV is concerned!
+\end_layout
+
+\begin_layout Part
+Data and Pattern matching
+\end_layout
+
+\begin_layout Standard
+see chapter draft
+\end_layout
+
+\begin_layout Part
+Automated testing
+\end_layout
+
+\begin_layout Standard
+https://arxiv.org/abs/1507.04817
+\end_layout
+
+\begin_layout Part
+Runtime proof search
+\end_layout
+
+\begin_layout Part
+Conclusion and Future Work
+\end_layout
+
+\begin_layout Standard
+Chapter 2 argued that decidability was a poor metric for type systems, A
+ more meaningful metric, perhaps based on localizing problems would be good.
+\end_layout
+
+\begin_layout Standard
+non-termination as warning and error.
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+btprint "btPrintCited"
+bibfiles "/Users/stephaniesavir/dtest/papers/2022-cpp/dtest"
+options "alpha"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Part
+TODO
+\end_layout
+
+\begin_layout Itemize
+https://library.bu.edu/theses
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+https://library.bu.edu/ld.php?content_id=30310050
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+am I a dual from 1.5.4
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Itemize
+instructions for running the artifact (tag a corresponding git release)
+\end_layout
+
+\begin_layout Itemize
+clearly explain the subtext
+\end_layout
+
+\begin_layout Itemize
+invite reader to contact
+\end_layout
+
+\begin_layout List of TODOs
+
+\end_layout
+
+\begin_layout Part
+Scratch
+\end_layout
+
+\begin_layout Standard
+The surface language is pure in the sense of Haskell, supporting only non-termin
+ation and unchecked errors as effects.
+ Combining other effects with full-spectrum dependent types is substantially
+ more difficult because effectful equality is hard to characterize for individua
+l effects and especially hard for effects in combination.
+ Several attempts have been made to combine dependent types with more effects
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "pedrot2020fire"
+literal "false"
+
+\end_inset
+
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "ahman2017handling,ahman2017fibred"
+literal "false"
+
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "pedrot2020fire"
+literal "false"
+
+\end_inset
+
+ but there is still a lot of work to be done.
+ General effects, though undoubtedly useful, will not be considered in this
+ proposal.
+\end_layout
+
+\begin_layout Standard
+...
+\end_layout
+
+\begin_layout Standard
+In spite of logical unsoundness, the surface language still supports a partial
+ correctness property for first order data types when run with Call-by-Value.
+ For instance,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\vdash M:\,\sum x:\mathbb{N}.\mathtt{IsEven}\,x
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\mathtt{fst}\,M$
+\end_inset
+
+ may not terminate, but if it does, 
+\begin_inset Formula $\mathtt{fst}\,M$
+\end_inset
+
+ will be an even 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $\mathbb{N}$
+\end_inset
+
+.
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+ However, this property does not extend to functions
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\vdash M:\,\sum x:\mathbb{N}.\left(y:\mathbb{N}\right)\rightarrow x\leq y
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+it is possible that 
+\begin_inset Formula $\mathtt{fst}\,M\equiv7$
+\end_inset
+
+ if 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+M\equiv\left\langle 7,\lambda y.\mathtt{loopForever}\right\rangle 
+\]
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

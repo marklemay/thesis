@@ -26,16 +26,18 @@ all work related to my thesis document, will eventually become public
   - [x] draft Surface Data chapter
 ## Plan
 - [ ] December
-  - [ ] draft Cast Data chapter
-  - [ ] Rework symbolic execution to work in the cast language
-  - [ ] draft testing chapter
-  - [ ] draft runtime proof search chapter
-  - [ ] draft introduction
+  - [x] draft Cast Data chapter
+  - [x] draft introduction
   - [ ] draft conclusion
 - [ ] Jan
   - [ ] finalize thesis
   - [ ] Send to commitee (at least 2 weeks before defense)
+- [ ] Feb
   - [ ] Defend
+## Remove from teh body of the thesis
+- [ ] Rework symbolic execution to work in the cast language
+- [ ] draft testing chapter
+- [ ] draft runtime proof search chapter
 
 ## Submodules
 need to pull bibliography in with

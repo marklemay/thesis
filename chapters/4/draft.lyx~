@@ -917,7 +917,7 @@ unreachable
 status open
 
 \begin_layout Plain Layout
-Example, translate out to motive
+Example: transitivity, translate out to motive
 \end_layout
 
 \end_inset
@@ -6785,6 +6785,10 @@ options "alpha"
 
 \begin_layout Part
 TODO
+\end_layout
+
+\begin_layout Standard
+check by value
 \end_layout
 
 \begin_layout List of TODOs
