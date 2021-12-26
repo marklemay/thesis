@@ -63,6 +63,7 @@ Send to people for review
 * Eric's friends
 * Chapter 5, Fuzzing person 
 * internet
+* contact authors about https://arxiv.org/pdf/2107.04859.pdf
 
 
 defence 

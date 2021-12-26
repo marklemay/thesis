@@ -111,37 +111,183 @@ Chapter 6 (draft): Notes, Future work, Conclusion
 Mark Lemay
 \end_layout
 
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+Seperate into notes and future work AAND then conclusion
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Part
 Symbolic Execution
 \end_layout
 
-\begin_layout Part
-Runtime Poof Search
-\end_layout
-
-\begin_layout Part
-Future work
-\end_layout
-
-\begin_layout Section
-Semantics
+\begin_layout Standard
+In the introduction a more pragmatic approach to types was explored, however
+ we can go further.
+ We can automatically test test the type assertions of the of the project
+ until errors are uncovered.
+ Further this can be done passively so that the programmar is always allowed
+ to see warnings and to experement to possible exerccise their own errors.
 \end_layout
 
 \begin_layout Standard
-More subtle is that the procedure described here will allow f to observe
- parallel or, even though parallel or cannot be constructed within the language.
- This hints that the approach presented here could be revised in terms of
- games semantics (perhaps along lines like 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "lin_et_al:LIPIcs:2020:12349"
-literal "false"
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+            edit program
+\end_layout
+
+\begin_layout Plain Layout
+
+             |      
+\end_layout
+
+\begin_layout Plain Layout
+
+             |      
+\end_layout
+
+\begin_layout Plain Layout
+
+             v
+\end_layout
+
+\begin_layout Plain Layout
+
+ testing  <- Elaboration                    ^
+\end_layout
+
+\begin_layout Plain Layout
+
+    | ^      |              |               | runtime error
+\end_layout
+
+\begin_layout Plain Layout
+
+     -       | no warnings  | type warnings |
+\end_layout
+
+\begin_layout Plain Layout
+
+             v              v               |
+\end_layout
+
+\begin_layout Plain Layout
+
+                run program   ---------------
+\end_layout
 
 \end_inset
 
-).
- Though game semantics for dependent types is a complicated subject in and
- of itself 
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+better graphics
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Ideal Workflow
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:intro-thesis-workflow"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+A one hole context
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+cite
+\end_layout
+
+\end_inset
+
+ can be defined for the cast languages presented in this thesis 
+\begin_inset Formula $C[-]$
+\end_inset
+
+ and we can say that an error is observable if 
+\begin_inset Formula $\vdash a:A$
+\end_inset
+
+ and 
+\begin_inset Formula $\vdash C[a]:B$
+\end_inset
+
+ and 
+\begin_inset Formula $C[a]\rightsquigarrow_{*}b$
+\end_inset
+
+ and Blame 
+\begin_inset Formula $b$
+\end_inset
+
+ l o 
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+correct
+\end_layout
+
+\end_inset
+
+ for some l in a but not in C.
+\end_layout
+
+\begin_layout Standard
+While formalizing a complete and efficient testing procedure allong these
+ lines is still future work.
+ There are likely insights to be gianed from the large body of reasurch
+ on symbolic execution, especiually work that deals with typed higher oreder
+ functions.
+ A fully formal account would deal with a formal semantics of the cast lanfguage.
+ Game semantics seems a promising formalism even if the game semantics of
+ depenent types in general seems fairly complicated by iteslef
 \begin_inset Flex TODO Note (Margin)
 status open
 
@@ -152,7 +298,31 @@ cite
 \end_inset
 
 .
- 
+\end_layout
+
+\begin_layout Standard
+Prevous implementations had experemented with descovering these obseravle
+ errors by 
+\end_layout
+
+\begin_layout Part
+Runtime Poof Search
+\end_layout
+
+\begin_layout Part
+Convenience 
+\end_layout
+
+\begin_layout Standard
+implicit function arguments
+\end_layout
+
+\begin_layout Part
+Future work
+\end_layout
+
+\begin_layout Section
+Semantics
 \end_layout
 
 \begin_layout Section
@@ -193,6 +363,34 @@ notes
 
 \begin_layout Section
 unused
+\end_layout
+
+\begin_layout Standard
+More subtle is that the procedure described here will allow f to observe
+ parallel or, even though parallel or cannot be constructed within the language.
+ This hints that the approach presented here could be revised in terms of
+ games semantics (perhaps along lines like 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "lin_et_al:LIPIcs:2020:12349"
+literal "false"
+
+\end_inset
+
+).
+ Though game semantics for dependent types is a complicated subject in and
+ of itself 
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+cite
+\end_layout
+
+\end_inset
+
+.
+ 
 \end_layout
 
 \end_body

@@ -4930,6 +4930,19 @@ Discussion
 \end_layout
 
 \begin_layout Standard
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+ECHO VIEW from the left to 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 Pattern matching seems simple, but is a surprisingly subtle.
 \end_layout
 

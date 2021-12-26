@@ -34,7 +34,7 @@ all work related to my thesis document, will eventually become public
   - [ ] Send to commitee (at least 2 weeks before defense)
 - [ ] Feb
   - [ ] Defend
-## Remove from teh body of the thesis
+## Remove from the body of the thesis
 - [ ] Rework symbolic execution to work in the cast language
 - [ ] draft testing chapter
 - [ ] draft runtime proof search chapter

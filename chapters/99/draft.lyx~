@@ -104,11 +104,24 @@ todonotes
 \begin_body
 
 \begin_layout Title
-Chapter - (draft): Notes, Future work, Conclusion
+Chapter 6 (draft): Notes, Future work, Conclusion
 \end_layout
 
 \begin_layout Author
 Mark Lemay
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+Seperate into notes and future work AAND then conclusion
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Part
@@ -117,6 +130,14 @@ Symbolic Execution
 
 \begin_layout Part
 Runtime Poof Search
+\end_layout
+
+\begin_layout Part
+Convenience 
+\end_layout
+
+\begin_layout Standard
+implicit function arguments
 \end_layout
 
 \begin_layout Part
