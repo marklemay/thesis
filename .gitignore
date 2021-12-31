@@ -2,14 +2,15 @@ thesis.pdf
 thesis.blg
 thesis.log
 
-# thesis.aux
-# thesis.toc
-# thesis.lot
+**/*.aux
+thesis.toc
+thesis.lot
+thesis.lof
 
 thesis.fls
 thesis.fdb_latexmk
-# thesis.ps
-# thesis.out
-# thesis.dvi
-# thesis.bbl
+thesis.ps
+thesis.out
+thesis.dvi
+thesis.bbl
 thesis.synctex.gz
