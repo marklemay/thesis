@@ -1,6 +1,8 @@
 # thesis
 all work related to my thesis document, will eventually become public
+[![Build LaTeX document](https://github.com/marklemay/thesis/actions/workflows/build-thesis.yml/badge.svg)](https://github.com/marklemay/thesis/actions/workflows/build-thesis.yml)
 
+latest draft availible [https://github.com/marklemay/thesis/releases](here)
 
 ## What to Review
 * Chapter 1
@@ -12,7 +14,7 @@ all work related to my thesis document, will eventually become public
 need to pull bibliography in with
 ```
 git submodule foreach git pull origin master
-pdflatex thesis
+latexmk thesis.tex -pdf
 ```
 
 ## Complete
