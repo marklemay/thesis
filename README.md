@@ -8,6 +8,12 @@ all work related to my thesis document, will eventually become public
 * Chapter 2
   * proofs and formalizms
 
+## compile pdf
+need to pull bibliography in with
+```
+git submodule foreach git pull origin master
+pdflatex thesis
+```
 
 ## Complete
 * 6/16/2021 thesis proposal
@@ -30,7 +36,7 @@ all work related to my thesis document, will eventually become public
 - [ ] December
   - [x] draft Cast Data chapter
   - [x] draft introduction
-  - [ ] draft conclusion
+  - [x] draft conclusion
 - [ ] Jan
   - [ ] finalize thesis
   - [ ] Send to commitee (at least 2 weeks before defense)
@@ -41,11 +47,7 @@ all work related to my thesis document, will eventually become public
 - [ ] draft testing chapter
 - [ ] draft runtime proof search chapter
 
-## Submodules
-need to pull bibliography in with
-```
-git submodule foreach git pull origin master
-```
+
 
 ## TODO
 * formatting
@@ -53,6 +55,7 @@ git submodule foreach git pull origin master
 * CI
 
 ## Related
+* https://github.com/marklemay/boston-university-thesis-template
 * https://github.com/marklemay/thesis-proposal
 * https://icfp21.sigplan.org/details/TyDe-2021/1/Gradual-Correctness-a-Dynamically-Bidirectional-Full-Spectrum-Dependent-Type-Theory-
   * https://github.com/marklemay/dDynamic

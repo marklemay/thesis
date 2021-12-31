@@ -1,0 +1,39 @@
+Dependent types offer a uniform foundation for both proof systems
+and programing languages. While the proof systems built with dependent
+types have become relatively popular, dependently typed programing
+languages are far from mainstream. 
+
+One key issue with existing dependently typed languages, is the overly
+conservative definitional equality that programmers are forced to
+use. When combined with a traditional typing workflow, these systems
+can be quite challenging and require a large amount expertise to master.
+
+This thesis explores an alternative workflow and a more liberal handling
+of equality. Programmers are given warnings that contain the same
+information as the type errors that would be given by an existing
+system. Programers can be run these programs optimistically, and they
+will behave appropriately unless a direct contradiction confirming
+the warning is found.
+
+This is achieved, by localizing the constraints using a new form of
+elaboration based on bidirectional type inference. These local checks,
+or casts are given a runtime behavior (similar to those of contract
+and monitors). The elaborated terms have a weakened form of type soundness,
+they will not get stuck without an explicit counter example.
+
+The language explored in this thesis will be a calculus of constructions
+like language with recursion, type-in-type, user defined data and
+pattern matching. 
+
+Several meta-theoretic results will be presented. The key result,
+is that the core language, called the \textbf{cast system}, ``will
+not get stuck without a counter example'', a result called \textbf{cast
+soundness}. A proof of cast soundness is fully worked out for the
+fragment of the system without user defined data, and a Coq proof
+is available. Several other properties based on the gradual guarantees
+of gradual typing are also presented. In the presence of user defined
+data and pattern matching these properties are conjectured to hold.
+
+An prototype implementation of this work is available.
+
+\todo[inline]{review of not new stuff}

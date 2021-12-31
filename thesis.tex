@@ -1,0 +1,87 @@
+% MAIN PREAMBLE 
+\documentclass[12pt,letterpaper]{report}          % Single-sided printing for the library
+%\documentclass[12pt,twoside]{report} % Double-sided printing
+\usepackage[intlimits]{amsmath}
+\usepackage{amsfonts,amssymb}
+\DeclareSymbolFontAlphabet{\mathbb}{AMSb}
+%\usepackage{natbib}
+\usepackage{apalike}
+\usepackage{float}
+\usepackage[bf]{caption}       
+\setcaptionmargin{0.5in}
+\usepackage{fancyhdr}
+%\usepackage{fancyheadings}
+\usepackage{fancybox}
+\usepackage{ifthen}
+\usepackage{bu_ece_thesis}
+\usepackage{url}
+\usepackage{lscape,afterpage}
+\usepackage{xspace}
+\usepackage{epstopdf} 
+\usepackage{subfig}
+\usepackage{todonotes}
+
+%%% graphicx and pdf creation
+\usepackage{graphicx}
+\usepackage{appendix}
+%\usepackage{psfrag}
+%\DeclareGraphicsExtensions{.eps}   % extension for included graphics
+%\usepackage{thumbpdf}              % thumbnails for ps2pdf
+%\usepackage[ps2pdf,                % hyper-references for ps2pdf
+%bookmarks=true,%                   % generate bookmarks ...
+%bookmarksnumbered=true,%           % ... with numbers
+%hypertexnames=false,%              % needed for correct links to figures !!!
+%breaklinks=true,%                  % breaks lines, but links are very small
+%linkbordercolor={0 0 1},%          % blue frames around links
+%pdfborder={0 0 112.0}]{hyperref}%  % border-width of frames 
+%                                   % will be multiplied with 0.009 by ps2pdf
+%\hypersetup{
+%  pdfauthor   = {Joe Graduate <joe.graduate@bu.edu>},
+%  pdftitle    = {dissertation.pdf},
+%  pdfsubject  = {doctoral dissertations},
+%  pdfkeywords = {mathematics, science, technology},
+%  pdfcreator  = {LaTeX with hyperref package},
+%  pdfproducer = {dvips + ps2pdf}
+%}
+
+% customized commands can be placed here
+%\newcommand{\figref}[1]{Figure~\ref{#1}}
+%\newcommand{\chapref}[1]{Chapter~\ref{#1}}
+%\newcommand{\latex}{\LaTeX\xspace}
+
+\begin{document}
+
+% The preliminary pages
+\include{chapters/00_Prelim/prelim}        
+\cleardoublepage
+
+% \include{1_Intro/intro}
+% \cleardoublepage
+
+% \include{2_Body/body}
+% \cleardoublepage
+
+% \include{3_Details/details}
+% \cleardoublepage
+
+% \include{4_Conclusions/conclusions}
+% \cleardoublepage
+
+% %\appendix
+% \begin{appendices}
+% \include{Appendix/Appendix}
+% \end{appendices}
+
+% % Bibliography
+% \newpage
+% \singlespace
+% \bibliographystyle{apalike}
+
+% % each subdirectory can have its own BiBTeX file
+% \bibliography{thesis}
+% \cleardoublepage
+
+% % Curriculum Vitae
+% \include{0_Prelim/cv} 
+
+\end{document}

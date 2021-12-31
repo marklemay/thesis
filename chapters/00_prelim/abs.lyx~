@@ -112,19 +112,6 @@ Mark Lemay
 \end_layout
 
 \begin_layout Standard
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-Dependent types are great, but under used
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
 Dpendnet types offer a uniform foundation for both proof systems and programing
  languages.
  While the proof systems built with dependent types have become relatively
@@ -198,32 +185,6 @@ status open
 
 \begin_layout Plain Layout
 review of not new stuff
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-Some details
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-why think the results are good
 \end_layout
 
 \end_inset

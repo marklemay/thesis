@@ -48,6 +48,7 @@ the design of CastCIC."
 
 Formatting
 * department
+* alternative single sppaced draft.tex for better printing
 * nice looking multi tabbed proof format?
 * validity/regularity
 * note on equality

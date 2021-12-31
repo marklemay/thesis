@@ -1069,19 +1069,6 @@ obvious
 The solution proposed here is additional syntax that will search for a term
  of the type when resolved at runtime.
  Given the sorting function 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-begin{spacing}{0.9}
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Standard
@@ -1096,32 +1083,7 @@ begin{spacing}{0.9}
 \end_layout
 
 \begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-end{spacing}
-\end_layout
-
-\end_inset
-
 and given the first order predicate that 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-begin{spacing}{0.9}
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Standard
@@ -1136,36 +1098,11 @@ begin{spacing}{0.9}
 \end_layout
 
 \begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-end{spacing}
-\end_layout
-
-\end_inset
-
 then it is possible to assert that 
 \begin_inset Formula $\mathtt{sort}$
 \end_inset
 
  behaves as expected with
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-begin{spacing}{0.9}
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Standard
@@ -1180,18 +1117,6 @@ begin{spacing}{0.9}
 \end_layout
 
 \begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-end{spacing}
-\end_layout
-
-\end_inset
-
 This term will act like any other function at runtime, given a 
 \begin_inset Formula $\mathtt{List}$
 \end_inset
@@ -1206,19 +1131,6 @@ This term will act like any other function at runtime, given a
 \begin_layout Standard
 Additionally, this would allow simple prototyping form first order specification.
  For instance,
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-begin{spacing}{0.9}
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Standard
@@ -1235,32 +1147,7 @@ data\ \mathtt{Mult} & :\mathbb{N}\rightarrow\mathbb{N}\rightarrow\mathbb{N}\righ
 \end_layout
 
 \begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-end{spacing}
-\end_layout
-
-\end_inset
-
 can be used to prototype
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-begin{spacing}{0.9}
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Standard
@@ -1627,10 +1514,237 @@ While trying to carefully to avoid effects in this thesis, we still have
  encountered 2 important effects, non-termination and blame based error.
 \end_layout
 
+\begin_layout Subsection
+Errors
+\end_layout
+
 \begin_layout Standard
-Non-termination is treated allowed, but it would be better to have it work
- in the same framework as equational constraints, namely warn when non-terminati
-on is possible, and try to find slow running code via symbolic execution.
+The current system handles blame based runtime errors and static warnings
+ in a unique way.
+ There is no control flow for errors built into the reduction relations,
+ and there is no way to handle an error.
+ Every potential error is linked to a static warning.
+ There are a few features that would be good to experiment with
+\end_layout
+
+\begin_layout Standard
+Allow users to provide proofs of equality to remove warnings by having them
+ define and annotate an appropriate identity type.
+ This would allow the language to act more like an extensional type theory.
+ Just as with ETT many desirable properties such as function extensionality
+ would not be provable.
+ Programmers could justify these proofs as a way to make symbolic execution
+ faster.
+ We have pushed this to future work since their are already many explored
+ strategies for dealing with equality in an Intentional type theory that
+ are completely compatible with the current implementation.
+\end_layout
+
+\begin_layout Standard
+Currently blame based errors aren't handled.
+ Programmers may want to use the information from a bad cast to build the
+ final output, it might even be possible to capture the witness of the bad
+ cast.
+ For instance,
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+f : Vec y -> string;
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+h : (x : Nat) -> string;
+\end_layout
+
+\begin_layout Plain Layout
+
+h x =
+\end_layout
+
+\begin_layout Plain Layout
+
+  handle{
+\end_layout
+
+\begin_layout Plain Layout
+
+    f (rep x)
+\end_layout
+
+\begin_layout Plain Layout
+
+  } pr : x != y => 
+\begin_inset Quotes eld
+\end_inset
+
+whoops
+\begin_inset Quotes erd
+\end_inset
+
+ ;
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Though additional research would be need for exactly the form the contradictions
+ should take.
+\end_layout
+
+\begin_layout Standard
+However handling effects in a dependent type system is subtle
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+everything about dependent types is subtle
+\end_layout
+
+\end_inset
+
+ since the handling construct can observe differences that should not otherwise
+ be apparent.
+ This is most clearly seen in the generalization of Herbelin's paradox
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+independent cite
+\end_layout
+
+\end_inset
+
+ presented in
+\begin_inset CommandInset citation
+LatexCommand cite
+key "pedrot2020fire"
+literal "false"
+
+\end_inset
+
+.
+ The paradox can be instantiated to the system presented in this thesis
+ with an additional handling construct and assuming a lazy evaluation order,
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+h : (u : Unit) -> Bool;
+\end_layout
+
+\begin_layout Plain Layout
+
+h u =
+\end_layout
+
+\begin_layout Plain Layout
+
+  handle{
+\end_layout
+
+\begin_layout Plain Layout
+
+    case u {
+\end_layout
+
+\begin_layout Plain Layout
+
+      | tt => true
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+  } _ => false ;
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+hIsTrue : (u : Unit) -> Id Bool true (h u);
+\end_layout
+
+\begin_layout Plain Layout
+
+hIsTrue u =
+\end_layout
+
+\begin_layout Plain Layout
+
+  case u <u -> Id Bool true (h u)>{
+\end_layout
+
+\begin_layout Plain Layout
+
+    | tt => refl Bool true
+\end_layout
+
+\begin_layout Plain Layout
+
+  };
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+hIsTrue !! : Id Bool true false
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Interestingly this term is not as bad as the paradox makes out, the term
+ 
+\begin_inset Quotes eld
+\end_inset
+
+gets stuck
+\begin_inset Quotes erd
+\end_inset
+
+ but with a well blamed runtime error and a static warning is given.
+\end_layout
+
+\begin_layout Subsection
+Non-termination
+\end_layout
+
+\begin_layout Standard
+Non-termination is allowed, but it would be better to have it work in the
+ same framework as equational constraints, namely warn when non-termination
+ is possible, and try to find slow running code via symbolic execution.
  Then we could say without caveat 
 \begin_inset Quotes eld
 \end_inset
@@ -1640,22 +1754,38 @@ programs without warnings are proofs
 \end_inset
 
 .
-\end_layout
+ It might be possible for users to supply their own external proofs of terminati
+on
+\begin_inset CommandInset citation
+LatexCommand cite
+key "casinghino2014combining"
+literal "false"
 
-\begin_layout Standard
-Blame based errors aren't handled, handling effects in a dependent type
- system is not strait forward since the handling construct can observe differenc
-es that should not otherwise be apparent
+\end_inset
+
+, or termination metrics
 \begin_inset Flex TODO Note (Margin)
 status open
 
 \begin_layout Plain Layout
-herbransds paradox from Fire triangle, this should be expanded and specified
+Ats, 
+\begin_inset Quotes eld
+\end_inset
+
+Termination casts: A flexible approach to termination with general recursion
+\begin_inset Quotes erd
+\end_inset
+
+
 \end_layout
 
 \end_inset
 
 .
+\end_layout
+
+\begin_layout Subsection
+Other effects
 \end_layout
 
 \begin_layout Standard
@@ -1685,21 +1815,66 @@ helloworld
 \begin_inset Quotes erd
 \end_inset
 
- : Writer Unit? by differing checks to runtime these issues can be avoided.
- further effects risk making computation mathematically inelegant, In this
- thesis we avoided this inelegance with an additional cast syntax and blame
- relation, This strategy could perhaps be applied to more interesting effect
- systems.
+ : IO Unit? by delaying equality checks to runtime these issues can be avoided
+ until the research space is better explored.
+ Effects risk making computation mathematically inelegant.
+ In this thesis we avoided this inelegance for an error effect with a blame
+ relation.
+ This strategy could perhaps be applied to more interesting effect systems.
 \end_layout
 
 \begin_layout Standard
 Both the symbolic execution and search above could be considered in terms
  of an effect in an effect system.
- proof search specifically could be localized though an effect modality.
+ Proof search could be localized though an effect modality, avoiding the
+ non local examples above.
+\end_layout
+
+\begin_layout Section
+User studies
+\end_layout
+
+\begin_layout Standard
+The main proposition of this work is that it will make dependent types easier
+ to learn and use.
+ This should be demonstrated empirically with user studies.
 \end_layout
 
 \begin_layout Section
 Semantics
+\end_layout
+
+\begin_layout Standard
+The semantics explored in this thesis have been operational, this has lead
+ to serviceable, but cumbersome, proofs.
+ Ideally the denotational semantics of a typed language in this style should
+ be explored.
+ While there has been some exploration into untyped contextual equivalence
+ for dependent types 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "sjoberg2015dependently,jia2010dependent"
+literal "false"
+
+\end_inset
+
+, untyped contextual equivalence is a weak relation 
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+Ian A.
+ Mason and Carolyn L.
+ Talcott.
+ Equivalence in functional languages with effects.
+ Journal of Functional Programming, 1(3):287–327, 1991
+\end_layout
+
+\end_inset
+
+.
+ A notion of dependently typed contextual equivalence would be an interesting
+ and helpful direction for further study.
 \end_layout
 
 \begin_layout Standard

@@ -1,0 +1,136 @@
+% This file contains all the necessary setup and commands to create
+% the preliminary pages according to the buthesis.sty option.
+
+\title{A Dependently Typed Language with Dynamic Equality for Programming}
+
+\author{Mark Lemay}
+
+% Phd = 2
+\degree=2
+
+\prevdegrees{B.S., Rochester Institute of technology, 2010}
+
+\department{Department of Computer Science}
+
+\defenseyear{2022}
+\degreeyear{2022}
+
+% For each reader, specify appropriate label {First, Second, Third},
+% then name, and title. IMPORTANT: The title should be:
+%   "Professor of Electrical and Computer Engineering",
+% or similar, but it MUST NOT be:
+%   Professor, Department of Electrical and Computer Engineering"
+% or you will be asked to reprint and get new signatures.
+\reader{First}{First M. Last, PhD}{Professor of Computer Science}
+\reader{Second}{First M. Last}{Professor of Computer Science}
+\reader{Third}{First M. Last}{Assistant Professor of \ldots}
+%% \todo[inline]{double check honerifics}
+
+% The Major Professor is the same as the first reader, but must be
+% specified again for the abstract page.
+\numadvisors=1
+\majorprof{First M. Last, PhD}{{Professor of Computer Science}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
+
+%                       PRELIMINARY PAGES
+% According to the BU guide the preliminary pages consist of:
+% title, copyright (optional), approval,  acknowledgments (opt.),
+% abstract, preface (opt.), Table of contents, List of tables (if
+% any), List of illustrations (if any). The \tableofcontents,
+% \listoffigures, and \listoftables commands can be used in the
+% appropriate places. For other things like preface, do it manually
+% with something like \newpage\section*{Preface}.
+
+% This is an additional page to print a boxed-in title, author name and
+% degree statement so that they are visible through the opening in BU
+% covers used for reports. This makes a nicely bound copy. Uncomment only
+% if you are printing a hardcopy for such covers. Leave commented out
+% when producing PDF for library submission.
+%\buecethesistitleboxpage
+
+% Make the titlepage based on the above information.  If you need
+% something special and can't use the standard form, you can specify
+% the exact text of the titlepage yourself.  Put it in a titlepage
+% environment and leave blank lines where you want vertical space.
+% The spaces will be adjusted to fill the entire page.
+\maketitle
+\cleardoublepage
+
+% The copyright page is blank except for the notice at the bottom. You
+% must provide your name in capitals.
+\copyrightpage
+\cleardoublepage
+
+% Now include the approval page based on the readers information
+% Once the approval page is approved by the Mugar Library staff, please
+% comment out the "\approvalpagewithcomment" line and uncomment "\approvalpage"
+\approvalpagewithcomment
+%\approvalpage
+\cleardoublepage
+
+% Here goes your favorite quote. This page is optional.
+\newpage
+%\thispagestyle{empty}
+\input{chapters/00_Prelim/quote}
+\cleardoublepage
+
+% The acknowledgment page should go here. Use something like
+% \newpage\section*{Acknowledgments} followed by your text.
+\newpage
+\section*{\centerline{Acknowledgments}}
+\input{chapters/00_Prelim/ack}
+\cleardoublepage
+
+% The abstractpage environment sets up everything on the page except
+% the text itself.  The title and other header material are put at the
+% top of the page, and the supervisors are listed at the bottom.  A
+% new page is begun both before and after.  Of course, an abstract may
+% be more than one page itself.  If you need more control over the
+% format of the page, you can use the abstract environment, which puts
+% the word "Abstract" at the beginning and single spaces its text.
+
+\begin{abstractpage}
+\input{chapters/00_Prelim/abs}
+\end{abstractpage}
+\cleardoublepage
+
+% Now you can include a preface. Again, use something like
+% \newpage\section*{Preface} followed by your text
+
+% Table of contents comes after preface
+\tableofcontents
+\cleardoublepage
+
+% If you do not have tables, comment out the following lines
+% \newpage
+% \listoftables
+% \cleardoublepage
+
+% If you have figures, uncomment the following line
+% \newpage
+% \listoffigures
+% \cleardoublepage
+
+% List of Abbrevs is NOT optional (Martha Wellman likes all abbrevs listed)
+\chapter*{List of Abbreviations}
+
+{\bf The list below must be in alphabetical order as per BU library instructions or it will be returned to you for re-ordering.}
+
+% \begin{center}
+%   \begin{tabular}{lll}
+%     \hspace*{2em} & \hspace*{1in} & \hspace*{4.5in} \\
+%     CAD  & \dotfill & Computer-Aided Design \\
+%     CO   & \dotfill & Cytochrome Oxidase \\
+%     DOG  & \dotfill & Difference Of Gaussian (distributions) \\
+%     FWHM & \dotfill & Full-Width at Half Maximum \\
+%     LGN  & \dotfill & Lateral Geniculate Nucleus \\
+%     ODC  & \dotfill & Ocular Dominance Column \\
+%     PDF  & \dotfill & Probability Distribution Function \\
+%     $\mathbb{R}^{2}$  & \dotfill & the Real plane \\
+%   \end{tabular}
+% \end{center}
+\cleardoublepage
+
+\newpage
+\endofprelim

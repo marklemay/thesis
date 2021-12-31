@@ -112,10 +112,10 @@ Mark Lemay
 \end_layout
 
 \begin_layout Standard
-Dpendnet types offer a uniform foundation for both proof systems and programing
+Dependent types offer a uniform foundation for both proof systems and programing
  languages.
  While the proof systems built with dependent types have become relatively
- popular, dtepentently typed programing langugages are far from mainstream.
+ popular, dependently typed programing languages are far from mainstream.
  
 \end_layout
 
@@ -127,34 +127,33 @@ ive definitional equality that programmers are forced to use.
 \end_layout
 
 \begin_layout Standard
-This thesuss explores an alternative workflow and a more libral handling
+This thesis explores an alternative workflow and a more liberal handling
  of equality.
- Programmers are given warnings that contain the same information as type
- errors.
- Programs can be run these programs optimisitically, and they will behave
- in a type sound manner unless a direct contrediction confirming the warning
- is found.
+ Programmers are given warnings that contain the same information as the
+ type errors that would be given by an existing system.
+ Programers can be run these programs optimistically, and they will behave
+ appropriately unless a direct contradiction confirming the warning is found.
 \end_layout
 
 \begin_layout Standard
 This is achieved, by localizing the constraints using a new form of elaboration
- based on bidriectional type inference.
- These local checks, or casts are given a runtime behavour (similar to those
- of contract systems and monitors), these elaborated terms have a weakened
- form of type soundness, they will not they will not get stuck without an
- explicit counter example.
+ based on bidirectional type inference.
+ These local checks, or casts are given a runtime behavior (similar to those
+ of contract and monitors).
+ The elaborated terms have a weakened form of type soundness, they will
+ not get stuck without an explicit counter example.
 \end_layout
 
 \begin_layout Standard
-The langauge explored in this thesus will be a calculus of constructions
- like languagw with recursion, type-in-type, user defined data and pattern
+The language explored in this thesis will be a calculus of constructions
+ like language with recursion, type-in-type, user defined data and pattern
  matching.
  
 \end_layout
 
 \begin_layout Standard
-Several metatheoetic results will be presented.
- The key result, is the cast system, 
+Several meta-theoretic results will be presented.
+ The key result, is that the core language, called the cast system, 
 \begin_inset Quotes eld
 \end_inset
 
@@ -167,16 +166,16 @@ will not get stuck without a counter example
 cast soundness
 \series default
 .
- A proof of cast soundness is fully worked out for the fragment of the language
- with out user defined data, and a Coq proof is availible.
- Several other properties based on the gradual gaurentees of gradual typing
+ A proof of cast soundness is fully worked out for the fragment of the system
+ without user defined data, and a Coq proof is available.
+ Several other properties based on the gradual guarantees of gradual typing
  are also presented.
- In the presnece of user defined data these properties seem likely but are
- too complicated yo prove here.
+ In the presence of user defined data and pattern matching these properties
+ are conjectured to hold.
 \end_layout
 
 \begin_layout Standard
-An prototype implementation of this work is availibe.
+An prototype implementation of this work is available.
 \end_layout
 
 \begin_layout Standard
