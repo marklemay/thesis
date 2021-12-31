@@ -1,0 +1,230 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+\usepackage{xcolor}
+\usepackage{tikz-cd}
+\tikzcdset{%
+    triple line/.code={\tikzset{%
+        double equal sign distance, % replace by double distance = 'measure' 
+        double=\pgfkeysvalueof{/tikz/commutative diagrams/background color}}},
+    quadruple line/.code={\tikzset{%
+        double equal sign distance, % replace by double distance = 'measure'
+        double=\pgfkeysvalueof{/tikz/commutative diagrams/background color}}},
+    Rrightarrow/.code={\tikzcdset{triple line}\pgfsetarrows{tikzcd implies cap-tikzcd implies}},
+    RRightarrow/.code={\tikzcdset{quadruple line}\pgfsetarrows{tikzcd implies cap-tikzcd implies}}
+}    
+\newcommand*{\tarrow}[2][]{\arrow[Rrightarrow, #1]{#2}\arrow[dash, shorten >= 0.5pt, #1]{#2}}
+\newcommand*{\qarrow}[2][]{\arrow[RRightarrow, #1]{#2}\arrow[equal, double distance = 0.25pt, shorten >= 1.28pt, #1]{#2}}
+\end_preamble
+\use_default_options true
+\begin_modules
+todonotes
+\end_modules
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize letterpaper
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 2cm
+\topmargin 2cm
+\rightmargin 2cm
+\bottommargin 2cm
+\headheight 2cm
+\headsep 2cm
+\footskip 2cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 2
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Abstract (draft)
+\end_layout
+
+\begin_layout Author
+Mark Lemay
+\end_layout
+
+\begin_layout Standard
+Dependent types offer a uniform foundation for both proof systems and programing
+ languages.
+ While the proof systems built with dependent types have become relatively
+ popular, dependently typed programing languages are far from mainstream.
+ 
+\end_layout
+
+\begin_layout Standard
+One key issue with existing dependently typed languages, is the overly conservat
+ive definitional equality that programmers are forced to use.
+ When combined with a traditional typing workflow, these systems can be
+ quite challenging and require a large amount expertise to master.
+\end_layout
+
+\begin_layout Standard
+This thesis explores an alternative workflow and a more liberal handling
+ of equality.
+ Programmers are given warnings that contain the same information as the
+ type errors that would be given by an existing system.
+ Programers can be run these programs optimistically, and they will behave
+ appropriately unless a direct contradiction confirming the warning is found.
+\end_layout
+
+\begin_layout Standard
+This is achieved, by localizing the constraints using a new form of elaboration
+ based on bidirectional type inference.
+ These local checks, or casts are given a runtime behavior (similar to those
+ of contract and monitors).
+ The elaborated terms have a weakened form of type soundness, they will
+ not get stuck without an explicit counter example.
+\end_layout
+
+\begin_layout Standard
+The language explored in this thesis will be a calculus of constructions
+ like language with recursion, type-in-type, user defined data and pattern
+ matching.
+ 
+\end_layout
+
+\begin_layout Standard
+Several meta-theoretic results will be presented.
+ The key result, is that the core language, called the cast system, 
+\begin_inset Quotes eld
+\end_inset
+
+will not get stuck without a counter example
+\begin_inset Quotes erd
+\end_inset
+
+, a result called 
+\series bold
+cast soundness
+\series default
+.
+ A proof of cast soundness is fully worked out for the fragment of the system
+ without user defined data, and a Coq proof is available.
+ Several other properties based on the gradual guarantees of gradual typing
+ are also presented.
+ In the presence of user defined data and pattern matching these properties
+ are conjectured to hold.
+\end_layout
+
+\begin_layout Standard
+An prototype implementation of this work is available.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+review of not new stuff
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Part
+TODO
+\end_layout
+
+\begin_layout List of TODOs
+
+\end_layout
+
+\begin_layout Section
+notes
+\end_layout
+
+\begin_layout Standard
+\begin_inset Quotes eld
+\end_inset
+
+The abstract should contain a clear and brief statement of the problem,
+ the procedure(s) and/or method(s) followed, the result(s), and the conclusion(s
+).
+ The purpose of an abstract is to help a reader decide if they want to consult
+ the complete work.
+ As with the title, the abstract is searchable in many databases, including
+ ProQuest Dissertations & Theses Global.
+ Include relevant place names, full personal names, and other proper nouns,
+ which can be very useful keywords for scholars locating resources.
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+unused
+\end_layout
+
+\end_body
+\end_document
