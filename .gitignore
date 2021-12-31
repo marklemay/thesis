@@ -3,6 +3,11 @@ thesis.blg
 thesis.log
 
 **/*.aux
+**/*.fdb_latexmk
+**/*.fls
+**/*.log
+**/*.lyx~
+
 thesis.toc
 thesis.lot
 thesis.lof

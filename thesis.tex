@@ -20,6 +20,11 @@
 \usepackage{epstopdf} 
 \usepackage{subfig}
 \usepackage{todonotes}
+\usepackage{cancel} % from lyx. why?
+\usepackage{listings} % from lyx. why?
+\renewcommand{\lstlistingname}{Listing}
+
+
 
 %%% graphicx and pdf creation
 \usepackage{graphicx}
@@ -56,8 +61,8 @@
 % \include{chapters/00_Prelim/prelim}   
 \cleardoublepage
 
-% \include{1_Intro/intro}
-% \cleardoublepage
+\include{1_Intro/intro}
+\cleardoublepage
 
 % \include{2_Body/body}
 % \cleardoublepage
@@ -73,14 +78,14 @@
 % \include{Appendix/Appendix}
 % \end{appendices}
 
-% % Bibliography
-% \newpage
-% \singlespace
+% Bibliography
+\newpage
+\singlespace
 % \bibliographystyle{apalike}
-
-% % each subdirectory can have its own BiBTeX file
 % \bibliography{thesis}
-% \cleardoublepage
+\bibliographystyle{alpha} %can get away with alpha style citations?
+\bibliography{bibliography/dtest}
+\cleardoublepage
 
 % % Curriculum Vitae
 % \include{0_Prelim/cv} 

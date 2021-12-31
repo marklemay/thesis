@@ -1956,7 +1956,7 @@ note that this additional extraction is needed since the blame relation
 \end_layout
 
 \begin_layout Standard
-This blame be realizable with 
+This blame can be realizable with 
 \begin_inset Formula $\left(\star::!!\rightarrow\star::\star\rightarrow\star\right)\star$
 \end_inset
 
@@ -4265,7 +4265,7 @@ fully applied
 
 \end_inset
 
-
+ 
 \end_layout
 
 \begin_layout Standard
