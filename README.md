@@ -2,7 +2,7 @@
 all work related to my thesis document, will eventually become public
 [![Build LaTeX document](https://github.com/marklemay/thesis/actions/workflows/build-thesis.yml/badge.svg)](https://github.com/marklemay/thesis/actions/workflows/build-thesis.yml)
 
-latest draft availible [https://github.com/marklemay/thesis/releases](here)
+latest draft availible [here](https://github.com/marklemay/thesis/releases)
 
 ## What to Review
 * Chapter 1
