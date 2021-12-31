@@ -1,8 +1,8 @@
-PWD /Users/stephaniesavir/thesis/chapters/00_prelim
+PWD /Users/stephaniesavir/thesis/chapters/00_Prelim
 INPUT /usr/local/texlive/2020/texmf.cnf
 INPUT /usr/local/texlive/2020/texmf-dist/web2c/texmf.cnf
 INPUT /usr/local/texlive/2020/texmf-var/web2c/pdftex/pdflatex.fmt
-INPUT /Users/stephaniesavir/thesis/chapters/00_prelim/abs.tex
-OUTPUT /Users/stephaniesavir/thesis/chapters/00_prelim/abs.log
+INPUT /Users/stephaniesavir/thesis/chapters/00_Prelim/abs.tex
+OUTPUT /Users/stephaniesavir/thesis/chapters/00_Prelim/abs.log
 INPUT /usr/local/texlive/2020/texmf-dist/fonts/map/fontname/texfonts.map
 INPUT /usr/local/texlive/2020/texmf-dist/fonts/tfm/public/cm/cmbx10.tfm
