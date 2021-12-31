@@ -1,0 +1,1762 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+\usepackage{xcolor}
+\usepackage{tikz-cd}
+\tikzcdset{%
+    triple line/.code={\tikzset{%
+        double equal sign distance, % replace by double distance = 'measure' 
+        double=\pgfkeysvalueof{/tikz/commutative diagrams/background color}}},
+    quadruple line/.code={\tikzset{%
+        double equal sign distance, % replace by double distance = 'measure'
+        double=\pgfkeysvalueof{/tikz/commutative diagrams/background color}}},
+    Rrightarrow/.code={\tikzcdset{triple line}\pgfsetarrows{tikzcd implies cap-tikzcd implies}},
+    RRightarrow/.code={\tikzcdset{quadruple line}\pgfsetarrows{tikzcd implies cap-tikzcd implies}}
+}    
+\newcommand*{\tarrow}[2][]{\arrow[Rrightarrow, #1]{#2}\arrow[dash, shorten >= 0.5pt, #1]{#2}}
+\newcommand*{\qarrow}[2][]{\arrow[RRightarrow, #1]{#2}\arrow[equal, double distance = 0.25pt, shorten >= 1.28pt, #1]{#2}}
+\end_preamble
+\use_default_options true
+\begin_modules
+todonotes
+\end_modules
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize letterpaper
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 2cm
+\topmargin 2cm
+\rightmargin 2cm
+\bottommargin 2cm
+\headheight 2cm
+\headsep 2cm
+\footskip 2cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 2
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Chapter 6 (draft): Notes, Future work, Conclusion
+\end_layout
+
+\begin_layout Author
+Mark Lemay
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+Introduce this section
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Part
+Symbolic Execution
+\end_layout
+
+\begin_layout Standard
+One of the advantages of type checking is the immediacy of feedback.
+ We have outlined here a system that will give warning messages immediately,
+ but requires evaluation to give the detailed error messages that are most
+ helpful when correcting a program.
+ This is especially important if the user wants to use the system as a proof
+ language, and will not generally execute their proofs.
+ A symbolic evaluation system recaptures some of that quicker feed back,
+ by having a system that passively tries to find errors.
+ This ideal workflow appears in table 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:intro-thesis-workflow"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Since this procedure operates over the cast language, we must decide what
+ constitutes a reasonable testing environment
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+            edit program
+\end_layout
+
+\begin_layout Plain Layout
+
+             |      
+\end_layout
+
+\begin_layout Plain Layout
+
+             |      
+\end_layout
+
+\begin_layout Plain Layout
+
+             v
+\end_layout
+
+\begin_layout Plain Layout
+
+ testing  <- Elaboration                    ^
+\end_layout
+
+\begin_layout Plain Layout
+
+    | ^      |              |               | runtime error
+\end_layout
+
+\begin_layout Plain Layout
+
+     -       | no warnings  | type warnings |
+\end_layout
+
+\begin_layout Plain Layout
+
+             v              v               |
+\end_layout
+
+\begin_layout Plain Layout
+
+                run program   ---------------
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+better graphics
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Ideal Workflow
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:intro-thesis-workflow"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+A one hole context
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+cite
+\end_layout
+
+\end_inset
+
+ can be defined for the cast languages presented in this thesis 
+\begin_inset Formula $C[-]$
+\end_inset
+
+ and we can say that an error is observable if 
+\begin_inset Formula $\vdash a:A$
+\end_inset
+
+ and 
+\begin_inset Formula $\vdash C[a]:B$
+\end_inset
+
+ and 
+\begin_inset Formula $C[a]\rightsquigarrow_{*}b$
+\end_inset
+
+ and 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $\textbf{Blame}\:\ensuremath{\ell}\,o\,b$
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+ for some 
+\begin_inset Formula $\ensuremath{\ell}\in lables\left(a\right)$
+\end_inset
+
+ but 
+\begin_inset Formula $\ensuremath{\ell}\notin lables\left(C[-]\right)$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+This process is semi-decidable in general (by enumerating all well typed
+ syntax).
+ But testing every term is infeasibly inefficient for functions and types.
+ An approximate approach can build partial contexts, that are correct up
+ to some constraint.
+ For instance, 
+\end_layout
+
+\begin_layout Itemize
+If we have the 
+\begin_inset Quotes eld
+\end_inset
+
+empty
+\begin_inset Quotes erd
+\end_inset
+
+ type, 
+\begin_inset Formula $\lambda x\Rightarrow\star::_{\ensuremath{\ell}}x\quad:\left(x:\star\right)\rightarrow x$
+\end_inset
+
+, then we can observe an error by applying 
+\begin_inset Formula $x$
+\end_inset
+
+ of type 
+\begin_inset Formula $x:\star$
+\end_inset
+
+ to the term and 
+\begin_inset Formula $x=-\rightarrow-$
+\end_inset
+
+, which would correspond to the context 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $[\lambda x\Rightarrow\star::_{\ensuremath{\ell}}x]\left(\star\rightarrow\star\right)\rightsquigarrow_{*}\star::_{\star,\ensuremath{\ell}}\left(\star\rightarrow\star\right)$
+\end_inset
+
+ and 
+\begin_inset Formula $\textbf{Blame}\:\ensuremath{\ell}\,.\,\star::_{\star,\ensuremath{\ell}}\left(\star\rightarrow\star\right)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+This reasoning can be extended to higher order functions 
+\begin_inset Formula $\lambda f\Rightarrow\star::_{\ensuremath{\ell}}f\star::\star\quad:\left(\star\rightarrow\star\right)\rightarrow\star$
+\end_inset
+
+, then we can observe an error by applying 
+\begin_inset Formula $f$
+\end_inset
+
+ of type 
+\begin_inset Formula $f:\star\rightarrow\star$
+\end_inset
+
+ to the term and 
+\begin_inset Formula $f\star=-\rightarrow-$
+\end_inset
+
+, which would correspond to the context 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $[\lambda f\Rightarrow\star::_{\ensuremath{\ell}}f\star::\star]\left(\lambda x\Rightarrow\left(\star\rightarrow\star\right)\right)\rightsquigarrow_{*}\star::_{\star,\ensuremath{\ell}}\left(\star\rightarrow\star\right)$
+\end_inset
+
+ and 
+\begin_inset Formula $\textbf{Blame}\:\ensuremath{\ell}\,.\,\star::_{\star,\ensuremath{\ell}}\left(\star\rightarrow\star\right)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Observing a higher order input directly, 
+\begin_inset Formula $\lambda\,f\Rightarrow f\left(!!\right)\quad:\left(\star\rightarrow\star\right)\rightarrow\star$
+\end_inset
+
+, and can observe an error by inspecting its input, which would correspond
+ to the context 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $[\lambda\,f\Rightarrow f\left(!!\right)]\left(\lambda x\Rightarrow x\right)\rightsquigarrow_{*}!!$
+\end_inset
+
+ which is blamable.
+ 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+Where 
+\begin_inset Formula $!!$
+\end_inset
+
+ will stand infor any blamabme term (
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+here 
+\begin_inset Formula $!!=\star::\left(\star\rightarrow\star\right)::\star$
+\end_inset
+
+)
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+ 
+\end_layout
+
+\begin_layout Itemize
+Similarly with dependent types, 
+\begin_inset Formula $!!\rightarrow\star\quad:\star$
+\end_inset
+
+, can observe an error by inspecting its input, which would correspond to
+ the context 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $\left(\left(\lambda x\Rightarrow x::\star\right)::[!!\rightarrow\star]::\left(\star\rightarrow\star\right)\right)\star\rightsquigarrow_{*}\star::[!!]::\star$
+\end_inset
+
+ which is blamable.
+\end_layout
+
+\begin_layout Itemize
+Similarly we will allow extraction from the dependent body of a function
+ type 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $\left(b:\mathbb{B}_{c}\right)\rightarrow b\,\star\,!!\,\star\quad:\star$
+\end_inset
+
+, by symbolically applying 
+\begin_inset Formula $b$
+\end_inset
+
+ where 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+
+\begin_inset Formula $b:\mathbb{B}_{c},b\,\star=y$
+\end_inset
+
+ leaving 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $y\,!!\,\star$
+\end_inset
+
+ wich can obseve blame via 
+\begin_inset Formula $y$
+\end_inset
+
+'s first argument.
+ 
+\end_layout
+
+\begin_layout Itemize
+data can be observed incrementally, and paths along data will confirm that
+ the data conductors are consistent 
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+data...
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The procedure insists that the following constraints hold, 
+\end_layout
+
+\begin_layout Itemize
+variables and assignments are type correct
+\end_layout
+
+\begin_layout Itemize
+observable different outputs must come from observably different inputs
+ (in the case of dependent function types, the argument should be considered
+ as an input)
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+require a minimum output
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This seems to be good because the procedure,
+\end_layout
+
+\begin_layout Itemize
+can guide toward the labels of interest, for instance we can move to labels
+ that have not yet observed a concrete error.
+ Terms without lables can be skipped entirely.
+\end_layout
+
+\begin_layout Itemize
+can choose assignments strategically avoiding or activating blame as desired
+\end_layout
+
+\begin_layout Itemize
+Since examples are built up partially the partial contexts can avoid introducing
+ their own blame by construction
+\end_layout
+
+\begin_layout Itemize
+handle higher order functions, recursions, and self reference gracefully.
+ For instance 
+\begin_inset Formula $f:Nat\rightarrow Nat$
+\end_inset
+
+, 
+\begin_inset Formula $f\left(f\,0\right)=1$
+\end_inset
+
+ and 
+\begin_inset Formula $f\left(3\right)=3$
+\end_inset
+
+ if there is an assignment that implies
+\begin_inset Formula $f\,0\neq3$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+However the procedure is unsound, it will flag errors that are not possible
+ to realize in a context,
+\end_layout
+
+\begin_layout Itemize
+However since there is no way for a terms within the cast language to 
+\begin_inset Quotes eld
+\end_inset
+
+observe
+\begin_inset Quotes erd
+\end_inset
+
+ a distinction between the type formers plausible environments cannot always
+ be realized back to a term that would witness the bad behavior.
+ For instance, the environment 
+\begin_inset Formula $F:\star\rightarrow\star,F\,\star=\star\rightarrow\star,F\,\left(\star\rightarrow\star\right)=\star$
+\end_inset
+
+ , which might be needed to explore the term with casts like 
+\begin_inset Formula $\lambda F\Rightarrow...::\star::F\left(\star\rightarrow\star\right)......::\left(\star\rightarrow\star\right)::F\,\star\ :\left(\star\rightarrow\star\right)\rightarrow...$
+\end_inset
+
+, cannot be realized as a closed term.
+ In this way the environment is stronger then the cast language.
+ The environment reflects a term language that has a type case construct
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+cite
+\end_layout
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+add non termination as a source of unrealizability
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Additionally, working symbolically can move past evaluations that would
+ block blame in a context.
+ For instance that procedure outlined above would allow 
+\begin_inset Formula $!!$
+\end_inset
+
+ to be reached in 
+\begin_inset Formula $\left(\lambda xf\Rightarrow f(!!)\right)loop\quad:\star\rightarrow\star$
+\end_inset
+
+ even though there is no context that would allow this to cause blame.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+add por as a source of unrealizability
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Subtly a version of parallel-or can be generated via assignment even though
+ such a term is unconstructable in the languge, 
+\begin_inset Formula $por:\mathbb{B}\rightarrow\mathbb{B}\rightarrow\mathbb{B},por\ loop\ tt=tt,por\ tt\ loop=tt,por\ ff\ ff=ff$
+\end_inset
+
+.
+ Here all assignments are well typed, and each output can be differentiated
+ by a different input.
+ 
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+G.
+ Plotkin, LCF considered as a programming language, Theoretical Computer
+ Science 5 (1977) 223{255.
+ as cited in https://alleystoughton.us/research/por.pdf
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Section
+Related and Future Work
+\end_layout
+
+\begin_layout Standard
+While formalizing a complete and efficient testing procedure along these
+ lines is still future work.
+ There are likely insights to be gained from the large body of research
+ on symbolic execution, especially work that deals with typed higher order
+ functions.
+ A fully formal account would deal with a formal semantics of the cast language.
+ 
+\end_layout
+
+\begin_layout Subsection
+Testing
+\end_layout
+
+\begin_layout Standard
+Many of the testing strategies for typed functional programming trace their
+ heritage to 
+\series bold
+property based
+\series default
+ testing in QuickCheck 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "quickcheck"
+literal "false"
+
+\end_inset
+
+.
+ Property based testing involves writing functions that encode the properties
+ of interest, and then randomly testing those functions.
+\end_layout
+
+\begin_layout Itemize
+QuickChick 
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+https://github.com/QuickChick/QuickChick
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "denes2014quickchick"
+literal "false"
+
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "lampropoulos2017generating,lampropoulos2017beginner,lampropoulos2018random"
+literal "false"
+
+\end_inset
+
+ uses type-level predicates to construct generators with soundness and completen
+ess properties, but without support for higher order functions.
+ However, testing requires building types classes that establish the properties
+ needed by the testing framework such as decidable equality.
+ This is presumably out of reach of novice Coq users.
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Current work in this area uses coverage guided techniques in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "lampropoulos2019coverage"
+literal "false"
+
+\end_inset
+
+ like those in symbolic execution.
+ More recently Benjamin Pierce has used Afl on compiled Coq code as a way
+ to generate counter examples
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+https://www.youtube.com/watch?v=dfZ94N0hS4I
+\end_layout
+
+\end_inset
+
+
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+review this, maybe there's a paper or draft now?
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+\begin_inset CommandInset citation
+LatexCommand cite
+key "dybjer2003combining"
+literal "false"
+
+\end_inset
+
+ added QuickCheck style testing to Agda 1.
+\end_layout
+
+\begin_layout Subsection
+Symbolic Execution
+\end_layout
+
+\begin_layout Standard
+Symbolic evaluation is a technique to efficiently extract errors from programs.
+ Usually this happens in the context of an imperative language with the
+ assistance of an SMT solver.
+ Symbolic evaluation can be supplemented with other techniques and a rich
+ literature exists on the topic.
+ 
+\end_layout
+
+\begin_layout Standard
+The situation described in this chapter is unusual from the perspective
+ of symbolic execution:
+\end_layout
+
+\begin_layout Itemize
+the number of blamable source positions is limited by the location tags.
+ Thus the search is error guided, rather then coverage guided.
+\end_layout
+
+\begin_layout Itemize
+The language is dependently typed.
+ Often the language under test is untyped.
+\end_layout
+
+\begin_layout Itemize
+The language needs higher order execution.
+ often the research in this area focuses on base types that are efficiently
+ handleable with an SMT solver.
+\end_layout
+
+\begin_layout Standard
+This limits the prior work to relatively few papers
+\end_layout
+
+\begin_layout Itemize
+A Symbolic execution engine for Haskell is presented in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "10.1145/3314221.3314618"
+literal "false"
+
+\end_inset
+
+, but at the time of publication it did not support higher order functions.
+\end_layout
+
+\begin_layout Itemize
+A system for handling higher order functions is presented in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "nguyen2017higher"
+literal "false"
+
+\end_inset
+
+, however the system is designed for Racket and is untyped.
+ Additionally it seems that there might be a state space explosion in the
+ presence of higher order functions.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset citation
+LatexCommand cite
+key "10.1007/978-3-030-72019-3_23"
+literal "false"
+
+\end_inset
+
+ extended and corrected some issues with 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "nguyen2017higher"
+literal "false"
+
+\end_inset
+
+, but still works in a untyped environment.
+ The authors note that there is still a lot of room to improve performance.
+\end_layout
+
+\begin_layout Itemize
+Closest to the goal here, 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "lin_et_al:LIPIcs:2020:12349"
+literal "false"
+
+\end_inset
+
+ uses game semantics to build a symbolic execution engine for a subset of
+ ML with some nice theoretical properties.
+\end_layout
+
+\begin_layout Itemize
+An version of the above procedure was experimented with in the extended
+ abstract 
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+cite
+\end_layout
+
+\end_inset
+
+, however conjectures made in that preliminary work were false (the procedure
+ was unsound).
+ The underlying languages has improved substantially since that work.
+\end_layout
+
+\begin_layout Standard
+The subtle unsoundness hints that the approach presented here could be revised
+ in terms of games semantics (perhaps along lines like 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "lin_et_al:LIPIcs:2020:12349"
+literal "false"
+
+\end_inset
+
+).
+ Though game semantics for dependent types is a complicated subject in and
+ of itself 
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+cite
+\end_layout
+
+\end_inset
+
+.
+ Additionally is seems helpful to allow programmers to program their own
+ solvers that could greatly increase the search speed.
+\end_layout
+
+\begin_layout Part
+Runtime Poof Search
+\end_layout
+
+\begin_layout Standard
+Just as 
+\begin_inset Quotes eld
+\end_inset
+
+obvious
+\begin_inset Quotes erd
+\end_inset
+
+ equalities are missing from the definitional relation, 
+\begin_inset Quotes eld
+\end_inset
+
+obvious
+\begin_inset Quotes erd
+\end_inset
+
+ proofs and programs are not always conveniently available to the programmer.
+ For instance, in Agda it is possible to write a sorting function quickly
+ using simple types.
+ With effort is it possible to prove that sorting procedure correct by rewriting
+ it with the necessarily dependently typed invariants.
+ However, very little is offered in between.
+ The problem is magnified if module boundaries hide the implementation details
+ of a function, since those details are exactly what is needed to make a
+ proof! This is especially important for larger scale software where a library
+ may require proof terms that while true are not provable from the exports
+ of other libraries.
+\end_layout
+
+\begin_layout Standard
+The solution proposed here is additional syntax that will search for a term
+ of the type when resolved at runtime.
+ Given the sorting function 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{spacing}{0.9}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\mathtt{sort}:\mathtt{List}\,\mathbb{N}\rightarrow\mathtt{List}\,\mathbb{N}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{spacing}
+\end_layout
+
+\end_inset
+
+and given the first order predicate that 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{spacing}{0.9}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\mathtt{IsSorted}:\mathtt{List}\,\mathbb{N}\rightarrow*
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{spacing}
+\end_layout
+
+\end_inset
+
+then it is possible to assert that 
+\begin_inset Formula $\mathtt{sort}$
+\end_inset
+
+ behaves as expected with
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{spacing}{0.9}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\lambda x.?:\left(x:\mathtt{List}\,\mathbb{N}\right)\rightarrow\mathtt{IsSorted}\left(\mathtt{sort}x\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{spacing}
+\end_layout
+
+\end_inset
+
+This term will act like any other function at runtime, given a 
+\begin_inset Formula $\mathtt{List}$
+\end_inset
+
+ input the function will verify that the 
+\begin_inset Formula $\mathtt{sort}$
+\end_inset
+
+ correctly handled that input, or the term will give an error, or non-terminate.
+\end_layout
+
+\begin_layout Standard
+Additionally, this would allow simple prototyping form first order specification.
+ For instance,
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{spacing}{0.9}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+data\ \mathtt{Mult} & :\mathbb{N}\rightarrow\mathbb{N}\rightarrow\mathbb{N}\rightarrow*\ where\\
+\mathtt{base} & :\left(x:\mathbb{N}\right)\rightarrow\mathtt{Mult}\ 0\ x\ 0\\
+\mathtt{suc} & :\left(x\,y\,z:\mathbb{N}\right)\rightarrow\mathtt{Mult}\,x\,y\,z\rightarrow\mathtt{Mult}\,\left(1+x\right)\,y\,(y+z)
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{spacing}
+\end_layout
+
+\end_inset
+
+can be used to prototype
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{spacing}{0.9}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\mathtt{div}=\lambda z.\lambda x.\mathtt{fst}\left(?:\sum y:\mathbb{N}.\mathtt{Mult}x\,y\,z\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The symbolic execution described above can precompute many of these solutions
+ in advance.
+ In some cases it is possible to find and report a contradiction.
+ 
+\end_layout
+
+\begin_layout Standard
+Experiments along these lines have been limited to ground data types, and
+ a an arbitrary solution is fixed for every type.
+ Ground data types do not need to to worry about the path equalities since
+ all the constructors will be concrete.
+\end_layout
+
+\begin_layout Standard
+Non ground data can be very hard to work with when functions or function
+ types are considered.
+ For instance,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+?:\sum f:\mathbb{N}\rightarrow\mathbb{N}.\mathtt{Id}\left(f,\lambda x.x+1\right)\&\mathtt{Id}\left(f,\lambda x.1+x\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+It is tempting to make the 
+\begin_inset Formula $?$
+\end_inset
+
+ operator sensitive to more then just the type.
+ For instance,
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+n : Nat;
+\end_layout
+
+\begin_layout Plain Layout
+
+n = ?;
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+pr : Id Nat n 1;
+\end_layout
+
+\begin_layout Plain Layout
+
+pr = refl Nat 1;
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+will likely give the waning error 
+\begin_inset Quotes eld
+\end_inset
+
+n =?= 1 in Id Nat 
+\bar under
+n
+\bar default
+ 1
+\begin_inset Quotes erd
+\end_inset
+
+.
+ It will then likely give the runtime error 
+\begin_inset Quotes eld
+\end_inset
+
+0=!=1
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Since the only information to solve ? is the type Nat and an arbitrary
+ term of type nat will be 0.
+ Most users would expect 
+\begin_inset Formula $n$
+\end_inset
+
+ to be solved for 
+\begin_inset Formula $1$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+However constraints assigned in this manner can be extremely non-local.
+ For instance,
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+n : Nat;
+\end_layout
+
+\begin_layout Plain Layout
+
+n = ?;
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+...
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+pr : Id Nat n 1;
+\end_layout
+
+\begin_layout Plain Layout
+
+pr = refl Nat 1;
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+...
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+pr2 : Id Nat n 2;
+\end_layout
+
+\begin_layout Plain Layout
+
+pr2 = refl Nat 2;
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+And thing become even more complicated when solving is interleaved with
+ computation.
+ For instance,
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+n : Nat;
+\end_layout
+
+\begin_layout Plain Layout
+
+n = ?;
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+prf : Nat -> Nat ;
+\end_layout
+
+\begin_layout Plain Layout
+
+prf x = (
+\backslash
+ _ => x) (refl Nat x : Id Nat n x);
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Prior Work
+\end_layout
+
+\begin_layout Standard
+Proof search is often used for static term generation in dependently typed
+ languages (for instance Coq tactics).
+ A first order theorem prover is attached to Agda in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "norell2007towards"
+literal "false"
+
+\end_inset
+
+.
+ However it is rare to make those features available at runtime.
+ 
+\end_layout
+
+\begin_layout Standard
+Logic programing languages such as Prolog
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+https://www.swi-prolog.org/
+\end_layout
+
+\end_inset
+
+, Datalog
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+https://docs.racket-lang.org/datalog/
+\end_layout
+
+\end_inset
+
+, and miniKanren
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+http://minikanren.org/
+\end_layout
+
+\end_inset
+
+ use 
+\begin_inset Quotes eld
+\end_inset
+
+proof search
+\begin_inset Quotes erd
+\end_inset
+
+ as their primary method of computation.
+ Dependent data types can be seen as a kind of logical programming predicate
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+cite the Curry lang
+\end_layout
+
+\end_inset
+
+.
+ The Twelf project
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+http://twelf.org/wiki/Main_Page
+\end_layout
+
+\end_inset
+
+ makes use of runtime proof search and has some support for dependent types,
+ but the underling theory cannot be considered full-spectrum.
+ The only full spectrum systems that preport to handle solving in this way
+ are the gradual dependent type work, though it is unclear how that work
+ handles the non locality of constraints given their local 
+\begin_inset Formula $?$
+\end_inset
+
+ operator.
+\end_layout
+
+\begin_layout Part
+Convenience 
+\end_layout
+
+\begin_layout Standard
+implicit function arguments
+\end_layout
+
+\begin_layout Part
+Future work
+\end_layout
+
+\begin_layout Section
+Effects
+\end_layout
+
+\begin_layout Standard
+The last and biggest hurdle to bring dependent types into a mainstream programmi
+ng language is by providing a reasonable way to handle effects.
+ Though dependent types and effects have been studied I am not aware of
+ any full spectrum system that has implemented those systems.
+ It is not even completely clear how to best to add an effect system into
+ Haskell, the closest 
+\begin_inset Quotes eld
+\end_inset
+
+mainstream
+\begin_inset Quotes erd
+\end_inset
+
+ language to the one studied here.
+\end_layout
+
+\begin_layout Standard
+While trying to carefully to avoid effects in this thesis, we still have
+ encountered 2 important effects, non-termination and blame based error.
+\end_layout
+
+\begin_layout Standard
+Non-termination is treated allowed, but it would be better to have it work
+ in the same framework as equational constraints, namely warn when non-terminati
+on is possible, and try to find slow running code via symbolic execution.
+ Then we could say without caveat 
+\begin_inset Quotes eld
+\end_inset
+
+programs without warnings are proofs
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Blame based errors aren't handled, handling effects in a dependent type
+ system is not strait forward since the handling construct can observe differenc
+es that should not otherwise be apparent
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+herbransds paradox from Fire triangle, this should be expanded and specified
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+One of the difficulties of an effect system for dependent types is expressing
+ the definitional equalities of the effect modality.
+ Is print 
+\begin_inset Quotes eld
+\end_inset
+
+hello
+\begin_inset Quotes erd
+\end_inset
+
+;print 
+\begin_inset Quotes eld
+\end_inset
+
+world
+\begin_inset Quotes erd
+\end_inset
+
+ = print 
+\begin_inset Quotes eld
+\end_inset
+
+helloworld
+\begin_inset Quotes erd
+\end_inset
+
+ : Writer Unit? by differing checks to runtime these issues can be avoided.
+ further effects risk making computation mathematically inelegant, In this
+ thesis we avoided this inelegance with an additional cast syntax and blame
+ relation, This strategy could perhaps be applied to more interesting effect
+ systems.
+\end_layout
+
+\begin_layout Standard
+Both the symbolic execution and search above could be considered in terms
+ of an effect in an effect system.
+ proof search specifically could be localized though an effect modality.
+\end_layout
+
+\begin_layout Section
+Semantics
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+btprint "btPrintCited"
+bibfiles "/Users/stephaniesavir/thesis/bibliography/dtest"
+options "alpha"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Part
+TODO
+\end_layout
+
+\begin_layout List of TODOs
+
+\end_layout
+
+\begin_layout Part
+notes
+\end_layout
+
+\begin_layout Part
+unused
+\end_layout
+
+\begin_layout Standard
+More subtle is that the procedure described here will allow f to observe
+ parallel or, even though parallel or cannot be constructed within the language.
+ This hints that the approach presented here could be revised in terms of
+ games semantics (perhaps along lines like 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "lin_et_al:LIPIcs:2020:12349"
+literal "false"
+
+\end_inset
+
+).
+ Though game semantics for dependent types is a complicated subject in and
+ of itself 
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+cite
+\end_layout
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\end_body
+\end_document

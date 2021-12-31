@@ -58,12 +58,13 @@ Formatting
 * listing the git location and hash
 
 Send to people for review
-* CH2 Zach
+* CH2/4 Zach
 * almost done Luara
 * Eric's friends
-* Chapter 5, Fuzzing person 
+* Chapter 6, Fuzzing person 
 * internet
-* contact authors about https://arxiv.org/pdf/2107.04859.pdf
+* contact authors about https://arxiv.org/pdf/2107.04859.pdf, should probly invite to defence
+  * address concernce that this is novel
 
 
 defence 

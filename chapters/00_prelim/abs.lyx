@@ -104,7 +104,7 @@ todonotes
 \begin_body
 
 \begin_layout Title
-Chapter 6 (draft): Conclusion
+Abstract (draft)
 \end_layout
 
 \begin_layout Author
@@ -112,74 +112,84 @@ Mark Lemay
 \end_layout
 
 \begin_layout Standard
-This thesis has attempted to articulate and address a common hesitation
- around dependent types.
- Programmers do not want do be interrupted if their is only a chance of
- an error.
- Addressing this legitimate concern has lead to a new way of treating warnings
- in a dependent type system.
- By creating a parallel system where checks are made and given runtime behavior,
- programmers still get all of the benefits, but fewer drawbacks of dependent
- type systems.
+Dpendnet types offer a uniform foundation for both proof systems and programing
+ languages.
+ While the proof systems built with dependent types have become relatively
+ popular, dtepentently typed programing langugages are far from mainstream.
+ 
 \end_layout
 
 \begin_layout Standard
-This turned out to be surpassingly more subtle then expected.
- As we saw in Chapter 3, the programmer's intent needs to be inferred, so
- that a reasonable check can be localized.
- This is possible through an extension to bidirectional type checking.
- Runtime errors complicate the semantics, this issue was sidestepped by
- applying a new relation that extracts blame.
- Checks need their own runtime behavior, which is strait forward in the
- pure functional setting.
+One key issue with existing dependently typed languages, is the overly conservat
+ive definitional equality that programmers are forced to use.
+ When combined with a traditional typing workflow, these systems can be
+ quite challenging and require a large amount expertise to master.
 \end_layout
 
 \begin_layout Standard
-Further, user defined data turned out to be far more complicated then anticipate
-d.
- Extending pattern matching to track equalities seems like a clever idea,
- however the formalism in Chapter 5 is not as simple as we might like.
- It is unclear if a simpler approach is possible.
+This thesuss explores an alternative workflow and a more libral handling
+ of equality.
+ Programmers are given warnings that contain the same information as type
+ errors.
+ Programs can be run these programs optimisitically, and they will behave
+ in a type sound manner unless a direct contrediction confirming the warning
+ is found.
 \end_layout
 
 \begin_layout Standard
-Finally, in Chapter 6, there are several ways to improve the current system
- and build towards future work.
-\begin_inset Flex TODO Note (Margin)
+This is achieved, by localizing the constraints using a new form of elaboration
+ based on bidriectional type inference.
+ These local checks, or casts are given a runtime behavour (similar to those
+ of contract systems and monitors), these elaborated terms have a weakened
+ form of type soundness, they will not they will not get stuck without an
+ explicit counter example.
+\end_layout
+
+\begin_layout Standard
+The langauge explored in this thesus will be a calculus of constructions
+ like languagw with recursion, type-in-type, user defined data and pattern
+ matching.
+ 
+\end_layout
+
+\begin_layout Standard
+Several metatheoetic results will be presented.
+ The key result, is the cast system, 
+\begin_inset Quotes eld
+\end_inset
+
+will not get stuck without a counter example
+\begin_inset Quotes erd
+\end_inset
+
+, a result called 
+\series bold
+cast soundness
+\series default
+.
+ A proof of cast soundness is fully worked out for the fragment of the language
+ with out user defined data, and a Coq proof is availible.
+ Several other properties based on the gradual gaurentees of gradual typing
+ are also presented.
+ In the presnece of user defined data these properties seem likely but are
+ too complicated yo prove here.
+\end_layout
+
+\begin_layout Standard
+An prototype implementation of this work is availibe.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
 status open
 
 \begin_layout Plain Layout
-more
+review of not new stuff
 \end_layout
 
 \end_inset
 
 
-\end_layout
-
-\begin_layout Standard
-The approach to warnings presented in this thesis may be more generally
- applicable.
- Type systems can still be designed to harshly avoid errors, but by creating
- a parallel system where checks are made and given runtime behavior, the
- type system will be less imposing to new users.
- For instance, many interesting linear type systems are currently being
- explored, allowing warnings may make these systems more usable to programmers
- who are not used to those restrictions.
-\end_layout
-
-\begin_layout Standard
-Dependent types have seemed on the verge of mainstream use for decades.
- While Dependent types are not mainstream yet, they have the unique potential
- to bridge the gap between those who program and those who prove.
- Each community has built invaluable expertise that could benefit the other.
- Once that connection is made solid, more robust software is the least we
- can expect.
-\end_layout
-
-\begin_layout Standard
-While this thesis has not single handedly made this connection, I think
- it is a necessary piece of the puzzle.
 \end_layout
 
 \begin_layout Part
@@ -192,6 +202,25 @@ TODO
 
 \begin_layout Section
 notes
+\end_layout
+
+\begin_layout Standard
+\begin_inset Quotes eld
+\end_inset
+
+The abstract should contain a clear and brief statement of the problem,
+ the procedure(s) and/or method(s) followed, the result(s), and the conclusion(s
+).
+ The purpose of an abstract is to help a reader decide if they want to consult
+ the complete work.
+ As with the title, the abstract is searchable in many databases, including
+ ProQuest Dissertations & Theses Global.
+ Include relevant place names, full personal names, and other proper nouns,
+ which can be very useful keywords for scholars locating resources.
+\begin_inset Quotes erd
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section

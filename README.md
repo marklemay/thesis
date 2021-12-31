@@ -3,6 +3,8 @@ all work related to my thesis document, will eventually become public
 
 
 ## What to Review
+* Chapter 1
+  * is a pluasable argument made
 * Chapter 2
   * proofs and formalizms
 
@@ -48,7 +50,6 @@ git submodule foreach git pull origin master
 ## TODO
 * formatting
 * join one of the writing groups/workshops?
-* submodule out the bib file
 * CI
 
 ## Related

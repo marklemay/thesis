@@ -104,7 +104,7 @@ todonotes
 \begin_body
 
 \begin_layout Title
-Chapter 6 (draft): Notes, Future work, Conclusion
+Chapter 7 (draft): Conclusion
 \end_layout
 
 \begin_layout Author
@@ -112,241 +112,74 @@ Mark Lemay
 \end_layout
 
 \begin_layout Standard
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-Seperate into notes and future work AAND then conclusion
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Part
-Symbolic Execution
+This thesis has attempted to articulate and address a common hesitation
+ around dependent types.
+ Programmers do not want do be interrupted if their is only a chance of
+ an error.
+ Addressing this legitimate concern has lead to a new way of treating warnings
+ in a dependent type system.
+ By creating a parallel system where checks are made and given runtime behavior,
+ programmers still get all of the benefits, but fewer drawbacks of dependent
+ type systems.
 \end_layout
 
 \begin_layout Standard
-In the introduction a more pragmatic approach to types was explored, however
- we can go further.
- We can automatically test test the type assertions of the of the project
- until errors are uncovered.
- Further this can be done passively so that the programmar is always allowed
- to see warnings and to experement to possible exerccise their own errors.
+This turned out to be surpassingly more subtle then expected.
+ As we saw in Chapter 3, the programmer's intent needs to be inferred, so
+ that a reasonable check can be localized.
+ This is possible through an extension to bidirectional type checking.
+ Runtime errors complicate the semantics, this issue was sidestepped by
+ applying a new relation that extracts blame.
+ Checks need their own runtime behavior, which is strait forward in the
+ pure functional setting.
 \end_layout
 
 \begin_layout Standard
-\begin_inset Float figure
-wide false
-sideways false
-status open
-
-\begin_layout Plain Layout
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-            edit program
-\end_layout
-
-\begin_layout Plain Layout
-
-             |      
-\end_layout
-
-\begin_layout Plain Layout
-
-             |      
-\end_layout
-
-\begin_layout Plain Layout
-
-             v
-\end_layout
-
-\begin_layout Plain Layout
-
- testing  <- Elaboration                    ^
-\end_layout
-
-\begin_layout Plain Layout
-
-    | ^      |              |               | runtime error
-\end_layout
-
-\begin_layout Plain Layout
-
-     -       | no warnings  | type warnings |
-\end_layout
-
-\begin_layout Plain Layout
-
-             v              v               |
-\end_layout
-
-\begin_layout Plain Layout
-
-                run program   ---------------
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-better graphics
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Caption Standard
-
-\begin_layout Plain Layout
-Ideal Workflow
-\end_layout
-
-\end_inset
-
-
-\begin_inset CommandInset label
-LatexCommand label
-name "fig:intro-thesis-workflow"
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
+Further, user defined data turned out to be far more complicated then anticipate
+d.
+ Extending pattern matching to track equalities seems like a clever idea,
+ however the formalism in Chapter 5 is not as simple as we might like.
+ It is unclear if a simpler approach is possible.
 \end_layout
 
 \begin_layout Standard
-A one hole context
+Finally, in Chapter 6, there are several ways to improve the current system
+ and build towards future work.
 \begin_inset Flex TODO Note (Margin)
 status open
 
 \begin_layout Plain Layout
-cite
+more
 \end_layout
 
 \end_inset
 
- can be defined for the cast languages presented in this thesis 
-\begin_inset Formula $C[-]$
-\end_inset
 
- and we can say that an error is observable if 
-\begin_inset Formula $\vdash a:A$
-\end_inset
-
- and 
-\begin_inset Formula $\vdash C[a]:B$
-\end_inset
-
- and 
-\begin_inset Formula $C[a]\rightsquigarrow_{*}b$
-\end_inset
-
- and Blame 
-\begin_inset Formula $b$
-\end_inset
-
- l o 
-\begin_inset Flex TODO Note (Margin)
-status open
-
-\begin_layout Plain Layout
-correct
-\end_layout
-
-\end_inset
-
- for some l in a but not in C.
 \end_layout
 
 \begin_layout Standard
-While formalizing a complete and efficient testing procedure allong these
- lines is still future work.
- There are likely insights to be gianed from the large body of reasurch
- on symbolic execution, especiually work that deals with typed higher oreder
- functions.
- A fully formal account would deal with a formal semantics of the cast lanfguage.
- Game semantics seems a promising formalism even if the game semantics of
- depenent types in general seems fairly complicated by iteslef
-\begin_inset Flex TODO Note (Margin)
-status open
-
-\begin_layout Plain Layout
-cite
-\end_layout
-
-\end_inset
-
-.
+The approach to warnings presented in this thesis may be more generally
+ applicable.
+ Type systems can still be designed to harshly avoid errors, but by creating
+ a parallel system where checks are made and given runtime behavior, the
+ type system will be less imposing to new users.
+ For instance, many interesting linear type systems are currently being
+ explored, allowing warnings may make these systems more usable to programmers
+ who are not used to those restrictions.
 \end_layout
 
 \begin_layout Standard
-Prevous implementations had experemented with descovering these obseravle
- errors by 
-\end_layout
-
-\begin_layout Part
-Runtime Poof Search
-\end_layout
-
-\begin_layout Part
-Convenience 
+Dependent types have seemed on the verge of mainstream use for decades.
+ While Dependent types are not mainstream yet, they have the unique potential
+ to bridge the gap between those who program and those who prove.
+ Each community has built invaluable expertise that could benefit the other.
+ Once that connection is made solid, more robust software is the least we
+ can expect.
 \end_layout
 
 \begin_layout Standard
-implicit function arguments
-\end_layout
-
-\begin_layout Part
-Future work
-\end_layout
-
-\begin_layout Section
-Semantics
-\end_layout
-
-\begin_layout Section
-Effects
-\end_layout
-
-\begin_layout Section
-Logic programming
-\end_layout
-
-\begin_layout Part
-Conclusion
-\end_layout
-
-\begin_layout Standard
-\begin_inset CommandInset bibtex
-LatexCommand bibtex
-btprint "btPrintCited"
-bibfiles "/Users/stephaniesavir/thesis/bibliography/dtest"
-options "alpha"
-
-\end_inset
-
-
+While this thesis has not single handedly made this connection, I think
+ it is a necessary piece of the puzzle.
 \end_layout
 
 \begin_layout Part
@@ -363,34 +196,6 @@ notes
 
 \begin_layout Section
 unused
-\end_layout
-
-\begin_layout Standard
-More subtle is that the procedure described here will allow f to observe
- parallel or, even though parallel or cannot be constructed within the language.
- This hints that the approach presented here could be revised in terms of
- games semantics (perhaps along lines like 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "lin_et_al:LIPIcs:2020:12349"
-literal "false"
-
-\end_inset
-
-).
- Though game semantics for dependent types is a complicated subject in and
- of itself 
-\begin_inset Flex TODO Note (Margin)
-status open
-
-\begin_layout Plain Layout
-cite
-\end_layout
-
-\end_inset
-
-.
- 
 \end_layout
 
 \end_body
