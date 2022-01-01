@@ -24,6 +24,7 @@
 \use_default_options true
 \begin_modules
 todonotes
+theorems-ams
 \end_modules
 \maintain_unincluded_children false
 \language english
@@ -131,7 +132,7 @@ not handle data types in a rigorous way.
 
 \end_layout
 
-\begin_layout Part
+\begin_layout Section
 Introduction
 \end_layout
 
@@ -143,7 +144,7 @@ User defined data is an important part of a realistic programming language.
 
 \begin_layout Standard
 Dependent data types allow these user defined types, while also unifying
- over many types that are handled as special cases in most mainstream languages.
+ many types that are handled as special cases in most mainstream languages.
  For instance, 
 \begin_inset Quotes eld
 \end_inset
@@ -191,8 +192,8 @@ ease of use
 \begin_inset Quotes erd
 \end_inset
 
- is the overriding concern for the system developed in this thesis, encoding
- are an unrealistic way to use data.
+ is the overriding concern for the system developed in this thesis, those
+ encoding are an unrealistic way to use data.
  
 \begin_inset ERT
 status open
@@ -209,18 +210,18 @@ status open
 \end_layout
 
 \begin_layout Standard
-In this chapter we will show 2 different, closely related ways to add data
- to the surface language.
- The first which we call the direct eliminator encoding, is metatheoretically
- well behaved but cumbersome.
+In this chapter we will show two different, closely related ways to add
+ data to the surface language and bidirectional system.
+ The first, a direct eliminator scheme, is meta-theoretically well behaved
+ but cumbersome.
  The second is based on pattern matching, and is extremely useful for programmer
-s, though it's meta theory is much more difficult.
+s, though its meta-theory is much more difficult.
  The specific form of pattern matching in this chapter is designed to allow
  syntactic sugar of function definition by cases.
  
 \end_layout
 
-\begin_layout Part
+\begin_layout Section
 Data 
 \end_layout
 
@@ -312,6 +313,15 @@ status open
 lstparams "basicstyle={\ttfamily\small}"
 inline false
 status open
+
+\begin_layout Plain Layout
+
+data Void : * {};
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
 
 \begin_layout Plain Layout
 
@@ -573,12 +583,12 @@ name "fig:data-defs"
 
 \end_layout
 
-\begin_layout Part
+\begin_layout Section
 Direct Elimination
 \end_layout
 
 \begin_layout Standard
-How should a program observe data? Since the term of a given data type can
+How should a program observe data? Since a term of a given data type can
  only be created with one of the constructors from its definition, we can
  completely handle a data expression if each possible constructor is accounted
  for.
@@ -671,6 +681,7 @@ noprefix "false"
 \end_inset
 
 .
+ Data Type constructors and Data Term constructors are treated like functions.
  This direct eliminator scheme, is roughly similar to how Coq handles data
  in it's core language.
 \begin_inset Float figure
@@ -2102,7 +2113,7 @@ Cite De Bruijn for telescopes
 \end_inset
 
  type checks against 
-\begin_inset Formula $\left(x:\star\right)\rightarrow\left(y:\mathtt{Nat}\right)\rightarrow\left(z:\mathtt{Nat}\right)\rightarrow\left(-:Id\ x\,y\,z\right)$
+\begin_inset Formula $\left(X:\star\right)\rightarrow\left(y:X\right)\rightarrow\left(z:X\right)\rightarrow\left(-:Id\ X\,y\,z\right)$
 \end_inset
 
 .
@@ -2111,7 +2122,7 @@ Cite De Bruijn for telescopes
  We will allow several syntactic puns, such as treating telescopes as prefixes
  for function types.
  For instance, if 
-\begin_inset Formula $\Delta=\left(x:\star\right)\rightarrow\left(y:\mathtt{Nat}\right)\rightarrow\left(z:\mathtt{Nat}\right)\rightarrow\left(-:Id\ x\,y\,z\right)$
+\begin_inset Formula $\Delta=\left(y:\mathtt{Nat}\right)\rightarrow\left(z:\mathtt{Nat}\right)\rightarrow\left(-:Id\ \mathtt{Nat}\,y\,z\right)$
 \end_inset
 
  then writing 
@@ -2132,7 +2143,7 @@ Cite De Bruijn for telescopes
 \end_inset
 
  will be short hand for 
-\begin_inset Formula $f:\left(x:\star\right)\rightarrow\left(y:\mathtt{Nat}\right)\rightarrow\left(z:\mathtt{Nat}\right)\rightarrow Id\ x\,y\,z\rightarrow\mathtt{Nat}$
+\begin_inset Formula $f:\left(y:\mathtt{Nat}\right)\rightarrow\left(z:\mathtt{Nat}\right)\rightarrow Id\ \mathtt{Nat}\,y\,z\rightarrow\mathtt{Nat}$
 \end_inset
 
 .
@@ -2184,7 +2195,7 @@ Adding data allows for two additional sources of bad behavior.
  
 \end_layout
 
-\begin_layout Section
+\begin_layout Subsubsection
 Incomplete Eliminations
 \end_layout
 
@@ -2277,19 +2288,29 @@ unmatched
 \end_layout
 
 \begin_layout Standard
-For similar reasons we will insist that each constructor is matched at most
- once, so there is no ambiguity for how an case eliminated when using direct
- eliminations.
+For similar reasons, in the direct eliminator scheme, we will insist that
+ each constructor is matched at most once, so there is no ambiguity for
+ how an case eliminated when using direct eliminations.
 \end_layout
 
-\begin_layout Section
-(non) Strict Positivity
+\begin_layout Subsubsection
+(non-)Strict Positivity
 \end_layout
 
 \begin_layout Standard
 A more subtle concern is posed by data definitions that are not strictly
  positive.
- Consider the following definition,
+ Consider the following definition, 
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+TODO think this can be simplified
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -2381,15 +2402,15 @@ The
 \end_layout
 
 \begin_layout Standard
-non strictly positive data data definitions can cause non-termination, independe
-nt of the two other sources of non-termination already considered (general
+Non-strictly positive data definitions can cause non-termination, independent
+ of the two other sources of non-termination already considered (general
  recursion and type-in-type).
  Dependent type systems usually require a strictness check on data definitions
  to avoid this possibility.
  However, this would disallow some useful constructions like higher order
  abstract syntax.
  Since non-termination is already allowed in the surface TAS, we will not
- restrict the surface language to strictly positive date.
+ restrict the surface language to strictly positive data.
 \end_layout
 
 \begin_layout Standard
@@ -2419,8 +2440,8 @@ status open
 
 \end_layout
 
-\begin_layout Section
-Typing
+\begin_layout Subsection
+Type assignment System
 \end_layout
 
 \begin_layout Standard
@@ -2568,7 +2589,7 @@ noprefix "false"
 
  constructor.
  This thesis does not formalize a syntax that adds data to context, though
- a very module system has been implemented in the prototype.
+ a very simple module system has been implemented in the prototype.
  It is taken for granted that any well formed data in context is fine.
  This presentation of data definitions largely follows 
 \begin_inset CommandInset citation
@@ -2871,7 +2892,7 @@ noprefix "false"
 \end_inset
 
 .
- They follow the scheme of parallel reductions laid out in chapter 2.
+ They follow the scheme of parallel reductions laid out in Chapter 2.
  The 
 \begin_inset Formula $\textrm{\Rrightarrow-\mathsf{case}-red}$
 \end_inset
@@ -2886,6 +2907,16 @@ Also called
 \end_inset
 
 , or Iota reduction
+\end_layout
+
+\end_inset
+
+
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+mention beta in CH2
 \end_layout
 
 \end_inset
@@ -2914,7 +2945,7 @@ Also called
 \end_inset
 
  relation reflexive.
- The reduction relation must be generalized to lists in the expected way.
+ The reduction relation is be generalized to lists in the expected way.
 \end_layout
 
 \begin_layout Standard
@@ -3208,25 +3239,41 @@ literal "false"
 
 \end_inset
 
-, we will not prove the type soundness of the system here.
+
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+switch to vilhelms thesis?
+\end_layout
+
+\end_inset
+
+ , we will not prove the type soundness of the system here.
  For clarity we will list the important properties as conjectures.
 \end_layout
 
-\begin_layout Standard
-
-\series bold
-Conjecture 
-\series default
-the surface language extended with data and elimination preserves types
+\begin_layout Conjecture
+The surface language extended with data and elimination preserves types
  over reduction.
 \end_layout
 
 \begin_layout Standard
+\begin_inset ERT
+status open
 
-\series bold
-Conjecture 
-\series default
-the surface language extended with data and elimination has progress if
+\begin_layout Plain Layout
+
+% ...
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Conjecture
+The surface language extended with data and elimination has progress if
  
 \begin_inset Formula $\Gamma\,\mathbf{Empty}$
 \end_inset
@@ -3273,14 +3320,24 @@ the surface language extended with data and elimination has progress if
 \end_layout
 
 \begin_layout Standard
+\begin_inset ERT
+status open
 
-\series bold
-Conjecture 
-\series default
-the surface language extended with data and elimination is type sound.
+\begin_layout Plain Layout
+
+% ...
 \end_layout
 
-\begin_layout Section
+\end_inset
+
+
+\end_layout
+
+\begin_layout Conjecture
+The surface language extended with data and elimination is type sound.
+\end_layout
+
+\begin_layout Subsection
 Bidirectional Type Checking
 \end_layout
 
@@ -3297,7 +3354,8 @@ noprefix "false"
 
 \end_inset
 
-.As noted in 
+.
+ As noted in 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "10.1145/3450952"
@@ -3306,8 +3364,8 @@ literal "false"
 \end_inset
 
 , the bidirectional rules around data are open to some interpretation.
- The dependent case simplifies these questions since only a few schemes
- are feasible.
+ The dependent case simplifies these questions since only a few rules are
+ sensable.
 \end_layout
 
 \begin_layout Standard
@@ -3448,20 +3506,34 @@ We can confidently conjecture that the desired bidirectional properties
  hold.
 \end_layout
 
-\begin_layout Standard
+\begin_layout Conjecture
 
 \series bold
-Conjecture 
+T
 \series default
-the data extension to the bidirectional surface language is type sound.
+he data extension to the bidirectional surface language is type sound.
 \end_layout
 
 \begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% ...
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Conjecture
 
 \series bold
-Conjecture 
+T
 \series default
-the data extension to the bidirectional surface language is weakly annotatable
+he data extension to the bidirectional surface language is weakly annotatable
  from the data extension of the surface language.
 \begin_inset Flex TODO Note (Margin)
 status open
@@ -3494,13 +3566,12 @@ This is a minimal (and somewhat crude) accounting of bidirectional data.
 \begin_inset Formula $\operatorname{\overrightarrow{ty}-}\mathsf{case}<>$
 \end_inset
 
- it is also also possible to imagine some type constructor arguments being
- inferred.
+ it is also possible to imagine some type constructor arguments being inferred.
  These features and more will be subsumed by the dependent pattern matching
  of the next section, though this will complicate the meta-theory.
 \end_layout
 
-\begin_layout Part
+\begin_layout Section
 Pattern Matching
 \end_layout
 
@@ -3621,7 +3692,7 @@ status open
 
 \begin_layout Plain Layout
 
- -- eliminator style
+ -- direct eliminator style
 \end_layout
 
 \begin_layout Plain Layout
@@ -4537,7 +4608,7 @@ talk about or formalize the more subtle inference in the actual system
 
 \end_layout
 
-\begin_layout Section
+\begin_layout Subsection
 First Order Unification
 \end_layout
 
@@ -4547,17 +4618,22 @@ When type checking the branches of the a case expression, the patterns are
  pattern.
  If these equations can be unified, then the brach will type-check under
  the variable assignments, with the additional typing information.
- For instance, the pattern
+ For instance,
 \end_layout
 
-\begin_layout Standard
+\begin_layout Example
+Type checking by unification
+\end_layout
+
+\begin_layout Example
+the pattern 
 \begin_inset Formula $Cons\,x\,\left(S\,y\right)\,2\,z$
 \end_inset
 
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Example
 could be checked against the type 
 \begin_inset Formula $Vec\,Nat\,w$
 \end_inset
@@ -4565,7 +4641,7 @@ could be checked against the type
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Example
 this implies the typings 
 \begin_inset Formula $x:*,y:Nat,\left(S\,y\right):x,2:Nat,z:Vec\,x\,2,\left(Cons\,x\,\left(S\,y\right)\,2\,z\right):Vec\,Nat\,w$
 \end_inset
@@ -4573,11 +4649,8 @@ this implies the typings
 
 \end_layout
 
-\begin_layout Standard
-which in turn imply the equalities
-\end_layout
-
-\begin_layout Standard
+\begin_layout Example
+which in turn imply the equalities 
 \begin_inset Formula $x=Nat,w=3$
 \end_inset
 
@@ -4751,9 +4824,13 @@ name "fig:surface-data-unification"
 \begin_layout Standard
 After the branches have type checked we should makes sure that they are
  exhaustive, such that every possible branch will be covered.
- There are several possible strategies.
+ Usually the is done by generating a set of patterns that would cover all
+ combinations of constructors and proving that the unlisted branches are
+ unreachable.
  In general it is undecidable wether any given pattern is impossible or
  not, so a practical approximation must be chosen.
+ Usually a branch is characterized as unreachable if a contradiction is
+ found in the unification procedure.
  At least programmers have the ability to manually include non-obviously
  unreachable branches and prove their unreachability, (or direct those branches
  to dummy outputs).
@@ -4763,26 +4840,16 @@ After the branches have type checked we should makes sure that they are
 \end_layout
 
 \begin_layout Standard
-Usually a branch is characterized as unreachable if a contradiction is found
- in the unification procedure.
- But that pattern or patterns must still be generated, given the explicit
- branches the programmer introduced.
- There is no clear 
-\begin_inset Quotes eld
-\end_inset
-
-best way
-\begin_inset Quotes erd
-\end_inset
-
- to do this since a more fine devision of patterns may allow enough additional
- definitional information to show unsatisfiability, while a more coarse
- devision of patterns will be more efficient.
+But that set of patterns must still be generated, given the explicit branches
+ the programmer introduced.
+ There is no clear best way to do this since a more fine devision of patterns
+ may allow enough additional definitional information to show unsatisfiability,
+ while a more coarse devision of patterns will be more efficient.
  Agda uses a tree branching approach, that is efficient, but generates course
  patterns.
  The implementation of the language in this thesis generates patterns by
  a system of complements, this system seams slightly easier to implement,
- more uniform, and generates a much finer system of patterns then the case
+ more uniform, and generates a much finer set of patterns then the case
  trees used in Agda.
  However this approach is exponentially less performant then Agda in the
  worse case.
@@ -4859,11 +4926,7 @@ where
  
 \end_layout
 
-\begin_layout Standard
-
-\series bold
-Conjecture 
-\series default
+\begin_layout Conjecture
 Their exists a suitable
 \begin_inset Foot
 status open
@@ -4879,10 +4942,21 @@ supporting at least subject reduction, type soundness, and regularity
 \end_layout
 
 \begin_layout Standard
+This conjecture is not obvious since pattern matching is not consistent
+ under reduction, or even well typed substitution.
+ Probably the best way to work in that direction is to use explicit contextual
+ equalities as in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "sjoberg2012irrelevance"
+literal "false"
 
-\series bold
-Conjecture 
-\series default
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Conjecture
 The bidirectional extension listed here is weakly annotatable with that
  extension to the surface language.
 \end_layout
@@ -4905,7 +4979,7 @@ Discussion
 status open
 
 \begin_layout Plain Layout
-ECHO VIEW from the left to 
+ECHO VIEW from the left to explore this more
 \end_layout
 
 \end_inset
@@ -4918,7 +4992,7 @@ ECHO VIEW from the left to
 status open
 
 \begin_layout Plain Layout
-Inductive families
+Inductive families? don't seem to make sense in this formulation
 \end_layout
 
 \end_inset
@@ -4931,7 +5005,8 @@ Pattern matching seems simple, but is a surprisingly subtle.
 \end_layout
 
 \begin_layout Standard
-Even without dependent types, pattern matching is a strange feature.
+Even without dependent types, pattern matching is a strange programming
+ construct.
  How important is it that patterns correspond exactly to a subset expression
  syntax? What about capture annotations or side conditions? Restricting
  patterns to constructors and variable means that it is hard to encapsulate
@@ -4996,7 +5071,37 @@ In the presence of full-spectrum dependent types, the perspective dramatically
  attacking a much more difficult problem then in the non-dependent case.
  It may make sense to extend the notion of pattern matching to include other
  useful but difficult features.
- To some extent this is similar to the with syntax of 
+ One such interesting feature was the 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $\mathsf{with}$
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+ syntax of 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "mcbride_mckinna_2004"
@@ -5025,16 +5130,7 @@ discuss stuck state of unification explicitly, x = f a vs.
 \end_layout
 
 \begin_layout Standard
-\begin_inset Flex TODO Note (Margin)
-status open
-
-\begin_layout Plain Layout
-Epigram
-\end_layout
-
-\end_inset
-
-, Agda and Idris make pattern matching more powerful using 
+Epigram, Agda and Idris make pattern matching more powerful using 
 \family roman
 \series medium
 \shape up
@@ -5067,7 +5163,7 @@ Epigram
  syntax that allows further pattern based branching by attaching a computation
  to a branch.
  This is justified as syntactic sugar that corresponds to helper functions
- that can be appropriately elaborated and typed.
+ that can be appropriately elaborated and type-checked.
  The language described in this thesis does not use the 
 \family roman
 \series medium
@@ -5104,7 +5200,37 @@ Epigram
 \end_layout
 
 \begin_layout Standard
-More aggressive choices should be explored beyond the with construct.
+More aggressive choices should be explored beyond the 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $\mathsf{with}$
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+ construct.
  In principle it seems that dependent case expressions could be extended
  with relevant proof search, arbitrary computation or some amount of constraint
  solving, without being any theoretically worse than usual first order unificati
@@ -5189,7 +5315,8 @@ This chapter has glossed over the definitional behavior of
 \uwave default
 \noun default
 \color inherit
-s, since we plan to sidestep the issue with the cast language.
+s, since we plan to sidestep definitional issues entirely with the cast
+ language.
  It is worth noting that their are several ways to set up the definitional
  reductions.
  Agda style case trees may result in unpredictable definitional equalities
@@ -5231,8 +5358,8 @@ first match
 \end_inset
 
  behavior programmers are used to).
- Another extreme would be to only allow reductions at fully computed scrutinee
- values, as in trellies work 
+ Another extreme would be to only allow reductions when the scrutinee is
+ a value, similar to the work in 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "sjoberg2012irrelevance"
@@ -5255,17 +5382,17 @@ confirm
 d as they are found unreachable and substitutions made as they are available.
  This last approach is experimentally implemented for the language defined
  here.
+ However it is unclear how partial reduction could be handled in the meta-theory.
 \end_layout
 
 \begin_layout Standard
-This complicates the simple story from chapter 2, where the bidirectional
- system made the TAS system checkable by only adding annotations (and having
- annotatability).
+Patten matching complicates the simple story from Chapter 2, where the bidirecti
+onal system made the TAS system checkable by only adjusting annotations.
  We have only conjectured the existence of a suitable TAS system for pattern
  matching.
  If the definitional equality that feeds the TAS is generated by a system
- of reductions, any of the reduction strategies will generate a different
- TAS with subtly different characteristics.
+ of reductions, any of the reduction strategies listed above will generate
+ a different TAS with subtly different characteristics.
  For instance, insisting on a call-by-value case reduction will leave many
  equivalent computations unassociated.
  If the TAS system uses partial reductions it will need to inspect the construct
@@ -5333,25 +5460,56 @@ literal "false"
 \end_layout
 
 \begin_layout Standard
-last condition is optional if you're willing to modify type soundness to
- allow pattern match errors (again, they are no worse then the non-termination
- already allowed, and better behaved).
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% Where the last condition is optional if you're willing to modify type
+ soundness to allow pattern match errors (again, they are no worse then
+ the non-termination already allowed, and better behaved).
 \end_layout
 
-\begin_layout Part
-Related work
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
-Systems with Data
+Related work
+\end_layout
+
+\begin_layout Subsection
+Dependent Systems with Data
 \end_layout
 
 \begin_layout Standard
 Many systems that target data only formalize a representative collection
  of data types, expecting the reader to be able to generalize the scheme.
- This data usually covers Nats (for recursion) dependent pairs (for type
- constructor arguments) and unit to end a chain of dependent pairs.
- For example, Martin Lof's original paper treated data this way
+ This data usually covers Nats (for recursive types) and dependent pairs
+ (for dependent types) 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% and unit to end a chain of dependent pairs
+\end_layout
+
+\end_inset
+
+.
+ For example, Martin Lof's
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+accent
+\end_layout
+
+\end_inset
+
+ original paper treated data this way
 \begin_inset Flex TODO Note (Margin)
 status open
 
@@ -5361,7 +5519,7 @@ confirm, cite
 
 \end_inset
 
-, and is still a common approach tp data (for instance in 
+, and is still a common approach to data (for instance in 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "jia2010dependent"
@@ -5373,18 +5531,18 @@ literal "false"
 \end_layout
 
 \begin_layout Standard
-Martin Lof generalized the notion of data to W types of well founded trees
- 
-\begin_inset Flex TODO Note (Margin)
+\begin_inset ERT
 status open
 
 \begin_layout Plain Layout
-confirm, cite
+
+% Martin Lof generalized the notion of data to W types of well founded trees
+  and this still serves as a theoretical justification for data.
 \end_layout
 
 \end_inset
 
- and this still serves as a theoretical justification for data.
+
 \end_layout
 
 \begin_layout Standard
@@ -5400,40 +5558,22 @@ literal "false"
  data types by way of a logical framework defined in MLTT.
  This scheme generates primitive recursors for schematized data, and does
  not inherently support pattern matching.
-\begin_inset Flex TODO Note (Margin)
-status open
-
-\begin_layout Plain Layout
-finish reading this
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Standard
 The Calculus of Inductive Constructions (CiC) is an extension to the calculus
- of constructions that includes a system of first class data.
- It was first presented in 
-\begin_inset Flex TODO Note (Margin)
-status open
-
-\begin_layout Plain Layout
-\begin_inset Quotes eld
-\end_inset
-
-Inductive definitions in the system Coq rules and properties
-\begin_inset Quotes erd
-\end_inset
-
- confirm
-\end_layout
+ of constructions that includes a system of first class data definitions.
+ It evolved form Calculus of Constructions with Inductive Definitions (CCID)
+ which was first presented in, 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "10.1007/BFb0037116"
+literal "false"
 
 \end_inset
 
- , but the most complete up to date formulation is maintained as part of
- the Coq manual 
+ but the most complete up to date formulation is maintained as part of the
+ Coq manual 
 \begin_inset Foot
 status open
 
@@ -5469,8 +5609,8 @@ CTT, higher inductive types, quotient types
 
 \end_layout
 
-\begin_layout Section
-Pattern matching
+\begin_layout Subsection
+Dependent Pattern matching
 \end_layout
 
 \begin_layout Standard
@@ -5487,7 +5627,8 @@ Clean up this section
 \end_layout
 
 \begin_layout Standard
-Early work by Coq92 
+The scheme for dependent pattern matching was first presented by Thierry
+ Coquand in 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "coquand1992pattern"
@@ -5495,11 +5636,42 @@ literal "false"
 
 \end_inset
 
-
+.
 \end_layout
 
 \begin_layout Standard
-with a lot of follow up from McBride 
+Mcbride and Mckinna extended the power and theory of dependent pattern matching
+ with several additional constructs such as 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $\mathsf{with}$
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+ in
 \begin_inset CommandInset citation
 LatexCommand cite
 key "mcbride_mckinna_2004"
@@ -5507,11 +5679,12 @@ literal "false"
 
 \end_inset
 
-
+.
 \end_layout
 
 \begin_layout Standard
-reiterated in 
+Ulf Norell greatly simplified the presentation of pattern matching in his
+ thesis 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "norell2007towards"
@@ -5519,7 +5692,7 @@ literal "false"
 
 \end_inset
 
-
+.
 \end_layout
 
 \begin_layout Standard
@@ -5539,7 +5712,7 @@ A tutorial implementation of dynamic pattern unification Adam Gundry and
 \end_layout
 
 \begin_layout Standard
-with substantial follow up in 
+The subtleties of dependently pattern matching are explored in 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "cockx_devriese_2018"
@@ -5547,7 +5720,8 @@ literal "false"
 
 \end_inset
 
-
+, which has many informative examples, some of which were motivated by longstand
+ing bugs in Agda.
 \end_layout
 
 \begin_layout Standard
@@ -5592,24 +5766,6 @@ http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.99.1405&rep=rep1&type=p
 \end_layout
 
 \begin_layout Standard
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-talk about normalization
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-https://popl19.sigplan.org/details/POPL-2019-Research-Papers/33/Higher-Inductive-T
-ypes-in-Cubical-Computational-Type-Theory
-\end_layout
-
-\begin_layout Standard
 \begin_inset CommandInset bibtex
 LatexCommand bibtex
 btprint "btPrintCited"
@@ -5623,6 +5779,20 @@ options "alpha"
 
 \begin_layout Part
 TODO
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+address in chapter 5 https://popl19.sigplan.org/details/POPL-2019-Research-Papers/
+33/Higher-Inductive-Types-in-Cubical-Computational-Type-Theory
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Itemize
