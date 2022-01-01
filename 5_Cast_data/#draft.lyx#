@@ -24,6 +24,7 @@
 \use_default_options true
 \begin_modules
 todonotes
+theorems-ams
 \end_modules
 \maintain_unincluded_children false
 \language english
@@ -111,8 +112,8 @@ Chapter 5 (draft): Data and Pattern Matching in the Cast Language
 Mark Lemay
 \end_layout
 
-\begin_layout Part
-Cast Language Data
+\begin_layout Section
+Introduction
 \end_layout
 
 \begin_layout Standard
@@ -139,7 +140,7 @@ Consider the normal forms of data terms.
  While in standard type theory a normal form of data, in a closed context,
  must have the data constructor in head position (justifying the pattern
  syntax), in the cast language the normal form of data will have a stack
- of 0 or more casts applied to a value.
+ of zero or more casts applied to a value.
  Casts will be wrapped around constructors during the elaboration procedure,
  and will accumulate during evaluation.
  If the cast language is extended with a path variable that can represent
@@ -178,8 +179,8 @@ gradual correctness
 \end_inset
 
  properties relative to a type assignment system and bidirectional system.
- In this case we will target the previously described TAS with a first order
- unification style pattern matching.
+ In this case we will target the conjectured TAS from Chapter 4, with a
+ first order unification style pattern matching.
  
 \end_layout
 
@@ -194,9 +195,19 @@ unreachable
 \begin_inset Quotes erd
 \end_inset
 
- branch if a bad case is made.
+ branch if a bad scrutinee is inspected.
  If this happens blame will be reflected back onto a specific problematic
  cast of the input.
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+define path
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -218,11 +229,11 @@ During elaboration, after a pattern is unified, we will inject the proofs
  
 \end_layout
 
-\begin_layout Section
+\begin_layout Subsection
 Examples
 \end_layout
 
-\begin_layout Subsection
+\begin_layout Subsubsection
 Head
 \end_layout
 
@@ -295,7 +306,11 @@ the vector may be empty but cast to look like it is inhabited.
 \end_layout
 
 \begin_layout Itemize
-the vector may have a type that is not Bool.
+the vector may have a type that is not 
+\begin_inset Formula $\mathtt{Bool}$
+\end_inset
+
+.
  For instance 
 \begin_inset Formula $\mathtt{Cons}\,\mathtt{Nat}\,3\,...\,...::\mathtt{Vec}\,\mathtt{Bool}\,5$
 \end_inset
@@ -360,7 +375,8 @@ is a path variable
 \begin_inset Formula $p:\mathtt{Vec}\ A\ (\mathtt{S}\,y)\approx\mathtt{Vec}\,\mathtt{Bool}\,(\mathtt{S}\,n)$
 \end_inset
 
- that contains evidence that the 2 types have been asserted to be the same.
+ that contains evidence that the two types have been asserted to be the
+ same.
  
 \begin_inset Formula $InT_{0}p$
 \end_inset
@@ -459,7 +475,7 @@ If the vector is inhabited by an incorrect type, it will return
  result is eliminated.
 \end_layout
 
-\begin_layout Subsection
+\begin_layout Subsubsection
 Sum
 \end_layout
 
@@ -535,35 +551,76 @@ case x <_:Vec Nat 2 => Nat> {
 \end_layout
 
 \begin_layout Itemize
-in the first branch we have, p1 : Vec Nat'' (S n'') = Vec Nat' n', p2 :
- Vec Nat' (S n') = Vec Nat 2, i:Nat', j:Nat''
+in the first branch we have, 
+\begin_inset Formula $p1:\mathtt{Vec}\ Nat''\ (\mathtt{S}\ n'')\approx\mathtt{Vec}\ Nat'\ n'$
+\end_inset
+
+, 
+\begin_inset Formula $p2:\mathtt{Vec}\ Nat''\ (\mathtt{S}\ n')\approx\mathtt{Vec}\ \mathtt{Nat}\ 2$
+\end_inset
+
+, 
+\begin_inset Formula $i:Nat'$
+\end_inset
+
+, 
+\begin_inset Formula $j:Nat''$
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
 \begin_layout Itemize
-this means we can deduce InTc0(p2) : Nat' = Nat, and InTc0(p1) InTc0(p2)
- : Nat'' = Nat
+this means we can deduce 
+\begin_inset Formula $InTc_{0}(p2):Nat'\approx\mathtt{Nat}$
+\end_inset
+
+, and 
+\begin_inset Formula $InTc_{0}(p1)InTc_{0}(p2):Nat''\approx\mathtt{Nat}$
+\end_inset
+
+
 \end_layout
 
 \end_deeper
 \begin_layout Itemize
-in the 2nd branch, p : Vec Nat' 0 = Vec Nat' 2
+in the 2nd branch, 
+\begin_inset Formula $p:\mathtt{Vec}\ Nat''\ 0\approx\mathtt{Vec}\ Nat'\ 2$
+\end_inset
+
+
 \end_layout
 
 \begin_deeper
 \begin_layout Itemize
-which is unsatisfiable, by InTc1(p) : 0 = 2
+which is unsatisfiable, by 
+\begin_inset Formula $InTc_{1}(p):0\approx2$
+\end_inset
+
+
 \end_layout
 
 \end_deeper
 \begin_layout Itemize
-in the 3rd branch, p1 : Vec Nat'' 0 = Vec Nat' n', p2 : Vec Nat' (S n')
- = Vec Nat 2
+in the 3rd branch, 
+\begin_inset Formula $p1:\mathtt{Vec}\ Nat''\ 0\approx\mathtt{Vec}\ Nat'\ n'$
+\end_inset
+
+, 
+\begin_inset Formula $p2:\mathtt{Vec}\ Nat'\ (\mathtt{S}\ n')\approx\mathtt{Vec}\ \mathtt{Nat}\ 2$
+\end_inset
+
+, 
 \end_layout
 
 \begin_deeper
 \begin_layout Itemize
-which is unsatisfiable by InTc1(p1) InTc1(p2) : 0 = 2.
+which is unsatisfiable by 
+\begin_inset Formula $InTc_{1}(p1)InTc_{1}(p2):0\approx2$
+\end_inset
+
+.
  We don't need to know which path is problematic beforehand, only that the
  combination causes trouble.
 \end_layout
@@ -571,7 +628,7 @@ which is unsatisfiable by InTc1(p1) InTc1(p2) : 0 = 2.
 \end_deeper
 \begin_layout Standard
 We know from unification what the type and value of every term is supposed
- to be, so casts can be injected using evidence from the pattern
+ to be, so casts can be injected using evidence from the pattern.
 \end_layout
 
 \begin_layout Standard
@@ -588,8 +645,8 @@ s
 
 \end_layout
 
-\begin_layout Subsection
-assignment at the type level
+\begin_layout Subsubsection
+Assignment at the type level
 \end_layout
 
 \begin_layout Standard
@@ -720,7 +777,7 @@ where
  .
 \end_layout
 
-\begin_layout Subsection
+\begin_layout Subsubsection
 need to remove a cast
 \end_layout
 
@@ -926,7 +983,7 @@ Example: transitivity, translate out to motive
 \end_layout
 
 \begin_layout Section
-Cast Language
+Cast Language Pattern Matching
 \end_layout
 
 \begin_layout Standard
@@ -949,6 +1006,19 @@ noprefix "false"
 
  for the extended path syntax.
  
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+unmatched patterns
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -2656,7 +2726,7 @@ the same
 \end_inset
 
  input.
- Tracking that 2 functions should be equal becomes complicated, the system
+ Tracking that two functions should be equal becomes complicated, the system
  must be sensible under context, functions can take other higher order inputs,
  and function terms can be copied freely.
 \end_layout
@@ -2675,8 +2745,8 @@ Example back to pattern matching?
 \end_layout
 
 \begin_layout Standard
-The cleanest way I could find to encode the a dynamic check functions for
- equality, was with a new term level construct
+The cleanest way I could find to encode a dynamic check for function equality,
+ was with a new term level construct
 \begin_inset Foot
 status collapsed
 
@@ -2751,7 +2821,7 @@ How do sameness assertions cast check? This is difficult, because there
 \end_layout
 
 \begin_layout Standard
-Since there will only ever be a bounded number of assumptions, we can give
+Since there will only ever be a fintite number of assumptions, we can give
  each assumption a unique index 
 \begin_inset Formula $k$
 \end_inset
@@ -2783,7 +2853,7 @@ k=left,Bool
 
 \begin_layout Standard
 where we allow syntactic sugar to summarize the cast when they are the same
- over all branches (
+ over all branches (Figure 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:surface-pre-syntax-abrev"
@@ -2831,13 +2901,14 @@ To control the assumptions in scope, in a closed term every
 \begin_layout Standard
 Now we must consider how patterns would evaluate under assumptions.
  The original inspiration was to allow abstraction over casts as represented
- by a path, but now casts contain a bundle of paths each indexed by assumption.
+ by a path, but now casts contain a bundle of paths each indexed by assumption,
+ that may or may not have the same start and endpoint.
  Luckily, we can maintain the operational behavior by allowing uniform substitut
 ion into path variables.
 \end_layout
 
 \begin_layout Standard
-For simplicity of formalization we will require that 
+For simplicity of the formalization, we will require that 
 \begin_inset Formula $kmap$
 \end_inset
 
@@ -3840,6 +3911,9 @@ Cast Language Data Sub
 \end_inset
 
 
+\end_layout
+
+\begin_layout Plain Layout
 \begin_inset CommandInset label
 LatexCommand label
 name "fig:cast-data-sub"
@@ -3885,6 +3959,19 @@ status open
 \[
 \frac{\overline{a}\,\mathbf{Match}\,\overline{patc'}_{j}}{\textbf{Blame}\:\ensuremath{\ell}\,inEx_{\overline{patc'}_{j}}[\overline{a}]\,\mathsf{case}\,\overline{a,}\,\left\{ \overline{|\,\overline{patc\Rightarrow}b}\overline{|\,\overline{patc'\Rightarrow}!_{\ell_{j}}}\right\} }
 \]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+fix syntax?
+\end_layout
 
 \end_inset
 
@@ -3955,7 +4042,7 @@ noprefix "false"
 \begin_inset Quotes eld
 \end_inset
 
-unmatched
+unhandled
 \begin_inset Quotes erd
 \end_inset
 
@@ -3991,6 +4078,19 @@ This runtime error is conventional in ML style languages, and is even how
 wide false
 sideways false
 status open
+
+\begin_layout Plain Layout
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+REDO THIS
+\end_layout
+
+\end_inset
+
+
+\end_layout
 
 \begin_layout Plain Layout
 \begin_inset Formula 
@@ -4871,7 +4971,7 @@ substitution abbreviation
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-Cast Language Matching
+Cast Language Matching and sub
 \end_layout
 
 \end_inset
@@ -4905,13 +5005,12 @@ double check paths are fully applied when needed
 \end_layout
 
 \begin_layout Standard
-The Cast language extension defined in this chapter is now fairly complex.
+The Cast language extension defined in this chapter is fairly complex.
  Though all the meta-theory of this section is plausible, we have not fully
- formalized it in Coq, and there is a potential that some undetected errors
- exist.
- To be as clear as possible about the slight uncertainty around the meta-theory
+ formalized it, and there is a potential that some subtle errors exist.
+ To be as clear as possible about the uncertainty around the meta-theory
  proposed in this chapter, I will list what would normally be considered
- theorems and lemmas as conjectures and postulates.
+ theorems and lemmas as conjectures.
  
 \begin_inset Flex TODO Note (Margin)
 status open
@@ -4926,26 +5025,22 @@ weird place to make this note.
 
 \end_layout
 
-\begin_layout Standard
-
-\series bold
-Postulate
-\series default
- there is a suitable definitional equality 
+\begin_layout Conjecture
+There is a suitable definitional equality 
 \begin_inset Formula $\equiv$
 \end_inset
 
  , overloaded to all syntactic constructs, such that
 \end_layout
 
-\begin_layout Itemize
+\begin_layout Conjecture
 \begin_inset Formula $\equiv$
 \end_inset
 
  is an equivalence
 \end_layout
 
-\begin_layout Itemize
+\begin_layout Conjecture
 \begin_inset Formula $a\rightsquigarrow_{*}b$
 \end_inset
 
@@ -4960,7 +5055,7 @@ Postulate
 
 \end_layout
 
-\begin_layout Itemize
+\begin_layout Conjecture
 \begin_inset Formula $p\rightsquigarrow_{*}q$
 \end_inset
 
@@ -4975,7 +5070,7 @@ Postulate
 
 \end_layout
 
-\begin_layout Itemize
+\begin_layout Conjecture
 \begin_inset Formula $kcast\rightsquigarrow_{*}kcast''$
 \end_inset
 
@@ -4990,7 +5085,7 @@ Postulate
 
 \end_layout
 
-\begin_layout Itemize
+\begin_layout Conjecture
 if 
 \begin_inset Formula $\mathbf{Head\ }a\neq\mathbf{Head}\ b$
 \end_inset
@@ -5012,7 +5107,7 @@ settle on a capitalization for head
 
 \end_layout
 
-\begin_layout Itemize
+\begin_layout Conjecture
 if 
 \family roman
 \series medium
@@ -5054,7 +5149,7 @@ if
 
 \end_layout
 
-\begin_layout Itemize
+\begin_layout Conjecture
 \begin_inset Flex TODO Note (Margin)
 status open
 
@@ -5465,19 +5560,15 @@ technically speaking, telescopes should generalize to the different syntactic
 We now conjecture the core lemmas that could be used to prove cast soundness
 \end_layout
 
-\begin_layout Standard
-
-\series bold
-Conjecture
-\series default
- substitution of cast terms preserves cast
+\begin_layout Conjecture
+substitution of cast terms preserves cast
 \end_layout
 
-\begin_layout Standard
+\begin_layout Conjecture
 equivalently the following rule is admissible
 \end_layout
 
-\begin_layout Standard
+\begin_layout Conjecture
 \begin_inset Formula 
 \[
 \frac{HK\vdash a:A\quad x:A\in H\quad HK\vdash b:B}{H\left[x\coloneqq a\right]K\vdash b\left[x\coloneqq a\right]:B\left[x\coloneqq a\right]}
@@ -5489,18 +5580,28 @@ equivalently the following rule is admissible
 \end_layout
 
 \begin_layout Standard
+\begin_inset ERT
+status open
 
-\series bold
-Conjecture
-\series default
- substitution of typed path preserves type
+\begin_layout Plain Layout
+
+% ...
 \end_layout
 
-\begin_layout Standard
+\end_inset
+
+
+\end_layout
+
+\begin_layout Conjecture
+substitution of typed path preserves type
+\end_layout
+
+\begin_layout Conjecture
 equivalently the following rule is admissible
 \end_layout
 
-\begin_layout Standard
+\begin_layout Conjecture
 \begin_inset Formula 
 \[
 \frac{HK\vdash p:a\thickapprox a'\quad x_{p}:a\thickapprox a'\in H\quad HK\vdash b:B}{H\left[x_{p}\coloneqq p\right]K\vdash b\left[x_{p}\coloneqq p\right]:B\left[x_{p}\coloneqq p\right]}
@@ -5512,22 +5613,32 @@ equivalently the following rule is admissible
 \end_layout
 
 \begin_layout Standard
+\begin_inset ERT
+status open
 
-\series bold
-Conjecture
-\series default
- substitution of 
+\begin_layout Plain Layout
+
+% ...
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Conjecture
+substitution of 
 \begin_inset Formula $kcasts$
 \end_inset
 
  preserve cast
 \end_layout
 
-\begin_layout Standard
+\begin_layout Conjecture
 equivalently the following rule is admissible
 \end_layout
 
-\begin_layout Standard
+\begin_layout Conjecture
 \begin_inset Formula 
 \[
 \frac{HK\vdash kcast_{K}:a\thickapprox a'\quad x_{p}:a\thickapprox a'\in H\quad HK\vdash b:B}{H\left[x_{p}\coloneqq kcast_{K}\right]K\vdash b\left[x_{p}\coloneqq kcast\right]:B\left[x_{p}\coloneqq kcast\right]}
@@ -5539,18 +5650,28 @@ equivalently the following rule is admissible
 \end_layout
 
 \begin_layout Standard
+\begin_inset ERT
+status open
 
-\series bold
-Conjecture
-\series default
- substitution of cast terms preserves path endpoints
+\begin_layout Plain Layout
+
+% ...
 \end_layout
 
-\begin_layout Standard
+\end_inset
+
+
+\end_layout
+
+\begin_layout Conjecture
+substitution of cast terms preserves path endpoints
+\end_layout
+
+\begin_layout Conjecture
 equivalently the following rule is admissible
 \end_layout
 
-\begin_layout Standard
+\begin_layout Conjecture
 \begin_inset Formula 
 \[
 \frac{HK\vdash a:A\quad x:A\in H\quad HK\vdash p:b\thickapprox b'}{H\left[x\coloneqq a\right]K\vdash p\left[x\coloneqq a\right]:b\left[x\coloneqq a\right]\thickapprox b'\left[x\coloneqq a\right]}
@@ -5562,18 +5683,28 @@ equivalently the following rule is admissible
 \end_layout
 
 \begin_layout Standard
+\begin_inset ERT
+status open
 
-\series bold
-Conjecture
-\series default
- substitution of typed paths preserves path endpoints
+\begin_layout Plain Layout
+
+% ...
 \end_layout
 
-\begin_layout Standard
+\end_inset
+
+
+\end_layout
+
+\begin_layout Conjecture
+substitution of typed paths preserves path endpoints
+\end_layout
+
+\begin_layout Conjecture
 equivalently the following rule is admissible
 \end_layout
 
-\begin_layout Standard
+\begin_layout Conjecture
 \begin_inset Formula 
 \[
 \frac{HK\vdash p:a\thickapprox a'\quad x_{p}:a\thickapprox a'\in H\quad HK\vdash q:b\thickapprox b'}{H\left[x_{p}\coloneqq p\right]K\vdash q\left[x_{p}\coloneqq p\right]:b\left[x_{p}\coloneqq p\right]\thickapprox b'\left[x_{p}\coloneqq p\right]}
@@ -5585,22 +5716,32 @@ equivalently the following rule is admissible
 \end_layout
 
 \begin_layout Standard
+\begin_inset ERT
+status open
 
-\series bold
-Conjecture
-\series default
- substitution of 
+\begin_layout Plain Layout
+
+% ...
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Conjecture
+substitution of 
 \begin_inset Formula $kcasts$
 \end_inset
 
  preserve cast
 \end_layout
 
-\begin_layout Standard
+\begin_layout Conjecture
 equivalently the following rule is admissible
 \end_layout
 
-\begin_layout Standard
+\begin_layout Conjecture
 \begin_inset Formula 
 \[
 \frac{HK\vdash kcast_{K}:a\thickapprox a'\quad x_{p}:a\thickapprox a'\in H\quad HK\vdash b:B}{H\left[x_{p}\coloneqq kcast_{K}\right]K\vdash q\left[x_{p}\coloneqq kcast_{K}\right]:b\left[x_{p}\coloneqq kcast\right]\thickapprox b'\left[x_{p}\coloneqq kcast\right]}
@@ -5612,36 +5753,66 @@ equivalently the following rule is admissible
 \end_layout
 
 \begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% ...
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 Finally we will conjecture the cast soundness.
 \end_layout
 
-\begin_layout Standard
-
-\series bold
-Conjecture
-\series default
- The cast system preserves types and path endpoints over normalization
+\begin_layout Conjecture
+The cast system preserves types and path endpoints over normalization
 \end_layout
 
 \begin_layout Standard
+\begin_inset ERT
+status open
 
-\series bold
-Conjecture
-\series default
- a well typed path in an empty context is a value, takes a step, or produces
+\begin_layout Plain Layout
+
+% ...
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Conjecture
+a well typed path in an empty context is a value, takes a step, or produces
  blame
 \end_layout
 
 \begin_layout Standard
+\begin_inset ERT
+status open
 
-\series bold
-Conjecture
-\series default
- A well typed term in an empty context is a value, takes a step, or produces
+\begin_layout Plain Layout
+
+% ...
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Conjecture
+A well typed term in an empty context is a value, takes a step, or produces
  blame
 \end_layout
 
-\begin_layout Part
+\begin_layout Section
 Elaborating Eliminations
 \end_layout
 
@@ -5682,7 +5853,7 @@ unreachable
  blame the incomplete match if that pattern ever occurs.
 \end_layout
 
-\begin_layout Section
+\begin_layout Subsection
 Preliminaries
 \end_layout
 
@@ -5707,7 +5878,15 @@ As mentioned in the introduction we will need to add and remove justified
 
 .
  Fortunately the language is already expressive enough to embed these operations
- using a Assert that does not bind a same assertion.
+ using an 
+\begin_inset Formula $Assert$
+\end_inset
+
+ that does not bind a 
+\begin_inset Formula $same$
+\end_inset
+
+ assertion.
  
 \end_layout
 
@@ -5931,7 +6110,7 @@ move note somewhere else
 
 \end_layout
 
-\begin_layout Section
+\begin_layout Subsection
 Elaboration
 \end_layout
 
@@ -6241,24 +6420,29 @@ The elaboration algorithm is extremely careful to only add casts, this means
 \end_layout
 
 \begin_layout Standard
-Further I conjecture the remaining properties from Chapter 3 hold
+Further the remaining properties from Chapter 3 probably still hold
 \end_layout
 
-\begin_layout Itemize
-
-\series bold
-Conjecture
-\series default
- that every term well typed in the bidirectional surface language elaborates
- 
+\begin_layout Conjecture
+Every term well typed in the bidirectional surface language elaborates 
 \end_layout
 
-\begin_layout Itemize
+\begin_layout Standard
+\begin_inset ERT
+status open
 
-\series bold
-Conjecture 
-\series default
-blame never points to something that checked in the bidirectional system
+\begin_layout Plain Layout
+
+% ..
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Conjecture
+Blame never points to something that checked in the bidirectional system
  
 \end_layout
 
@@ -6293,7 +6477,7 @@ Though the meta theory in this section is plausible, there are some awkward
 \begin_inset Formula $\left\{ \lambda x\Rightarrow x\sim_{k,o,\ell}\lambda x\Rightarrow Not\ x\right\} \left\{ true\sim_{k,o,\ell}false\right\} \rightsquigarrow_{*}\left(\lambda x\Rightarrow\left\{ x\sim_{k,o.app[x],\ell}Not\ x\right\} \right)\left\{ true\sim_{k,o,\ell}false\right\} \rightsquigarrow_{*}\left\{ true\sim_{k,o.app[\left\{ true\sim_{k,o,\ell}false\right\} ],\ell}true\right\} $
 \end_inset
 
-
+.
 \end_layout
 
 \begin_layout Subsection
@@ -6305,7 +6489,7 @@ It turns out that the system defined in Chapter 3 had the advantage of only
  dealing with equalities in the type universe.
  Extending to equalities over arbitrary type has vastly increased the complexity
  of the system.
- To make the system work paths are untyped, which seems at least inelegant.
+ To make the system work paths are untyped, which seems inelegant.
  There is nothing currently preventing blame across type.
  For instance,
 \end_layout
@@ -6328,6 +6512,17 @@ It turns out that the system defined in Chapter 3 had the advantage of only
  but the resulting systems quickly became too complicated to work with.
  Some vestigial typing constraints are still in the system (such as on the
  explicit blame) to encourage this cleaner blame.
+ 
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+remove or revise
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
@@ -6466,7 +6661,7 @@ Extending to Call-by-Value
 \end_layout
 
 \begin_layout Standard
-As in chapter 3, the system presented here does the minimal amount of checking
+As in Chapter 3, the system presented here does the minimal amount of checking
  to maintain type safety.
  This can lead to unexpected results, for instance consider the surface
  term 
@@ -6530,11 +6725,15 @@ case (refl Nat 7 :: Id Nat 2 2) <_ => Nat> {
 
 \begin_layout Standard
 which will evaluate to 
-\begin_inset Formula $7::Nat$
+\begin_inset Formula $7::\mathtt{Nat}$
 \end_inset
 
  without generating blame.
- And indeed we only ever asserted that the result was of type Nat.
+ And indeed we only ever asserted that the result was of type 
+\begin_inset Formula $\mathtt{Nat}$
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
@@ -6545,6 +6744,16 @@ In the implementation, some of this behavior is avoided by requiring type
 \end_inset
 
  before the cast is even evaluated.
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+expand
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
@@ -6573,7 +6782,15 @@ As written there are many redundant computations, and trying every combination
 \end_inset
 
  assignments would remove redundant work directly.
- To some extent Cong and Assert can be made multi-arity to allow fewer jumps.
+ To some extent 
+\begin_inset Formula $Cong$
+\end_inset
+
+ and 
+\begin_inset Formula $Assert$
+\end_inset
+
+ can be made multi-arity to allow fewer jumps.
  But most helpful of all would be simplifying away unneeded casts.
  More advanced options include using proof search to find casts that will
  never cause an error.
@@ -6750,12 +6967,23 @@ The system here has some simple inspiration that could be extended into
  in univalent type theories such as CTT.
 \end_layout
 
-\begin_layout Part
+\begin_layout Section
 Related work
 \end_layout
 
 \begin_layout Standard
-previously published as an extended abstract in ...
+This work was previously presented as an extended abstract at the TyDE workshop
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+cite
+\end_layout
+
+\end_inset
+
+, the version there reflected a less plausible meta-theory based on earlier
+ implementation experiments.
 \end_layout
 
 \begin_layout Standard

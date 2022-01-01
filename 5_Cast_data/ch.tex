@@ -1,0 +1,1289 @@
+\chapter{Data in the Cast Langugae}
+\label{chapter:CastData}
+\thispagestyle{myheadings}
+
+\section{Introduction}
+
+% Cast pattern matching is easy!
+Surprisingly, the cast system can be extended with a pattern matching
+construct without unification.
+
+Consider the normal forms of data terms. While in standard type theory
+a normal form of data, in a closed context, must have the data constructor
+in head position (justifying the pattern syntax), in the cast language
+the normal form of data will have a stack of zero or more casts applied
+to a value. Casts will be wrapped around constructors during the elaboration
+procedure, and will accumulate during evaluation. If the cast language
+is extended with a path variable that can represent the stack of equalities
+then that stack can be matched and used in the body of the branch.
+Since the type constructor is known, it is possible to check the coverage
+of the patterns against it's constructors. If every constructor is
+accounted for, only blameable data remains. Quantifying over casts
+allows blame to be redirected, so if the program gets stuck in a pattern
+branch it can blame the original faulty assumption. 
+
+If we hope to target the properties of Chapter 3 we need the cast
+language to be \textbf{cast sound}. Elaboration should satisfy the
+additional correctness\todo{``gradual correctness''?} properties
+relative to a type assignment system and bidirectional system. In
+this case we will target the conjectured TAS from Chapter 4, with
+a first order unification style pattern matching. 
+
+To account for unreachable patterns, we can record the proof of inequality
+that makes the unification unsatisfiable with an explicit blame syntax.
+It is perfectly possible for a case expression to reduce into such
+an ``unreachable'' branch if a bad scrutinee is inspected. If this
+happens blame will be reflected back onto a specific problematic cast
+of the input.\todo{define path}
+
+When we internalize the notion of path we need to support path operations
+that correspond to each of operations used by the unification of the
+bidirectional type system. Specifically we need to index into the
+arguments of data constructors, and data type constructors. We will
+also need to be able to reverse paths and concatenate paths since
+the unification algorithm implicitly uses these properties of equality.
+Finally we need to be a able to remove and append casts from and to
+the endpoints of paths.
+
+During elaboration, after a pattern is unified, we will inject the
+proofs of equality into the branch terms so that they cast check.
+This will require that our notion of paths support congruence. 
+
+\subsection{Examples}
+
+\subsubsection{Head}
+
+For instance if the user case matches the head of $x$ where $x$
+has type $\mathtt{Vec}\,A\,(\mathtt{S}n)$ in the surface language,
+
+\begin{lstlisting}[basicstyle={\ttfamily\small}]
+case x <_:Vec Bool (S n) => Bool> {
+| Cons _ a _ _ => a
+}
+\end{lstlisting}
+
+What can go wrong in the presence of casts?
+\begin{itemize}
+\item a faulty cast assumption may have made $x$ appear to be a Vector
+even when it is not. For instance, $\mathtt{True}::\mathtt{Vec}\,\mathtt{Bool}\,3$
+\item the vector may be empty but cast to look like it is inhabited. For
+instance $\mathtt{Nil}\,\mathtt{Bool}\,::\mathtt{Vec}\,\mathtt{Bool}\,5$
+\item the vector may have a type that is not $\mathtt{Bool}$. For instance
+$\mathtt{Cons}\,\mathtt{Nat}\,3\,...\,...::\mathtt{Vec}\,\mathtt{Bool}\,5$
+\end{itemize}
+To handle these issues elaboration will perform unification resulting
+in the term
+
+\begin{lstlisting}[basicstyle={\ttfamily\small}]
+case x <_:Vec Bool (S n) => Bool> {
+| (Cons A a y _) :: p => a::InTCon0(p)
+| (Nil A) :: p => !InTc1(p)
+}
+\end{lstlisting}
+
+In the fist branch $A:\star$, $a:A$, $y:\mathtt{Nat}$, while $p$is
+a path variable $p:\mathtt{Vec}\ A\ (\mathtt{S}\,y)\approx\mathtt{Vec}\,\mathtt{Bool}\,(\mathtt{S}\,n)$
+that contains evidence that the two types have been asserted to be
+the same. $InT_{0}p$ extracts the 0th argument from the type constructor
+$p:\mathtt{Vec}\ \underline{A}\ (\mathtt{S}\,y)\approx\mathtt{Vec}\,\underline{\mathtt{Bool}}\,(\mathtt{S}\,n)$
+resulting in the type $InT_{0}p:A\approx\mathtt{Bool}$. The body
+of the branch casts $a$along $InT_{0}p$ to $\mathtt{Bool}$.
+
+In the the second branch, $A:\star$, $p:\mathtt{Vec}\ A\ \mathtt{Z}\approx\mathtt{Vec}\,\mathtt{Bool}\,(\mathtt{S}\,y)$
+. The body of the branch encodes the contradiction observed by noting
+$\mathtt{Z}\neq\mathtt{S}\,y$.
+
+Consider the ways $x$could go wrong,
+\begin{itemize}
+\item If the case tries to eliminate $\mathtt{True}::\mathtt{Vec}\,\mathtt{Bool}\,3$,
+the type constructor is not matched so the faulty assumption can be
+blamed
+\item If the scrutinee is empty, we will fall into the $\mathtt{Nil}$ branch,
+which will reflect the underling faulty assumption, via the explicit
+blame syntax
+\item If the vector is inhabited by an incorrect type, it will return $3::\mathtt{Bool}$
+with the a cast that rests on the faulty assumption of $\mathtt{Vec}\,\mathtt{Nat}\,5=\mathtt{Vec}\,\mathtt{Bool}\,\,5$.
+If checking is done aggressively this will produce blame immediately.
+If minimal checking is done, the blame will be discovered whenever
+the result is eliminated.
+\end{itemize}
+
+\subsubsection{Sum}
+
+Consider the more involved example that sums the 2 numbers in a vector
+
+\begin{lstlisting}[basicstyle={\ttfamily\small}]
+case x <_:Vec Nat 2 => Nat> {
+| Cons _ i _ (Cons _ j _ _) => i+j
+}
+\end{lstlisting}
+
+the elaboration procedure will produce
+
+\begin{lstlisting}[basicstyle={\ttfamily\small}]
+case x <_:Vec Nat 2 => Nat> {
+| (Cons Nat' i n' (Cons Nat'' j n'' rest):: p1):: p2 => i::InTc0(p2) + j::(InTc0(p1).InTc0(p2))
+| (Nil Nat') :: p => !InTc1(p)
+| (Cons Nat' i n' (Nil Nat''):: p1):: p2 => !InTc1(p1).InTc1(p2) 
+}
+\end{lstlisting}
+
+\begin{itemize}
+\item in the first branch we have, $p1:\mathtt{Vec}\ Nat''\ (\mathtt{S}\ n'')\approx\mathtt{Vec}\ Nat'\ n'$,
+$p2:\mathtt{Vec}\ Nat''\ (\mathtt{S}\ n')\approx\mathtt{Vec}\ \mathtt{Nat}\ 2$,
+$i:Nat'$, $j:Nat''$
+\begin{itemize}
+\item this means we can deduce $InTc_{0}(p2):Nat'\approx\mathtt{Nat}$,
+and $InTc_{0}(p1)InTc_{0}(p2):Nat''\approx\mathtt{Nat}$
+\end{itemize}
+\item in the 2nd branch, $p:\mathtt{Vec}\ Nat''\ 0\approx\mathtt{Vec}\ Nat'\ 2$
+\begin{itemize}
+\item which is unsatisfiable, by $InTc_{1}(p):0\approx2$
+\end{itemize}
+\item in the 3rd branch, $p1:\mathtt{Vec}\ Nat''\ 0\approx\mathtt{Vec}\ Nat'\ n'$,
+$p2:\mathtt{Vec}\ Nat'\ (\mathtt{S}\ n')\approx\mathtt{Vec}\ \mathtt{Nat}\ 2$, 
+\begin{itemize}
+\item which is unsatisfiable by $InTc_{1}(p1)InTc_{1}(p2):0\approx2$. We
+don't need to know which path is problematic beforehand, only that
+the combination causes trouble.
+\end{itemize}
+\end{itemize}
+We know from unification what the type and value of every term is
+supposed to be, so casts can be injected using evidence from the pattern.
+
+\todo[inline]{Example of a var out of scope that gets set, would require cong in
+all situations}
+
+\subsubsection{Assignment at the type level}
+
+There are more complicated possibilities to consider
+
+\begin{lstlisting}[basicstyle={\ttfamily\small}]
+case x <_:Id Nat 2 2 => Vec Bool 2> {
+| refl _ a => rep a Bool True
+}
+\end{lstlisting}
+
+this will elaborate to
+
+\begin{lstlisting}[basicstyle={\ttfamily\small}]
+case x <_:Id Nat 2 2 => Vec Bool 2> {
+| (refl Nat' a)::p => (rep (a::InTc0(p))):: Cong (x=> (A : *) -> A -> Vec Nat x)
+                                                 (CastL (InTC0(p)) (InTC1 p))
+   Nat 9
+}
+\end{lstlisting}
+
+where $Nat':\star$, $a:Nat'$, and $p:\mathtt{Id}\ Nat'\ a\ a\approx\mathtt{Id}\ \mathtt{Nat}\ 2\ 2$.
+Since we have $p:\mathtt{Id}\ Nat'\ a\ a\approx\mathtt{Id}\ \mathtt{Id}\ 2\ 2$,
+$(a::InTC_{0}(p))$ casts $a$ to a $\mathtt{Nat}$ but then we need
+to evidence that $(A:\star)\rightarrow A\rightarrow\mathtt{Vec}\,\mathtt{Nat}\,(a::InTC_{0}(p))\approx(A:\star)\rightarrow A\rightarrow\mathtt{Vec}\,\mathtt{Nat}\,2$.
+This means we fist need congruence to select the portion of interest.
+Ideally we would have a path from $(a::InTC_{0}(p))\approx2$, but
+we only have a path $(InTC_{1}(p)):a\approx2$ . We will use the meta
+operation $CastL$ to produce the path $CastL_{InTC_{0}(p)}\left(InTC_{1}p\right):(a::InTC_{0}p))\approx2$
+.
+
+\subsubsection{need to remove a cast}
+
+Consider this surface language case that extracts the last element
+from a non-empty list. Assume the function $last:(n:Nat)\rightarrow Vec\,A\,(S\,N)\rightarrow A$
+is in scope.
+
+\begin{lstlisting}[basicstyle={\ttfamily\small}]
+case v <_: Vec A (S x) => A > {
+| Cons _ a (Z) _ => a
+| Cons _ _ (S n) rest => last n rest
+}
+\end{lstlisting}
+
+this will elaborate into 
+
+\begin{lstlisting}[basicstyle={\ttfamily\small}]
+case v <_: Vec A (S x) => A > {
+| (Cons A' a' (Z)::q rest) :: p => a' :: rev(inTC1(p))
+| (Cons A' a' (S n)::q rest)::p => last n (rest :: p')
+| (Nil A')::p => !TCon1(p)
+}
+\end{lstlisting}
+
+In the 2nd branch we have $A':\star$, $a':A'$, $n:Nat$, $q:Nat\approx Nat$,
+$rest:Vec\,A'\,\left(\left(S\,n\right)::q\right)$, and $p:Vec\,A'\,\left(S\left(\left(S\,n\right)::q\right)\right)\approx Vec\,A\,\left(S\,x\right)$.
+Note that we cannot unify a solution unless we can freely remove casts
+from endpoints, otherwise it becomes impossible to construct a path
+from $Vec\,A'\,\left(\left(S\,n\right)::q\right)\approx Vec\,A\,\left(S\,n\right)$.
+We will need an operator that can remove casts from the endpoints
+of paths that arise from unification, we will call these operators
+$uncastL$ and $uncastR$. With these operations we can match the
+process of surface level unification so that
+
+$p'=Cong_{x\Rightarrow Vec\,A'\,x}\left(UncastR\left(refl\right)\right)\circ Cong_{x\Rightarrow Vec\,x\,\left(S\,n\right)}\left(TCon_{0}p\right):Vec\,A'\,\left(\left(S\,n\right)::q\right)\approx Vec\,A\,\left(S\,n\right)$
+
+In the first branch we have, $A':\star$, $a':A'$, $q:Nat\approx Nat$,
+$rest:Vec\,A'\,\left(Z::q\right)$, and $p:Vec\,A'\,\left(S\left(Z::q\right)\right)\approx Vec\,A\,\left(S\,x\right)$.
+Unification can proceed to derive $TCon_{1}\left(Con_{0}\left(p\right)\right)^{-1}:\ x\approx Z::q$
+and $TCon_{1}\left(p\right)^{-1}:\ A\approx A'$.
+
+In the ``unreachable'' branch we have $p:Vec\,A'\,Z\approx Vec\,A'\,\left(S\,x\right)$,
+which is contradicted by $TCon_{1}p:Z\approx S\,x$
+
+\todo[inline]{Example: transitivity, translate out to motive}
+
+\section{Cast Language Pattern Matching}
+
+Pattern matching across dependent data types will allow for observations
+that were impossible before. We can now observe specific arguments
+in type constructors and term constructors. Since function terms can
+appear directly in data type constructors it is now possible to observe
+functions directly. Unfortunately formalizing this syntax seems to
+requires some heavy constructs, see \ref{fig:cast-data} for the extended
+path syntax. 
+
+\todo[inline]{unmatched patterns}
+
+\begin{figure}
+\begin{tabular}{lcll}
+\multicolumn{4}{l}{path var,}\tabularnewline
+$x_{p}$ &  &  & \tabularnewline
+\multicolumn{4}{l}{assertion index,}\tabularnewline
+$k$ &  &  & \tabularnewline
+\multicolumn{4}{l}{assertion assumption,}\tabularnewline
+$kin$ & $\Coloneqq$ & $k=left$ | $k=right$ & \tabularnewline
+\multicolumn{4}{l}{assertion maps,}\tabularnewline
+$kmap$ & $\Coloneqq$ & $\overline{kin,}$ & \tabularnewline
+\multicolumn{4}{l}{casts under assumption,}\tabularnewline
+$kcast$ & $\Coloneqq$ & $\overline{kmap,p;}$ & \tabularnewline
+\multicolumn{4}{l}{path exp.,}\tabularnewline
+$p,p'$ & $\Coloneqq$ & $x_{p}$ & \tabularnewline
+ & | & $Assert_{k\Rightarrow C}$ & concrete assumption\tabularnewline
+ & | & $\overline{p\circ}$ & concatenated paths\tabularnewline
+ & | & $cong_{x\Rightarrow a}p$ & congruence\tabularnewline
+ & | & $p^{-1}$ & \tabularnewline
+ & | & $inTC_{i}\,p$ & \tabularnewline
+ & | & $inC_{i}\,p$ & \tabularnewline
+\multicolumn{4}{l}{cast pattern,}\tabularnewline
+$patc$ & $\Coloneqq$ & $x$ | $\left(d\,\overline{patc}\right)::x_{p}$ & \tabularnewline
+\multicolumn{3}{l}{cast expression,} & \tabularnewline
+$a$... & $\Coloneqq$ & ... & \tabularnewline
+ & | & $D$ & type cons.\tabularnewline
+ & | & $d$ & data cons.\tabularnewline
+ & | & $\mathsf{case}\,\overline{a,}\,\left\{ \overline{|\,\overline{patc\Rightarrow}b}\overline{|\,\overline{patc'\Rightarrow}!_{\ell}}\right\} $ & data elim.\tabularnewline
+ & | & $!_{kcast}$ & force blame\tabularnewline
+ & | & $a::kcast$ & cast\tabularnewline
+ & | & $\left\{ a\sim_{k,o,\ell}b\right\} $ & assert same\tabularnewline
+\multicolumn{4}{l}{observations,}\tabularnewline
+o & $\Coloneqq$ & ... & \tabularnewline
+ & | & $o.App[a]$ & application\tabularnewline
+ & | & $o.TCon_{i}$ & type cons. arg.\tabularnewline
+ & | & $o.DCon_{i}$ & data cons. arg.\tabularnewline
+ & | & $inEx_{\overline{patc}}[\overline{a}]$ & in-exhaustive pattern match\tabularnewline
+\end{tabular}
+
+\todo[inline]{extend H ctxs}
+
+\caption{Cast Language Data}
+\label{fig:cast-data}
+\end{figure}
+
+\begin{figure}
+\begin{tabular}{lclll}
+(the empty path) & written & $refl$ &  & \tabularnewline
+$a::kmap,p;kmap',q;...$ & written & $a::\begin{array}{cc}
+kmap, & p\\
+kmap', & q\\
+... & ...
+\end{array}$ &  & \tabularnewline
+$a::\begin{array}{cc}
+kmap,k=left, & p\\
+kmap,k=right, & p\\
+kmap',k=left, & q\\
+kmap,k=right, & q\\
+... & ...
+\end{array}$ & written & $a::\begin{array}{cc}
+kmap, & p\\
+kmap', & q\\
+... & ...
+\end{array}$ & when  & $k$ is irrelevant\tabularnewline
+\end{tabular}
+
+\caption{Surface Language Abbreviations}
+\label{fig:surface-pre-syntax-abrev}
+\end{figure}
+
+In this thesis we have taken an extremely extensional perspective,
+terms are only different if an observation recognizes a difference.
+For instance this approach justifies equating the functions $\lambda x\Rightarrow x+1=\lambda x\Rightarrow1+x$
+without proof, even though they are usually definitionally distinct.
+Therefore we will only blame inequality across functions if two functions
+that were asserted to be equal return different observations for ``the
+same'' input. Tracking that two functions should be equal becomes
+complicated, the system must be sensible under context, functions
+can take other higher order inputs, and function terms can be copied
+freely.
+
+\todo[inline]{Example back to pattern matching?}
+
+The cleanest way I could find to encode a dynamic check for function
+equality, was with a new term level construct\footnote{it would also be possible to extend the system with meta variables,
+though this seems harder to formalize}. This assertion that two terms are the same is written as $\left\{ a\sim_{k,o,\ell}b\right\} $
+and will evaluate $a$and $b$ in parallel until a head constructor
+is reached on each branch. If the constructor is the same it will
+commute out of the term. If the head constructor is different the
+term will get stuck with the information for the final blame message.
+For instance, $\left\{ \lambda x\Rightarrow x+1\sim_{k,o,\ell}\lambda x\Rightarrow1+x\right\} \rightsquigarrow_{*}\lambda x\Rightarrow\left\{ x+1\sim_{k,o.App[x],\ell}1+x\right\} $.
+
+Since this equational construct is already needed for functions, we
+will use it to handle all equality assertions. For instance, $\left\{ \left(\lambda x\Rightarrow S\,x\right)Z\sim_{k,o,\ell}2+2\right\} \rightsquigarrow_{*}\left\{ S\,Z\sim_{k,o,\ell}S\,\left(1+2\right)\right\} \rightsquigarrow_{*}S\,\left\{ Z\sim_{k,o.DCon_{0},\ell}1+2\right\} \rightsquigarrow_{*}S\,\left\{ Z\sim_{k,o.DCon_{0},\ell}S\,2\right\} $.
+We compute past the first $S$ constructor and blame the predecessor
+for not being equal.
+
+Unfortunately this dynamic assertion complicates other aspects of
+the system. Specifically, 
+\begin{itemize}
+\item How do same assertions interact with casts? For instance $\left\{ 1::Bool\sim_{k,o,\ell}2::Bool\right\} $. 
+\item How do sameness assertions cast check? This is difficult, because
+there is no requirement that a user asserted equality is of the same
+type. For instance what type should the term $\left\{ 1\sim_{k,o,\ell}True\right\} $
+have?
+\end{itemize}
+Since there will only ever be a fintite number of assumptions, we
+can give each assumption a unique index $k$ and consider all computations
+and judgments point-wise for every different combinations of $k$s.
+We will extend the notion of cast so different casts are possible
+for every assignment of $k$s in scope. So 
+
+$\left\{ 1::Bool\sim_{k,o,\ell}2::Bool\right\} \rightsquigarrow_{*}\left\{ 1\sim_{k,o,\ell}2::Bool\right\} ::k=left,Bool\rightsquigarrow_{*}\left\{ 1\sim_{k,o,\ell}2\right\} ::\begin{array}{c}
+k=right,Bool\\
+k=left,Bool
+\end{array}=\left\{ 1\sim_{k,o,\ell}2\right\} ::Bool$ 
+
+where we allow syntactic sugar to summarize the cast when they are
+the same over all branches (Figure \ref{fig:surface-pre-syntax-abrev}).
+
+We will also index typing judgments by the choice of $k$ in scope
+so that, $k=left\vdash\left\{ 1\sim_{k,o,\ell}True\right\} :Nat$
+and $k=right\vdash\left\{ 1\sim_{k,o,\ell}True\right\} :Bool$.
+
+To control the assumptions in scope, in a closed term every $k$ will
+be bound in the $C$ expression of an $Assert_{k\Rightarrow C}$ path.
+
+Now we must consider how patterns would evaluate under assumptions.
+The original inspiration was to allow abstraction over casts as represented
+by a path, but now casts contain a bundle of paths each indexed by
+assumption, that may or may not have the same start and endpoint.
+Luckily, we can maintain the operational behavior by allowing uniform
+substitution into path variables.
+
+For simplicity of the formalization, we will require that $kmap$s
+always uniquely map every $k$ index in scope. We will also assume
+that $kcast$ handles all possible mappings of $k$s in scope.
+
+Substitution is outlined in table \ref{fig:cast-data-sub}. The function
+$\left\lfloor -\right\rfloor _{k=-}$ filters a term along $k$ taking
+it out of scope. For instance $\left\lfloor \left\{ 7\sim_{k,o,\ell}True\right\} \right\rfloor _{k=left}=7$
+and $\left\lfloor 3::\begin{array}{ccc}
+k=left & j=left & Bool\\
+k=left & j=right & Nat\\
+k=right & j=left & String\\
+k=right & j=right & Unit
+\end{array}\right\rfloor _{k=right}=3::\begin{array}{cc}
+j=left & String\\
+j=right & Unit
+\end{array}$. The function $\left\lceil -\right\rceil ^{k}$ puts an assumption
+$k$ into scope extending it in every cast. For instance, $\left\lceil 3::\begin{array}{cc}
+j=left & String\\
+j=right & Unit
+\end{array}\right\rceil ^{k}=3::\begin{array}{ccc}
+j=left & k=left & String\\
+j=left & k=right & String\\
+j=right & k=left & Unit\\
+j=right & k=right & Unit
+\end{array}$ and $\left\lceil !_{x_{p}}\right\rceil ^{k}=!_{\begin{array}{cc}
+k=left & x_{p}\\
+k=right & x_{p}
+\end{array}}$. The subscript $kcast_{kmap}$ selects the appropriate assumption
+from the $kcast$. For instance $\begin{array}{ccc}
+k=left & j=left & x_{p}\\
+k=left & j=right & refl\\
+k=right & j=left & y_{p}\\
+k=right & j=right & x_{p}
+\end{array}_{k=right,j=left}=y_{p}$ . Since we have assumed that every choice in scope is handled, this
+result always exists.
+
+\begin{figure}
+\begin{tabular}{ccc}
+$\mathsf{case}\,\overline{b,}\,\left\{ \overline{|\,\overline{patc\Rightarrow}c}\overline{|\,\overline{patc'\Rightarrow}!_{\ell}}\right\} $ & $\left[x\coloneqq a\right]=$ & $\mathsf{case}\,\overline{b\left[x\coloneqq a\right],}\,\left\{ \overline{|\,\overline{patc\Rightarrow}c\left[x\coloneqq a\right]}\overline{|\,\overline{patc'\Rightarrow}!_{\ell}}\right\} $\tabularnewline
+$!_{kcast}$ & $\left[x\coloneqq a\right]=$ & $!_{kcast\left[x\coloneqq a\right]}$\tabularnewline
+$b::kcast$ & $\left[x\coloneqq a\right]=$ & $b\left[x\coloneqq a\right]::kcast\left[x\coloneqq a\right]$\tabularnewline
+$\left\{ b\sim_{k,o,\ell}c\right\} $ & $\left[x\coloneqq a\right]=$ & $\left\{ b\left[x\coloneqq\left\lfloor a\right\rfloor _{k=left}\right]\sim_{k,o\left[x\coloneqq a\right],\ell}c\left[x\coloneqq\left\lfloor a\right\rfloor _{k=right}\right]\right\} $\tabularnewline
+... & ... & ...\tabularnewline
+$x_{p}$ & $\left[x\coloneqq a\right]=$ & $x_{p}$\tabularnewline
+$Assert_{k\Rightarrow C}$ & $\left[x\coloneqq a\right]=$ & $Assert_{k\Rightarrow C\left[x\coloneqq\left\lceil a\right\rceil ^{k}\right]}$\tabularnewline
+$\overline{p\circ}$ & $\left[x\coloneqq a\right]=$ & $\overline{p\left[x\coloneqq a\right]\circ}$\tabularnewline
+$cong_{y\Rightarrow b}p$ & $\left[x\coloneqq a\right]=$ & $cong_{y\Rightarrow b\left[x\coloneqq a\right]}p\left[x\coloneqq a\right]$\tabularnewline
+$p^{-1}$ & $\left[x\coloneqq a\right]=$ & $p\left[x\coloneqq a\right]^{-1}$\tabularnewline
+$inTC_{i}\,p$ & $\left[x\coloneqq a\right]=$ & $inTC_{i}\,\left(p\left[x\coloneqq a\right]\right)$\tabularnewline
+$inC_{i}\,p$ & $\left[x\coloneqq a\right]=$ & $inC_{i}\,\left(p\left[x\coloneqq a\right]\right)$\tabularnewline
+$\overline{kmap,p;}$ & $\left[x\coloneqq a\right]=$ & $\overline{kmap,p\left[x\coloneqq\left\lfloor a\right\rfloor _{kmap}\right];}$\tabularnewline
+... &  & ...\tabularnewline
+$x_{p}$ & $\left[x_{p}\coloneqq p\right]=$ & $p$\tabularnewline
+\end{tabular}
+
+\begin{tabular}{ccc}
+$\mathsf{case}\,\overline{a,}\,\left\{ \overline{|\,\overline{patc\Rightarrow}c}\overline{|\,\overline{patc'\Rightarrow}!_{\ell}}\right\} $ & $\left[x_{p}\coloneqq kcast\right]=$ & $\mathsf{case}\,\overline{a\left[x_{p}\coloneqq kcast\right],}\,\left\{ \overline{|\,\overline{patc\Rightarrow}c\left[x_{p}\coloneqq kcast\right]}\overline{|\,\overline{patc'\Rightarrow}!_{\ell}}\right\} $\tabularnewline
+$!_{kcast}$ & $\left[x_{p}\coloneqq kcast\right]=$ & $!_{kcast\left[x_{p}\coloneqq kcast\right]}$ (issue)\tabularnewline
+$a::kcast'$ & $\left[x_{p}\coloneqq kcast\right]=$ & $a\left[x_{p}\coloneqq kcast\right]::kcast'\left[x_{p}\coloneqq kcast\right]$\tabularnewline
+$\left\{ b\sim_{k,o,\ell}c\right\} $ & $\left[x_{p}\coloneqq kcast\right]=$ & $\left\{ b\left[x\coloneqq\left\lfloor kcast\right\rfloor _{k=left}\right]\sim_{k,o\left[x\coloneqq a\right],\ell}c\left[x\coloneqq\left\lfloor kcast\right\rfloor _{k=right}\right]\right\} $\tabularnewline
+... & ... & ...\tabularnewline
+$\overline{kmap,p;}$ & $\left[x_{p}\coloneqq kcast\right]=$ & $\overline{kmap,p\left[x_{p}\coloneqq kcast_{kmap}\right];}$\tabularnewline
+\end{tabular}
+
+\caption{Cast Language Data Sub}
+
+\label{fig:cast-data-sub}
+\end{figure}
+
+
+\section{Cast Value, Blame, and Reductions}
+
+We need to extend the notion of value, Blame and call-by-value reduction
+from Chapter 3.
+
+\begin{figure}
+\[
+\frac{a\:\mathbf{whnf}\quad b\:\mathbf{whnf}\quad\mathbf{head}\,a\neq\mathbf{head}\,b}{\textbf{Blame}\:\ensuremath{\ell}\,o\,\left\{ a\sim_{k,o,\ell}b\right\} }
+\]
+
+\[
+\frac{\overline{a}\,\mathbf{Match}\,\overline{patc'}_{j}}{\textbf{Blame}\:\ensuremath{\ell}\,inEx_{\overline{patc'}_{j}}[\overline{a}]\,\mathsf{case}\,\overline{a,}\,\left\{ \overline{|\,\overline{patc\Rightarrow}b}\overline{|\,\overline{patc'\Rightarrow}!_{\ell_{j}}}\right\} }
+\]
+
+\todo[inline]{fix syntax?}
+
+\[
+\frac{\overline{a}\ \mathbf{!Match}\ \ensuremath{\ell}\,o\,\overline{|\overline{patc'}_{j}}}{\textbf{Blame}\:\ensuremath{\ell}\,o\,\mathsf{case}\,\overline{a,}\,\left\{ \overline{|\,\overline{patc\Rightarrow}-}\right\} }
+\]
+
+\[
+\frac{!_{kcast}\quad\textbf{Blame}\:\ensuremath{\ell}\,o\ kcast}{\textbf{Blame}\:\ensuremath{\ell}\,o\,!_{kcast}}
+\]
+
+\caption{Selection of Cast Language Blame}
+\label{fig:cast-data-Blame}
+\end{figure}
+
+Blame the blame conditions of Chapter 3 are simplified via the sameness
+assertion\ref{fig:cast-data-Blame}. There are two new sources of
+blame from the case construct. The cast language records every ``unhandled''
+branch and if a scrutinee hits one of those branches the case will
+be blamed for in-exhaustiveness \footnote{This runtime error is conventional in ML style languages, and is even
+how Agda handles incomplete matches }. If a scrutinee list primitively contradicts the pattern coverage
+via the $\mathbf{!Match}$ judgment blame will be extracted from the
+scrutinee. Since our type system will ensure complete coverage (based
+only on constructors) if a scrutinee escapes the complete pattern
+match in an empty context, it must be that there was a cast blamable
+cast to the head constructor. We have elided most of the structural
+rules that extract blame from terms, paths, and casts. We have left
+the structural rule for explicit blame for emphasis.
+
+\begin{figure}
+\todo[inline]{REDO THIS}
+
+\[
+\frac{\textbf{Blame}\:\ensuremath{\ell}\,o\ p}{\left(d'\ \overline{patc}\right)::p\ \mathbf{!Match}\ \ensuremath{\ell}\,o\,\left(d\ \overline{patc}\right)::p}
+\]
+
+\todo[inline]{This figure is not very helpful?}
+
+\caption{Cast Language Blame}
+\label{fig:cast-data-NoMatch}
+\end{figure}
+
+\begin{figure}
+\[
+\frac{\,}{\star\ \mathbf{Val}}
+\]
+
+\[
+\frac{\,}{\left(x:A\right)\rightarrow B\ \mathbf{Val}}
+\]
+
+\[
+\frac{kcast\ \mathbf{Val}\quad\forall Assert_{k\Rightarrow\left(x:A\right)\rightarrow B}\in kcast}{\left(fun\,f\,x\Rightarrow a\right)::kcast\ \mathbf{Val}}
+\]
+
+\todo[inline]{clean up notation above}
+
+\[
+\frac{\overline{a}\ \mathbf{Val}}{D\,\overline{a}\ \mathbf{Val}}
+\]
+
+\[
+\frac{\overline{a}\ \mathbf{Val}\quad kcast\ \mathbf{Val}\quad\exists D.\forall Assert_{k\Rightarrow D\overline{b}}\in kcast}{\left(d\,\overline{a}\right)::kcast\ \mathbf{Val}}
+\]
+
+\todo[inline]{clean up notation above}
+
+\[
+\frac{C\ \mathbf{Val}\quad C\neq\star}{Assert_{k\Rightarrow C}\ \mathbf{Val}}
+\]
+
+\[
+\frac{p\ \mathbf{Val}\quad q\ \mathbf{Val}}{p\circ q\ \mathbf{Val}}
+\]
+
+\[
+\frac{\ }{kmap,refl\ \mathbf{Val}}
+\]
+
+\[
+\frac{p\ \mathbf{Val}}{kmap,p\ \mathbf{Val}}
+\]
+
+\[
+\frac{\forall kmap,p\in kcast,\ kmap,p\,\mathbf{Val}}{kcast\ \mathbf{Val}}
+\]
+
+type and term constructors need not be fully applied.
+
+\caption{Selection of Cast Language Values}
+\label{fig:cast-data-vals}
+\end{figure}
+
+The value forms of the language must also be extended, values are
+presented in \ref{fig:cast-data-vals}. As before type level values
+must have all type level casts reduced, term level values are allowed
+casts as long as they have plausible head form.
+
+\begin{figure}
+path reductions
+
+\[
+\frac{\ }{Assert_{-\Rightarrow\star}\rightsquigarrow refl}
+\]
+
+\[
+\frac{\ }{cong_{x\Rightarrow a}\left(Assert_{k\Rightarrow c}\right)\rightsquigarrow Assert_{k\Rightarrow a\left[x\coloneqq c\right]}}
+\]
+
+\[
+\frac{\ }{cong_{x\Rightarrow a}refl\rightsquigarrow refl}
+\]
+
+\[
+\frac{\ }{cong_{x\Rightarrow a}\left(p\circ q\right)\rightsquigarrow\left(cong_{x\Rightarrow a}p\right)\circ\left(cong_{x\Rightarrow a}q\right)}
+\]
+
+\[
+\frac{\ }{\left(Assert_{k\Rightarrow C}\right)^{-1}\rightsquigarrow Assert_{k\Rightarrow\mathbf{Swap}_{k}C}}
+\]
+
+\[
+\frac{\quad}{refl^{-1}\rightsquigarrow refl}
+\]
+
+\[
+\frac{\quad}{\left(q\circ p\right)^{-1}\rightsquigarrow p^{-1}\circ q^{-1}}
+\]
+
+\[
+\frac{\ }{inTC_{i}\left(p\circ Assert_{k\Rightarrow D\overline{a}}\right)\rightsquigarrow inTC_{i}\left(p\right)\circ Assert_{k\Rightarrow a_{i}}}
+\]
+
+\[
+\frac{\ }{inTC_{i}\left(refl\right)\rightsquigarrow refl}
+\]
+
+\[
+\frac{\ }{inC_{i}\left(p\circ Assert_{k\Rightarrow\left(d\overline{a}\right)::kcast}\right)\rightsquigarrow inC_{i}\left(p\right)\circ Assert_{k\Rightarrow a_{i}}}
+\]
+
+\todo[inline]{given suitable condition on the kcast}
+
+\[
+\frac{\ }{inC_{i}\left(refl\right)\rightsquigarrow refl}
+\]
+
+structural rules
+
+\[
+\frac{C\rightsquigarrow C'}{Assert_{k\Rightarrow C}\rightsquigarrow Assert_{k\Rightarrow C'}}
+\]
+
+\[
+\frac{q\rightsquigarrow q'}{p\circ q\rightsquigarrow p\circ q'}
+\]
+
+\[
+\frac{p\rightsquigarrow p'}{p\circ q\rightsquigarrow p'\circ q}
+\]
+
+assumption reductions
+
+\[
+\frac{p\rightsquigarrow p'}{\begin{array}{c}
+kcast\\
+\overline{kin,}p;\\
+kcast'
+\end{array}\rightsquigarrow\begin{array}{c}
+kcast\\
+\overline{kin,}p';\\
+kcast'
+\end{array}}
+\]
+
+\[
+\frac{a\rightsquigarrow a'}{a::kcast\rightsquigarrow a'::kcast}
+\]
+
+\[
+\frac{kcast\rightsquigarrow kcast'}{a::kcast\rightsquigarrow a::kcast'}
+\]
+
+term reductions
+\[
+\frac{p\rightsquigarrow p'}{!_{p}\rightsquigarrow!_{p'}}
+\]
+
+\[
+\frac{\,}{\left\{ a::\begin{array}{l}
+kcast\\
+\overline{kin,}p\circ Assert_{k\Rightarrow C};\\
+kcast'
+\end{array}\sim_{k,o,\ell}b\right\} \rightsquigarrow\left\{ a::\begin{array}{c}
+kcast\\
+\overline{kin,}p;\\
+kcast'
+\end{array}\sim_{k,o,\ell}b\right\} ::\overline{kin,}k=left\,Assert_{k\Rightarrow C};}
+\]
+
+\todo[inline]{could remove more then just assertions}
+
+\[
+\frac{\,}{\left\{ \star\sim_{k,o,\ell}\star\right\} \rightsquigarrow\star}
+\]
+
+\[
+\frac{\,}{\left\{ \left(x:A\right)\rightarrow B\sim_{k,o,\ell}\left(x:A'\right)\rightarrow B'\right\} \rightsquigarrow\left(x:\left\{ A\sim_{k,o.arg,\ell}A'\right\} \right)\rightarrow\left\{ B\sim_{k,o.bod\left[x\right],\ell}B'\right\} }
+\]
+
+\[
+\frac{\,}{\left\{ \mathsf{fun}\,f\,x\Rightarrow b\sim_{k,o,\ell}\mathsf{fun}\,f\,x\Rightarrow b'\right\} \rightsquigarrow\mathsf{fun}\,f\,x\Rightarrow\left\{ b\sim_{k,o.app\left[x\right],\ell}b'\right\} }
+\]
+
+\[
+\frac{\,}{\left\{ d\overline{a}\sim_{k,o,\ell}d\overline{a'}\right\} \rightsquigarrow d\overline{\left\{ a_{i}\sim_{k,o.DCon[i],\ell}a'_{i}\right\} }}
+\]
+
+\[
+\frac{\,}{\left\{ D\overline{a}\sim_{k,o,\ell}D\overline{a'}\right\} \rightsquigarrow D\overline{\left\{ a_{i}\sim_{k,o.TCon[i],\ell}a'_{i}\right\} }}
+\]
+
+\[
+\frac{\,}{a::refl\rightsquigarrow a}
+\]
+
+\todo[inline]{by shorthand}
+
+\[
+\frac{\ }{\left(a::kcast\right)::kcast'\rightsquigarrow a::\left(kcast\circ kcast'\right)}
+\]
+
+\todo[inline]{by shorthand}
+
+\[
+\frac{\ }{\left(a::\begin{array}{c}
+kcast\\
+kin,q\ Assert_{k\Rightarrow\left(x:A\right)\rightarrow B};\\
+kcast'
+\end{array}\right)b\rightsquigarrow\left(\left(a::\begin{array}{c}
+kcast\\
+kin,q\ Assert_{k\Rightarrow\left(x:A\right)\rightarrow B};\\
+kcast'
+\end{array}\right)\left(b::kin,Assert_{k\Rightarrow\mathbf{Swap}_{k}A};\right)\right)::kin,Assert_{k\Rightarrow B\left[x\coloneqq\left\lfloor \left(b::kin,Assert_{k\Rightarrow\mathbf{Swap}_{k}A};\right)\right\rfloor _{k=kin}\right]};}
+\]
+
+\todo[inline]{double check}
+
+\[
+\frac{\overline{a}\ \mathbf{Match}\ \overline{patc}_{i}}{\mathsf{case}\,\overline{a,}\,\left\{ \overline{|\,\overline{patc\Rightarrow}b_{i}}\overline{|\,\overline{patc'\Rightarrow}!_{\ell}}\right\} \rightsquigarrow b_{i}\left[patc_{i}\coloneqq\overline{a}\right]}
+\]
+
+\caption{Summery of Cast Language Reductions}
+\label{fig:cast-data-red}
+\end{figure}
+
+This extension to the syntax induces many more reduction rules. We
+include a summery of selected reduction rules in \ref{fig:cast-data-red}.
+We do not show the value restrictions to avoid clutter\footnote{there are also multiple ways to lay them out. For instance we could
+evaluate paths left to right or right to left.}. The important properties of reduction are 
+\begin{itemize}
+\item Paths reduce into a stack of zero or more $Assert_{k\Rightarrow A}$s
+\item Sameness assertions emit observably consistent constructors, and record
+the needed observations
+\item Sameness assertions will get stuck on inconsistent constructors
+\item Casts can commute out of sameness assertions with proper index tracking
+\item function application can commute around $kcasts$ , similar to Chapter
+3, but will keep $k$ assumptions properly indexed
+\end{itemize}
+Matching is defined in \ref{fig:cast-data-match}. Note that uncast
+terms are equivalent to refl cast terms.
+
+\begin{figure}
+\todo[inline]{swap, pattern on the left?}
+
+\todo[inline]{record substitutions}
+
+\[
+\frac{\,}{a\ \mathbf{Match}\ x}
+\]
+
+\[
+\frac{\overline{a}\ \mathbf{Match}\ \overline{patc}}{d\,\overline{a}\ \mathbf{Match}\ \left(d\,\overline{patc}\right)::x_{p}}
+\]
+
+\[
+\frac{\overline{a}\ \mathbf{Match}\ \overline{patc}}{\left(d\,\overline{a}\right)::kcast\ \mathbf{Match}\ \left(d\,\overline{patc}\right)::x_{p}}
+\]
+
+\[
+\frac{\overline{a}\ \mathbf{Match}\ \overline{patc}}{\left(d\,\overline{a}\right)::kcast\ \mathbf{Match}\ \left(d\,\overline{patc}\right)::x_{p}}
+\]
+
+\[
+\frac{\,}{.\ \mathbf{Match}\ .}
+\]
+
+\[
+\frac{b\ \mathbf{Match}\ patc'\quad\overline{a}\ \mathbf{Match}\ \overline{patc}}{b\overline{a}\ \mathbf{Match}\ patc'\overline{patc}}
+\]
+
+substitution abbreviation
+
+\[
+-\left[\left(d\,\overline{patc}\right)::x_{p}\coloneqq d\,\overline{a}\right]=-\left[\overline{patc}\coloneqq\overline{a}\right]\left[x_{p}\coloneqq refl\right]
+\]
+
+\[
+-\left[\left(d\,\overline{patc}\right)::x_{p}\coloneqq\left(d\,\overline{a}\right)::kcast\right]=-\left[\overline{patc}\coloneqq\overline{a}\right]\left[x_{p}\coloneqq kcast\right]
+\]
+
+\caption{Cast Language Matching and sub}
+\label{fig:cast-data-match}
+\end{figure}
+
+\todo[inline]{double check paths are fully applied when needed}
+
+The Cast language extension defined in this chapter is fairly complex.
+Though all the meta-theory of this section is plausible, we have not
+fully formalized it, and there is a potential that some subtle errors
+exist. To be as clear as possible about the uncertainty around the
+meta-theory proposed in this chapter, I will list what would normally
+be considered theorems and lemmas as conjectures. \todo{weird place to make this note. add it to the front or back matter?}
+\begin{conjecture}
+There is a suitable definitional equality $\equiv$ , overloaded to
+all syntactic constructs, such that
+
+$\equiv$ is an equivalence
+
+$a\rightsquigarrow_{*}b$ and $a'\rightsquigarrow_{*}b$ implies $a\equiv a'$
+
+$p\rightsquigarrow_{*}q$ and $p'\rightsquigarrow_{*}q$ implies $p\equiv p'$
+
+$kcast\rightsquigarrow_{*}kcast''$ and $kcast'\rightsquigarrow_{*}kcast''$
+implies $kcast\equiv kcast''$
+
+if $\mathbf{Head\ }a\neq\mathbf{Head}\ b$ then $a\cancel{\equiv}b$
+\todo{settle on a capitalization for head}
+
+if \textup{$kmap$ and $kmap'$ have consistent assignments then}
+$kmap\equiv kmap'$
+
+\todo{supports subtitutivity}
+\end{conjecture}
+
+
+\section{Cast System and Pathing}
+
+The cast system needs to maintain the consistency of well cast terms
+and also well typed paths. But unlike in Chapter 3 each judgment indexed
+by choices of $k$.
+
+The typing and pathing judgments are listed in \ref{fig:cast-data-ty}.
+Pathing judgments record the endpoint of paths with the $\thickapprox$
+symbol. 
+
+\begin{figure}
+\[
+\frac{x_{p}:A\thickapprox A'\in H}{HK\vdash x_{p}:A\thickapprox A'}
+\]
+
+\[
+\frac{HK,k=left\vdash a:A\quad HK,k=right\vdash a:A'}{HK\vdash Assert_{k\Rightarrow a}:\left\lfloor a\right\rfloor _{k=left}\thickapprox\left\lfloor a\right\rfloor _{k=right}}
+\]
+
+\todo[inline]{does A=A'?}
+
+\[
+\frac{HK\vdash p:A\thickapprox B\quad HK\vdash q:B\thickapprox C}{HK\vdash p\circ q:A\thickapprox C}
+\]
+
+\[
+\frac{HK\vdash p:b\thickapprox b\quad H,K\vdash b:B\quad H,K\vdash b':B\quad H,x:B,K\vdash A}{HK\vdash cong_{x\Rightarrow a}p:a\left[x\coloneqq b\right]\thickapprox a\left[x\coloneqq b'\right]}
+\]
+
+\[
+\frac{HK\vdash p:A\thickapprox B}{HK\vdash p^{-1}:B\thickapprox A}
+\]
+
+\[
+\frac{HK\vdash p:\left(D\,\overline{a}\right)::kcast\ \thickapprox\ \left(D\,\overline{b}\right)::kcast'}{HK\vdash inTC_{i}\,p:a_{i}\thickapprox b_{i}}
+\]
+
+\todo[inline]{and fully applied!}
+
+\[
+\frac{HK\vdash p:\left(d\,\overline{a}\right)::kcast\ \thickapprox\ \left(d\,\overline{b}\right)::kcast'}{HK\vdash inC_{i}\,p:a_{i}\thickapprox b_{i}}
+\]
+
+\todo[inline]{and fully applied!}
+
+\todo[inline]{possibly force a matching type? but then it is unclear what type the
+conclusion should have}
+
+\[
+\frac{a'\equiv a\quad b'\equiv b\quad HK\vdash p:a\thickapprox b}{HK\vdash p:a'\thickapprox b'}
+\]
+
+\todo[inline]{will need to adjust this if moves to a typed conversion rule}
+
+\[
+\frac{k=left\in K\quad HK\vdash a:A}{HK\vdash\left\{ a\sim_{k,o,\ell}b\right\} :A}
+\]
+
+\[
+\frac{k=right\in K\quad HK\vdash b:B}{HK\vdash\left\{ a\sim_{k,o,\ell}b\right\} :B}
+\]
+
+\[
+\frac{HK\vdash a:A\quad HK\vdash kcast_{K}:A\thickapprox B}{HK\vdash a::kcast\ :B}
+\]
+
+\[
+\frac{\begin{array}{c}
+HK\vdash\overline{a}:\Delta\\
+H,\Delta,K\vdash B:\star\\
+\forall\:i\,\left(HK\vdash\overline{pat}_{i}:\Delta\quad H,\left(\overline{pat}_{i}:\Delta\right)K\vdash b_{i}:B\right)\\
+\forall\:j\,\left(HK\vdash\overline{pat}_{j}:\Delta\right)\\
+HK\vdash\overline{\overline{patc}}\,\overline{\overline{patc'}}:\Delta\ \mathbf{complete}
+\end{array}}{\begin{array}{c}
+HK\vdash\mathsf{case}\,\overline{a,}\,\left\{ \overline{|\,\overline{patc_{i}\Rightarrow}b_{i}}\overline{|\,\overline{patc'_{j}\Rightarrow}!_{\ell}}\right\} \\
+:M\left[\Delta\coloneqq\overline{a}\right]
+\end{array}}
+\]
+
+\todo[inline]{pattern expansion and pattern on context may need further exposition}
+
+\[
+\frac{\begin{array}{c}
+HK\vdash C:\star\\
+HK\vdash kcast_{K}:a\thickapprox a'\\
+HK\vdash a:A\quad HK\vdash a':A\\
+\mathbf{Head}(a)\neq\mathbf{Head}(a')
+\end{array}}{HK\vdash!_{kcast}\ :C}
+\]
+
+\todo[inline]{REMOVE TYPE RESTRICTION? the extra type restrictions is intended to
+force blame to the type level when needed, though this will not (cannot?)
+be invariant over reduction of paths in general}
+
+\caption{Cast Language typing and pathing rules}
+\label{fig:cast-data-ty}
+\end{figure}
+
+\todo[inline]{technically speaking, telescopes should generalize to the different
+syntactic classes}
+
+We now conjecture the core lemmas that could be used to prove cast
+soundness
+\begin{conjecture}
+substitution of cast terms preserves cast
+
+equivalently the following rule is admissible
+
+\[
+\frac{HK\vdash a:A\quad x:A\in H\quad HK\vdash b:B}{H\left[x\coloneqq a\right]K\vdash b\left[x\coloneqq a\right]:B\left[x\coloneqq a\right]}
+\]
+\end{conjecture}
+
+% ...
+\begin{conjecture}
+substitution of typed path preserves type
+
+equivalently the following rule is admissible
+
+\[
+\frac{HK\vdash p:a\thickapprox a'\quad x_{p}:a\thickapprox a'\in H\quad HK\vdash b:B}{H\left[x_{p}\coloneqq p\right]K\vdash b\left[x_{p}\coloneqq p\right]:B\left[x_{p}\coloneqq p\right]}
+\]
+\end{conjecture}
+
+% ...
+\begin{conjecture}
+substitution of $kcasts$ preserve cast
+
+equivalently the following rule is admissible
+
+\[
+\frac{HK\vdash kcast_{K}:a\thickapprox a'\quad x_{p}:a\thickapprox a'\in H\quad HK\vdash b:B}{H\left[x_{p}\coloneqq kcast_{K}\right]K\vdash b\left[x_{p}\coloneqq kcast\right]:B\left[x_{p}\coloneqq kcast\right]}
+\]
+\end{conjecture}
+
+% ...
+\begin{conjecture}
+substitution of cast terms preserves path endpoints
+
+equivalently the following rule is admissible
+
+\[
+\frac{HK\vdash a:A\quad x:A\in H\quad HK\vdash p:b\thickapprox b'}{H\left[x\coloneqq a\right]K\vdash p\left[x\coloneqq a\right]:b\left[x\coloneqq a\right]\thickapprox b'\left[x\coloneqq a\right]}
+\]
+\end{conjecture}
+
+% ...
+\begin{conjecture}
+substitution of typed paths preserves path endpoints
+
+equivalently the following rule is admissible
+
+\[
+\frac{HK\vdash p:a\thickapprox a'\quad x_{p}:a\thickapprox a'\in H\quad HK\vdash q:b\thickapprox b'}{H\left[x_{p}\coloneqq p\right]K\vdash q\left[x_{p}\coloneqq p\right]:b\left[x_{p}\coloneqq p\right]\thickapprox b'\left[x_{p}\coloneqq p\right]}
+\]
+\end{conjecture}
+
+% ...
+\begin{conjecture}
+substitution of $kcasts$ preserve cast
+
+equivalently the following rule is admissible
+
+\[
+\frac{HK\vdash kcast_{K}:a\thickapprox a'\quad x_{p}:a\thickapprox a'\in H\quad HK\vdash b:B}{H\left[x_{p}\coloneqq kcast_{K}\right]K\vdash q\left[x_{p}\coloneqq kcast_{K}\right]:b\left[x_{p}\coloneqq kcast\right]\thickapprox b'\left[x_{p}\coloneqq kcast\right]}
+\]
+\end{conjecture}
+
+% ...
+
+Finally we will conjecture the cast soundness.
+\begin{conjecture}
+The cast system preserves types and path endpoints over normalization
+\end{conjecture}
+
+% ...
+\begin{conjecture}
+a well typed path in an empty context is a value, takes a step, or
+produces blame
+\end{conjecture}
+
+% ...
+\begin{conjecture}
+A well typed term in an empty context is a value, takes a step, or
+produces blame
+\end{conjecture}
+
+
+\section{Elaborating Eliminations}
+
+% elaboration unification
+To make the overall system behave as expected we do not want to expose
+users to equality patterns, or force them to manually do the path
+bookkeeping. To work around this we extend a standard unification
+algorithm to cast patterns with instrumentation to remember paths
+that were required for the solution. Then if pattern matching is satisfiable,
+compile additional casts into the branch based on its assignments.
+Unlisted patterns can be checked to confirm they are unsatisfiable.
+If the pattern is unsatisfiable then elaboration can use the proof
+of unsatisfiability to construct explicit blame. If an unlisted pattern
+cannot be proven ``unreachable'' then we could warn the user, and
+like most functional programming languages, blame the incomplete match
+if that pattern ever occurs.
+
+\subsection{Preliminaries}
+
+As mentioned in the introduction we will need to add and remove justified
+casts from the endpoints of arguments. For instance, we will need
+to be able to generate $3\thickapprox x::Nat$ from $3\thickapprox x$,
+$x:X$, and $X\thickapprox Nat$. Fortunately the language is already
+expressive enough to embed these operations using an $Assert$ that
+does not bind a $same$ assertion. 
+
+We will specify the shorthand $CastR_{a}p=Assert_{k\Rightarrow a::k=right,p}:a\thickapprox a::p$,
+similarly we can define $CastL$.
+
+We can use use a similar construction to remove casts from an endpoint.
+Given a path $p:a::q\thickapprox b$ , we can define the macro $UnCastR_{a}p=Assert_{k\Rightarrow a::k=right,q}\circ p\ :\ a\thickapprox b$,
+similarly for $UnCastL$.
+
+The surface language needs to be enriched with additional location
+metadata at each position where the two bidirectional typing modalities
+would cause a check in the surface language.
+
+\begin{tabular}{lcll}
+$m...$ & $\Coloneqq$ & ... & \tabularnewline
+ & | & $\mathsf{case}\,\overline{n_{\ell},}\,\left\{ \overline{|\,\overline{pat\Rightarrow}m_{\ell'}}\right\} $ & data elim. without motive\tabularnewline
+ & | & $\mathsf{case}\,\overline{n_{\ell},}\,\left\langle \overline{x\Rightarrow}M_{\ell'}\right\rangle \left\{ \overline{|\,\overline{pat\Rightarrow}m_{\ell''}}\right\} $ & data elim. with motive\tabularnewline
+\end{tabular}
+
+The implementation allows additional annotations along the motive,
+while this works within the bidirectional framework. The syntax is
+not presented here since the theory is already quite complicated.\todo{move note somewhere else}
+
+\subsection{Elaboration}
+
+\todo[inline]{"can", "could", weasel words until implementation is finalized}
+
+The biggest extension to the elaboration procedure in Chapter 3 is
+the path relevant unification and the insertion of casts to simulate
+surface language pattern matching. The unification and casting processes
+both work without $k$ assumptions in scope, simplifying the possible
+terms that may appear.
+
+\begin{figure}
+\[
+\frac{\,}{U\left(\emptyset,\emptyset\right)}
+\]
+
+\[
+\frac{U\left(E,u\right)\quad a\equiv a'}{U\left(\left\{ p:a\thickapprox a'\right\} \cup E,u\right)}
+\]
+
+\[
+\frac{U\left(E\left[x\coloneqq a\right],u\left[x\coloneqq a\right]\right)}{U\left(\left\{ p:x\thickapprox a\right\} \cup E,u\cup\left\{ p:x\thickapprox a\right\} \right)}
+\]
+
+\todo[inline]{actually a little incorrect, needs to use conq to concat the paths}
+
+\[
+\frac{U\left(E\left[x\coloneqq a\right],u\left[x\coloneqq a\right]\right)}{U\left(\left\{ p:a\thickapprox x\right\} \cup E,u\cup\left\{ p^{-1}:x\thickapprox a\right\} \right)}
+\]
+
+\[
+\frac{U\left(\left\{ p:a\thickapprox a'\right\} \cup E,u\right)\quad a\equiv d\overline{b}\quad a'\equiv d\overline{b'}}{U\left(\left\{ Con_{i}p:b_{i}\thickapprox b'_{i}\right\} _{i}\cup E,u\right)}
+\]
+
+\todo[inline]{fully applied}
+
+\[
+\frac{U\left(\left\{ p:a\thickapprox a'\right\} \cup E,u\right)\quad a\equiv D\overline{b}\quad a'\equiv D\overline{b'}}{U\left(\left\{ TCon_{i}p:b_{i}\thickapprox b'_{i}\right\} _{i}\cup E,u\right)}
+\]
+
+\todo[inline]{fully applied}
+
+\[
+\frac{U\left(\left\{ p:a::q\thickapprox a'\right\} \cup E,u\right)}{U\left(\left\{ uncastLp:a\thickapprox a\right\} _{i}\cup E,u\right)}
+\]
+
+\[
+\frac{U\left(\left\{ p:a\thickapprox a'::q\right\} \cup E,u\right)}{U\left(\left\{ uncastRp:a\thickapprox a'\right\} \cup E,u\right)}
+\]
+
+\todo[inline]{fully applied}
+
+\todo[inline]{break cycle, make sure x is assignable}
+
+\todo[inline]{double check constraint order}
+
+\todo[inline]{correct vars in 4a}
+
+\caption{Surface Language Unification}
+\label{fig:surface-data-unification}
+\end{figure}
+
+The elaboration procedure uses the extended unification procedure
+to determine the implied type and assignment of each variable. In
+the match body casts are made so that variables behave as if they
+have the types and assignments consistent with the surface language.
+The original casting mechanism is still active, so it is possible
+that after all the casting types still don't line up. In this case
+primitive casts are still made at their given location.
+
+\todo[inline]{add explicit rules for elaboration?}
+
+The elaboration algorithm is extremely careful to only add casts,
+this means erasure is preserved and evaluation will be consistent
+with the surface language.
+
+Further the remaining properties from Chapter 3 probably still hold
+\begin{conjecture}
+Every term well typed in the bidirectional surface language elaborates 
+\end{conjecture}
+
+% ..
+\begin{conjecture}
+Blame never points to something that checked in the bidirectional
+system 
+\end{conjecture}
+
+
+\section{Discussion and Future Work}
+
+\subsection{Blame is not tight}
+
+Though the meta theory in this section is plausible, there are some
+awkward allowed behaviors. Blame may not be able to zero in as precisely
+as it seems is possible, when an assumption interacts with itself.
+For instance take the term under assumption $k$,
+
+$\left\{ \lambda x\Rightarrow x\sim_{k,o,\ell}\lambda x\Rightarrow x\right\} \left\{ 1\sim_{k,o,\ell}2\right\} \rightsquigarrow_{*}\left(\lambda x\Rightarrow\left\{ x\sim_{k,o.app[x],\ell}x\right\} \right)\left\{ 1\sim_{k,o,\ell}2\right\} \rightsquigarrow_{*}\left\{ 2\sim_{k,o.app[\left\{ 1\sim_{k,o,\ell}2\right\} ],\ell}0\right\} $
+which will mistakenly give blame to the function when it is more reasonable
+to blame the argument. This situations is more complicated if we want
+to avoid blame when the two sides are mutually consistent $\left\{ \lambda x\Rightarrow x\sim_{k,o,\ell}\lambda x\Rightarrow Not\ x\right\} \left\{ true\sim_{k,o,\ell}false\right\} \rightsquigarrow_{*}\left(\lambda x\Rightarrow\left\{ x\sim_{k,o.app[x],\ell}Not\ x\right\} \right)\left\{ true\sim_{k,o,\ell}false\right\} \rightsquigarrow_{*}\left\{ true\sim_{k,o.app[\left\{ true\sim_{k,o,\ell}false\right\} ],\ell}true\right\} $.
+
+\subsection{Types invariance along paths}
+
+It turns out that the system defined in Chapter 3 had the advantage
+of only dealing with equalities in the type universe. Extending to
+equalities over arbitrary type has vastly increased the complexity
+of the system. To make the system work paths are untyped, which seems
+inelegant. There is nothing currently preventing blame across type.
+For instance,
+
+$\left\{ 1\sim_{k,o,\ell}false\right\} $ will generate blame $1\neq false$.
+While blame of $Nat\neq Bool$ will certainly result in a better error
+message. Several attempts were made to encode the type into the type
+assumption, but the resulting systems quickly became too complicated
+to work with. Some vestigial typing constraints are still in the system
+(such as on the explicit blame) to encourage this cleaner blame. \todo{remove or revise}
+
+\subsection{Elaboration is non-deterministic with regard to blame}
+
+Consider the case
+
+\begin{lstlisting}[basicstyle={\ttfamily\small}]
+case x <_:Id Nat 2 2 => S 2> {
+| refl _ a => s a
+}
+\end{lstlisting}
+
+that can elaborate to
+
+\begin{lstlisting}[basicstyle={\ttfamily\small}]
+case x <_:Id Nat 2 2 => S 2> {
+| (refl A a)::p => (s (a::TCon0(p)) :: Cong uncastL(TCon1(p)))
+}
+\end{lstlisting}
+
+where $p:Id\,A\,a\,a\thickapprox Id\,Nat\,2\,2$, where $TCon_{1}p$
+selects the first position $p:Id\,A\,\underline{a}\,a\thickapprox Id\,Nat\,\underline{2}\,2$.
+But this could also have elaborated to 
+
+\begin{lstlisting}[basicstyle={\ttfamily\small}]
+case x <_:Id Nat 2 2 => S 2> {
+| (refl A a)::p => (s (a::TCon0(p)) :: Cong uncastL(TCon2(p)))
+}
+\end{lstlisting}
+
+relying on $p:Id\,A\,a\,\underline{a}\thickapprox Id\,Nat\,2\,\underline{2}$.
+This can make a difference if the scrutinee is 
+
+$refl\ Nat\,2::Id\,Nat\,3\,2::Id\,Nat\,2\,2$
+
+in one case blame will be triggered, in the other it will not. In
+this case it is possible to mix the blame from both positions, though
+this does not seem to extend in general since the consequences of
+inequality are undecidable in general and we intend to allow running
+programs if they can maintain their intended types.
+
+\subsection{Extending to Call-by-Value}
+
+As in Chapter 3, the system presented here does the minimal amount
+of checking to maintain type safety. This can lead to unexpected results,
+for instance consider the surface term 
+
+\begin{lstlisting}[basicstyle={\ttfamily\small}]
+case (refl Nat 7 :: Id Nat 2 2) <_ => Nat> {
+| refl _ a => a
+}
+\end{lstlisting}
+
+This will elaborate into 
+
+\begin{lstlisting}[basicstyle={\ttfamily\small}]
+case (refl Nat 7 :: Id Nat 2 2) <_ => Nat> {
+| (refl A a)::p => a::TCon0(p)
+}
+\end{lstlisting}
+
+which will evaluate to $7::\mathtt{Nat}$ without generating blame.
+And indeed we only ever asserted that the result was of type $\mathtt{Nat}$.
+
+In the implementation, some of this behavior is avoided by requiring
+type arguments in a cast be run call-by-value. This restriction will
+blame $7\neq2$ before the cast is even evaluated.\todo{expand}
+
+\subsection{Efficiency}
+
+The system defined here is brutally inefficient. 
+
+In theory the system has an arbitrary slow down. As in Chapter 3,
+a cast that relies on non-terminating code can itself cause additional
+non-termination as paths are resolved.
+
+As written there are many redundant computations, and trying every
+combination of assumptions is very inefficient. Currently the implementation
+is quite slow, though there are several ways to speed things up. Caching
+redundant computation would help. Having a smarter embedding of $k$
+assignments would remove redundant work directly. To some extent $Cong$
+and $Assert$ can be made multi-arity to allow fewer jumps. But most
+helpful of all would be simplifying away unneeded casts. More advanced
+options include using proof search to find casts that will never cause
+an error.
+
+\todo[inline]{paremetricity}
+
+\todo[inline]{relation to fun-ext}
+
+\todo[inline]{warnings}
+
+\subsection{Relation to UIP}
+
+Pattern matching as outlined in the last Chapter (which follows from
+\cite{coquand1992pattern}) implies the \textbf{uniqueness of identity
+proofs} (UIP)\footnote{Also called \textbf{axiom k}}. UIP states
+that every proof of identity is equal to refl (and thus unique), and
+is not provable in many type theories. In univalent type theories
+UIP is directly contradicted by the ``non-trivial'' equalities,
+required to equate isomorphisms and Id. UIP is derivable in the surface
+language by following pattern match 
+
+\begin{lstlisting}[basicstyle={\ttfamily\small}]
+case x <pr : Id A a a => Id (Id A a a) pr (refl A a) > {
+| refl A a => refl (Id A a a) (refl A a)
+}
+\end{lstlisting}
+
+This type checks since unification will assign $pr\coloneqq refl\,A\,a$
+and under that assumption $refl\ (Id\ A\ a\ a)\ (refl\ A\ a):Id\ (Id\ A\ a\ a)\ (refl\ A\ a)\ (refl\ A\ a)$.
+Like univalent type theories, the cast language has its own nontrivial
+equalities, so it might seem that the cast language would also contradict
+UIP . But it is perfectly compatible, and will elaborate. One interpretation
+is that though there are multiple ``proofs'' of identity, we don't
+care which one is used. \todo{interpretation + take aways?}
+
+\subsection{Future work}
+
+\todo[inline]{Make equalities visible in the surface syntax}
+
+The system here has some simple inspiration that could be extended
+into pattern matching syntax more generally. It seems useful to be
+able to read equational information out of patterns, especially in
+settings with rich treatment of equality. Matching equalities directly
+could be a semi-useful feature in Agda, or in univalent type theories
+such as CTT.
+
+\section{Related work}
+
+This work was previously presented as an extended abstract at the
+TyDE workshop\todo[inline]{cite}, the version there reflected a less
+plausible meta-theory based on earlier implementation experiments.
+
+\todo[inline]{CTT data is related?}
