@@ -1,6 +1,7 @@
 % MAIN PREAMBLE 
 \documentclass[12pt,letterpaper]{report}          % Single-sided printing for the library
 %\documentclass[12pt,twoside]{report} % Double-sided printing
+
 \usepackage[intlimits]{amsmath}
 \usepackage{amsfonts,amssymb}
 \DeclareSymbolFontAlphabet{\mathbb}{AMSb}
@@ -19,16 +20,69 @@
 \usepackage{xspace}
 \usepackage{epstopdf} 
 \usepackage{subfig}
-\usepackage{todonotes}
-\usepackage{cancel} % from lyx. why?
-\usepackage{listings} % from lyx. why?
+% from lyx.
+\usepackage{xcolor}
+\usepackage{array}
+\usepackage{mathtools}
+\usepackage{enumitem}
+\usepackage{multirow}
+\usepackage[textsize=tiny]{todonotes}
+\usepackage{cancel} % why?
+\usepackage{listings} % why?
 \renewcommand{\lstlistingname}{Listing}
+\usepackage{amsthm}
+\usepackage{wasysym}
 
 
 
 %%% graphicx and pdf creation
 \usepackage{graphicx}
 \usepackage{appendix}
+
+
+\theoremstyle{plain}
+\newtheorem{thm}{\protect\theoremname}
+\theoremstyle{plain}
+\newtheorem{lem}[thm]{\protect\lemmaname}
+\theoremstyle{plain}
+\newtheorem{fact}[thm]{\protect\factname}
+\theoremstyle{plain}
+\newtheorem{cor}[thm]{\protect\corollaryname}
+\newlist{casenv}{enumerate}{4}
+\setlist[casenv]{leftmargin=*,align=left,widest={iiii}}
+\setlist[casenv,1]{label={{\itshape\ \casename} \arabic*.},ref=\arabic*}
+\setlist[casenv,2]{label={{\itshape\ \casename} \roman*.},ref=\roman*}
+\setlist[casenv,3]{label={{\itshape\ \casename\ \alph*.}},ref=\alph*}
+\setlist[casenv,4]{label={{\itshape\ \casename} \arabic*.},ref=\arabic*}
+\theoremstyle{definition}
+\newtheorem{example}[thm]{\protect\examplename}
+
+\usepackage{xcolor}
+\usepackage{tikz-cd}
+\tikzcdset{%
+    triple line/.code={\tikzset{%
+        double equal sign distance, % replace by double distance = 'measure' 
+        double=\pgfkeysvalueof{/tikz/commutative diagrams/background color}}},
+    quadruple line/.code={\tikzset{%
+        double equal sign distance, % replace by double distance = 'measure'
+        double=\pgfkeysvalueof{/tikz/commutative diagrams/background color}}},
+    Rrightarrow/.code={\tikzcdset{triple line}\pgfsetarrows{tikzcd implies cap-tikzcd implies}},
+    RRightarrow/.code={\tikzcdset{quadruple line}\pgfsetarrows{tikzcd implies cap-tikzcd implies}}
+}    
+\newcommand*{\tarrow}[2][]{\arrow[Rrightarrow, #1]{#2}\arrow[dash, shorten >= 0.5pt, #1]{#2}}
+\newcommand*{\qarrow}[2][]{\arrow[RRightarrow, #1]{#2}\arrow[equal, double distance = 0.25pt, shorten >= 1.28pt, #1]{#2}}
+
+\makeatother
+
+\usepackage{babel}
+\providecommand{\casename}{Case}
+\providecommand{\corollaryname}{Corollary}
+\providecommand{\examplename}{Example}
+\providecommand{\factname}{Fact}
+\providecommand{\lemmaname}{Lemma}
+\providecommand{\theoremname}{Theorem}
+
+
 %\usepackage{psfrag}
 %\DeclareGraphicsExtensions{.eps}   % extension for included graphics
 %\usepackage{thumbpdf}              % thumbnails for ps2pdf
@@ -64,8 +118,8 @@
 \include{1_Intro/intro}
 \cleardoublepage
 
-% \include{2_Body/body}
-% \cleardoublepage
+\include{2_Surface/surface}
+\cleardoublepage
 
 % \include{3_Details/details}
 % \cleardoublepage

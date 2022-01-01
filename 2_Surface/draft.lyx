@@ -24,6 +24,7 @@
 \use_default_options true
 \begin_modules
 todonotes
+theorems-ams
 \end_modules
 \maintain_unincluded_children false
 \language english
@@ -111,10 +112,6 @@ Chapter 2 (draft): a Dependent Type System
 Mark Lemay
 \end_layout
 
-\begin_layout Part
-Surface language
-\end_layout
-
 \begin_layout Standard
 Despite the usability issues this thesis hopes to correct, dependent type
  systems are still one of the most promising technologies for correctness
@@ -130,6 +127,16 @@ The
 \series bold
 surface language
 \series default
+
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+is there a better name then surface lang?
+\end_layout
+
+\end_inset
+
  presented in this chapter specifies a minimal dependent type system.
  The semantics are intended to be as simple as possible and compatible with
  other well studied intentional dependent type theories.
@@ -181,16 +188,6 @@ literal "false"
 status open
 
 \begin_layout Plain Layout
-should cite as [HOTT13]
-\end_layout
-
-\end_inset
-
-
-\begin_inset Flex TODO Note (Margin)
-status open
-
-\begin_layout Plain Layout
 Martin Loff/Hoff (TODO pr notation)
 \end_layout
 
@@ -203,8 +200,8 @@ Martin Loff/Hoff (TODO pr notation)
 \begin_layout Standard
 The surface language will serve both as foundation for later chapters and
  a self contained technical introduction to dependent types.
- By design, the machinery of later chapters should be invisible to programers
- that use the full system.
+ By design, the machinery that deals with equality addressed in later chapters
+ should be invisible to programers that use the full system.
  They should only need to think about the surface language.
  Everything presented in later chapters is designed to reinforce an understandin
 g of the surface type system, and make it easier to use.
@@ -243,19 +240,6 @@ Though similar systems have been studied over the last few decades this
  be helpful introduction for other researchers.
 \end_layout
 
-\begin_layout Standard
-\begin_inset Flex TODO Note (Margin)
-status open
-
-\begin_layout Plain Layout
-is there a better name then surface lang?
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
 \begin_layout Section
 Surface Language Syntax
 \end_layout
@@ -275,13 +259,23 @@ status open
 \end_layout
 
 \begin_layout Standard
-The syntax for the surface language is in figure 
+The syntax for the surface language is in Figure 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:surface-pre-syntax"
 plural "false"
 caps "false"
 noprefix "false"
+
+\end_inset
+
+
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+formatting figure references
+\end_layout
 
 \end_inset
 
@@ -351,6 +345,19 @@ status open
 
 \begin_layout Plain Layout
 more about f being recursive?
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+extrinsic
 \end_layout
 
 \end_inset
@@ -859,7 +866,7 @@ name "fig:surface-pre-syntax"
 \end_layout
 
 \begin_layout Standard
-Several standard abbreviations are listed in 
+Several standard abbreviations are listed in Figure 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:surface-pre-syntax-abrev"
@@ -869,11 +876,7 @@ noprefix "false"
 
 \end_inset
 
- for convenience.
-\end_layout
-
-\begin_layout Standard
-the intern
+.
 \begin_inset Float figure
 wide false
 sideways false
@@ -1442,6 +1445,9 @@ trivial proposition, polymorphic identity
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $:\star$
+\end_inset
+
 
 \end_layout
 
@@ -2575,12 +2581,11 @@ turn .
 \end_layout
 
 \begin_layout Plain Layout
-\begin_inset ERT
+\begin_inset Flex TODO Note (inline)
 status open
 
 \begin_layout Plain Layout
-
-% TODO: suc, pred as an example of an unpleasant encoding, also citation
+break out eq for a better table
 \end_layout
 
 \end_inset
@@ -2589,12 +2594,11 @@ status open
 \end_layout
 
 \begin_layout Plain Layout
-\begin_inset ERT
+\begin_inset Flex TODO Note (inline)
 status open
 
 \begin_layout Plain Layout
-
-% TODO: trans, cong
+suc, pred as an example of an unpleasant encoding, also citation
 \end_layout
 
 \end_inset
@@ -2603,12 +2607,11 @@ status open
 \end_layout
 
 \begin_layout Plain Layout
-\begin_inset ERT
+\begin_inset Flex TODO Note (inline)
 status open
 
 \begin_layout Plain Layout
-
-% TODO: list, vec, singleton
+trans, cong
 \end_layout
 
 \end_inset
@@ -2617,12 +2620,11 @@ status open
 \end_layout
 
 \begin_layout Plain Layout
-\begin_inset ERT
+\begin_inset Flex TODO Note (inline)
 status open
 
 \begin_layout Plain Layout
-
-% TODO: TODo footnote on Leibniz equality for alt encoding 
+list, vec, singleton
 \end_layout
 
 \end_inset
@@ -2660,34 +2662,29 @@ Data types are expressible using Church encodings, (in the style of System
  F).
  Church encodings embed the elimination principle of a data type into continuati
 ons
-\begin_inset ERT
+\begin_inset Flex TODO Note (Margin)
 status open
 
 \begin_layout Plain Layout
-
-% TODO: not exactly right, not just elimination, recursion is also involved
+not exactly right, not just elimination, recursion is also involved
 \end_layout
 
 \end_inset
 
 .
- For instance Boolean data is eliminated against true and false, 2 tags
+ For instance Boolean data is eliminated against true and false, two tags
  with no additional data.
  This can also be recognized as the familiar if-then-else construct.
  So 
 \begin_inset Formula $\mathbb{B}_{c}$
 \end_inset
 
- encodes the possibility of choice between 2 elements, 
+ encodes the possibility of choice between two elements, 
 \begin_inset Formula $true_{c}$
 \end_inset
 
  picks the 
-\begin_inset Quotes eld
-\end_inset
-
-then
-\begin_inset Quotes erd
+\begin_inset Formula $then$
 \end_inset
 
  branch, and 
@@ -2695,11 +2692,7 @@ then
 \end_inset
 
  picks the 
-\begin_inset Quotes eld
-\end_inset
-
-else
-\begin_inset Quotes erd
+\begin_inset Formula $else$
 \end_inset
 
  branch.
@@ -2712,23 +2705,13 @@ status open
 
 \begin_layout Plain Layout
 called 
-\begin_inset Quotes eld
-\end_inset
-
+\series bold
 church numerals
-\begin_inset Quotes erd
-\end_inset
-
-
 \end_layout
 
 \end_inset
 
- are encodable with two tags, 
-\begin_inset Formula $0$
-\end_inset
-
- and successor.
+ are encodable with two tags, zero and successor.
  Where successor also contains the result of the preceding number.
  So 
 \begin_inset Formula $\mathbb{N}_{c}$
@@ -2769,12 +2752,11 @@ Parameterized data types such as pairs and the
 \end_layout
 
 \begin_layout Standard
-\begin_inset ERT
+\begin_inset Flex TODO Note (Margin)
 status open
 
 \begin_layout Plain Layout
-
-% TODO: church encoding citation
+church encoding citation
 \end_layout
 
 \end_inset
@@ -2800,9 +2782,8 @@ status open
 Church encodings provide a theoretically light weight way of working with
  data in minimal lambda calculus, however they are very inconvenient to
  work with.
- For instance, the predecessor function on natural numbers is not straight
- forward.
- To make the system easier for programmers, data types will be addressed
+ For instance, the predecessor function on natural numbers is good exercise.
+ To make the system easier for programmers, data types will be added directly
  in Chapter 4.
 \end_layout
 
@@ -2830,7 +2811,7 @@ empty
 \begin_inset Formula $Unit_{c}$
 \end_inset
 
- can be considered a trivially true logical proposition.
+ can be considered a trivially true proposition.
 \end_layout
 
 \begin_layout Standard
@@ -2935,7 +2916,7 @@ Several of the church encoded data types we have seen can also be interpreted
 
 \begin_layout Standard
 With dependent types, more interesting logical predicates can be encoded.
- For instance, we can characterize when a number is Even with 
+ For instance, we can characterize when a number is even with 
 \begin_inset Formula $Even_{c}\,x$
 \end_inset
 
@@ -2964,7 +2945,7 @@ literal "false"
 
 \end_inset
 
- .
+.
  For instance, we can encode the existential as 
 \begin_inset Formula $\exists_{c}$
 \end_inset
@@ -2998,28 +2979,20 @@ One of the most potent and interesting propositions is the proposition of
 \begin_inset Formula $\doteq$
 \end_inset
 
- is referred to as Leibniz equality since two terms are equal when they
- behave the same on all 
-\begin_inset Quotes eld
-\end_inset
-
-observations
-\begin_inset Quotes erd
-\end_inset
-
-
+ is referred to as 
+\series bold
+Leibniz equality
+\series default
+ since two terms are equal when they behave the same on all observations
+ 
 \begin_inset Foot
 status open
 
 \begin_layout Plain Layout
 The identification of indiscernibles is called 
-\begin_inset Quotes eld
-\end_inset
-
+\series bold
 Leibniz law
-\begin_inset Quotes erd
-\end_inset
-
+\series default
  in philosophy.
  Leibniz assumed a metaphysical notion of identification of 
 \begin_inset Quotes eld
@@ -3030,6 +3003,25 @@ substance
 \end_inset
 
 s, not a mathematical notion of equality.
+ See Section 9 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Leibniz1686"
+literal "false"
+
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+cite the ency of philosophy
 \end_layout
 
 \end_inset
@@ -3045,42 +3037,11 @@ s, not a mathematical notion of equality.
 \end_layout
 
 \begin_layout Standard
-\begin_inset ERT
+\begin_inset Flex TODO Note (inline)
 status open
 
 \begin_layout Plain Layout
-
-% TODO: 
-\begin_inset Quotes eld
-\end_inset
-
-Leibniz asserted the identity of indiscernibles: two objects are equal if
- and only if they satisfy the same properties (Leibniz, 1686)
-\begin_inset Quotes erd
-\end_inset
-
- https://homepages.inf.ed.ac.uk/wadler/papers/leibniz/leibniz.pdf
-\end_layout
-
-\begin_layout Plain Layout
-
-% section 9 ish, sort of asmed tobe true  Leibniz, G.
- (1686) Discourse on metaphysics.
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-% TODO: some simple non reflexive proof, though this is really hard without
- proper induction principles
+footnote on Leibniz equality for alt encoding
 \end_layout
 
 \end_inset
@@ -3093,23 +3054,25 @@ Large Eliminations
 \end_layout
 
 \begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+double check large elimination def.
+ consistent with the notes here: 
 \begin_inset ERT
 status open
 
 \begin_layout Plain Layout
 
-% TODO: doulbe check large elimination def (write it here)
+% https://github.com/RobertHarper/hott-notes/blob/5339576f55a4b7f5d04734370a51174
+91c44b1fe/notes_week5.tex#L155
 \end_layout
 
-\begin_layout Plain Layout
+\end_inset
 
-% consistent with the notes here: https://github.com/RobertHarper/hott-notes/blob
-/5339576f55a4b7f5d04734370a5117491c44b1fe/notes_week5.tex#L155
-\end_layout
-
-\begin_layout Plain Layout
-
-% would like better explanaition
+ .
+ would like better explanation
 \end_layout
 
 \end_inset
@@ -3336,7 +3299,7 @@ The expression
 Note that such functions are not possible in the Calculus of Constructions.
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Subsection
 Inequalities
 \end_layout
 
@@ -3565,12 +3528,11 @@ boolean true and false are distinct
 \end_layout
 
 \begin_layout Standard
-\begin_inset ERT
+\begin_inset Flex TODO Note (inline)
 status open
 
 \begin_layout Plain Layout
-
-% TODO: 1st not sensible in CC
+1st not sensible in CC
 \end_layout
 
 \end_inset
@@ -3579,12 +3541,11 @@ status open
 \end_layout
 
 \begin_layout Standard
-\begin_inset ERT
+\begin_inset Flex TODO Note (inline)
 status open
 
 \begin_layout Plain Layout
-
-% TODO: 2 possiblely in CC?
+2 possibly in CC?
 \end_layout
 
 \end_inset
@@ -3610,15 +3571,15 @@ literal "false"
 status open
 
 \begin_layout Plain Layout
-Martin Hofmann excellently motivates the reasoning in 
+Martin Hofmann excellently motivates the reasoning in the Exercises of 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "hofmann1997syntax"
+key "hofmann_1997"
 literal "false"
 
 \end_inset
 
-Exercises 2.5, 2.6, 3.7, 3.25, 3.26, 3.43, 3.44
+
 \end_layout
 
 \end_inset
@@ -3628,27 +3589,12 @@ Exercises 2.5, 2.6, 3.7, 3.25, 3.26, 3.43, 3.44
 \end_layout
 
 \begin_layout Standard
-\begin_inset ERT
+\begin_inset Flex TODO Note (inline)
 status open
 
 \begin_layout Plain Layout
-
-% TODO: citation is actually for an MLTT, bleh
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-% TODO: cite origional and cleaned up in M.
- Hoffman
+citation is actually for an MLTT, but if good enough for Hoff good enough
+ for me
 \end_layout
 
 \end_inset
@@ -3685,16 +3631,15 @@ Assuming appropriate definitions for
 
 \begin_layout Standard
 Recursion can also be used to simulate induction, and this will be heavily
- relied on when data types are added in chapter 4.
+ relied on when data types are added in Chapter 4.
 \end_layout
 
 \begin_layout Standard
-\begin_inset ERT
+\begin_inset Flex TODO Note (inline)
 status open
 
 \begin_layout Plain Layout
-
-% TODO: GCD, recursive types
+GCD, recursive types
 \end_layout
 
 \end_inset
@@ -3723,21 +3668,41 @@ status open
 \end_inset
 
 .
- Type systems can disallow 
-\begin_inset Quotes eld
-\end_inset
-
-bad terms
-\begin_inset Quotes erd
-\end_inset
-
- like these which in turn avoids bad runtime behavior.
+ Type systems can disallow bad terms like these which in turn avoids bad
+ runtime behavior.
 \end_layout
 
 \begin_layout Standard
-We will present our our type system as a type assignment system.
+We will present our our type system as a 
+\series bold
+Type Assignment System
+\series default
+ (TAS).
+ Type assignment systems do not require type annotations, and will be easier
+ to work with then other styles of typing that require all variables be
+ annotated 
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+or all everything for MH
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+church/curry?
+\end_layout
+
+\end_inset
+
+.
  Practically this means that the type assignment system may need to infer
- an impractical amount of information from a term and its context for typing.
+ an unrealistic amount of information from a term and its context for typing.
  This also means that terms do not necessarily have unique typings.
  For instance 
 \begin_inset Formula $\vdash\lambda x\Rightarrow x:\mathbb{N}_{c}\rightarrow\mathbb{N}_{c}$
@@ -3752,12 +3717,24 @@ We will present our our type system as a type assignment system.
 \end_layout
 
 \begin_layout Standard
-\begin_inset ERT
+\begin_inset Flex TODO Note (Margin)
 status open
 
 \begin_layout Plain Layout
+move negative stuff later?
+\end_layout
 
-%TODO example of an unearased term?
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+example of an unearased term?
 \end_layout
 
 \end_inset
@@ -3952,7 +3929,7 @@ There is some question about how much typing information should be coupled
 \series bold
 convertible
 \series default
- to each other.
+ to each other, whether they are equivalent.
 \end_layout
 
 \begin_layout Standard
@@ -4019,7 +3996,15 @@ wrong
 \begin_inset Quotes erd
 \end_inset
 
- instead of stuck
+ instead of 
+\begin_inset Quotes eld
+\end_inset
+
+stuck
+\begin_inset Quotes erd
+\end_inset
+
+
 \end_layout
 
 \end_inset
@@ -4078,7 +4063,15 @@ get stuck
 \end_layout
 
 \begin_layout Standard
-Type soundness can be shown with a progress and preservation
+Type soundness can be shown with a 
+\series bold
+progress
+\series default
+ and 
+\series bold
+preservation
+\series default
+
 \begin_inset Foot
 status open
 
@@ -4109,7 +4102,7 @@ literal "false"
 status open
 
 \begin_layout Plain Layout
-Though first published in 
+The first proof published in this style is 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "WRIGHT199438"
@@ -4117,10 +4110,10 @@ literal "false"
 
 \end_inset
 
- their progress lemma is a bit different form modern presentations.
+ though their progress lemma is a bit different form modern presentations.
  Most relevant textbooks outline forms of this proof for non-dependent type
  systems.
- For instance, part 2 of 
+ For instance, Part 2 of 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "pierce2002types"
@@ -4136,7 +4129,48 @@ literal "false"
 
 \end_inset
 
-, the Chapala book
+, Chapter 11 of 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "chlipala2017formal"
+literal "false"
+
+\end_inset
+
+.
+ Chapter 3 of 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "sjoberg2015dependently"
+literal "false"
+
+\end_inset
+
+ has a similar progress and preservation style proof for a dependently typed
+ language.
+\end_layout
+
+\end_inset
+
+
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+cite parts of things in latex?
+\end_layout
+
+\end_inset
+
+
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+TAPL cites Harper as a co-originator of progress-preservation.
+  Maybe just email him?  it might be also good to gice him for intractability
+ (blum stuff).
+  might want to review his book first
 \end_layout
 
 \end_inset
@@ -4145,18 +4179,6 @@ literal "false"
 \end_layout
 
 \begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-% TODO: TAPL cites Harper as a co-originator of progress-preservation.
-  Maybe just email him?  it might be also good to gice him for intractability.
-  might want to review his book first/comenentary
-\end_layout
-
-\end_inset
-
 .
  The preservation lemma shows that typing information is invariant over
  evaluation.
@@ -4173,7 +4195,8 @@ get stuck
  By iterating these lemmas together, it is possible to show that the type
  system prevents a term from evaluating to the class of bad behavior described
  above.
- This type of proof hinges on a suitable definition of the 
+ For a progress and preservation style proof of a dependently typed language,
+ everything hinges on a suitable definition of the 
 \begin_inset Formula $\equiv$
 \end_inset
 
@@ -4206,8 +4229,8 @@ automatically
 \begin_inset Formula $\equiv$
 \end_inset
 
- relation is usually based on the definition of terms, rather then on extrinsic
- properties, it is called 
+ relation is usually based on the definition of reductions, rather then
+ on extrinsic properties, it is called 
 \series bold
 definitional equality
 \series default
@@ -4221,14 +4244,42 @@ is that actually why?
 
 \end_inset
 
+
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+also called 
+\series bold
+Judgmental Equality
+\series default
+, since it is defined via judgments
+\end_layout
+
+\end_inset
+
 .
  Usually it is desirable to make the definitional equality relation as large
- as possible, though we will not do that in this chapter.
- Chapter 3 will pose an alternative way to avoid definitional equalities.
+ as possible, since the programmer in the system will get more equalities
+ 
+\begin_inset Quotes eld
+\end_inset
+
+for free
+\begin_inset Quotes erd
+\end_inset
+
+.
+ This chapter will opt for an easier less powerful 
+\begin_inset Formula $\equiv$
+\end_inset
+
+ relation, since Chapter 3 will pose an alternative way to avoid definitional
+ equalities entirely.
 \end_layout
 
 \begin_layout Standard
-In a progress and preservation style proof the 
+In a progress and preservation style proof, the 
 \begin_inset Formula $\equiv$
 \end_inset
 
@@ -4533,8 +4584,19 @@ noprefix "false"
 \end_inset
 
  since they directly preform reductions.
+ The 
+\begin_inset Formula $\textrm{\Rrightarrow-fun-app-red}$
+\end_inset
+
+ rule recursively reduces a function given an argument.
+ The 
+\begin_inset Formula $\textrm{\Rrightarrow-::-red}$
+\end_inset
+
+ rule removes a type annotation, making type annotations definitionally
+ irrelevant.
  The other rules are entirely structural.
- Repeating a parallel reductions zero or more times is written 
+ Repeating parallel reductions zero or more times is written 
 \begin_inset Formula $\Rrightarrow_{\ast}$
 \end_inset
 
@@ -4558,17 +4620,6 @@ literal "false"
 \end_inset
 
 ).
- 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-% TODO a little too scatterd so consider revising
-\end_layout
-
-\end_inset
-
  It is also common to assume the properties of 
 \begin_inset Formula $\equiv$
 \end_inset
@@ -4583,28 +4634,44 @@ Definitional Equality
 \begin_layout Standard
 We now have enough information to prove the critical properties of definitional
  equality.
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+index theorem by chapter
+\end_layout
+
+\end_inset
+
+
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+would like to combine these?
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsubsection
+Reflexivity Lemmas
+\end_layout
+
+\begin_layout Lemma
 \begin_inset Formula $\Rrightarrow$
 \end_inset
 
-, 
-\begin_inset Formula $\Rrightarrow_{\ast}$
-\end_inset
-
-, 
-\begin_inset Formula $\equiv$
-\end_inset
-
- are reflexive
+ is reflexive.
 \end_layout
 
-\begin_layout Standard
+\begin_layout Lemma
 The following rule is admissible,
 \end_layout
 
-\begin_layout Standard
+\begin_layout Lemma
 \begin_inset Formula 
 \[
 \frac{\,}{m\Rrightarrow\,m}\,\textrm{\Rrightarrow-refl}
@@ -4615,7 +4682,7 @@ The following rule is admissible,
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Proof
 by induction on the syntax of 
 \begin_inset Formula $m$
 \end_inset
@@ -4623,15 +4690,22 @@ by induction on the syntax of
 
 \end_layout
 
-\begin_layout Standard
-Recall that 
+\begin_layout Fact
 \begin_inset Formula $\Rrightarrow_{\ast}$
 \end_inset
 
- is reflexive by definition so
+ is reflexive.
 \end_layout
 
-\begin_layout Standard
+\begin_layout Lemma
+\begin_inset Formula $\equiv$
+\end_inset
+
+ is reflexive.
+\end_layout
+
+\begin_layout Lemma
+The following rule is admissible,
 \begin_inset Formula 
 \[
 \frac{\,}{m\equiv m}\,\textrm{\equiv-refl}
@@ -4642,28 +4716,36 @@ Recall that
 
 \end_layout
 
-\begin_layout Standard
-is admissible.
-\end_layout
-
-\begin_layout Subsubsection
-\begin_inset Formula $\Rrightarrow$
-\end_inset
-
-, 
+\begin_layout Proof
+since 
 \begin_inset Formula $\Rrightarrow_{\ast}$
 \end_inset
 
-, 
-\begin_inset Formula $\equiv$
-\end_inset
-
- are closed under substitutions.
+ is reflexive
 \end_layout
 
-\begin_layout Standard
+\begin_layout Subsubsection
+Closure Lemmas
+\end_layout
+
+\begin_layout Lemma
+\begin_inset Formula $\Rrightarrow$
+\end_inset
+
+ is closed under substitutions.
+\end_layout
+
+\begin_layout Lemma
 The following rule is admissible for every substitution 
 \begin_inset Formula $\sigma$
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{m\Rrightarrow m'}{m\left[\sigma\right]\Rrightarrow m'\left[\sigma\right]}\,\textrm{\Rrightarrow-sub-\sigma}
+\]
+
 \end_inset
 
 
@@ -4696,18 +4778,7 @@ is this lemma needed or is it just to accommodate stupid binding stuff in
 
 \end_layout
 
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{m\Rrightarrow m'}{m\left[\sigma\right]\Rrightarrow m'\left[\sigma\right]}\,\textrm{\Rrightarrow-sub-\sigma}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
+\begin_layout Proof
 by induction on the 
 \begin_inset Formula $\Rrightarrow$
 \end_inset
@@ -4723,7 +4794,14 @@ by induction on the
  case.
 \end_layout
 
-\begin_layout Standard
+\begin_layout Lemma
+\begin_inset Formula $\Rrightarrow$
+\end_inset
+
+ is closed under substitutions that step.
+\end_layout
+
+\begin_layout Lemma
 The following rule is admissible where 
 \begin_inset Formula $\sigma$
 \end_inset
@@ -4745,9 +4823,6 @@ The following rule is admissible where
 \end_inset
 
 
-\end_layout
-
-\begin_layout Standard
 \begin_inset Formula 
 \[
 \frac{m\Rrightarrow m'\quad\sigma\Rrightarrow\tau}{m\left[\sigma\right]\Rrightarrow m'\left[\tau\right]}\,\textrm{\Rrightarrow-sub}
@@ -4758,7 +4833,7 @@ The following rule is admissible where
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Proof
 by induction on the 
 \begin_inset Formula $\Rrightarrow$
 \end_inset
@@ -4766,7 +4841,11 @@ by induction on the
  relation.
 \end_layout
 
-\begin_layout Standard
+\begin_layout Lemma
+\begin_inset Formula $\Rrightarrow_{\ast}$
+\end_inset
+
+ is closed under substitutions that step.
 \begin_inset Formula 
 \[
 \frac{m\Rrightarrow_{\ast}m'\quad\sigma\Rrightarrow\tau}{m\left[\sigma\right]\Rrightarrow_{\ast}\,m'\left[\tau\right]}\,\textrm{\Rrightarrow_{\ast}-sub}
@@ -4774,19 +4853,23 @@ by induction on the
 
 \end_inset
 
-
+is admissible 
 \end_layout
 
-\begin_layout Standard
-is admissible by induction on the 
+\begin_layout Proof
+by induction on the 
 \begin_inset Formula $\Rrightarrow_{\ast}$
 \end_inset
 
  relation.
- And follows that 
+ 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Lemma
+\begin_inset Formula $\equiv$
+\end_inset
+
+ is closed under substitutions that step.
 \begin_inset Formula 
 \[
 \frac{m\equiv m'\quad\sigma\Rrightarrow\tau}{m\left[\sigma\right]\equiv m'\left[\tau\right]}\,\textrm{\equiv-sub}
@@ -4794,15 +4877,14 @@ is admissible by induction on the
 
 \end_inset
 
-
-\end_layout
-
-\begin_layout Standard
 is admissible.
 \end_layout
 
-\begin_layout Standard
-The following corollary is admissible
+\begin_layout Corollary
+\begin_inset Formula $\equiv$
+\end_inset
+
+ is closed under substituted reduction.
 \end_layout
 
 \begin_layout Standard
@@ -4816,11 +4898,11 @@ The following corollary is admissible
 
 \end_layout
 
-\begin_layout Standard
-since
+\begin_layout Proof
+Since
 \end_layout
 
-\begin_layout Standard
+\begin_layout Proof
 \begin_inset Tabular
 <lyxtabular version="3" rows="4" columns="2">
 <features tabularvalignment="middle">
@@ -4952,43 +5034,39 @@ by repeated
 \end_layout
 
 \begin_layout Subsubsection
-\begin_inset Formula $\Rrightarrow$
-\end_inset
-
-, 
-\begin_inset Formula $\Rrightarrow_{\ast}$
-\end_inset
-
- is confluent, 
-\begin_inset Formula $\equiv$
-\end_inset
-
- is transitive
+Transitivity
 \end_layout
 
 \begin_layout Standard
-A relation 
-\begin_inset Formula $R$
+To prove the transitivity of the 
+\begin_inset Formula $\equiv$
 \end_inset
 
- is 
+, we will first need to prove that 
+\series bold
+
+\begin_inset Formula $\Rrightarrow_{\ast}$
+\end_inset
+
+ 
+\series default
+is 
 \series bold
 confluent
 \series default
+.
+ A relation 
+\begin_inset Formula $R$
+\end_inset
 
+ is confluent
 \begin_inset Foot
 status open
 
 \begin_layout Plain Layout
 also called 
-\begin_inset Quotes eld
-\end_inset
-
+\series bold
 Church-Rosser
-\begin_inset Quotes erd
-\end_inset
-
-
 \end_layout
 
 \end_inset
@@ -5045,7 +5123,7 @@ Church-Rosser
 
 .
  If a relation is confluent, in a sense, specific paths don't matter since
- you can alway reach the same destinations.
+ you can alway rejoin at a future destination.
 \end_layout
 
 \begin_layout Standard
@@ -5629,17 +5707,16 @@ otherwise
 \end_layout
 
 \begin_layout Standard
-\begin_inset ERT
+\begin_inset Flex TODO Note (Margin)
 status open
 
 \begin_layout Plain Layout
-
-% TODO for example
+for example
 \end_layout
 
 \end_inset
 
- 
+
 \end_layout
 
 \begin_layout Standard
@@ -5653,7 +5730,7 @@ Triangle Property
 \end_layout
 
 \begin_layout Plain Layout
-\begin_inset Formula $\ensuremath{\forall{\color{red}m},{\color{red}m'}.\:{\color{red}m\Rrightarrow m'}\:\rightarrow\:{\color{red}m'}{\color{blue}\Rrightarrow max\left(m\right)}}$
+\begin_inset Formula $\ensuremath{\forall{\color{red}m},{\color{red}m'}.\:{\color{red}m\Rrightarrow m'}\:\mathrm{implies}\:{\color{red}m'}{\color{blue}\Rrightarrow max\left(m\right)}}$
 \end_inset
 
 
@@ -5719,7 +5796,7 @@ Diamond Property
 \end_layout
 
 \begin_layout Plain Layout
-\begin_inset Formula $\forall{\color{red}m},{\color{red}m'},{\color{red}m''}.\:{\color{red}m\Rrightarrow m'}\:\wedge\:{\color{red}m\Rrightarrow m''}\:\rightarrow\:{\color{red}m'}{\color{blue}\Rrightarrow max\left(m\right)}$
+\begin_inset Formula $\forall{\color{red}m},{\color{red}m'},{\color{red}m''}.\:{\color{red}m\Rrightarrow m'}\:\wedge\:{\color{red}m\Rrightarrow m''}\:\mathrm{implies}\:{\color{red}m'}{\color{blue}\Rrightarrow max\left(m\right)}$
 \end_inset
 
 
@@ -5794,7 +5871,7 @@ Confluence
 \end_layout
 
 \begin_layout Plain Layout
-\begin_inset Formula $\forall{\color{red}m},{\color{red}n},{\color{red}n'}.\:{\color{red}m\Rrightarrow_{\ast}n}\:\wedge\:{\color{red}m\Rrightarrow_{\ast}n'}\:\rightarrow\:\exists{\color{blue}n'''}.\:{\color{red}n}{\color{blue}\Rrightarrow_{\ast}{\color{blue}n'''}}\:\wedge\:{\color{red}n'}{\color{blue}\Rrightarrow{\color{blue}n'''}}$
+\begin_inset Formula $\forall{\color{red}m},{\color{red}n},{\color{red}n'}.\:{\color{red}m\Rrightarrow_{\ast}n}\:\wedge\:{\color{red}m\Rrightarrow_{\ast}n'}\:\mathrm{implies}\:\exists{\color{blue}n'''}.\:{\color{red}n}{\color{blue}\Rrightarrow_{\ast}{\color{blue}n'''}}\:\wedge\:{\color{red}n'}{\color{blue}\Rrightarrow{\color{blue}n'''}}$
 \end_inset
 
 
@@ -5878,6 +5955,19 @@ end{tikzcd}
 \end_layout
 
 \begin_layout Plain Layout
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+absorb these diagrams into the proofs
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
@@ -5901,7 +5991,15 @@ name "fig:shape-diagrams"
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Lemma
+Triangle Property of 
+\begin_inset Formula $\Rrightarrow$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Lemma
 If 
 \begin_inset Formula $m\Rrightarrow\,m'$
 \end_inset
@@ -5913,15 +6011,16 @@ If
  .
 \end_layout
 
-\begin_layout Standard
+\begin_layout Proof
 by induction on the derivation 
 \begin_inset Formula $m\Rrightarrow\,m'$
 \end_inset
 
- , with the only interesting cases are where a reduction is not taken
+, with the only interesting cases are where a reduction is not taken
 \end_layout
 
-\begin_layout Itemize
+\begin_deeper
+\begin_layout Case
 in the case of 
 \begin_inset Formula $\textrm{\Rrightarrow-::}$
 \end_inset
@@ -5937,7 +6036,7 @@ in the case of
 
 \end_layout
 
-\begin_layout Itemize
+\begin_layout Case
 in the case of 
 \begin_inset Formula $\textrm{\Rrightarrow-fun-app}$
 \end_inset
@@ -5951,10 +6050,29 @@ in the case of
 \end_inset
 
  
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+fix formatting
 \end_layout
 
-\begin_layout Standard
-It follows that, if 
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Lemma
+Diamond Property of 
+\begin_inset Formula $\Rrightarrow$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Lemma
+If 
 \begin_inset Formula $m\Rrightarrow\,m'$
 \end_inset
 
@@ -5970,8 +6088,12 @@ It follows that, if
 \begin_inset Formula $m''\Rrightarrow\,max\left(m\right)$
 \end_inset
 
- (referred to as the diamond property).
- Since the 
+ .
+ 
+\end_layout
+
+\begin_layout Proof
+Since 
 \begin_inset Formula $max\left(m\right)=max\left(m\right)$
 \end_inset
 
@@ -5979,21 +6101,71 @@ It follows that, if
  
 \end_layout
 
-\begin_layout Standard
-The diamond property implies the confluence of 
+\begin_layout Theorem
+Confluence of 
 \begin_inset Formula $\Rrightarrow_{\ast}$
 \end_inset
 
- , by repeated application of the diamond property.
+ 
+\end_layout
+
+\begin_layout Theorem
+If 
+\begin_inset Formula $m\Rrightarrow_{\ast}\,n'$
+\end_inset
+
+, 
+\begin_inset Formula $m\Rrightarrow_{\ast}\,n''$
+\end_inset
+
+, then their exists 
+\begin_inset Formula $n'''$
+\end_inset
+
+ such that 
+\begin_inset Formula $n'\Rrightarrow\,n'''$
+\end_inset
+
+ ,
+\begin_inset Formula $n''\Rrightarrow\,n'''$
+\end_inset
+
+ .
+\end_layout
+
+\begin_layout Proof
+by repeated application of the diamond property.
 \end_layout
 
 \begin_layout Standard
-It follows that 
+It follows that
+\end_layout
+
+\begin_layout Theorem
 \begin_inset Formula $\equiv$
 \end_inset
 
- is transitive.
- Since if 
+ is transitive
+\end_layout
+
+\begin_layout Theorem
+if 
+\begin_inset Formula $m\equiv m'$
+\end_inset
+
+ and 
+\begin_inset Formula $m'\equiv m''$
+\end_inset
+
+ then 
+\begin_inset Formula $m\equiv m''$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Proof
+Since if 
 \begin_inset Formula $m\equiv m'$
 \end_inset
 
@@ -6063,31 +6235,49 @@ such that
 
 .
  
-\begin_inset ERT
+\begin_inset Flex TODO Note (Margin)
 status open
 
 \begin_layout Plain Layout
-
-% TODO clean up, diagram
+clean up, diagram
 \end_layout
 
 \end_inset
 
- 
+
+\end_layout
+
+\begin_layout Fact
+\begin_inset Formula $\equiv$
+\end_inset
+
+ is an equivalence relation.
 \end_layout
 
 \begin_layout Subsubsection
 Stability
 \end_layout
 
-\begin_layout Standard
-\begin_inset Formula $\forall N,M,P.\left(x:N\right)\rightarrow M\Rrightarrow_{\ast}P\:\Rightarrow\:\exists N',M'.P=\left(x:N'\right)\rightarrow M'\land N\Rrightarrow_{\ast}N'\land M\Rrightarrow_{\ast}M'$
+\begin_layout Lemma
+Stability of 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ over 
+\begin_inset Formula $\Rrightarrow_{\ast}$
 \end_inset
 
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Lemma
+\begin_inset Formula $\forall N,M,P.\left(x:N\right)\rightarrow M\Rrightarrow_{\ast}P\:\mathrm{implies}\:\exists N',M'.P=\left(x:N'\right)\rightarrow M'\land N\Rrightarrow_{\ast}N'\land M\Rrightarrow_{\ast}M'$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Proof
 by induction on 
 \begin_inset Formula $\Rrightarrow_{\ast}$
 \end_inset
@@ -6095,15 +6285,15 @@ by induction on
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Proof
 \begin_inset Tabular
-<lyxtabular version="3" rows="8" columns="3">
+<lyxtabular version="3" rows="10" columns="3">
 <features tabularvalignment="middle">
 <column alignment="left" valignment="top">
 <column alignment="left" valignment="top">
 <column alignment="left" valignment="top">
 <row>
-<cell alignment="left" valignment="top" usebox="none">
+<cell multicolumn="1" alignment="left" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -6115,7 +6305,36 @@ by induction on
 
 \end_inset
 </cell>
-<cell alignment="left" valignment="top" usebox="none">
+<cell multicolumn="2" alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -6127,7 +6346,7 @@ by induction on
 
 \end_inset
 </cell>
-<cell alignment="left" valignment="top" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -6208,7 +6427,7 @@ by induction on
 </cell>
 </row>
 <row>
-<cell alignment="left" valignment="top" usebox="none">
+<cell multicolumn="1" alignment="left" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -6220,7 +6439,36 @@ by induction on
 
 \end_inset
 </cell>
-<cell alignment="left" valignment="top" usebox="none">
+<cell multicolumn="2" alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -6236,7 +6484,7 @@ by induction on
 
 \end_inset
 </cell>
-<cell alignment="left" valignment="top" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -6415,7 +6663,16 @@ by inspection, only the
 Therefore the following rule is admissible
 \end_layout
 
-\begin_layout Standard
+\begin_layout Corollary
+Stability of 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ over 
+\begin_inset Formula $\equiv$
+\end_inset
+
+
 \begin_inset Formula 
 \[
 \frac{\left(x:N\right)\rightarrow M\equiv\left(x:N'\right)\rightarrow M'}{N\equiv N'\quad M\equiv M'}
@@ -6426,7 +6683,7 @@ Therefore the following rule is admissible
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Proof
 \begin_inset Tabular
 <lyxtabular version="3" rows="4" columns="2">
 <features tabularvalignment="middle">
@@ -6582,7 +6839,7 @@ Preservation
 \begin_layout Standard
 A fundamental property of a type systems is that evaluation preserves type
 \begin_inset Foot
-status collapsed
+status open
 
 \begin_layout Plain Layout
 Similar proofs for dependent type systems can be found in Chapter 3 of 
@@ -6615,6 +6872,26 @@ literal "false"
 
 \end_inset
 
+
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+review vilhems thesis chapter 3
+\end_layout
+
+\end_inset
+
+
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+push this further up?
+\end_layout
+
+\end_inset
+
 .
 \end_layout
 
@@ -6624,17 +6901,9 @@ We need a number of technical lemmas before we can prove that
 \end_inset
 
  preserves types.
- Proofs are almost always on induction by typing derivations, this allows
- the context to 
-\begin_inset Quotes eld
-\end_inset
-
-grow
-\begin_inset Quotes erd
-\end_inset
-
- with recursive calls while still being well founded by the tree structure
- of the derivation.
+ Since the lemmas needed are almost always on induction by typing derivations,
+ this allows the context to grow under the inductive hypothesis while still
+ being well founded by the tree structure of the derivation.
  
 \end_layout
 
@@ -6655,15 +6924,12 @@ status open
 
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Theorem
 Context Weakening
 \end_layout
 
-\begin_layout Standard
+\begin_layout Theorem
 The following rule is admissible
-\end_layout
-
-\begin_layout Standard
 \begin_inset Formula 
 \[
 \frac{\Gamma\vdash n:N}{\Gamma,\Gamma'\vdash n:N}
@@ -6674,18 +6940,18 @@ The following rule is admissible
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Proof
 by induction on typing derivations
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Lemma
 Substitution Preservation
 \end_layout
 
-\begin_layout Standard
+\begin_layout Lemma
 The following rule is admissible
 \begin_inset Foot
-status open
+status collapsed
 
 \begin_layout Plain Layout
 This lemma is sufficient for our informal account of variable substitution
@@ -6697,9 +6963,6 @@ This lemma is sufficient for our informal account of variable substitution
 \end_inset
 
 
-\end_layout
-
-\begin_layout Standard
 \begin_inset Formula 
 \[
 \frac{\Gamma\vdash n:N\quad\Gamma,x:N,\Gamma'\vdash m:M}{\Gamma,\Gamma'\left[x\coloneqq n\right]\vdash m\left[x\coloneqq n\right]:M\left[x\coloneqq n\right]}
@@ -6710,40 +6973,64 @@ This lemma is sufficient for our informal account of variable substitution
 
 \end_layout
 
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-%TODO would be H subscript instead of H' according to unposted style guide
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
+\begin_layout Proof
 by induction on typing derivations
 \end_layout
 
-\begin_layout Standard
+\begin_layout Proof
 \begin_inset Tabular
-<lyxtabular version="3" rows="35" columns="4">
+<lyxtabular version="3" rows="43" columns="4">
 <features tabularvalignment="middle">
 <column alignment="left" valignment="top">
 <column alignment="left" valignment="top">
 <column alignment="left" valignment="top">
 <column alignment="left" valignment="top">
 <row>
-<cell alignment="left" valignment="top" usebox="none">
+<cell multicolumn="1" alignment="left" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
 \begin_inset Formula $\textrm{ty-}\star$
 \end_inset
 
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
 
 \end_layout
 
@@ -6761,7 +7048,7 @@ by induction on typing derivations
 
 \end_inset
 </cell>
-<cell multicolumn="2" alignment="left" valignment="top" usebox="none">
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -6770,7 +7057,7 @@ by induction on typing derivations
 
 \end_inset
 </cell>
-<cell alignment="left" valignment="top" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -6825,13 +7112,51 @@ by induction on typing derivations
 </cell>
 </row>
 <row>
-<cell alignment="center" valignment="top" usebox="none">
+<cell multicolumn="1" alignment="left" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
 \begin_inset Formula $\textrm{ty-var}$
 \end_inset
 
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
 
 \end_layout
 
@@ -7314,13 +7639,51 @@ if
 </cell>
 </row>
 <row>
-<cell alignment="center" valignment="top" usebox="none">
+<cell multicolumn="1" alignment="left" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
 \begin_inset Formula $\textrm{ty-::}$
 \end_inset
 
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
 
 \end_layout
 
@@ -7443,13 +7806,51 @@ by induction
 </cell>
 </row>
 <row>
-<cell alignment="center" valignment="top" usebox="none">
+<cell multicolumn="1" alignment="left" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
 \begin_inset Formula $\textrm{ty-fun-ty}$
 \end_inset
 
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
 
 \end_layout
 
@@ -7630,13 +8031,51 @@ by induction
 </cell>
 </row>
 <row>
-<cell alignment="center" valignment="top" usebox="none">
+<cell multicolumn="1" alignment="left" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
 \begin_inset Formula $\textrm{ty-fun}$
 \end_inset
 
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
 
 \end_layout
 
@@ -7687,7 +8126,7 @@ by induction
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\Gamma,\Gamma'\left[x\coloneqq n\right],f:\left(y:N\left[x\coloneqq n\right]\right)\rightarrow M\left[x\coloneqq n\right],y:N\left[x\coloneqq n\right]\vdash m\left[x\coloneqq n\right]\,:\,M\left[x\coloneqq n\right]$
+\begin_inset Formula $\Gamma,\Gamma'\left[x\coloneqq n\right],f:\left(y:N\left[x\coloneqq n\right]\right)\rightarrow M\left[x\coloneqq n\right],y:N\left[x\coloneqq n\right]$
 \end_inset
 
 
@@ -7704,11 +8143,52 @@ by induction
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" usebox="none">
+<cell multirow="3" alignment="left" valignment="middle" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
 by induction
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="1" alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\ \vdash m\left[x\coloneqq n\right]\,:\,M\left[x\coloneqq n\right]$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multirow="4" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
 \end_layout
 
 \end_inset
@@ -7759,13 +8239,51 @@ by induction
 </cell>
 </row>
 <row>
-<cell alignment="center" valignment="top" usebox="none">
+<cell multicolumn="1" alignment="left" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
 \begin_inset Formula $\textrm{ty-fun-app}$
 \end_inset
 
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
 
 \end_layout
 
@@ -7974,13 +8492,51 @@ by induction
 </cell>
 </row>
 <row>
-<cell alignment="center" valignment="top" usebox="none">
+<cell multicolumn="1" alignment="left" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
 \begin_inset Formula $\textrm{ty-conv}$
 \end_inset
 
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
 
 \end_layout
 
@@ -8296,10 +8852,6 @@ by
 
 \end_layout
 
-\begin_layout Subsubsection
-Context Preservation
-\end_layout
-
 \begin_layout Standard
 When contexts are convertible, typing judgments still hold.
  We extend the notion of definitional equality to contexts in 
@@ -8367,11 +8919,12 @@ name "fig:surface-Context-Equiv"
 
 \end_layout
 
-\begin_layout Standard
-the following rule is admissible
+\begin_layout Lemma
+Context Preservation
 \end_layout
 
-\begin_layout Standard
+\begin_layout Lemma
+the following rule is admissible
 \begin_inset Formula 
 \[
 \frac{\Gamma\vdash n:N\quad\Gamma\equiv\Gamma'}{\Gamma'\vdash n:N}
@@ -8382,19 +8935,19 @@ the following rule is admissible
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Proof
 by induction over typing derivations
 \end_layout
 
-\begin_layout Standard
+\begin_layout Proof
 \begin_inset Tabular
-<lyxtabular version="3" rows="27" columns="3">
+<lyxtabular version="3" rows="35" columns="3">
 <features tabularvalignment="middle">
 <column alignment="left" valignment="top">
 <column alignment="left" valignment="top">
 <column alignment="left" valignment="top">
 <row>
-<cell alignment="left" valignment="top" usebox="none">
+<cell multicolumn="1" alignment="left" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -8406,7 +8959,36 @@ by induction over typing derivations
 
 \end_inset
 </cell>
-<cell alignment="left" valignment="top" usebox="none">
+<cell multicolumn="2" alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -8418,7 +9000,7 @@ by induction over typing derivations
 
 \end_inset
 </cell>
-<cell alignment="left" valignment="top" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -8464,7 +9046,7 @@ by induction over typing derivations
 </cell>
 </row>
 <row>
-<cell alignment="left" valignment="top" usebox="none">
+<cell multicolumn="1" alignment="left" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -8476,7 +9058,36 @@ by induction over typing derivations
 
 \end_inset
 </cell>
-<cell alignment="left" valignment="top" usebox="none">
+<cell multicolumn="2" alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -8488,7 +9099,7 @@ by induction over typing derivations
 
 \end_inset
 </cell>
-<cell alignment="left" valignment="top" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -8667,7 +9278,7 @@ by symmetry
 </cell>
 </row>
 <row>
-<cell alignment="left" valignment="top" usebox="none">
+<cell multicolumn="1" alignment="left" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -8679,7 +9290,36 @@ by symmetry
 
 \end_inset
 </cell>
-<cell alignment="left" valignment="top" usebox="none">
+<cell multicolumn="2" alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -8695,7 +9335,7 @@ by symmetry
 
 \end_inset
 </cell>
-<cell alignment="left" valignment="top" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -8773,7 +9413,7 @@ by induction
 </cell>
 </row>
 <row>
-<cell alignment="left" valignment="top" usebox="none">
+<cell multicolumn="1" alignment="left" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -8785,7 +9425,36 @@ by induction
 
 \end_inset
 </cell>
-<cell alignment="left" valignment="top" usebox="none">
+<cell multicolumn="2" alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -8797,7 +9466,7 @@ by induction
 
 \end_inset
 </cell>
-<cell alignment="left" valignment="top" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -8875,7 +9544,7 @@ by induction
 </cell>
 </row>
 <row>
-<cell alignment="left" valignment="top" usebox="none">
+<cell multicolumn="1" alignment="left" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -8887,7 +9556,36 @@ by induction
 
 \end_inset
 </cell>
-<cell alignment="left" valignment="top" usebox="none">
+<cell multicolumn="2" alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -8903,7 +9601,7 @@ by induction
 
 \end_inset
 </cell>
-<cell alignment="left" valignment="top" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -9052,7 +9750,7 @@ by induction with
 </cell>
 </row>
 <row>
-<cell alignment="left" valignment="top" usebox="none">
+<cell multicolumn="1" alignment="left" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -9064,7 +9762,36 @@ by induction with
 
 \end_inset
 </cell>
-<cell alignment="left" valignment="top" usebox="none">
+<cell multicolumn="2" alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -9089,7 +9816,7 @@ by induction with
 
 \end_inset
 </cell>
-<cell alignment="left" valignment="top" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -9208,7 +9935,36 @@ by induction with
 \begin_inset Text
 
 \begin_layout Plain Layout
-by induction with 
+by induction with
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
 \family roman
 \series medium
 \shape up
@@ -9221,7 +9977,6 @@ by induction with
 \uwave off
 \noun off
 \color none
-
 \begin_inset Formula $\Gamma,f:\left(x:N\right)\rightarrow M,x:N\vdash m\,:\,M$
 \end_inset
 
@@ -9267,7 +10022,7 @@ by induction with
 </cell>
 </row>
 <row>
-<cell alignment="left" valignment="top" usebox="none">
+<cell multicolumn="1" alignment="left" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -9279,7 +10034,36 @@ by induction with
 
 \end_inset
 </cell>
-<cell alignment="left" valignment="top" usebox="none">
+<cell multicolumn="2" alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -9295,7 +10079,7 @@ by induction with
 
 \end_inset
 </cell>
-<cell alignment="left" valignment="top" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -9411,10 +10195,6 @@ by induction
 
 \end_layout
 
-\begin_layout Subsubsection
-Inversion
-\end_layout
-
 \begin_layout Standard
 In the preservation proof we will need to reason backwards about the typing
  judgments implied by a typing derivation of term syntax.
@@ -9426,7 +10206,14 @@ In the preservation proof we will need to reason backwards about the typing
 Thus we can show this more general rule
 \end_layout
 
-\begin_layout Standard
+\begin_layout Lemma
+\begin_inset Formula $\mathsf{fun}$
+\end_inset
+
+-Inversion (generalized)
+\end_layout
+
+\begin_layout Lemma
 \begin_inset Formula 
 \[
 \frac{\Gamma\vdash\mathsf{fun}\,f\,x\Rightarrow m\,:\,P\quad P\equiv\left(x:N\right)\rightarrow M}{\Gamma,f:\left(x:N\right)\rightarrow M,x:N\vdash m:M}
@@ -9437,12 +10224,16 @@ Thus we can show this more general rule
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Lemma
 is admissible.
- By induction on typing derivations,
+ 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Proof
+By induction on typing derivations,
+\end_layout
+
+\begin_layout Proof
 \begin_inset Tabular
 <lyxtabular version="3" rows="9" columns="3">
 <features tabularvalignment="middle">
@@ -9784,10 +10575,17 @@ the term position has the form
 \end_layout
 
 \begin_layout Standard
-This allows us to conclude the more strait-forward corollary 
+This allows us to conclude the more strait forward corollary 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Corollary
+\begin_inset Formula $\mathsf{fun}$
+\end_inset
+
+-Inversion
+\end_layout
+
+\begin_layout Corollary
 \begin_inset Formula 
 \[
 \frac{\Gamma\vdash\mathsf{fun}\,f\,x\Rightarrow m\,:\,\left(x:N\right)\rightarrow M}{\Gamma,f:\left(x:N\right)\rightarrow M,x:N\vdash m:M}
@@ -9798,7 +10596,7 @@ This allows us to conclude the more strait-forward corollary
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Proof
 by noting that 
 \begin_inset Formula $\left(x:N\right)\rightarrow M\equiv\left(x:N\right)\rightarrow M$
 \end_inset
@@ -9826,18 +10624,15 @@ status open
 
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Theorem
 \begin_inset Formula $\Rrightarrow$
 \end_inset
 
 -Preservation 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Theorem
 The following rule is admissible
-\end_layout
-
-\begin_layout Standard
 \begin_inset Formula 
 \[
 \frac{\Gamma\vdash m:M\quad m\Rrightarrow m'}{\Gamma\vdash m':M}
@@ -9848,7 +10643,7 @@ The following rule is admissible
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Proof
 by induction on the typing derivation 
 \begin_inset Formula $\Gamma\vdash m:M$
 \end_inset
@@ -9860,13 +10655,12 @@ by induction on the typing derivation
 ,
 \end_layout
 
-\begin_layout Standard
-\begin_inset ERT
+\begin_layout Proof
+\begin_inset Flex TODO Note (Margin)
 status open
 
 \begin_layout Plain Layout
-
-%TODO first 2 steps don't exactly match the scheme
+first 2 steps don't exactly match the scheme
 \end_layout
 
 \end_inset
@@ -9874,16 +10668,16 @@ status open
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Proof
 \begin_inset Tabular
-<lyxtabular version="3" rows="43" columns="4">
+<lyxtabular version="3" rows="45" columns="4">
 <features tabularvalignment="middle">
 <column alignment="left" valignment="top">
 <column alignment="left" valignment="top">
 <column alignment="left" valignment="top">
 <column alignment="left" valignment="top">
 <row>
-<cell alignment="left" valignment="top" usebox="none">
+<cell multicolumn="1" alignment="left" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -9895,7 +10689,45 @@ status open
 
 \end_inset
 </cell>
-<cell alignment="left" valignment="top" usebox="none">
+<cell multicolumn="2" alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -9907,7 +10739,7 @@ status open
 
 \end_inset
 </cell>
-<cell alignment="left" valignment="top" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -9923,7 +10755,7 @@ status open
 
 \end_inset
 </cell>
-<cell alignment="left" valignment="top" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -9934,7 +10766,7 @@ follows directly
 </cell>
 </row>
 <row>
-<cell alignment="left" valignment="top" usebox="none">
+<cell multicolumn="1" alignment="left" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -9946,7 +10778,45 @@ follows directly
 
 \end_inset
 </cell>
-<cell alignment="left" valignment="top" usebox="none">
+<cell multicolumn="2" alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -9958,7 +10828,7 @@ follows directly
 
 \end_inset
 </cell>
-<cell alignment="left" valignment="top" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -9974,7 +10844,7 @@ follows directly
 
 \end_inset
 </cell>
-<cell alignment="left" valignment="top" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -9985,7 +10855,7 @@ follows directly
 </cell>
 </row>
 <row>
-<cell alignment="left" valignment="top" usebox="none">
+<cell multicolumn="1" alignment="left" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -9997,7 +10867,7 @@ follows directly
 
 \end_inset
 </cell>
-<cell alignment="left" valignment="top" usebox="none">
+<cell multicolumn="2" alignment="left" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -10228,7 +11098,7 @@ by induction
 </cell>
 </row>
 <row>
-<cell alignment="left" valignment="top" usebox="none">
+<cell multicolumn="1" alignment="left" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -10240,7 +11110,7 @@ by induction
 
 \end_inset
 </cell>
-<cell alignment="left" valignment="top" usebox="none">
+<cell multicolumn="2" alignment="left" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -10664,7 +11534,7 @@ by symmetry
 </cell>
 </row>
 <row>
-<cell alignment="left" valignment="top" usebox="none">
+<cell multicolumn="1" alignment="left" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -10676,7 +11546,7 @@ by symmetry
 
 \end_inset
 </cell>
-<cell alignment="left" valignment="top" usebox="none">
+<cell multicolumn="2" alignment="left" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -11021,7 +11891,7 @@ by preservation of contexts
 </cell>
 </row>
 <row>
-<cell alignment="left" valignment="top" usebox="none">
+<cell multicolumn="1" alignment="left" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -11033,7 +11903,7 @@ by preservation of contexts
 
 \end_inset
 </cell>
-<cell alignment="left" valignment="top" usebox="none">
+<cell multicolumn="2" alignment="left" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -11194,7 +12064,7 @@ by induction
 </cell>
 </row>
 <row>
-<cell alignment="left" valignment="top" usebox="none">
+<cell multicolumn="1" alignment="left" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -11206,7 +12076,7 @@ by induction
 
 \end_inset
 </cell>
-<cell alignment="left" valignment="top" usebox="none">
+<cell multicolumn="2" alignment="left" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -11886,15 +12756,8 @@ Progress
 \end_layout
 
 \begin_layout Standard
-The second key lemma is to show preservation, computation is 
-\begin_inset Quotes eld
-\end_inset
-
-finished
-\begin_inset Quotes erd
-\end_inset
-
- or that a further step can be taken.
+The second key theorem to show is preservation, computation is finished
+ or a further step can be taken.
  For non-dependently typed programming languages, these steps are easy to
  characterize, but for dependent types there are issues.
  If we characterize computation with the 
@@ -11903,8 +12766,9 @@ finished
 
  relation, the progress lemma holds in a meaningless way since we can always
  take a reflexive step.
- Thus we need a more realistic computation relation, ideally one that is
- not reflexive, is deterministic and that is a sub relation of 
+ Thus a more realistic computation relation is needed.
+ Ideally one that is not reflexive, is deterministic and that is a sub relation
+ of 
 \begin_inset Formula $\Rrightarrow_{*}$
 \end_inset
 
@@ -12097,17 +12961,7 @@ noprefix "false"
 
 .
  As usual, functions with any body are values.
- Additionally the Type universe is a value, and function types 
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-evaluated to whnf
-\end_layout
-
-\end_inset
-
- are values.
+ Additionally the Type universe is a value, and function types are values.
 \end_layout
 
 \begin_layout Standard
@@ -12172,17 +13026,6 @@ status open
 \end_layout
 
 \begin_layout Plain Layout
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-% TODO: Note the location data makes this dangerous
-\end_layout
-
-\end_inset
-
-
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
@@ -12224,12 +13067,11 @@ noprefix "false"
 \end_layout
 
 \begin_layout Standard
-\begin_inset ERT
+\begin_inset Flex TODO Note (Margin)
 status open
 
 \begin_layout Plain Layout
-
-% TODO explicitly define stuck, transition from scare quats
+explicitly define stuck
 \end_layout
 
 \end_inset
@@ -12237,11 +13079,22 @@ status open
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Fact
+\begin_inset Formula $\rightsquigarrow$
+\end_inset
+
+ implies 
+\begin_inset Formula $\Rrightarrow$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Fact
 the following rule is admissible
 \end_layout
 
-\begin_layout Standard
+\begin_layout Fact
 \begin_inset Formula 
 \[
 \frac{m\rightsquigarrow m'}{m\Rrightarrow m'}
@@ -12260,16 +13113,19 @@ Thus
  also preserves types.
 \end_layout
 
-\begin_layout Subsubsection
-Canonical forms
-\end_layout
-
 \begin_layout Standard
 We will need a technical lemma that determines the form of a value of function
  type in an empty context
 \end_layout
 
-\begin_layout Standard
+\begin_layout Lemma
+\begin_inset Formula $\mathsf{fun}$
+\end_inset
+
+-Canonical form (generalized)
+\end_layout
+
+\begin_layout Proof
 If 
 \begin_inset Formula $\vdash v\,:\,P$
 \end_inset
@@ -12298,11 +13154,11 @@ If
 .
 \end_layout
 
-\begin_layout Standard
+\begin_layout Proof
 by induction on the typing derivation
 \end_layout
 
-\begin_layout Standard
+\begin_layout Proof
 \begin_inset Tabular
 <lyxtabular version="3" rows="9" columns="3">
 <features tabularvalignment="middle">
@@ -12654,7 +13510,14 @@ since they do not type values
 as a corollary,
 \end_layout
 
-\begin_layout Standard
+\begin_layout Corollary
+\begin_inset Formula $\mathsf{fun}$
+\end_inset
+
+-Canonical form (generalized)
+\end_layout
+
+\begin_layout Corollary
 If 
 \begin_inset Formula $\vdash v\,:\,\left(x:N\right)\rightarrow M$
 \end_inset
@@ -12680,13 +13543,12 @@ If
 \end_layout
 
 \begin_layout Standard
-\begin_inset ERT
+\begin_inset Flex TODO Note (Margin)
 status open
 
 \begin_layout Plain Layout
-
-%TODO not that by only considering values, we can aviod the problematic
- application case
+note that by only considering values, we can avoid the problematic application
+ case
 \end_layout
 
 \end_inset
@@ -12694,15 +13556,15 @@ status open
 
 \end_layout
 
-\begin_layout Subsubsection
-Progress
+\begin_layout Standard
+Finally we can prove the progress theorem.
 \end_layout
 
-\begin_layout Standard
-Finally we can prove
+\begin_layout Theorem
+Progress 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Theorem
 If 
 \begin_inset Formula $\vdash m\,:\,M$
 \end_inset
@@ -12722,20 +13584,20 @@ If
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Proof
 As usual this follows form induction on the typing derivation
 \end_layout
 
-\begin_layout Standard
+\begin_layout Proof
 \begin_inset Tabular
-<lyxtabular version="3" rows="20" columns="4">
+<lyxtabular version="3" rows="27" columns="4">
 <features tabularvalignment="middle">
 <column alignment="left" valignment="top">
 <column alignment="left" valignment="top">
 <column alignment="left" valignment="top">
 <column alignment="left" valignment="top">
 <row>
-<cell alignment="left" valignment="top" usebox="none">
+<cell multicolumn="1" alignment="left" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -12747,7 +13609,45 @@ As usual this follows form induction on the typing derivation
 
 \end_inset
 </cell>
-<cell alignment="left" valignment="top" usebox="none">
+<cell multicolumn="2" alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -12768,7 +13668,7 @@ As usual this follows form induction on the typing derivation
 
 \end_inset
 </cell>
-<cell alignment="left" valignment="top" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -12820,7 +13720,7 @@ is a value
 </cell>
 </row>
 <row>
-<cell alignment="left" valignment="top" usebox="none">
+<cell multicolumn="1" alignment="left" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -12832,7 +13732,45 @@ is a value
 
 \end_inset
 </cell>
-<cell alignment="left" valignment="top" usebox="none">
+<cell multicolumn="2" alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -12853,7 +13791,7 @@ is a value
 
 \end_inset
 </cell>
-<cell alignment="left" valignment="top" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -12864,7 +13802,7 @@ impossible in an empty context
 </cell>
 </row>
 <row>
-<cell alignment="left" valignment="top" usebox="none">
+<cell multicolumn="1" alignment="left" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -12876,7 +13814,45 @@ impossible in an empty context
 
 \end_inset
 </cell>
-<cell alignment="left" valignment="top" usebox="none">
+<cell multicolumn="2" alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -12901,7 +13877,7 @@ impossible in an empty context
 
 \end_inset
 </cell>
-<cell alignment="left" valignment="top" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -12965,7 +13941,7 @@ by induction on
 </cell>
 </row>
 <row>
-<cell alignment="left" valignment="top" usebox="none">
+<cell multicolumn="1" alignment="left" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -12977,7 +13953,45 @@ by induction on
 
 \end_inset
 </cell>
-<cell alignment="left" valignment="top" usebox="none">
+<cell multicolumn="2" alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -13002,7 +14016,7 @@ by induction on
 
 \end_inset
 </cell>
-<cell alignment="left" valignment="top" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -13178,7 +14192,7 @@ if
 </cell>
 </row>
 <row>
-<cell alignment="left" valignment="top" usebox="none">
+<cell multicolumn="1" alignment="left" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -13190,7 +14204,45 @@ if
 
 \end_inset
 </cell>
-<cell alignment="left" valignment="top" usebox="none">
+<cell multicolumn="2" alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -13211,7 +14263,7 @@ if
 
 \end_inset
 </cell>
-<cell alignment="left" valignment="top" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -13263,7 +14315,7 @@ if
 </cell>
 </row>
 <row>
-<cell alignment="left" valignment="top" usebox="none">
+<cell multicolumn="1" alignment="left" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -13275,7 +14327,45 @@ if
 
 \end_inset
 </cell>
-<cell alignment="left" valignment="top" usebox="none">
+<cell multicolumn="2" alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -13296,7 +14386,7 @@ if
 
 \end_inset
 </cell>
-<cell alignment="left" valignment="top" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -13348,13 +14438,51 @@ if
 </cell>
 </row>
 <row>
-<cell alignment="left" valignment="top" usebox="none">
+<cell multicolumn="1" alignment="left" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
 \begin_inset Formula $\textrm{ty-fun-app}$
 \end_inset
 
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
 
 \end_layout
 
@@ -13385,7 +14513,7 @@ if
 
 \end_inset
 </cell>
-<cell multicolumn="2" alignment="left" valignment="top" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -13703,7 +14831,7 @@ Progress via call-by-value can be seen as a specific sub-strategy of
 \begin_inset Formula $\rightsquigarrow$
 \end_inset
 
- until the the outermost constructor has completed.
+ until the the outermost computation has completed.
 \end_layout
 
 \begin_layout Subsection
@@ -13724,47 +14852,43 @@ get stuck
 \end_layout
 
 \begin_layout Standard
-\begin_inset ERT
+\begin_inset Flex TODO Note (Margin)
 status open
 
 \begin_layout Plain Layout
-
-% TODO: TODO be explicit about the disconnect between type computation via
- par, and term level cbv
+be explicit about the disconnect between type computation via par, and term
+ level cbv
 \end_layout
 
 \end_inset
 
- 
+
 \end_layout
 
 \begin_layout Standard
-\begin_inset ERT
+\begin_inset Flex TODO Note (Margin)
 status open
 
 \begin_layout Plain Layout
-
-% TODO: other properties, such as regularity?
+regularity!
 \end_layout
 
 \end_inset
 
- 
+
 \end_layout
 
 \begin_layout Standard
-\begin_inset ERT
+\begin_inset Flex TODO Note (Margin)
 status open
 
 \begin_layout Plain Layout
-
-% TODO: other lemmas not needed for this proof, par max is par, inversions
- 
+other lemmas not needed for this proof, par max is par, inversions?
 \end_layout
 
 \end_inset
 
- 
+
 \end_layout
 
 \begin_layout Subsection
@@ -13773,7 +14897,7 @@ Type checking is impractical
 
 \begin_layout Standard
 This type system is inherently non-local.
- No type annotations are ever required to form a derivation.
+ No type annotations are ever required to form a typing derivation.
  That means it would be up to a type checking algorithm to guess the types
  of intermediate terms.
  For instance, 
@@ -13803,13 +14927,14 @@ what should be deduced for the type of
 
 .
  But there are infinitely other possibilities.
- Worse, if there is an error, it may be impossible to localize.
+ Worse, if there is an error, it may be impossible to localize to a specific
+ region of code.
  To make a practical type checker we need to insist that the user include
  some type annotations.
 \end_layout
 
 \begin_layout Section
-Bi-directional Surface Language
+Bidirectional Surface Language
 \end_layout
 
 \begin_layout Standard
@@ -13829,7 +14954,7 @@ status open
 \begin_layout Standard
 There are many possible way to localize the type checking process.
  We could ask that all variable be annotated at binders.
- This is ideal from a theoretical perspective, since it matches how type
+ This is good from a theoretical perspective, since it matches how type
  contexts are built up.
 \end_layout
 
@@ -13842,19 +14967,20 @@ However note that, our proof of
 \end_layout
 
 \begin_layout Standard
-\begin_inset Formula $\lambda pr:1_{c}\doteq_{\mathbb{N}_{c}}0_{c}\Rightarrow pr\,\left(\lambda n:\left(C:\left(\mathbb{N}_{c}\rightarrow\star\right)\right)\rightarrow C\,1_{c}\rightarrow C\,0_{c}\Rightarrow n\,\star\,(\lambda-:\star\Rightarrow Unit_{c})\,\perp_{c}\right)\,tt_{c}:\lnot1_{c}\doteq_{\mathbb{N}_{c}}0_{c}$
+\begin_inset Formula $\lambda pr\underline{:1_{c}\doteq_{\mathbb{N}_{c}}0_{c}}\Rightarrow pr\,\left(\lambda n:\underline{\left(C:\left(\mathbb{N}_{c}\rightarrow\star\right)\right)\rightarrow C\,1_{c}\rightarrow C\,0_{c}}\Rightarrow n\,\star\,(\lambda-:\underline{\star\Rightarrow Unit_{c}})\,\perp_{c}\right)\,tt_{c}:\underline{\lnot1_{c}\doteq_{\mathbb{N}_{c}}0_{c}}$
 \end_inset
 
 
 \end_layout
 
 \begin_layout Standard
-Annotating every binding site requires a lot of redundant information.
+More then half of the term is type annotations! Annotating every binding
+ site requires a lot of redundant information.
  Luckily there's a better way.
 \end_layout
 
 \begin_layout Subsection
-Bidirectional type checking
+Bidirectional Type Checking
 \end_layout
 
 \begin_layout Standard
@@ -13863,7 +14989,7 @@ Bidirectional type checking
 Bidirectional type checking
 \series default
  is a popular form of lightweight type inference, which strikes a good compromis
-e between the required type annotations and the simplicity of the theory,
+e between the required type annotations and the simplicity of the procedure,
  allowing for localized errors 
 \begin_inset Foot
 status open
@@ -13924,19 +15050,18 @@ Even in Haskell, with full Hindley-Milner type inference, top level type
 \end_inset
 
 
-\begin_inset ERT
+\begin_inset Flex TODO Note (Margin)
 status open
 
 \begin_layout Plain Layout
-
-%TODO ref style guide.
- the point was simialarly made in Agda thesis.
+ref style guide.
+ the point was similarly made in Agda thesis.
 \end_layout
 
 \end_inset
 
 .
- In fact, every example in 
+ In fact, almost every example in 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:surface-examples"
@@ -13985,11 +15110,15 @@ Type Checking
 \begin_layout Standard
 This allows typing information to flow from the outside in for type checking
  judgments and inside out for the type inference judgments.
+ A check can be induced manually with a type annotation.
  When an inference meets a check, a conversion verifies that the types are
  definitionally equal.
- This has the advantage of precisely limiting where conversion rule can
- be used, since conversion checking is usually an efficient part of dependent
- type checking.
+ This has the advantage of precisely limiting where the 
+\begin_inset Formula $\operatorname{ty-conv}$
+\end_inset
+
+ rule can be used, since conversion checking is usually an inefficient part
+ of dependent type checking.
 \end_layout
 
 \begin_layout Standard
@@ -13997,7 +15126,7 @@ This enforced flow results in a system that localizes type errors.
  If a type was inferred, it was unique from the term, so it can be used
  freely.
  Checking judgments force terms that could have multiple typings in the
- previous system to have at most one type.
+ TAS to have at most one type.
 \end_layout
 
 \begin_layout Standard
@@ -14121,8 +15250,8 @@ noprefix "false"
 \end_layout
 
 \begin_layout Standard
-As mentioned, bidirectional type checking handles higher order inputs very
- well.
+As mentioned, bidirectional type checking handles higher order functions
+ very well.
  For instance, the expression 
 \begin_inset Formula $\vdash(\lambda x\Rightarrow x\,(\lambda y\Rightarrow y)\,2)\overleftarrow{\,:\,}\left(\left(\mathbb{N}\rightarrow\mathbb{N}\right)\rightarrow\mathbb{N}\rightarrow\mathbb{N}\right)\rightarrow\mathbb{N}$
 \end_inset
@@ -14141,7 +15270,7 @@ As mentioned, bidirectional type checking handles higher order inputs very
 
 \begin_layout Standard
 Unlike the undirected judgments of the Type Assignment System, the inference
- rule of the the bidirectional system does not convert, it us unique up
+ rule of the the bidirectional system does not convert, it is unique up
  to syntax! For example 
 \begin_inset Formula $x:Vec\,3\vdash x\overrightarrow{\,:\,}Vec\,3$
 \end_inset
@@ -14151,42 +15280,29 @@ Unlike the undirected judgments of the Type Assignment System, the inference
 \end_inset
 
 .
- This could cause unexpected behavior around function applications if 
+ This could cause unexpected behavior around function applications.
+ For instance, if 
 \begin_inset Formula $\Gamma\vdash m\overrightarrow{\,:\,}\mathbb{N}\rightarrow\mathbb{N}$
 \end_inset
 
  then 
-\begin_inset Formula $m\:7$
+\begin_inset Formula $\Gamma\vdash m\:7\overrightarrow{\,:\,}\mathbb{N}$
 \end_inset
 
- will infer, but if the 
+ will infer, but only because the 
 \begin_inset Formula $\rightarrow$
 \end_inset
 
- from bing in the head position of the type even under another cast, for
- instance 
+ is in the head position of the type 
+\begin_inset Formula $\mathbb{N}\underline{\rightarrow}\mathbb{N}$
+\end_inset
+
+.
+ If 
 \begin_inset Formula $\Gamma\vdash m\overrightarrow{\,:\,}\left(\mathbb{N}\rightarrow\mathbb{N}::\star\right)$
 \end_inset
 
  then 
-\begin_inset Formula $m\:7$
-\end_inset
-
- will will not infer.
-\end_layout
-
-\begin_layout Standard
-The reverse issue is possible around Check rules against function definitions.
- For instance 
-\begin_inset Formula $\left((\lambda x\Rightarrow x)::\mathbb{N}\rightarrow\mathbb{N}\right)$
-\end_inset
-
- will infer, but if computation blocks the 
-\begin_inset Formula $\rightarrow$
-\end_inset
-
- from bing in the head position, inference will be impossible.
- As in this expression, 
 \family roman
 \series medium
 \shape up
@@ -14200,7 +15316,85 @@ The reverse issue is possible around Check rules against function definitions.
 \noun off
 \color none
 
-\begin_inset Formula $\left((\lambda x\Rightarrow x)::\left(\mathbb{N}\rightarrow\mathbb{N}::\star\right)\right)$
+\begin_inset Formula $::$
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+ is in the head position of 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $\mathbb{N}\rightarrow\mathbb{N}\underline{::}\star$
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+ and 
+\begin_inset Formula $\Gamma\cancel{\vdash}m\ 7\overrightarrow{\,:\,}\mathbb{N}$
+\end_inset
+
+ will will not infer.
+\end_layout
+
+\begin_layout Standard
+The similar issue is possible around check rules around function definitions.
+ For instance, 
+\begin_inset Formula $\vdash\left((\lambda x\Rightarrow x)::\mathbb{N}\rightarrow\mathbb{N}\right)\ \overrightarrow{\,:\,}\mathbb{N}\rightarrow\mathbb{N}$
+\end_inset
+
+ will infer, but if computation blocks the 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ from being in the head position, inference will be impossible.
+ As in the expression, 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $\left((\lambda x\Rightarrow x)::\left(\mathbb{N}\rightarrow\mathbb{N}\underline{::}\star\right)\right)$
 \end_inset
 
  
@@ -14289,11 +15483,14 @@ literal "false"
 \noun default
 \color inherit
 
-\begin_inset Flex TODO Note (inline)
-status open
+\begin_inset CommandInset citation
+LatexCommand cite
+key "norell2007towards"
+literal "false"
 
-\begin_layout Plain Layout
+\end_inset
 
+ 
 \family roman
 \series medium
 \shape up
@@ -14306,34 +15503,28 @@ status open
 \uwave off
 \noun off
 \color none
-Cite Ulf
+even preform unification as part of their bidirectional type checking.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+alternative listed in appendix
 \end_layout
 
 \end_inset
 
 
-\family roman
-\series medium
-\shape up
-\size normal
-\emph off
-\bar no
-\strikeout off
-\xout off
-\uuline off
-\uwave off
-\noun off
-\color none
- even preform unification as part of their bidirectional type checking.
 \end_layout
 
 \begin_layout Standard
-\begin_inset ERT
+\begin_inset Flex TODO Note (inline)
 status open
 
 \begin_layout Plain Layout
-
-% TODO what else does the algorithm infer not listed here
+what else does the algorithm infer not listed here
 \end_layout
 
 \end_inset
@@ -14361,7 +15552,7 @@ status open
 
 \begin_layout Plain Layout
 Clearly explain why this is needed for the cast system, annotating every
- var is combersome, constraint solving is iffy when things may be undecidable
+ var is cumbersome, constraint solving is iffy when things may be undecidable
 \end_layout
 
 \end_inset
@@ -14371,7 +15562,7 @@ Clearly explain why this is needed for the cast system, annotating every
 
 \begin_layout Standard
 This document opts for the simplest possible presentation, of bidirectional
- types.
+ type checking.
  There will always be ways to make type inference more powerful, at the
  cost of complexity.
 \end_layout
@@ -14396,7 +15587,11 @@ literal "false"
  a type assignment system typing judgment.
 \end_layout
 
-\begin_layout Itemize
+\begin_layout Theorem
+Bidirectional implies TAS
+\end_layout
+
+\begin_layout Theorem
 if 
 \begin_inset Formula $\Gamma\vdash m\overrightarrow{\,:\,}M$
 \end_inset
@@ -14408,7 +15603,7 @@ if
 
 \end_layout
 
-\begin_layout Itemize
+\begin_layout Theorem
 if 
 \begin_inset Formula $\Gamma\vdash m\overleftarrow{\,:\,}M$
 \end_inset
@@ -14420,7 +15615,7 @@ if
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Proof
 by mutual induction on the bidirectional typing derivations.
  
 \end_layout
@@ -14430,37 +15625,39 @@ Therefore the bidirectional system is also type sound.
 \end_layout
 
 \begin_layout Subsection
-The TAS System is annotatable
+The TAS System is weakly annotatable by the Bidirectional System
+\end_layout
+
+\begin_layout Standard
+In Bidirectional systems, 
+\series bold
+annotatability
+\series default
+
 \begin_inset Foot
 status open
 
 \begin_layout Plain Layout
-also called completeness
+also called 
+\series bold
+completeness
 \end_layout
 
 \end_inset
 
- by the Bidirectional System
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-%TODO complete is more common?
-\end_layout
-
+ is the property that any expression that types in a TAS will type in the
+ bidirectional system with only additional annotations.
+ This property doesn't exactly hold for the bidirectional system presented
+ here.
+ For instance, 
+\begin_inset Formula $\vdash\left((\lambda x\Rightarrow x)::\left(\mathbb{N}\rightarrow\mathbb{N}::\star\right)\right)$
 \end_inset
 
-
-\end_layout
-
-\begin_layout Standard
-Additionally we can show that the bidirectional system does not preclude
- any computation available in the type assignment system, though annotations
- may need to be added (or removed
+ type checks in the TAS system, but no amount of annotations will make it
+ check in the bidirectional system.
+ Instead we can show that the bidirectional system does not preclude any
+ computation available in the TAS, though annotations may need to be added
+ (or removed
 \begin_inset ERT
 status open
 
@@ -14472,19 +15669,23 @@ status open
 \end_inset
 
 ).
- Formally
+ We will call this property 
+\series bold
+weak annotatability
+\series default
+.
 \end_layout
 
-\begin_layout Itemize
+\begin_layout Theorem
+weak annotatability.
+\end_layout
+
+\begin_layout Theorem
 if 
 \begin_inset Formula $\Gamma\vdash m\,:\,M$
 \end_inset
 
  then 
-\begin_inset Formula $\Gamma\vdash m'\overrightarrow{\,:\,}M'$
-\end_inset
-
- , 
 \begin_inset Formula $\Gamma\vdash m'\overleftarrow{\,:\,}M'$
 \end_inset
 
@@ -14499,7 +15700,27 @@ if
  
 \end_layout
 
-\begin_layout Standard
+\begin_layout Theorem
+if 
+\begin_inset Formula $\Gamma\vdash m\,:\,M$
+\end_inset
+
+ then 
+\begin_inset Formula $\Gamma\vdash m'\overrightarrow{\,:\,}M'$
+\end_inset
+
+ , 
+\begin_inset Formula $m\equiv m'$
+\end_inset
+
+ and 
+\begin_inset Formula $M\equiv M'$
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Proof
 by induction on the typing derivation, adding and removing annotations at
  each step that are convertible with the original 
 \begin_inset Formula $m$
@@ -14508,7 +15729,20 @@ by induction on the typing derivation, adding and removing annotations at
 
 \end_layout
 
-\begin_layout Section
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+slight changes have been made, double check this
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
 Absent Logical Properties
 \end_layout
 
@@ -14520,7 +15754,7 @@ When type systems are used as logics, it is desirable that
 There exists an empty type that is uninhabited in the empty context, so
  the system is 
 \series bold
-logically sound
+logically consistent
 \series default
 
 \begin_inset Foot
@@ -14528,14 +15762,8 @@ status open
 
 \begin_layout Plain Layout
 also called 
-\begin_inset Quotes eld
-\end_inset
-
-consistent
-\begin_inset Quotes erd
-\end_inset
-
-
+\series bold
+sound
 \end_layout
 
 \end_inset
@@ -14550,7 +15778,7 @@ Type checking is decidable.
 \begin_layout Standard
 Neither the TAS system or the Bidirectional systems has these properties
 \begin_inset Foot
-status collapsed
+status open
 
 \begin_layout Plain Layout
 These properties are usually shown be showing that the computation that
@@ -14563,7 +15791,16 @@ literal "false"
 
 \end_inset
 
- 
+.
+ Another excellent tutorial can be fund in Chapter 2 in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "casinghino2014combiningthesis"
+literal "false"
+
+\end_inset
+
+
 \end_layout
 
 \end_inset
@@ -14575,8 +15812,8 @@ status open
 
 \begin_layout Plain Layout
 
-% TODO: aparently that note from Chris Casinghino is dead http://prosecco.gforge.i
-nria.fr/personal/hritcu/temp/snforcc.pdf
+% aparently that note from Chris Casinghino is dead http://prosecco.gforge.inria.fr
+/personal/hritcu/temp/snforcc.pdf
 \end_layout
 
 \end_inset
@@ -14584,12 +15821,24 @@ nria.fr/personal/hritcu/temp/snforcc.pdf
 
 \end_layout
 
-\begin_layout Subsection
-Logical Unsoundness
+\begin_layout Subsubsection
+Logical Inconsistency
 \end_layout
 
 \begin_layout Standard
-The surface language is logically unsound, every type is inhabited.
+The surface language is logically inconsistent
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+also called 
+\series bold
+Unsoundness
+\end_layout
+
+\end_inset
+
+, every type is inhabited.
  
 \end_layout
 
@@ -14607,25 +15856,56 @@ status open
 
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Example
 Every Type is Inhabited (by recursion)
 \end_layout
 
-\begin_layout Standard
+\begin_layout Example
 \begin_inset Formula $\mathsf{fun}\,f\,x\Rightarrow f\,x\qquad:\perp_{c}$
 \end_inset
 
 
 \end_layout
 
-\begin_layout Subsubsection
-Every Type is Inhabited (by Type-in-type)
-\end_layout
-
 \begin_layout Standard
 It is possible to encode Girard's paradox, producing another source of logical
  unsoundness.
- A subtle form of recursive behavior can be built out of Gerard's paradox
+ 
+\end_layout
+
+\begin_layout Example
+Every Type is Inhabited (by Type-in-type)
+\end_layout
+
+\begin_layout Example
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+full example
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Example
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+cite stuff (see https://stackoverflow.com/questions/18178999/do-agda-programs-nec
+essarily-terminate), of course this hapens in Girard's french thesis
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+A subtle form of recursive behavior can be built out of Gerard's paradox
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Reinhold89typecheckingis"
@@ -14643,26 +15923,6 @@ status open
 
 \begin_layout Plain Layout
 
-% TODO: cite stuff (see https://stackoverflow.com/questions/18178999/do-agda-prog
-rams-necessarily-terminate), 
-\end_layout
-
-\begin_layout Plain Layout
-
-% of course this hapens in Girard's french thesis
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
 % I am unaware of anyone accidentally deriving a falsehood from type-in-type.
  
 \end_layout
@@ -14672,12 +15932,8 @@ status open
 
 \end_layout
 
-\begin_layout Subsubsection
-Logical Unsoundness
-\end_layout
-
 \begin_layout Standard
-Operationally, logical unsoundness will be recognized by programmers as
+Operationally, logical inconsistency will be recognized by programmers as
  non-termination.
  Non-termination seems not to matter for programming languages in practice.
  For instance, in ML the type 
@@ -14695,7 +15951,7 @@ Operationally, logical unsoundness will be recognized by programmers as
  even though termination is not guaranteed by the type system.
  Importantly, no desirable computation is prevented in order to preserve
  logical soundness.
- There will never be a way to include all the terminating computations and
+ There will never be a way to allow all the terminating computations and
  exclude all the nonterminating computations.
  A tradeoff must be made, and programmers likely care more about having
  all possible computations then preventing non-termination.
@@ -14704,13 +15960,12 @@ ng language.
 \end_layout
 
 \begin_layout Standard
-\begin_inset ERT
+\begin_inset Flex TODO Note (Margin)
 status open
 
 \begin_layout Plain Layout
-
-% TODO: argue from the Blum proof?  Allowing non-termination makes writeing
- termination programs easier.
+argue from the Blum proof?  Allowing non-termination makes writeing termination
+ programs easier.
 \end_layout
 
 \end_inset
@@ -14719,12 +15974,11 @@ status open
 \end_layout
 
 \begin_layout Standard
-\begin_inset ERT
+\begin_inset Flex TODO Note (Margin)
 status open
 
 \begin_layout Plain Layout
-
-% TODO: add ref to inequalities
+add ref to inequalities
 \end_layout
 
 \end_inset
@@ -14747,11 +16001,12 @@ While the surface language supports proofs, not every term typed in the
  Even though the type system is not logically sound, type checking still
  eliminates a large class of possible mistakes.
  While it is possible to make a subtle error, it is easier to make an error
- in a paper and pencil proofs, or in typeset latex.
+ in a paper and pencil proofs, or in typeset \SpecialChar LaTeX
+.
 \end_layout
 
 \begin_layout Standard
-Finally by separating non-termination concerns from the core of the theory
+Finally by separating non-termination concerns from the core of the theory,
  this architecture is resilient to change.
  If the termination checker is updated in Coq, there is some chance older
  proof scripts will no longer type check.
@@ -14759,11 +16014,15 @@ Finally by separating non-termination concerns from the core of the theory
  and dynamic behavior, though some warnings might appear or disappear.
 \end_layout
 
-\begin_layout Subsection
+\begin_layout Subsubsection
 Type Checking is Undecidable
 \end_layout
 
-\begin_layout Standard
+\begin_layout Theorem
+Type Checking is Undecidable
+\end_layout
+
+\begin_layout Proof
 Given a thunk 
 \begin_inset Formula $f:Unit$
 \end_inset
@@ -14787,7 +16046,7 @@ Given a thunk
  
 \end_layout
 
-\begin_layout Standard
+\begin_layout Proof
 \begin_inset Formula $\vdash\star:f'\,\star\,\star$
 \end_inset
 
@@ -14811,7 +16070,7 @@ Given a thunk
  halts.
 \end_layout
 
-\begin_layout Standard
+\begin_layout Proof
 If there is a procedure to decide type checking we can decide exactly when
  any PCF function halts.
  Since checking if a PCF function halts is undecidable, type checking here
@@ -14820,8 +16079,8 @@ If there is a procedure to decide type checking we can decide exactly when
 
 \begin_layout Standard
 Again this the root of the problem is the non-termination that results by
- allowing Turing complete computations, which are apparently necessary for
- a realistic programing language.
+ allowing Turing complete computations, which are seem necessary in a realistic
+ programing language.
 \end_layout
 
 \begin_layout Standard
@@ -14830,7 +16089,7 @@ Luckily undecidability of type checking is not as bad as it sounds for several
  First, the pathological terms that cause non-terminating conversion are
  rarely created on purpose.
  In the bidirectional system, conversion checks will only happen at limited
- positions, ant it is possible to use a counter to warn or give errors at
+ positions, and it is possible to use a counter to warn or give errors at
  code positions that do not convert because normalization takes too long.
  Heuristic methods of conversion checking seem to work well enough in practice
  even without a counter.
@@ -14867,46 +16126,16 @@ Many dependent type systems, such as Agda, Coq, and Lean, aspire to decidable
 \end_layout
 
 \begin_layout Standard
-\begin_inset ERT
+\begin_inset Flex TODO Note (Margin)
 status open
 
 \begin_layout Plain Layout
-
-% TODO extract example
+make sure I'm not missing any langs, C#...?
 \end_layout
 
 \end_inset
 
 
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-% cite this blog https://existentialtype.wordpress.com/2014/03/20/old-neglected-th
-eorems-are-still-theorems/
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-% TODO make sure I'm not missing any langs, C#...?
-\end_layout
-
-\end_inset
-
- 
 \end_layout
 
 \begin_layout Standard
@@ -14936,8 +16165,7 @@ without a maximum search depth
 
 \end_inset
 
- and OCaml modules, make type checking undecidable in those languages respective
-ly).
+ and OCaml modules, make type checking undecidable in those languages).
  Haskell may be the most popular statically typed language with decidable
  type checking (though GHC compiler flags that make type checking undecidable
  are popular).
@@ -14957,7 +16185,7 @@ worst case
 \end_inset
 
  code.
- Even if they did, the worst that can happen is the type checking will time-out
+ Even if they did, the worst that can happen is the type checking will hang
  in the compilation process.
  When this happens programmers can fix their code, modify or remove macros,
  or add typing annotations.
@@ -14966,15 +16194,27 @@ worst case
  Programs regularly delete files, read and modify sensitive information,
  and send emails (some of these are even possible from within the language's
  macro systems).
- Relatively speaking, undecidable type checking is not the biggest concern.
+ Relatively speaking, undecidable type checking is not a programmers the
+ biggest concern.
 \end_layout
 
 \begin_layout Standard
-Finally, for the system descried in this thesis, users are expected to use
- the elaboration procedure defined in the next chapter that will bypass
- the type checking described here.
- That elaboration procedures is also undecidable, but only for extremely
+Most importantly for the system described in this thesis, users are expected
+ to use the elaboration procedure defined in the next chapter that will
+ bypass the type checking described here.
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+% That elaboration procedures is also undecidable, but only for extremely
  pathological terms.
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
@@ -15007,8 +16247,18 @@ There may, indeed, be other applications of the system than its use as a
 \end_inset
 
 .
- In the 1970s, Martin-Löf proposed a system with type-in-type that was shown
- logically unsound by Girard (as described in the introduction in 
+ In the 1970s, Per Martin-Löf proposed a system with type-in-type
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+cite it?
+\end_layout
+
+\end_inset
+
+ that was shown logically unsound by Girard (as described in the introduction
+ in 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Martin-Lof-1972"
@@ -15018,8 +16268,7 @@ literal "false"
 
 ).
  In the 1980s, Cardelli explored the domain semantics of a system with general
- recursive dependent functions and type-in-type, and produced more good
- examples 
+ recursive dependent functions and type-in-type 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "cardelli1986polymorphic"
@@ -15029,23 +16278,12 @@ literal "false"
 
 .
  
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-%TODO cite origional if I can find it
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Standard
 The first progress and preservation style proof of type soundness for a
- language with general recursive dependent functions and type-in-type that
- I am aware of comes form the Trellys Project 
+ language with general recursive dependent functions and type-in-type seem
+ to come form the Trellys Project 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "sjoberg2012irrelevance"
@@ -15126,13 +16364,12 @@ https://github.com/sweirich/trellys
 \end_layout
 
 \begin_layout Standard
-\begin_inset ERT
+\begin_inset Flex TODO Note (Margin)
 status open
 
 \begin_layout Plain Layout
-
-% TODO type in type as a well wknown shortcut, videos of Andraj, Conner
- MB saying it 
+type in type as a well wknown shortcut, videos of Andraj, Conner MB saying
+ it 
 \end_layout
 
 \end_inset
@@ -15141,24 +16378,19 @@ status open
 \end_layout
 
 \begin_layout Standard
-\begin_inset ERT
+\begin_inset Flex TODO Note (Margin)
 status open
 
 \begin_layout Plain Layout
-
-% TODO section on bidirectional dependent type systems, citing http://www.cse.chal
-mers.se/~nad/publications/altenkirch-et-al-flops2010.pdf https://www.seas.upenn.edu/~
-sweirich/papers/congruence-extended.pdf posibly https://arxiv.org/pdf/1203.4716.pdf
+section on bidirectional dependent type systems, citing http://www.cse.chalmers.se/
+~nad/publications/altenkirch-et-al-flops2010.pdf https://www.seas.upenn.edu/~sweiric
+h/papers/congruence-extended.pdf posibly https://arxiv.org/pdf/1203.4716.pdf
  https://drops.dagstuhl.de/opus/volltexte/2021/13919/pdf/LIPIcs-ITP-2021-24.pdf
-\end_layout
-
-\begin_layout Plain Layout
-
 \end_layout
 
 \end_inset
 
- 
+
 \end_layout
 
 \begin_layout Subsection
@@ -15166,8 +16398,8 @@ Implementations
 \end_layout
 
 \begin_layout Standard
-Several programming language implementations support this combination of
- features (though none prove type soundness).
+Several programming language implementations support features of the surface
+ language without a proof of type soundness.
  Pebble
 \begin_inset CommandInset citation
 LatexCommand cite
@@ -15177,7 +16409,17 @@ literal "false"
 \end_inset
 
  was a very early language with dependent types, though conversion did not
- associate alpha equivalent types 
+ associate alpha equivalent types
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+if saying alpha need to define it
+\end_layout
+
+\end_inset
+
+ 
 \begin_inset Foot
 status open
 
@@ -15214,9 +16456,9 @@ literal "false"
 
 \end_inset
 
- is a Haskell like language that combines dependent types with type-in-type
+ is a Haskell like language that combines dependent types with type in type
  and non-termination.
- Agda supports general recursion and type-in-type with compiler flags.
+ Agda supports general recursion and type in type with compiler flags.
  Idris supports similar 
 \begin_inset Quotes eld
 \end_inset
@@ -15226,6 +16468,19 @@ unsafe
 \end_inset
 
  features.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+macro for type in type
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
@@ -15257,14 +16512,10 @@ status open
 
 \begin_layout Plain Layout
 called 
-\begin_inset Quotes eld
-\end_inset
-
+\series bold
 prop
-\begin_inset Quotes erd
-\end_inset
-
-
+\series default
+, for proposition
 \end_layout
 
 \end_inset
@@ -15293,27 +16544,31 @@ in the sense that function types can quantify over
 
 .
  For instance, the polymorphic identity 
-\begin_inset Formula $(X:\star)\rightarrow X\rightarrow X$
+\begin_inset Formula $id:(X:\star)\rightarrow X\rightarrow X$
 \end_inset
 
  has type 
 \begin_inset Formula $\star$
 \end_inset
 
- so the polymorphic identity can be applied to itself.
+ so the polymorphic identity can be applied to itself, 
+\begin_inset Formula $id\,\left((X:\star)\rightarrow X\rightarrow X\right)\,id$
+\end_inset
+
+.
  From the perspective of the surface language this impredictivity is modest,
  but still causes issues in the presence of classical logical assumptions
-\begin_inset ERT
+ 
+\begin_inset Flex TODO Note (Margin)
 status open
 
 \begin_layout Plain Layout
-
-% TODO Cite
+Cite
 \end_layout
 
 \end_inset
 
- .
+.
  Many of the examples form this chapter are adapted from examples that were
  first worked out for the Calculus of Constructions.
 \end_layout
@@ -15329,7 +16584,7 @@ literal "false"
 
 \end_inset
 
-, extends the calculus of constructions with a predicative hierarchy of
+, extends the Calculus of Constructions with a predicative hierarchy of
  universes and dependent pair types.
  The Implicit Calculus of Constructions (ICC)
 \begin_inset CommandInset citation
@@ -15341,25 +16596,17 @@ literal "false"
 
  presents an extrinsic typing system
 \begin_inset Foot
-status collapsed
+status open
 
 \begin_layout Plain Layout
 Sometimes called 
-\begin_inset Quotes eld
-\end_inset
-
+\series bold
 Curry-style
-\begin_inset Quotes erd
-\end_inset
-
+\series default
 , in contrast to intrinsic systems which are sometimes called 
-\begin_inset Quotes eld
-\end_inset
-
+\series bold
 Church-style
-\begin_inset Quotes erd
-\end_inset
-
+\series default
 .
 \end_layout
 
@@ -15378,12 +16625,12 @@ sets
 
 ).
  Other extensions to the Calculus of Constructions that are primarily concerned
- with data (UCC, CIC) will be reviewed in chapter 4.
+ with data will be surveyed in Chapter 4.
 \end_layout
 
 \begin_layout Standard
 The lambda cube is a system for relating 8 interesting typed lambda caluli
- in relation to each other.
+ to each other.
  Presuming terms should always depend on terms, there are 3 additional dimension
 s of dependency: term depending on types, types dependent on types, and
  types depending on terms.
@@ -15411,12 +16658,12 @@ literal "false"
 \end_layout
 
 \begin_layout Standard
-\begin_inset ERT
+\begin_inset Flex TODO Note (Margin)
 status open
 
 \begin_layout Plain Layout
-
-% TODO bresumably Barndrct was the first one to put it in a cube
+presumably Barndrct was the first one to put it in a cube, but don't have
+ a good citation
 \end_layout
 
 \end_inset
@@ -15431,14 +16678,8 @@ status open
 
 \begin_layout Plain Layout
 previously called 
-\begin_inset Quotes eld
-\end_inset
-
+\series bold
 Generalized Type Systems
-\begin_inset Quotes erd
-\end_inset
-
-
 \end_layout
 
 \end_inset
@@ -15456,15 +16697,14 @@ Generalized Type Systems
 \end_layout
 
 \begin_layout Standard
-\begin_inset ERT
+\begin_inset Flex TODO Note (Margin)
 status open
 
 \begin_layout Plain Layout
-
-% TODO citations for PTS: (Terlouw, 1989; Berardi, 1988; Barendregt, 1991,
- 1992; Jutting, McKinna, and Pollack, 1994; McKinna and Pollack, 1993; Pollack,
+citations for PTS: (Terlouw, 1989; Berardi, 1988; Barendregt, 1991, 1992;
+ Jutting, McKinna, and Pollack, 1994; McKinna and Pollack, 1993; Pollack,
  1994).
- Acording to TAPL
+ According to TAPL
 \end_layout
 
 \end_inset
@@ -15473,7 +16713,7 @@ status open
 \end_layout
 
 \begin_layout Standard
-As previously mentioned Martin Lof Type Theory (MTLL) 
+As previously mentioned Martin Löf Type Theory (MTLL) 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Martin-Lof-1972"
@@ -15483,7 +16723,7 @@ literal "false"
 
  is one of the oldest frameworks for dependent type systems.
  MLTT is designed to be open, so that new constructs can be added with the
- appropriate introduction, elimination, and typing rules.
+ appropriate introduction, elimination, computation, and typing rules.
  The base system comes with a predicative hierarchy of universes, and at
  least dependently typed functions and a propositional equality type.
  The system has two flavors characterized by it's handling of definitional
@@ -15491,7 +16731,7 @@ literal "false"
  If types are only identified by convertibility (as every system described
  so far) it is called Intentional Type Theory (ITT).
  If the system allows proofs of equality to associate types, it is called
- Extensional Type Theory.
+ Extensional Type Theory (ETT).
  Since MTLL is open ended, the Calculus of Constructions can be added to
  it as a subsystem
 \begin_inset CommandInset citation
@@ -15501,75 +16741,51 @@ literal "false"
 
 \end_inset
 
+
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+double check these
+\end_layout
+
+\end_inset
+
 .
 \end_layout
 
 \begin_layout Standard
-\begin_inset ERT
+\begin_inset Flex TODO Note (Margin)
 status open
 
 \begin_layout Plain Layout
-
-% TODO cite the autosubst proof
+go back to Russle?
 \end_layout
 
 \end_inset
 
- 
+
 \end_layout
 
 \begin_layout Standard
-\begin_inset ERT
+\begin_inset Flex TODO Note (Margin)
 status open
 
 \begin_layout Plain Layout
-
-% TODO go back to Russle?
+solving universe constraints?
 \end_layout
 
 \end_inset
 
- 
+
 \end_layout
 
 \begin_layout Standard
-\begin_inset ERT
+\begin_inset Flex TODO Note (Margin)
 status open
 
 \begin_layout Plain Layout
-
-% TODO sloving universe constraints
-\end_layout
-
-\end_inset
-
- 
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-% avoid data heavey presentations (LIKE UTT, CIC) until CH4
-\end_layout
-
-\end_inset
-
- 
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-% TODO read through the inro of https://link.springer.com/book/10.1007/978-1-4471-0
-963-1#toc when was it published? what is the relation to his thesis? Is
- chapter 1 https://www.tcs.ifi.lmu.de/mitarbeiter/martin-hofmann/pdfs/syntaxandseman
-ticsof-dependenttypes.pdf worth skiming theough eiterh way 
+cite the autosubst proof
 \end_layout
 
 \end_inset
