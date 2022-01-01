@@ -5,10 +5,21 @@ all work related to my thesis document, will eventually become public
 latest draft availible [here](https://github.com/marklemay/thesis/releases)
 
 ## What to Review
+Where are you first confused?
+Where do you first get board?
 * Chapter 1
   * is a pluasable argument made
 * Chapter 2
-  * proofs and formalizms
+  * proofs correct 
+  * formalisms are well motivated
+  * formalisms are "standard"
+  * prior work is correct
+* Chapter 3
+  * proofs correct 
+  * formalisms are well motivated
+* Chapter 4
+  * formalisms are well motivated
+  * prior work is correct
 
 ## compile pdf
 need to pull bibliography in with

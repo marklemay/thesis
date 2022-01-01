@@ -124,7 +124,7 @@ Introduce this section
 
 \end_layout
 
-\begin_layout Part
+\begin_layout Section
 Symbolic Execution
 \end_layout
 
@@ -259,7 +259,7 @@ A one hole context
 status open
 
 \begin_layout Plain Layout
-cite
+cite? other people don't
 \end_layout
 
 \end_inset
@@ -325,8 +325,8 @@ cite
 This process is semi-decidable in general (by enumerating all well typed
  syntax).
  But testing every term is infeasibly inefficient for functions and types.
- An approximate approach can build partial contexts, that are correct up
- to some constraint.
+ An approximate approach can build partial contexts based on fixing observations.
+ These contexts are correct up to some constraint.
  For instance, 
 \end_layout
 
@@ -351,7 +351,7 @@ empty
 \begin_inset Formula $x:\star$
 \end_inset
 
- to the term and 
+ to the term and observing 
 \begin_inset Formula $x=-\rightarrow-$
 \end_inset
 
@@ -586,18 +586,8 @@ Similarly we will allow extraction from the dependent body of a function
 \end_layout
 
 \begin_layout Itemize
-data can be observed incrementally, and paths along data will confirm that
- the data conductors are consistent 
-\begin_inset Flex TODO Note (Margin)
-status open
-
-\begin_layout Plain Layout
-data...
-\end_layout
-
-\end_inset
-
-
+data can be observed incrementally, and observed paths along data will confirm
+ that the data conductors are consistent.
 \end_layout
 
 \begin_layout Standard
@@ -615,16 +605,16 @@ observable different outputs must come from observably different inputs
 \end_layout
 
 \begin_layout Itemize
-\begin_inset Flex TODO Note (Margin)
-status open
-
-\begin_layout Plain Layout
-require a minimum output
-\end_layout
-
+observations do not over-specify behavior.
+ For instance, 
+\begin_inset Formula $f:\mathtt{Nat}\rightarrow\mathtt{Nat},f2=x,f3=x$
 \end_inset
 
+ would not be allowed since 
+\begin_inset Formula $f2=f3$
+\end_inset
 
+ and is over specified.
 \end_layout
 
 \begin_layout Standard
@@ -648,7 +638,7 @@ Since examples are built up partially the partial contexts can avoid introducing
 
 \begin_layout Itemize
 handle higher order functions, recursions, and self reference gracefully.
- For instance 
+ For instance, 
 \begin_inset Formula $f:Nat\rightarrow Nat$
 \end_inset
 
@@ -660,7 +650,7 @@ handle higher order functions, recursions, and self reference gracefully.
 \begin_inset Formula $f\left(3\right)=3$
 \end_inset
 
- if there is an assignment that implies
+ if there is an assignment that implies 
 \begin_inset Formula $f\,0\neq3$
 \end_inset
 
@@ -673,7 +663,7 @@ However the procedure is unsound, it will flag errors that are not possible
 \end_layout
 
 \begin_layout Itemize
-However since there is no way for a terms within the cast language to 
+Since there is no way for a terms within the cast language to 
 \begin_inset Quotes eld
 \end_inset
 
@@ -739,7 +729,7 @@ Additionally, working symbolically can move past evaluations that would
 status open
 
 \begin_layout Plain Layout
-add por as a source of unrealizability
+ins't as crisp an example as I would like
 \end_layout
 
 \end_inset
@@ -772,7 +762,7 @@ G.
  
 \end_layout
 
-\begin_layout Section
+\begin_layout Subsection
 Related and Future Work
 \end_layout
 
@@ -786,7 +776,7 @@ While formalizing a complete and efficient testing procedure along these
  
 \end_layout
 
-\begin_layout Subsection
+\begin_layout Subsubsection
 Testing
 \end_layout
 
@@ -890,7 +880,7 @@ literal "false"
  added QuickCheck style testing to Agda 1.
 \end_layout
 
-\begin_layout Subsection
+\begin_layout Subsubsection
 Symbolic Execution
 \end_layout
 
@@ -921,7 +911,7 @@ The language is dependently typed.
 \begin_layout Itemize
 The language needs higher order execution.
  often the research in this area focuses on base types that are efficiently
- handleable with an SMT solver.
+ handleable with an SMT solver such as integer aritmetic.
 \end_layout
 
 \begin_layout Standard
@@ -1027,11 +1017,11 @@ cite
 \end_inset
 
 .
- Additionally is seems helpful to allow programmers to program their own
+ Additionally it seems helpful to allow programmers to program their own
  solvers that could greatly increase the search speed.
 \end_layout
 
-\begin_layout Part
+\begin_layout Section
 Runtime Poof Search
 \end_layout
 
@@ -1258,8 +1248,15 @@ n
 \end_inset
 
 .
- Since the only information to solve ? is the type Nat and an arbitrary
- term of type nat will be 0.
+ Since the only information to solve ? is the type 
+\begin_inset Formula $\mathtt{Nat}$
+\end_inset
+
+ and an arbitrary term of type 
+\begin_inset Formula $\mathtt{Nat}$
+\end_inset
+
+ will be 0.
  Most users would expect 
 \begin_inset Formula $n$
 \end_inset
@@ -1384,7 +1381,7 @@ prf x = (
 
 \end_layout
 
-\begin_layout Section
+\begin_layout Subsection
 Prior Work
 \end_layout
 
@@ -1467,28 +1464,41 @@ http://twelf.org/wiki/Main_Page
 
  makes use of runtime proof search and has some support for dependent types,
  but the underling theory cannot be considered full-spectrum.
- The only full spectrum systems that preport to handle solving in this way
- are the gradual dependent type work, though it is unclear how that work
- handles the non locality of constraints given their local 
+ The only full spectrum systems that purports to handle solving in this
+ way are the gradual dependent type work
+\begin_inset CommandInset citation
+LatexCommand cite
+key "DBLP:journals/corr/abs-1906-06469"
+literal "false"
+
+\end_inset
+
+, though it is unclear how that work handles the non locality of constraints
+ given their local 
 \begin_inset Formula $?$
 \end_inset
 
  operator.
 \end_layout
 
-\begin_layout Part
-Convenience 
-\end_layout
-
-\begin_layout Standard
-implicit function arguments
-\end_layout
-
-\begin_layout Part
+\begin_layout Section
 Future work
 \end_layout
 
-\begin_layout Section
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+Convenience: implicit function arguments
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
 Effects
 \end_layout
 
@@ -1507,6 +1517,16 @@ mainstream
 \end_inset
 
  language to the one studied here.
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+cites!!
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -1514,14 +1534,14 @@ While trying to carefully to avoid effects in this thesis, we still have
  encountered 2 important effects, non-termination and blame based error.
 \end_layout
 
-\begin_layout Subsection
+\begin_layout Subsubsection
 Errors
 \end_layout
 
 \begin_layout Standard
 The current system handles blame based runtime errors and static warnings
  in a unique way.
- There is no control flow for errors built into the reduction relations,
+ There is no control flow for errors built into the reduction or CBV relations,
  and there is no way to handle an error.
  Every potential error is linked to a static warning.
  There are a few features that would be good to experiment with
@@ -1602,11 +1622,11 @@ whoops
 
 \begin_layout Standard
 Though additional research would be need for exactly the form the contradictions
- should take.
+ should take if they are made available to the handler.
 \end_layout
 
 \begin_layout Standard
-However handling effects in a dependent type system is subtle
+Handling effects in a dependent type system is subtle
 \begin_inset Foot
 status open
 
@@ -1638,7 +1658,7 @@ literal "false"
 
 .
  The paradox can be instantiated to the system presented in this thesis
- with an additional handling construct and assuming a lazy evaluation order,
+ with an additional handling construct,
 \end_layout
 
 \begin_layout Standard
@@ -1737,7 +1757,20 @@ gets stuck
  but with a well blamed runtime error and a static warning is given.
 \end_layout
 
-\begin_layout Subsection
+\begin_layout Standard
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+doe ther errors kind of work like those Error TT papers?
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Subsubsection
 Non-termination
 \end_layout
 
@@ -1784,39 +1817,31 @@ Termination casts: A flexible approach to termination with general recursion
 .
 \end_layout
 
-\begin_layout Subsection
+\begin_layout Subsubsection
 Other effects
 \end_layout
 
 \begin_layout Standard
 One of the difficulties of an effect system for dependent types is expressing
  the definitional equalities of the effect modality.
- Is print 
-\begin_inset Quotes eld
+ Is 
+\begin_inset Formula $\mathtt{print“hello”;print“world”}$
 \end_inset
 
-hello
-\begin_inset Quotes erd
+ 
+\begin_inset Formula $\equiv$
 \end_inset
 
-;print 
-\begin_inset Quotes eld
+ 
+\begin_inset Formula $\mathtt{print“helloworld”}$
 \end_inset
 
-world
-\begin_inset Quotes erd
+ at type 
+\begin_inset Formula $\mathtt{IO\ Unit}$
 \end_inset
 
- = print 
-\begin_inset Quotes eld
-\end_inset
-
-helloworld
-\begin_inset Quotes erd
-\end_inset
-
- : IO Unit? by delaying equality checks to runtime these issues can be avoided
- until the research space is better explored.
+? by delaying equality checks to runtime these issues can be avoided until
+ the research space is better explored.
  Effects risk making computation mathematically inelegant.
  In this thesis we avoided this inelegance for an error effect with a blame
  relation.
@@ -1830,7 +1855,7 @@ Both the symbolic execution and search above could be considered in terms
  non local examples above.
 \end_layout
 
-\begin_layout Section
+\begin_layout Subsection
 User studies
 \end_layout
 
@@ -1840,7 +1865,7 @@ The main proposition of this work is that it will make dependent types easier
  This should be demonstrated empirically with user studies.
 \end_layout
 
-\begin_layout Section
+\begin_layout Subsection
 Semantics
 \end_layout
 
