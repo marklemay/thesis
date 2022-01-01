@@ -56,6 +56,8 @@
 \setlist[casenv,4]{label={{\itshape\ \casename} \arabic*.},ref=\arabic*}
 \theoremstyle{definition}
 \newtheorem{example}[thm]{\protect\examplename}
+\theoremstyle{plain}
+\newtheorem{conjecture}[thm]{\protect\conjecturename}
 
 \usepackage{xcolor}
 \usepackage{tikz-cd}
@@ -75,6 +77,8 @@
 \makeatother
 
 \usepackage{babel}
+
+\providecommand{\conjecturename}{Conjecture}
 \providecommand{\casename}{Case}
 \providecommand{\corollaryname}{Corollary}
 \providecommand{\examplename}{Example}
@@ -119,6 +123,9 @@
 \cleardoublepage
 
 \include{2_Surface/surface}
+\cleardoublepage
+
+\include{3_Cast/cast}
 \cleardoublepage
 
 % \include{3_Details/details}

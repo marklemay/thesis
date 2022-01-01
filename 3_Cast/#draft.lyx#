@@ -18295,21 +18295,11 @@ In this thesis I describe a full-spectrum dependently typed language.
 \series bold
 Hybrid Type Checking
 \series default
- 
+ methodology 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "10.1145/1111037.1111059"
 literal "false"
-
-\end_inset
-
-
-\begin_inset Flex TODO Note (Margin)
-status open
-
-\begin_layout Plain Layout
-more
-\end_layout
 
 \end_inset
 
@@ -18342,16 +18332,6 @@ literal "false"
 
 .
  
-\begin_inset Flex TODO Note (Margin)
-status open
-
-\begin_layout Plain Layout
-why is full spectrum better?
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Standard

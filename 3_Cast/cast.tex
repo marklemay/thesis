@@ -1,0 +1,1579 @@
+\chapter{a Dependent Cast System}
+\label{chapter:Cast}
+\thispagestyle{myheadings}
+
+\section{Introduction}
+
+We can now tackle the most fundamental problem with dependent type
+systems: Definitional equalities are pervasive and unintuitive.
+
+%% example of dependent types
+The motivating example form the introduction can now be stated with
+the surface language. Recall, dependent types can prevent an out-of-bounds
+error when indexing into a length indexed list. 
+
+\begin{align*}
+\mathtt{Vec} & :*\rightarrow\mathbb{N}_{c}\rightarrow*,\\
+\mathtt{rep} & :\left(X:*\right)\rightarrow X\rightarrow\left(y:\mathbb{N}_{c}\right)\rightarrow\mathtt{Vec\,}X\,y,\\
+\mathtt{head} & :\left(X:*\right)\rightarrow\left(y:\mathbb{N}_{c}\right)\rightarrow\mathtt{Vec}\,X\,\left(1_{c}+_{c}y\right)\rightarrow X
+\end{align*}
+\[
+\vdash\lambda x\Rightarrow\mathtt{head}\,\mathbb{B}_{c}\,x\,\left(\mathtt{rep}\,\mathbb{B}_{c}\,true_{c}\,\left(1_{c}+_{c}x\right)\right)\,:\,\mathbb{N}_{c}\rightarrow\mathbb{B}_{c}
+\]
+
+$\mathtt{head}$ is a function that expects a list of length $1_{c}+_{c}y$,
+making it impossible for $\mathtt{head}$ to inspect an empty list.
+
+%% example of problem
+Unfortunately, the following will not type check in the surface language,
+
+\[
+\cancel{\vdash}\lambda x\Rightarrow\mathtt{head}\,\mathbb{B}_{c}\,x\,\left(\mathtt{rep}\,\mathbb{B}_{c}\,true_{c}\,\left(x+_{c}1_{c}\right)\right)\,:\,\mathbb{N}_{c}\rightarrow\mathbb{B}_{c}
+\]
+
+%% explanation of example
+\sloppy While ``obviously'' $1+x=x+1$, in the surface language
+definitional equality does not associate these two terms, $1_{c}+_{c}x\cancel{\equiv}x+_{c}1_{c}$. 
+
+In this chapter we will show how to side step definitional equality
+and deal with issues at runtime in a principled way. This will be
+done with the \textbf{cast system} described in this chapter. The
+cast system is comprised of
+\begin{itemize}
+\item The \textbf{cast language}, a dependently typed language with embedded
+runtime checks, that have evaluation behavior.
+\item The \textbf{elaboration procedure} that transforms appropriate untyped
+surface syntax into checked cast language terms\todo{as a picture}
+\end{itemize}
+We show that a novel form of type soundness holds, that we call \textbf{cast
+soundness}. Instead of ``well typed terms don't get stuck'', we
+prove ``well cast terms don't get stuck without blame''. 
+
+Additionally, by construction, blame (in the sense of contracts and
+monitors) is reasonably handled. Several desirable properties hold
+for the system overall.
+
+\section{Cast Language}
+
+\subsection{Syntax}
+
+\begin{figure}
+\begin{tabular}{lcll}
+\multicolumn{4}{l}{source location information,}\tabularnewline
+$\ensuremath{\ell}$ &  &  & \tabularnewline
+\multicolumn{4}{l}{variable contexts,}\tabularnewline
+$H$ & $\Coloneqq$ & $\lozenge$ | $H,x:A$ & \tabularnewline
+\multicolumn{4}{l}{expressions,}\tabularnewline
+$a,b$,$A,B$ & $\Coloneqq$ & $x$ & \tabularnewline
+ & | & $a::_{A,\ensuremath{\ell},o}B$ & cast\tabularnewline
+ & | & $\star$ & \tabularnewline
+ & | & $\left(x:A\right)\rightarrow B$ & \tabularnewline
+ & | & $\mathsf{fun}\,f\,x\Rightarrow b$ & \tabularnewline
+ & | & $b\,a$ & \tabularnewline
+\multicolumn{4}{l}{observations,}\tabularnewline
+o & $\Coloneqq$ & . & current location\tabularnewline
+ & | & $o.arg$ & function type-arg\tabularnewline
+ & | & $o.bod[a]$ & function type-body\tabularnewline
+\end{tabular}
+
+\todo[inline]{would $a_{A}:?:_{\ensuremath{\ell},o}B$ be clearer syntax then $a::_{A,\ensuremath{\ell},o}B$
+?}
+
+\todo[inline]{would it be clearer to add the $\ell$ to the observation?}
+
+\caption{Cast Language Syntax}
+\label{fig:cast-pre-syntax}
+\end{figure}
+
+%% pre-syntax
+The syntax for the cast language can be seen in figure \ref{fig:cast-pre-syntax}.
+By design the cast language is almost identical to the surface language
+except that the cast construct has been added and annotations have
+been removed.
+
+The cast language can assume arbitrary equalities over types, $A=B$,
+with a cast, $a::_{A,\ensuremath{\ell},o}B$ given
+\begin{itemize}
+\item an underlying term $a$
+\item a source location $\ell$ where it was asserted, 
+\item a concrete observation $o$ that would witness inequality, 
+\item the type of the underlying $a$ term $A$, 
+\item and the expected type of the term $B$. 
+\end{itemize}
+Every time there is a definitional mismatch between the type inferred
+from a term and the type expected from the usage, the elaboration
+procedure will produce a cast.
+
+Observations allow indexing into terms to pinpoint errors. For instance
+if we want to highlight the $C$ sub expression in $\left(x:A\right)\rightarrow\left(y:\left(x:B\right)\rightarrow\underline{C}\right)\rightarrow D$
+we can use the observation $..Bod[x].arg.Bod[y]$. In general, the
+$C$ may specifically depend on $x$ and $y$ so they are tracked
+as part of the observation. For instance, given the type $\left(X:\star\right)\rightarrow X$
+we might want to point out $A$ when $X=A\rightarrow B$ resulting
+in the type $\left(X:\star\right)\rightarrow\left(\underline{A}\rightarrow B\right)$
+, the observation would then read $..Bod[A\rightarrow B].arg$ recording
+the specific type argument that allows an argument to be inspected.
+
+Locations and observations will be used to form blame and produce
+the runtime error message users might see.
+
+In addition to the abbreviations from Chapter 2, some new abbreviations
+for the cast language are listed in Figure \ref{fig:cast-pre-syntax-abrev}.
+\begin{figure}
+\begin{tabular}{lclll}
+$a::_{A,\ensuremath{\ell},o}B$ & written & $a::_{A,\ensuremath{\ell}}B$ & when & the observation is not relevant\tabularnewline
+$a::_{A,\ensuremath{\ell}}B$ & written & $a::_{A}B$ & when & the location is not relevant\tabularnewline
+$a::_{A}B$ & written & $a::B$ & when & the the type of $a$is clear\tabularnewline
+\end{tabular}
+
+\caption{Surface Language Abbreviations}
+\label{fig:cast-pre-syntax-abrev}
+\end{figure}
+
+
+\subsection{How Should Casts Reduce?}
+
+How does the cast construct interact with the existing constructs?
+These are all the interactions that could cause a term to be stuck
+in evaluation or block type checking
+
+\begin{tabular}{cc}
+$\star::B$ & universe under cast\tabularnewline
+$\left(\left(x:A\right)\rightarrow B\right)::C$ & function type under cast\tabularnewline
+$\left(b::C\right)a$ & application blocked by cast\tabularnewline
+\end{tabular}
+
+We can account for these by realizing obvious casts should evaporate,
+freeing up the underling term. The most interesting case is when a
+cast confirms that the applied term is a function, but with potentially
+different input and output types. Then we use the function cast to
+determine a reasonable cast over the argument, and maintain the appropriate
+cast over the resulting computation. This operation is similar to
+the way higher order contracts invert the polarity of blame for the
+arguments of higher order functions \cite{10.1145/581478.581484}
+\footnote{and also found in gradual type systems, such as \cite{10.1007/978-3-642-00590-9_1}}.
+
+\begin{tabular}{ccccc}
+$\star::\star$ & $\rightsquigarrow$ & $\star$ &  & \tabularnewline
+$\star::B$ & $\rightsquigarrow$ & $\star::B'$ & when  & $B\rightsquigarrow B'$\tabularnewline
+$\star::_{\ell,o}B$ & blame & $\ell,o$ & when  & $B$ cannot be $\star$ \tabularnewline
+$\left(\left(x:A\right)\rightarrow B\right)::\star$ & $\rightsquigarrow$ & $\star$ &  & \tabularnewline
+$\left(\left(x:A\right)\rightarrow B\right)::C$ & $\rightsquigarrow$ & $\left(\left(x:A\right)\rightarrow B\right)::C'$ & when  & $C\rightsquigarrow C'$\tabularnewline
+$\left(\left(x:A\right)\rightarrow B\right)::_{\ell,o}C$ & blame & $\ell,o$ & when  & $C$ cannot be $\star$ \tabularnewline
+$\left(b::_{\left(x:A'\right)\rightarrow B'}\left(x:A\right)\rightarrow B\right)a$ & $\rightsquigarrow$ & $\left(b\,\left(a::A'\right)\right)::_{B'\left[x\coloneqq a::A'\right]}B\left[x\coloneqq A\right]$ &  & \tabularnewline
+$\left(b::C\right)a$ & $\rightsquigarrow$ & $\left(b::C'\right)a$ & when  & $C\rightsquigarrow C'$\tabularnewline
+$\left(b::_{\ell,o}C\right)a$ & blame & $\ell,o$ & when  & $C$ cannot be $\left(x:A\right)\rightarrow B$ \tabularnewline
+\end{tabular}
+
+The fully formal reduction rules are listed later, but their complete
+detail can be distracting. Type universes live in the type universe,
+so any cast that contradicts this should be blamed. Similarly for
+function types. Terms that take input must be functions, so any cast
+that contradicts this should blame the source location.
+
+Note that the rules outlined here are not deterministic since there
+are cases when we might blame or continue reducing the argument. One
+of the subtle innovations of the system described in this chapter
+is to completely separate blame from reduction. This sidesteps many
+of the complexities of having a reduction relevant $\mathtt{abort}$
+term in a dependent type theory \cite{sjoberg2012irrelevance,pedrot2018failure}.
+As far as reduction is concerned, bad terms simply ``get stuck''
+as it might on a variable assumed in the typing context. Otherwise
+the reduction behavior is well behaved. Terms my be blamable by the
+rules outlined in this chapter, but it is easy to imagine more sophisticated
+ways to extract blame without interfering with reduction. 
+
+This outlines the minimum requirements for cast reductions, there
+are plausibly many additional reductions that could be considered.
+Some tempting reductions are
+
+\begin{tabular}{ccccc}
+$a::_{C}C$ & $\rightsquigarrow_{=}$ & $a$ &  & \tabularnewline
+$a::_{C'}C$ & $\rightsquigarrow_{\equiv}$ & $a$ & when & $C'\equiv C$\tabularnewline
+\end{tabular}
+
+However these rules preclude extracting blame that may be embedded
+within the casts themselves. These rules also seem to complicate the
+type theory. Despite this we will use these reductions in examples
+to keep the book keeping to a minimum.
+
+\subsection{Examples }
+
+% We can reexamine some of the examples terms from Chapter 2, but this time with equality assumptions
+
+\subsubsection{Higher Order Functions}
+
+%% walkthrough
+ Higher order functions are dealt with by distributing function casts
+around applications. If an application happens to a cast of function
+type, the argument and body cast is separated and the argument cast
+is swapped. For instance in 
+\begin{align*}
+\, & \left(\left(\lambda x\Rightarrow x\&\&x\right)::_{\mathbb{B}\rightarrow\mathbb{B},\ell,.}\mathbb{N}\rightarrow\mathbb{N}\right)7\\
+\rightsquigarrow & \left(\left(\lambda x\Rightarrow x\&\&x\right)\left(7::_{\mathbb{N},\ell,.arg}\mathbb{B}\right)\right)::_{\mathbb{B},\ell,.bod[7]}\mathbb{N}\\
+\rightsquigarrow & \left(\left(7::_{\mathbb{N},\ell,.arg}\mathbb{B}\right)\&\&\left(7::_{\mathbb{N},\ell,.arg}\mathbb{B}\right)\right)\\
+\, & \ ::_{\mathbb{B},\ell,.bod[7]}\mathbb{N}
+\end{align*}
+if evaluation gets stuck on $\&\&$ and we can blame the argument
+of the cast for equating $\mathbb{N}$ and $\mathbb{B}$. The body
+observation records the argument the function is called with. For
+instance in the $.bod[7]$ observation. In a dependently typed function
+the exact argument may be important to give a good error. Because
+casts can be embedded inside of casts, types themselves need to normalize
+and casts need to simplify. Since our system has one universe of types,
+type casts only need to simplify themselves when a term of type $\star$
+is cast to $\star$. For instance, 
+\begin{align*}
+\, & \left(\left(\lambda x\Rightarrow x\right)::_{\left(\mathbb{B}\rightarrow\mathbb{B}\right)::_{\star,\ell,.arg}\star,\ell,.}\mathbb{N}\rightarrow\mathbb{N}\right)7\\
+\rightsquigarrow & \left(\left(\lambda x\Rightarrow x\right)::_{\mathbb{B}\rightarrow\mathbb{B}}\mathbb{N}\rightarrow\mathbb{N}\right)7\\
+\rightsquigarrow & \left(\left(\lambda x\Rightarrow x\right)\left(7::_{\mathbb{N},\ell,.arg}\mathbb{B}\right)\right)::_{\mathbb{B},\ell,.bod[7]}\mathbb{N}\\
+\rightsquigarrow & \left(\left(7::_{\mathbb{N},\ell,.arg}\mathbb{B}\right)\right)::_{\mathbb{B},\ell,.bod[7]}\mathbb{N}
+\end{align*}
+
+
+\subsubsection{Pretending $true=false$}
+
+Recall that we proved $\lnot true_{c}\doteq_{\mathbb{B}_{c}}false_{c}$
+in Chapter 2. What happens if it is assumed anyway? Every type equality
+assumption needs an underlying term, here we can choose $refl_{true_{c}:\mathbb{B}_{c}}:true_{c}\doteq_{\mathbb{B}_{c}}true_{c}$,
+and cast that term to $true_{c}\doteq_{\mathbb{B}_{c}}false_{c}$
+resulting in $refl_{true_{c}:\mathbb{B}_{c}}::_{true_{c}\doteq_{\mathbb{B}_{c}}true_{c}}true_{c}\doteq_{\mathbb{B}_{c}}false_{c}$.
+Recall that $\lnot true_{c}\doteq_{\mathbb{B}_{c}}false_{c}$ is a
+short hand for $true_{c}\doteq_{\mathbb{B}_{c}}false_{c}\rightarrow\perp$.
+What if we try to use our term of type $true_{c}\doteq_{\mathbb{B}_{c}}false_{c}$
+to get a term of type $\perp$?
+
+\todo[inline]{break out figure}
+
+\begin{tabular}{cc}
+ & $\left(\lambda pr\Rightarrow pr\,toLogic\,tt_{c}\right)\left(refl_{true_{c}:\mathbb{B}_{c}}::_{true_{c}\doteq_{\mathbb{B}_{c}}true_{c}}true_{c}\doteq_{\mathbb{B}_{c}}false_{c}\right)$\tabularnewline
+$\rightsquigarrow$ & $\left(refl_{true_{c}:\mathbb{B}_{c}}::_{true_{c}\doteq_{\mathbb{B}_{c}}true_{c}}true_{c}\doteq_{\mathbb{B}_{c}}false_{c}\right)\,toLogic\,tt_{c}$\tabularnewline
+$true_{c}\doteq_{\mathbb{B}_{c}}false_{c}\coloneqq\left(C:\left(\mathbb{B}_{c}\rightarrow\star\right)\right)\rightarrow C\,true_{c}\rightarrow C\,false_{c}$ & $\left(refl_{true_{c}:\mathbb{B}_{c}}::_{true_{c}\doteq_{\mathbb{B}_{c}}true_{c}}\left(C:\left(\mathbb{B}_{c}\rightarrow\star\right)\right)\rightarrow C\,true_{c}\rightarrow C\,false_{c}\right)\,toLogic\,tt_{c}$\tabularnewline
+$true_{c}\doteq_{\mathbb{B}_{c}}true_{c}\coloneqq\left(C:\left(\mathbb{B}_{c}\rightarrow\star\right)\right)\rightarrow C\,true_{c}\rightarrow C\,true_{c}$ & $\left(refl_{true_{c}:\mathbb{B}_{c}}::_{\left(C:\left(\mathbb{B}_{c}\rightarrow\star\right)\right)\rightarrow C\,true_{c}\rightarrow C\,true_{c}}\left(C:\left(\mathbb{B}_{c}\rightarrow\star\right)\right)\rightarrow C\,true_{c}\rightarrow C\,false_{c}\right)\,toLogic\,tt_{c}$\tabularnewline
+$\rightsquigarrow_{=}$ & $\left(refl_{true_{c}:\mathbb{B}_{c}}\,toLogic::toLogic\,true_{c}\rightarrow toLogic\,true_{c}\right)::\left(toLogic\,true_{c}\rightarrow toLogic\,false_{c}\,tt_{c}\right)$\tabularnewline
+$refl_{true_{c}:\mathbb{B}_{c}}\coloneqq\lambda-\,cx\Rightarrow cx$ & $\left(\left(\lambda-\,cx\Rightarrow cx\right)\,toLogic::toLogic\,true_{c}\rightarrow toLogic\,true_{c}\right)::\left(toLogic\,true_{c}\rightarrow toLogic\,false_{c}\,tt_{c}\right)$\tabularnewline
+$\rightsquigarrow$ & $\left(\left(\lambda cx\Rightarrow cx\right)::toLogic\,true_{c}\rightarrow toLogic\,true_{c}\right)::\left(toLogic\,true_{c}\rightarrow toLogic\,false_{c}\,tt_{c}\right)$\tabularnewline
+$\rightsquigarrow_{=}$ & $\left(\left(\lambda cx\Rightarrow cx\right)tt_{c}::toLogic\,true_{c}\right)::toLogic\,false_{c}$\tabularnewline
+$\rightsquigarrow$ & $\left(tt_{c}::toLogic\,true_{c}\right)::toLogic\,false_{c}$\tabularnewline
+$toLogic\coloneqq\lambda b\Rightarrow b\,\star\,Unit_{c}\,\perp_{c}$ & $\left(tt_{c}::\left(\lambda b\Rightarrow b\,\star\,Unit_{c}\,\perp_{c}\right)\,true_{c}\right)::toLogic\,false_{c}$\tabularnewline
+$\rightsquigarrow$ & $\left(tt_{c}::\left(true_{c}\,\star\,Unit_{c}\,\perp_{c}\right)\right)::toLogic\,false_{c}$\tabularnewline
+$true_{c}\coloneqq\lambda-\,x\,-\Rightarrow x$ & $\left(tt_{c}::\left(\left(\lambda-\,x\,-\Rightarrow x\right)\,\star\,Unit_{c}\,\perp_{c}\right)\right)::toLogic\,false_{c}$\tabularnewline
+$\rightsquigarrow$ & $\left(tt_{c}::\left(\left(\lambda x\,-\Rightarrow x\right)\,Unit_{c}\,\perp_{c}\right)\right)::toLogic\,false_{c}$\tabularnewline
+$\rightsquigarrow$ & $\left(tt_{c}::\left(\left(\lambda-\Rightarrow Unit_{c}\right)\,\perp_{c}\right)\right)::toLogic\,false_{c}$\tabularnewline
+$\rightsquigarrow$ & $\left(tt_{c}::Unit_{c}\right)::toLogic\,false_{c}$\tabularnewline
+$toLogic\coloneqq\lambda b\Rightarrow b\,\star\,Unit_{c}\,\perp_{c}$ & $\left(tt_{c}::Unit_{c}\right)::\left(\lambda b\Rightarrow b\,\star\,Unit_{c}\,\perp_{c}\right)\,false_{c}$\tabularnewline
+$\rightsquigarrow$ & $\left(tt_{c}::Unit_{c}\right)::\left(false_{c}\,\star\,Unit_{c}\,\perp_{c}\right)$\tabularnewline
+$false_{c}\coloneqq\lambda-\,-\,y\Rightarrow y$ & $\left(tt_{c}::Unit_{c}\right)::\left(\left(\lambda-\,-\,y\Rightarrow y\right)\,\star\,Unit_{c}\,\perp_{c}\right)$\tabularnewline
+$\rightsquigarrow_{*}$ & $\left(tt_{c}::Unit_{c}\right)::\perp_{c}$\tabularnewline
+\end{tabular}
+
+As in the above the example, the term $\left(tt_{c}::Unit_{c}\right)::\perp_{c}$
+has not yet ``gotten stuck''. Applying any type will uncover the
+error.
+
+\begin{tabular}{cc}
+ & $\left(\left(tt_{c}::Unit_{c}\right)::\perp_{c}\right)\star$\tabularnewline
+$\perp_{c}\coloneqq\left(X:\star\right)\rightarrow X$ & $\left(\left(tt_{c}::Unit_{c}\right)::\left(X:\star\right)\rightarrow X\right)\star$\tabularnewline
+$\rightsquigarrow_{=}$ & $\left(\left(tt_{c}::Unit_{c}\right)\star\right)::\star$\tabularnewline
+$Unit_{c}\coloneqq\left(X:\star\right)\rightarrow X\rightarrow X$ & $\left(\left(tt_{c}::\left(\left(X:\star\right)\rightarrow X\rightarrow X\right)\right)\star\right)::\star$\tabularnewline
+$\rightsquigarrow_{=}$ & $\left(tt_{c}\star\right)::\left(\star\rightarrow\star\right)::\star$\tabularnewline
+$tt_{c}\coloneqq\lambda-\,x\Rightarrow x$ & $\left(\left(\lambda-\,x\Rightarrow x\right)\star\right)::\left(\star\rightarrow\star\right)::\star$\tabularnewline
+$\rightsquigarrow$ & $\left(\lambda x\Rightarrow x\right)::\left(\star\rightarrow\star\right)::\star$\tabularnewline
+Blame! & $\left(\lambda x\Rightarrow x\right)::\left(\star\underline{\rightarrow}\star\right)::\underline{\star}$\tabularnewline
+ & \tabularnewline
+\end{tabular}
+
+The location and observation information that was left out of the
+computation could generate an error message like
+
+$\left(C:\left(\mathbb{B}_{c}\rightarrow\star\right)\right).C\,true_{c}\rightarrow\underline{C\,true_{c}}\neq\left(C:\left(\mathbb{B}_{c}\rightarrow\star\right)\right).C\,true_{c}\rightarrow\underline{C\,false_{c}}$
+
+when 
+
+$C\coloneqq\lambda b:\mathbb{B}_{c}.b\,\star\,\star\,\perp$
+
+$C\,true_{c}=\perp\neq\star=C\,false_{c}$
+
+Reminding the programmer that they should not confuse true with false.
+
+\subsection{Cast Language Type Assignment System}
+
+% why cast soundness?
+
+Recall that type soundness is the primary property for a typed programming
+language to exhibit. In a programming language, type soundness proves
+some undesirable behaviors are unreachable from a well typed term.
+How should this apply to the cast language, where bad behaviors are
+intended to be reachable? We allow bad behavior, but require that
+when a bad state is reached we blame the original faulty type annotations.
+Where the slogan for type soundness is ``well typed terms don't get
+stuck'', the slogan for cast soundness is ``well cast terms don't
+get stuck without blame''.
+
+In Chapter 2 we proved type soundness for a minimal dependently typed
+language, with a progress and preservation style proof given a suitable
+definition of term equivalence. We can extend that proof to support
+cast soundness with only a few modifications.
+
+\begin{figure}
+\[
+\frac{x:A\in H}{H\vdash x\,:\,A}\operatorname{cast-var}
+\]
+\[
+\frac{H\vdash a:A\quad H\vdash A:\star\quad H\vdash B:\star}{H\vdash a::_{A,\ensuremath{\ell},o}B\::\:B}\operatorname{cast-::}
+\]
+
+\[
+\frac{\,}{H\vdash\star:\,\star}\operatorname{cast-\star}
+\]
+
+\[
+\frac{H\vdash A:\star\quad H,x:A\vdash B:\star}{H\vdash\left(x:A\right)\rightarrow B\,:\,\star}\operatorname{cast-fun-ty}
+\]
+
+\[
+\frac{H,f:\left(x:A\right)\rightarrow B,x:A\vdash b:B}{H\vdash\mathsf{fun}\,f\,x\Rightarrow b\,:\,\left(x:A\right)\rightarrow B}\operatorname{cast-fun}
+\]
+
+\[
+\frac{H\vdash b:\left(x:A\right)\rightarrow B\quad H\vdash a:A}{H\vdash b\,a\,:\,B\left[x\coloneqq a\right]}\operatorname{cast-fun-app}
+\]
+
+\[
+\frac{H\vdash a:A\quad A\equiv A'}{H\vdash a:A'}\operatorname{cast-conv}
+\]
+
+\todo[inline]{review regularity stuff}
+
+\caption{Cast Language Type Assignment Rules}
+\label{fig:cast-tas-rules}
+\end{figure}
+
+The cast language supports its own type assignment system, Figure
+\ref{fig:cast-tas-rules}. This system ensures that computations will
+not get stuck without enough information for good runtime error messages.
+Specifically computations will not get stuck without a source location
+and a witness of inequality. The only rule that types differently
+than the surface language is the $\operatorname{cast-::}$ rule that
+allows any type to appear like another type. 
+
+As before we need a suitable reduction relation to generate our equivalence
+relation. Figure \ref{fig:cast-reduction} shows that system of reductions.
+The full rule for function reduction is given in $\textrm{\ensuremath{\Rrightarrow}-fun-::-red}$
+which makes the intuition listed above explicit. Casts from a type
+univer to a type universe are allowed by the $\textrm{\ensuremath{\Rrightarrow}-::-red}$
+rule. Since observations embed expressions, they must also be given
+parallel reductions.
+
+\begin{figure}
+\[
+\frac{b\Rrightarrow b'\quad a\Rrightarrow a'}{\left(\mathsf{fun}\,f\,x\Rightarrow b\right)a\Rrightarrow b'\left[f\coloneqq\mathsf{fun}\,f\,x\Rightarrow b',x\coloneqq a'\right]}\,\textrm{\ensuremath{\Rrightarrow}-fun-app-red}
+\]
+
+\[
+\frac{b\Rrightarrow b'\quad a\Rrightarrow a'\quad A_{1}\Rrightarrow A_{1}'\quad A_{2}\Rrightarrow A_{2}'\quad B_{1}\Rrightarrow B_{1}'\quad B_{2}\Rrightarrow B_{2}'\quad o\Rrightarrow o'}{\begin{array}{c}
+\left(b::_{\left(x:A_{1}\right)\rightarrow B_{1},\ensuremath{\ell},o}\left(x:A_{2}\right)\rightarrow B_{2}\right)a\Rrightarrow\\
+\left(b'\,a'::_{A_{2}',\ell,o.arg}A_{1}'\right)::_{B_{1}'\left[x\coloneqq a'::_{A_{2}',\ell,o.arg}A_{1}'\right],\ensuremath{\ell},o'.bod[a']}B_{2}'\left[x\coloneqq a'\right]
+\end{array}}\,\textrm{\ensuremath{\Rrightarrow}-fun-::-red}
+\]
+
+\[
+\frac{a\Rrightarrow a'}{a::_{\star,\ensuremath{\ell},o}\star\Rrightarrow a'}\,\textrm{\ensuremath{\Rrightarrow}-::-red}
+\]
+
+\[
+\frac{\,}{x\Rrightarrow x}\,\textrm{\ensuremath{\Rrightarrow}-var}
+\]
+\[
+\frac{a\Rrightarrow a'\quad A_{1}\Rrightarrow A_{1}'\quad A_{2}\Rrightarrow A_{2}'\quad o\Rrightarrow o'}{a::_{A_{1},\ensuremath{\ell},o}A_{2}\Rrightarrow a'::_{A_{1}',\ensuremath{\ell},o'}A_{2}'}\,\textrm{\ensuremath{\Rrightarrow}-::}
+\]
+
+\[
+\frac{\,}{\star\Rrightarrow\star}\,\textrm{\ensuremath{\Rrightarrow}-}\star
+\]
+
+\[
+\frac{A\Rrightarrow A'\quad B\Rrightarrow B'}{\left(x:A\right)\rightarrow B\Rrightarrow\left(x:A'\right)\rightarrow B'}\,\textrm{\ensuremath{\Rrightarrow}-fun-ty}
+\]
+
+\[
+\frac{b\Rrightarrow b'}{\mathsf{fun}\,f\,x\Rightarrow b\,\Rrightarrow\,\mathsf{fun}\,f\,x\Rightarrow b'}\,\textrm{\ensuremath{\Rrightarrow}-fun}
+\]
+
+\[
+\frac{b\Rrightarrow b'\quad a\Rrightarrow a'}{b\,a\Rrightarrow b'\,a'}\,\textrm{\ensuremath{\Rrightarrow}-fun-app}
+\]
+
+\[
+\frac{\,}{.\Rrightarrow.}\,\textrm{\ensuremath{\Rrightarrow}-obs-emp}
+\]
+
+\[
+\frac{o\Rrightarrow o'}{o.arg\Rrightarrow o'.arg}\,\textrm{\ensuremath{\Rrightarrow}-obs-arg}
+\]
+
+\[
+\frac{o\Rrightarrow o'\quad a\Rrightarrow a'}{o.bod[a]\Rrightarrow o'.bod[a']}\,\textrm{\ensuremath{\Rrightarrow}-obs-bod}
+\]
+
+\[
+\frac{\,}{a\Rrightarrow_{\ast}a}\,\textrm{\ensuremath{\Rrightarrow_{\ast}}-refl}
+\]
+\[
+\frac{a\Rrightarrow_{\ast}a'\quad a'\Rrightarrow a''}{a\Rrightarrow_{\ast}a''}\,\textrm{\ensuremath{\Rrightarrow_{\ast}}-trans}
+\]
+\[
+\frac{a\Rrightarrow_{\ast}a''\quad a'\Rrightarrow_{\ast}a''}{a\equiv a'}\,\textrm{\ensuremath{\equiv}-def}
+\]
+
+\todo[inline]{font stuff}\caption{Cast Language Parallel Reductions}
+\label{fig:cast-reduction}
+\end{figure}
+
+
+\subsubsection{Definitional Equality}
+
+\todo{Address the irony of using a def eq to avoid the issues of a def eq}
+
+As in Chapter 2, $\Rrightarrow_{*}$ can be shown to be confluent.
+The proofs follow the same structure, but since observations can contain
+terms, $\Rrightarrow$ and $max$ must be extended to observations.
+Proofs must be extended to mutually induct on observations, since
+they can contain expressions that could also reduce.
+
+\begin{tabular}{ccccc}
+$max($ & $\left(\mathsf{fun}\,f\,x\Rightarrow b\right)\,a$ & $)=$ & $max\left(b\right)\left[f\coloneqq\mathsf{fun}\,f\,x\Rightarrow max\left(b\right),x\coloneqq max\left(a\right)\right]$ & otherwise\tabularnewline
+\multirow{2}{*}{$max($} & \multirow{2}{*}{$\left(b::_{\left(x:A_{1}\right)\rightarrow B_{1},\ensuremath{\ell},o}\left(x:A_{2}\right)\rightarrow B_{2}\right)a$} & \multirow{2}{*}{$)=$} & $\left(max\left(b\right)\,\left(max\left(a\right)::_{max\left(A_{2}\right),\ell,max\left(o\right).arg}max\left(A_{1}\right)\right)\right)$ & \multirow{2}{*}{otherwise}\tabularnewline
+ &  &  & $::_{max\left(B_{2}\right)\left[x\coloneqq max\left(a\right)::_{max\left(A_{2}\right),\ell,max\left(o\right).arg}max\left(A_{1}\right)\right],\ensuremath{\ell},max\left(o\right).bod[max\left(a\right)]}max\left(B_{2}\right)\left[x\coloneqq max\left(a\right)\right]$ & \tabularnewline
+$max($ & $b::_{B_{1},\ensuremath{\ell},o}B_{2}$ & $)=$ & $max\left(b\right)::_{max\left(B_{1}\right),\ensuremath{\ell},max\left(o\right)}max\left(B_{2}\right)$ & \tabularnewline
+$max($ & ... & $)=$ & ... & corresponds to the definition in chapter 2\tabularnewline
+$max($ & $.$ & $)=$ & $.$ & \tabularnewline
+$max($ & $o.arg$ & $)=$ & $max\left(o\right).arg$ & \tabularnewline
+$max($ & $o.bod[a]$ & $)=$ & $max\left(o\right).bod[max\left(a\right)]$ & \tabularnewline
+\end{tabular}
+\begin{lem}
+Triangle properties
+
+If $a\Rrightarrow a'$ then $a'\Rrightarrow max\left(a\right)$ 
+
+If $o\Rrightarrow o'$ then $o'\Rrightarrow max\left(o\right)$
+\end{lem}
+
+\begin{proof}
+by mutual induction on the derivations of $m\Rrightarrow\,m'$ and
+$o\Rrightarrow o'$.
+\end{proof}
+\todo{check this}
+\begin{lem}
+Diamond property 
+
+If $a\Rrightarrow a'$, $a\Rrightarrow a''$, implies $a'\Rrightarrow\,max\left(a\right)$
+,$a''\Rrightarrow\,max\left(a\right)$ 
+\end{lem}
+
+\begin{proof}
+The follows directly from triangle property
+\end{proof}
+\begin{thm}
+$\equiv$ is transitive
+
+If $a\equiv a'$, $a'\equiv a''$, implies $a\equiv a''$ 
+\end{thm}
+
+\begin{proof}
+The diamond property implies the confluence of $\Rrightarrow_{\ast}$
+.
+\end{proof}
+\begin{lem}
+Stability (generalized)
+
+$\forall A,B,C.\left(x:A\right)\rightarrow B\Rrightarrow_{\ast}C\:\Rightarrow\:\exists A',B'.C=\left(x:A'\right)\rightarrow B'\land A\Rrightarrow_{\ast}A'\land B\Rrightarrow_{\ast}B'$
+\end{lem}
+
+\begin{proof}
+by induction on $\Rrightarrow_{\ast}$
+\end{proof}
+\begin{cor}
+Stability
+
+The following rule is admissible
+\[
+\frac{\left(x:A\right)\rightarrow B\equiv\left(x:A'\right)\rightarrow B'}{A\equiv A'\quad B\equiv B'}
+\]
+\end{cor}
+
+
+\subsubsection{Preservation}
+\begin{lem}
+Context Weakening
+
+The following rule is admissible
+
+\[
+\frac{H\vdash a:A}{H,H'\vdash a:A}
+\]
+\end{lem}
+
+\begin{proof}
+by induction on typing derivations
+\end{proof}
+\begin{lem}
+Substitution Preservation
+
+The following rule is admissible
+
+\[
+\frac{H\vdash c:C\quad H,x:C,H'\vdash a:A}{H,H'\left[x\coloneqq c\right]\vdash a\left[x\coloneqq c\right]:A\left[x\coloneqq c\right]}
+\]
+\end{lem}
+
+\begin{proof}
+by induction over typing derivations
+
+\begin{tabular}{lll}
+$\operatorname{cast-::}$ & \multicolumn{2}{l}{$H,x:C,H'\vdash a:A$, $H,x:C,H'\vdash A:\star$, $H,x:C,H'\vdash B:\star$,
+wellformed $\ensuremath{\ell},o$}\tabularnewline
+ & $H,H'\left[x\coloneqq c\right]\vdash a\left[x\coloneqq c\right]:A\left[x\coloneqq c\right]$ & by induction\tabularnewline
+ & $H,H'\left[x\coloneqq c\right]\vdash A\left[x\coloneqq c\right]:\star$ & by induction\tabularnewline
+ & $H,H'\left[x\coloneqq c\right]\vdash B\left[x\coloneqq c\right]:\star$ & by induction\tabularnewline
+ & $H,H'\left[x\coloneqq c\right]\vdash a\left[x\coloneqq c\right]::_{A\left[x\coloneqq c\right],\ensuremath{\ell},o\left[x\coloneqq c\right]}B\left[x\coloneqq c\right]\::\:B\left[x\coloneqq c\right]$ & $\operatorname{cast-::}$\tabularnewline
+other rules & ... & correspond to the inductive cases in Chapter 2\tabularnewline
+\end{tabular}
+\end{proof}
+As before the notion of definitional equality can be extended to cast
+contexts in \ref{fig:surface-Context-Equiv}.
+
+\begin{figure}
+\[
+\frac{\ }{\lozenge\equiv\lozenge}\,\textrm{\ensuremath{\equiv}-ctx-empty}
+\]
+
+\[
+\frac{H\equiv H'\quad A\equiv A'}{H,x:A\equiv H',x:A'}\,\textrm{\ensuremath{\equiv}-ctx-ext}
+\]
+
+\caption{Contextual Equivalence}
+\label{fig:surface-Context-Equiv}
+\end{figure}
+
+\begin{lem}
+Context Preservation
+
+the following rule is admissible
+
+\[
+\frac{\Gamma\vdash n:N\quad\Gamma\equiv\Gamma'}{\Gamma'\vdash n:N}
+\]
+\end{lem}
+
+\begin{proof}
+by induction over typing derivations
+
+\begin{tabular}{lll}
+$\operatorname{cast-::}$ & \multicolumn{2}{l}{$H\vdash a:A$, $H\vdash A:\star$, $H\vdash B:\star$, wellformed
+$\ensuremath{\ell},o$}\tabularnewline
+ & $H'\vdash a:A$ & by induction\tabularnewline
+ & $H'\vdash A:\star$ & by induction\tabularnewline
+ & $H'\vdash B:\star$ & by induction\tabularnewline
+ & $H'\vdash a::_{A,\ensuremath{\ell},o}B\::\:B$ & $\operatorname{cast-::}$\tabularnewline
+other rules & ... & correspond to the inductive cases in Chapter 2\tabularnewline
+\end{tabular}
+\end{proof}
+As before we show inversions on the term syntaxes, generalizing the
+induction hypothesis up to equality, when needed.
+\begin{lem}
+$\mathsf{fun}$-Inversion (generalized)
+
+\[
+\frac{H\vdash\mathsf{fun}\,f\,x\Rightarrow a\,:\,C\quad C\equiv\left(x:A\right)\rightarrow B}{H,f:\left(x:A\right)\rightarrow B,x:A\vdash b:B}
+\]
+\end{lem}
+
+\begin{proof}
+by induction on the cast derivation
+
+\begin{tabular}{lll}
+$\operatorname{cast-fun}$ & \multicolumn{2}{l}{$H,f:\left(x:A'\right)\rightarrow B',x:A'\vdash b\,:\,B'$, $\left(x:A'\right)\rightarrow B'\equiv\left(x:A\right)\rightarrow B$}\tabularnewline
+ & $A'\equiv A,\quad B'\equiv B$ & by stability of fun-ty\tabularnewline
+ & $H,f:\left(x:A'\right)\rightarrow B',x:A'\equiv H,f:\left(x:A\right)\rightarrow B,x:A$ & by reflexivity of $\equiv$ , extended with previous equalities\tabularnewline
+ & $H,f:\left(x:A\right)\rightarrow B,x:A\vdash b\,:\,B'$ & by context preservation\tabularnewline
+ & $H,f:\left(x:A\right)\rightarrow B,x:A\vdash b\,:\,B$ & $\textrm{ty-conv}$\tabularnewline
+$\operatorname{cast-conv}$ & \multicolumn{2}{l}{$H\vdash\mathsf{fun}\,f\,x\Rightarrow b\,:\,C'$, $C'\equiv C$, $C\equiv\left(x:A\right)\rightarrow B$}\tabularnewline
+ & $C'\equiv\left(x:A\right)\rightarrow B$ & by transitivity\tabularnewline
+ & ... & by induction\tabularnewline
+other rules & impossible & the term position has the form $\mathsf{fun}\,f\,x\Rightarrow m$\tabularnewline
+\end{tabular}
+\end{proof}
+This allows us to conclude the corollary 
+\begin{cor}
+$\mathsf{fun}$-Inversion 
+
+\[
+\frac{H\vdash\mathsf{fun}\,f\,x\Rightarrow a\,:\,\left(x:A\right)\rightarrow B}{H,f:\left(x:A\right)\rightarrow B,x:A\vdash b:B}
+\]
+\end{cor}
+
+\begin{lem}
+$\rightarrow$-Inversion (generalized)
+
+The following rule is admissible
+\[
+\frac{H\vdash\left(x:A\right)\rightarrow B\,:\,C\quad C\equiv\star}{H\vdash A:\star\quad H,x:A\vdash B:\star}
+\]
+\end{lem}
+
+\begin{proof}
+By induction on the typing derivations
+
+\begin{tabular}{lll}
+$\operatorname{cast-fun-ty}$ & \multicolumn{2}{l}{$H\vdash\left(x:A\right)\rightarrow B\,:\,C$}\tabularnewline
+ &  & follows directly\tabularnewline
+$\operatorname{cast-conv}$ & \multicolumn{2}{l}{$H\vdash\left(x:A\right)\rightarrow B\::\:C'$, $C'\equiv C$}\tabularnewline
+ & $C'\equiv\star$ & by transitivity\tabularnewline
+ & ... & by induction\tabularnewline
+other rules & impossible & since the term position has the form $\left(x:A\right)\rightarrow B$\tabularnewline
+\end{tabular}
+\end{proof}
+leading to the corollary
+\begin{cor}
+$\rightarrow$-Inversion
+\[
+\frac{H\vdash\left(x:A\right)\rightarrow B\,:\,\star}{H\vdash A:\star\quad H,x:A\vdash B:\star}
+\]
+\end{cor}
+
+\begin{lem}
+$::$-Inversion
+
+The following rule is admissible
+\end{lem}
+
+\[
+\frac{H\vdash a::_{A,\ensuremath{\ell},o}B\::\:C}{H\vdash a:A\quad H\vdash A:\star\quad H\vdash B:\star}
+\]
+
+\todo{remove conditions for regularity?}
+\begin{proof}
+By induction on the typing derivations
+
+\begin{tabular}{lll}
+$\operatorname{cast-::}$ & \multicolumn{2}{l}{$H\vdash a:A\quad H\vdash A:\star\quad H\vdash B:\star$}\tabularnewline
+ &  & follows directly\tabularnewline
+$\operatorname{cast-conv}$ & \multicolumn{2}{l}{$H\vdash a::_{A,\ensuremath{\ell},o}B\::\:C'$, $C'\equiv C$}\tabularnewline
+ & ... & by induction\tabularnewline
+other rules & impossible & the term position has the form $a::_{A,\ensuremath{\ell},o}B$\tabularnewline
+\end{tabular}
+\end{proof}
+Note that each of the output judgments are smaller then the input
+judgments, this allows other proofs to use induction on the output
+of this lemma.
+\begin{thm}
+$\Rrightarrow$-Preservation 
+
+The following rule is admissible
+
+\[
+\frac{a\Rrightarrow a'\quad H\vdash a:A}{H\vdash a':A}
+\]
+\end{thm}
+
+\begin{proof}
+by induction
+
+\begin{tabular}{llll}
+$\operatorname{cast-\star}$ & $\textrm{\ensuremath{\Rrightarrow}-}\star$ & $H\vdash\star\,:\,\star$, $\star\Rrightarrow\star$ & follows directly\tabularnewline
+$\operatorname{cast-var}$ & $\textrm{\ensuremath{\Rrightarrow}-var}$ & $H\vdash x\,:\,A$, $x\Rrightarrow x$ & follows directly\tabularnewline
+$\textrm{ty-conv}$ &  & $H\vdash a\,:\,A$, $A\equiv A'$ & \tabularnewline
+ & all $\Rrightarrow$ & $a\Rrightarrow a'$ & \tabularnewline
+ &  & $H\vdash a'\,:\,A$ & by induction\tabularnewline
+ &  & $H\vdash a'\,:\,A'$ & $\operatorname{cast-conv}$\tabularnewline
+$\operatorname{cast-::}$ &  & well formed $\ell,o$ & \tabularnewline
+ & $\textrm{\ensuremath{\Rrightarrow}-::-red}$ & $H\vdash a:\star$, $a\Rrightarrow a'$ & \tabularnewline
+ &  & $H\vdash a'\,:\,\star$ & directly by induction\tabularnewline
+ & $\textrm{\ensuremath{\Rrightarrow}-::}$ & \multicolumn{2}{l}{$H\vdash a:A_{1}$, $H\vdash A_{2}:\star$, $a\Rrightarrow a'$, $A_{1}\Rrightarrow A_{1}'$,
+$A_{2}\Rrightarrow A_{2}'$, $o\Rrightarrow o'$}\tabularnewline
+ &  & $H\vdash a'\,:\,A_{1}$ & by induction\tabularnewline
+ &  & $H\vdash a'\,:\,A_{1}'$ & $\operatorname{cast-conv}$\tabularnewline
+ &  & $H\vdash A_{2}':\star$ & by induction\tabularnewline
+ &  & $H\vdash a'::_{A_{1}',\ell,o'}A_{2}'\,:\,A_{2}'$ & $\operatorname{cast-::}$\tabularnewline
+ &  & $H\vdash a'::_{A_{1}',\ell,o'}A_{2}'\,:\,A_{2}$ & $\operatorname{cast-conv}$\tabularnewline
+$\operatorname{cast-fun-ty}$ &  & $H\vdash A\,:\,\star$, $H,x:A\vdash B\,:\,\star$ & \tabularnewline
+ & $\textrm{\ensuremath{\Rrightarrow}-fun-ty}$ & $A\Rrightarrow A'$, $B\Rrightarrow B'$ & \tabularnewline
+ &  & $H\vdash A'\,:\,\star$ & by induction\tabularnewline
+ &  & $H,x:A\vdash B':\star$ & by induction\tabularnewline
+ &  & $H,x:A\equiv H,x:A'$ & by reflexivity of $\equiv$, extended with $A\equiv A'$\tabularnewline
+ &  & $H,x:A'\vdash B'\,:\,\star$ & by preservation of contexts\tabularnewline
+ &  & $H\vdash\left(x:A'\right)\rightarrow B'\,:\,\star$ & $\operatorname{cast-fun-ty}$\tabularnewline
+$\operatorname{cast-fun}$ &  & $H,f:\left(x:A\right)\rightarrow B,x:A\vdash a\,:\,A$ & \tabularnewline
+ & $\textrm{\ensuremath{\Rrightarrow}-fun}$ & $a\Rrightarrow a'$ & \tabularnewline
+ &  & $H,f:\left(x:A\right)\rightarrow B,x:A\vdash a':A$ & by induction\tabularnewline
+ &  & $H\vdash\mathsf{fun}\,f\,x\Rightarrow a'\,:\,\left(x:A\right)\rightarrow B$ & $\operatorname{cast-fun}$\tabularnewline
+$\operatorname{cast-fun-app}$ &  &  & \tabularnewline
+ & $\textrm{\ensuremath{\Rrightarrow}-fun-app-red}$ & \multicolumn{2}{l}{$H\vdash\mathsf{fun}\,f\,x\Rightarrow b\,:\,\left(x:A\right)\rightarrow B$,
+$H\vdash a:A$, $a\Rrightarrow a'$, $b\Rrightarrow b'$}\tabularnewline
+ &  & $\mathsf{fun}\,f\,x\Rightarrow b\Rrightarrow\mathsf{fun}\,f\,x\Rightarrow b'$ & $\textrm{\ensuremath{\Rrightarrow}-fun}$\tabularnewline
+ &  & $H\vdash\mathsf{fun}\,f\,x\Rightarrow b'\,:\,\left(x:A\right)\rightarrow B$ & by induction\tabularnewline
+ &  & $H,f:\left(x:A\right)\rightarrow B,x:A\vdash a'$ & by fun-inversion\tabularnewline
+ &  & $H\vdash a'\,:\,A$ & by induction\tabularnewline
+ &  & $H\vdash b'\left[f\coloneqq\mathsf{fun}\,f\,x\Rightarrow b',x\coloneqq a'\right]:B\left[x\coloneqq a'\right]$ & by typed substitutions\tabularnewline
+ &  & $B\left[x\coloneqq a'\right]\equiv M\left[x\coloneqq a\right]$ & by substitution by steps, $\equiv$ symmetry\tabularnewline
+ &  & $H\vdash b'\left[f\coloneqq\mathsf{fun}\,f\,x\Rightarrow b',x\coloneqq a'\right]:B\left[x\coloneqq A\right]$ & $\operatorname{cast-conv}$\tabularnewline
+ & $\textrm{\ensuremath{\Rrightarrow}-fun-app}$ & $H\vdash a\,:\,\left(x:A\right)\rightarrow B$, $H\vdash a:A$, $a\Rrightarrow a'$,
+$b\Rrightarrow b'$ & \tabularnewline
+ &  & $H\vdash b'\,:\,\left(x:B\right)\rightarrow A$ & by induction\tabularnewline
+ &  & $H\vdash A':A$ & by induction\tabularnewline
+ &  & $H\vdash b'\,a':\,B\left[x\coloneqq a'\right]$ & $\operatorname{cast-fun-app}$\tabularnewline
+ &  & $B\left[x\coloneqq a'\right]\equiv B\left[x\coloneqq a\right]$ & by substitution by steps, $\equiv$ symmetry\tabularnewline
+ &  & $H\vdash b'\left[f\coloneqq\mathsf{fun}\,f\,x\Rightarrow b',x\coloneqq a'\right]:B\left[x\coloneqq a\right]$ & $\operatorname{cast-conv}$\tabularnewline
+ & $\textrm{\ensuremath{\Rrightarrow}-fun-::-red}$ & \multicolumn{2}{l}{$H\vdash\left(b::_{\left(x:A_{1}\right)\rightarrow B_{1},\ensuremath{\ell},o}\left(x:A_{2}\right)\rightarrow B_{2}\right):\left(x:A_{2}\right)\rightarrow B_{2}$,
+$H\vdash a:A_{2}$, }\tabularnewline
+ &  & \multicolumn{2}{l}{$b\Rrightarrow b'$, $a\Rrightarrow a'$, $A_{1}\Rrightarrow A_{1}'$,
+$A_{2}\Rrightarrow A_{2}'$, $B_{1}\Rrightarrow B_{1}'$, $B_{2}\Rrightarrow B_{2}'$,
+$o\Rrightarrow o'$, }\tabularnewline
+ &  & $H\vdash a':A_{2}$ & by induction\tabularnewline
+ &  & $H\vdash a':A_{2}'$ & $\operatorname{cast-conv}$\tabularnewline
+ &  & $H\vdash b:\left(x:A_{1}\right)\rightarrow B_{1}$, $H\vdash\left(x:A_{1}\right)\rightarrow B_{1}:\star$,
+$H\vdash\left(x:A_{2}\right)\rightarrow B_{2}:\star$ & cast-inversion \tabularnewline
+ &  & $\left(x:A_{2}\right)\rightarrow B_{2}\Rrightarrow\left(x:A_{2}'\right)\rightarrow B_{2}'$ & $\textrm{\ensuremath{\Rrightarrow}-fun-ty}$\tabularnewline
+ &  & $H\vdash\left(x:A_{2}'\right)\rightarrow B_{2}':\star$ & by induction with $H\vdash\left(x:A_{2}\right)\rightarrow B_{2}:\star$,
+\footnote{well founded since cast-inversion produces smaller judgments}\tabularnewline
+ &  & $H\vdash A_{2}':\star$, $H,x:A_{2}'\vdash B_{2}':\star$ & fun-ty-inversion\tabularnewline
+ &  & $\left(x:A_{1}\right)\rightarrow B_{1}\Rrightarrow\left(x:A_{1}'\right)\rightarrow B_{1}'$ & $\textrm{\ensuremath{\Rrightarrow}-fun-ty}$\tabularnewline
+ &  & $H\vdash\left(x:A_{1}'\right)\rightarrow B_{1}':\star$ & by induction with $H\vdash\left(x:A_{1}\right)\rightarrow B_{1}:\star$,
+\footnote{well founded since cast-inversion produces smaller judgments}\tabularnewline
+ &  & $H\vdash A_{1}':\star$, $H,x:A_{1}'\vdash B_{1}':\star$ & fun-ty-inversion\tabularnewline
+ &  & let $ac=a'::_{A_{2}',\ell,o'.arg}A_{1}'$ & \tabularnewline
+ &  & $H\vdash ac:A_{1}'$ & $\operatorname{cast-::}$\tabularnewline
+ &  & $H\vdash b':\left(x:A_{1}\right)\rightarrow B_{1}$ & by induction with $H\vdash b:\left(x:A_{1}\right)\rightarrow B_{1}$,
+\footnote{well founded since cast-inversion produces smaller judgments}\tabularnewline
+ &  & $H\vdash b':\left(x:A_{1}'\right)\rightarrow B_{1}'$ & $\operatorname{cast-conv}$\tabularnewline
+ &  & $H\vdash b'\ ac:B_{1}'\left[x\coloneqq ac\right]$ & $\operatorname{cast-fun-app}$\tabularnewline
+ &  & $H\vdash B_{1}'\left[x\coloneqq ac\right]:\star$ & by substitution preservation\tabularnewline
+ &  & $H\vdash B_{2}'\left[x\coloneqq a'\right]:\star$ & by substitution preservation\tabularnewline
+ &  & $H\vdash\left(b'\ ac\right)::_{B_{1}'\left[x\coloneqq ac\right],\ensuremath{\ell},o'.bod[a']}B_{2}'\left[x\coloneqq a'\right]$ & $\operatorname{cast-::}$\tabularnewline
+\end{tabular}
+\end{proof}
+\todo{both vertically and horz too big}
+
+\todo{highlight the -fun-::-red case}
+
+\subsubsection{Progress}
+
+\begin{figure}
+\[
+\frac{\,}{\star\,\textbf{Val}}\operatorname{Val-\star}
+\]
+\[
+\frac{\,}{\left(x:A\right)\rightarrow B\,\textbf{Val}}\operatorname{Val-fun-ty}
+\]
+\[
+\frac{\,}{\mathsf{fun}\,f\,x\Rightarrow b\:\textbf{Val}}\operatorname{Val-fun}
+\]
+\[
+\frac{\begin{array}{c}
+a\:\textbf{Val}\quad A\:\textbf{Val}\quad B\:\textbf{Val}\\
+a\cancel{=}\star\\
+a\cancel{=}\left(x:C\right)\rightarrow C'
+\end{array}}{a::_{A,\ensuremath{\ell}o}B\:\textbf{Val}}\operatorname{Val-::}
+\]
+\caption{Cast Language Values}
+\label{fig:cast-val}
+\end{figure}
+
+Unlike the surface language, it is not longer practical to characterize
+values syntactically. Values are specified by judgments in Figure
+\ref{fig:cast-val}. They are standard except for the $\operatorname{Val-::}$,
+which states that a type ($\star$ or function type) under a cast
+is not a value.
+
+\begin{figure}
+\[
+\frac{a\,\textbf{Val}}{\left(\mathsf{fun}\,f\,x\Rightarrow b\right)a\rightsquigarrow b\left[f\coloneqq\mathsf{fun}\,f\,x\Rightarrow b,x\coloneqq a\right]}
+\]
+\[
+\frac{b\,\textbf{Val}\quad a\,\textbf{Val}}{\begin{array}{c}
+\left(b::_{\left(x:A_{1}\right)\rightarrow B_{1},\ensuremath{\ell},o}\left(x:A_{2}\right)\rightarrow B_{2}\right)a\rightsquigarrow\\
+\left(b\,a::_{A_{2},\ell,o.arg}A_{1}\right)::_{B_{1}\left[x\coloneqq a::_{A_{2},\ell,o.arg}A_{1}\right],\ensuremath{\ell},o.bod[a]}B_{2}\left[x\coloneqq a\right]
+\end{array}}
+\]
+\[
+\frac{a\,\textbf{Val}}{a::_{\star,\ensuremath{\ell},o}\star\rightsquigarrow a}
+\]
+\[
+\frac{a\rightsquigarrow a'}{a::_{A,\ensuremath{\ell},o}B\rightsquigarrow a'::_{A,\ensuremath{\ell},o}B}
+\]
+\[
+\frac{a\,\textbf{Val}\quad A\rightsquigarrow A'}{a::_{A,\ensuremath{\ell},o}B\rightsquigarrow a::_{A',\ensuremath{\ell},o}B}
+\]
+\[
+\frac{a\,\textbf{Val}\quad A\,\textbf{Val}\quad B\rightsquigarrow B'}{a::_{A,\ensuremath{\ell},o}B\rightsquigarrow a::_{A,\ensuremath{\ell},o}B'}
+\]
+\[
+\frac{b\rightsquigarrow b'}{b\,a\rightsquigarrow b'\,a}
+\]
+\[
+\frac{b\,\textbf{Val}\quad a\rightsquigarrow a'}{b\,a\rightsquigarrow b\,a'}
+\]
+
+\todo[inline]{name rules}\caption{Cast Language Small Step}
+\label{fig:cast-step}
+\end{figure}
+
+Small steps are listed in Figure \ref{fig:cast-step}. They are standard
+for call-by-value except that casts can distribute over application,
+and casts can reduce when both types are $\star$.
+
+\begin{figure}
+\[
+\frac{\,}{\textbf{Blame}\:\ensuremath{\ell}\,o\,\left(a::_{\left(x:A\right)\rightarrow B,\ensuremath{\ell},o}\star\right)}
+\]
+\[
+\frac{\,}{\textbf{Blame}\:\ensuremath{\ell}\,o\,\left(a::_{\star,\ensuremath{\ell},o}\left(x:A\right)\rightarrow B\right)}
+\]
+\[
+\frac{\textbf{Blame}\:\ensuremath{\ell}\,o\,a}{\textbf{Blame}\:\ensuremath{\ell}\,o\,\left(a::_{A,\ensuremath{\ell'},o'}B\right)}
+\]
+\[
+\frac{\textbf{Blame}\:\ensuremath{\ell}\,o\,A}{\textbf{Blame}\:\ensuremath{\ell}\,o\,\left(a::_{A,\ensuremath{\ell'},o'}B\right)}
+\]
+\[
+\frac{\textbf{Blame}\:\ensuremath{\ell}\,o\,B}{\textbf{Blame}\:\ensuremath{\ell}\,o\,\left(a::_{A,\ensuremath{\ell'},o'}B\right)}
+\]
+\[
+\frac{\textbf{Blame}\:\ensuremath{\ell}\,o\,b}{\textbf{Blame}\:\ensuremath{\ell}\,o\,\left(b\,a\right)}
+\]
+\[
+\frac{\textbf{Blame}\:\ensuremath{\ell}\,o\,a}{\textbf{Blame}\:\ensuremath{\ell}\,o\,\left(b\,a\right)}
+\]
+\todo[inline]{name rules}\caption{Cast Language Blame}
+\label{fig:cast-blame}
+\end{figure}
+
+%% walk through blame
+In addition to small step and values we also specify blame judgments
+in figure \ref{fig:cast-blame}. Blame tracks the information needed
+to create a good error message and is inspired by the many systems
+that use blame tracking \cite{10.1145/581478.581484,10.1007/978-3-642-00590-9_1,wadler:LIPIcs:2015:5033}.
+Specifically the judgment $\textbf{Blame}\:\ensuremath{\ell}\,o\,a$
+means that $a$witnesses an a contradiction in the source code at
+location $\ensuremath{\ell}$ under the observations $o$. With only
+dependent functions and universes, only inequalities of the form $*\,\cancel{=}\,A\rightarrow B$
+can be witnessed. The first 2 rules of the blame judgment witness
+these concrete type inequalities. The rest of the blame rules will
+recursively extract concrete witnesses from larger terms. The limited
+amount of observation is the main reason why the theory in this chapter
+is tractable. %% "self evidently correct" sinc it is clear to only extract inequalities. like step and val? one of several possible contrediction extraction relations
+\begin{fact}
+$\rightsquigarrow$ preserves types 
+
+since the following rule is admissible
+\end{fact}
+
+\[
+\frac{m\rightsquigarrow m'}{m\Rrightarrow m'}
+\]
+
+As in Chapter 2 we will need technical lemmas that determine the form
+of a value of a type in the empty context. However, canonical function
+values look different because they must account for the possibility
+of blame arising from a stuck term.
+\begin{lem}
+$\star$-Canonical forms (generalized)
+
+If $\vdash a\,:\,A$ , $a\,\textbf{Val}$, and $A\equiv\star$ then
+either
+
+\textup{$a=\star$ ,}
+
+\textup{or there exists $C$, $B$, such that $a=\left(x:C\right)\rightarrow B$}
+\end{lem}
+
+\todo{alternatively produce the blame judgment}
+\begin{proof}
+by induction on the cast derivation
+
+\begin{tabular}{lll}
+$\operatorname{cast-\star}$ & $\vdash\star:\star$ & follows since $a=\star$\tabularnewline
+$\operatorname{cast-fun-ty}$ & $\vdash\left(x:A\right)\rightarrow B\,:\,\star$ & follows since $a=\left(x:A\right)\rightarrow B$\tabularnewline
+$\textrm{ty-conv}$ & $\vdash a:A$, $a\,\textbf{Val}$, $A\equiv A'$, $A'\equiv\star$ & which concluded $\vdash a\,:\,A'$\tabularnewline
+ & $A'\equiv\star$ & by transitivity, symmetry\tabularnewline
+ & $a=\star$ or there exists $C$, $B$, such that $a=\left(x:C\right)\rightarrow B$  & by induction\tabularnewline
+$\operatorname{cast-::}$ & $\vdash a:A_{1}$, $a::_{A_{1},\ensuremath{\ell},o}A_{2}\:\textbf{Val}$,$\vdash A_{1}:\star$,
+$\vdash A_{2}:\star$, $A_{2}\equiv\star$ & \tabularnewline
+ & $a\cancel{=}\star,a\cancel{=}\left(x:C\right)\rightarrow B$, $a\:\textbf{Val}$ & since it must have been a value by $\operatorname{Val-::}$ \tabularnewline
+ & but $a=\star$ or there exists $C$, $B$, such that $a=\left(x:C\right)\rightarrow B$  & by induction \tabularnewline
+ & ! & so $\operatorname{cast-::}$ case was impossible\tabularnewline
+$\operatorname{cast-fun}$ & $f:\left(x:A\right)\rightarrow B,x:A\vdash b:B$, $\left(x:A\right)\rightarrow B\equiv\star$ & \tabularnewline
+ & $\left(x:A\right)\rightarrow B\cancel{\equiv}\star$ & by the stability of $\equiv$\tabularnewline
+ & ! & so $\operatorname{cast-fun}$ case was impossible\tabularnewline
+other rules & impossible & since they do not type values in an empty ctx\tabularnewline
+\end{tabular}
+\end{proof}
+Leading to the corollary ,
+\begin{cor}
+$\star$-Canonical forms
+
+If $\vdash A:\star$, and $A\,\textbf{Val}$ then either 
+
+\textup{$A=\star$ , }
+
+\textup{or there exists $C$, $B$, such that $A=\left(x:C\right)\rightarrow B$}
+\end{cor}
+
+\begin{proof}
+by reflexivity of $\equiv$
+\end{proof}
+Likewise
+\begin{lem}
+$\rightarrow$-Canonical forms (generalized)
+
+If $\vdash a\,:\,A$ , $a\,\textbf{Val}$, and $A\equiv\left(x:C\right)\rightarrow B$
+then either
+
+$a=\mathsf{fun}\,f\,x\Rightarrow b$ 
+
+or $a=d::_{D,\ensuremath{\ell},o}\left(x:C'\right)\rightarrow B'$,
+$d\,\textbf{Val}$, $D\,\textbf{Val}$, $C'\equiv C$, $B'\equiv B$ 
+\end{lem}
+
+\todo{alternatively produce the blame judgment}
+\begin{proof}
+by induction on the cast derivation
+
+\begin{tabular}{lll}
+$\operatorname{cast-\star}$ & $\star\equiv\left(x:C\right)\rightarrow B$ & \tabularnewline
+ & $\star\cancel{\equiv}\left(x:C\right)\rightarrow B$ ! & by the stability of $\equiv$\tabularnewline
+$\operatorname{cast-fun-ty}$ & $\star\equiv\left(x:C\right)\rightarrow B$ & \tabularnewline
+ & $\star\cancel{\equiv}\left(x:C\right)\rightarrow B$ ! & by the stability of $\equiv$\tabularnewline
+$\operatorname{cast-fun}$ & \multicolumn{2}{l}{$f:\left(x:C'\right)\rightarrow B',x:C'\vdash b:B'$, $\left(x:C'\right)\rightarrow B'\equiv\left(x:C\right)\rightarrow B$}\tabularnewline
+ &  & follows directly\tabularnewline
+$\operatorname{cast-::}$ & $\vdash a:A_{1}$, $\vdash A_{1}:\star$, $\vdash A_{2}:\star$, $A_{2}\equiv\left(x:C\right)\rightarrow B$ & \tabularnewline
+ & $a\cancel{=}\star,a\cancel{=}\left(x:C\right)\rightarrow B$, $a\:\textbf{Val}$,
+$A_{1}\:\textbf{Val}$, $A_{2}\:\textbf{Val}$ & since it must have been a value by $\operatorname{Val-::}$\tabularnewline
+ & $A_{2}=\left(x:C'\right)\rightarrow B'$ & by the stability of $\equiv$, $A_{2}\:\textbf{Val}$\footnote{TODO: make an explicit lemma?}\tabularnewline
+ & $C'\equiv C$, $B'\equiv B$ & by the stability of $\equiv$\tabularnewline
+$\textrm{ty-conv}$ & $\vdash a:A$, $A\equiv A'$, $A'\equiv\left(x:C\right)\rightarrow B$ & \tabularnewline
+ & $A\equiv\left(x:C\right)\rightarrow B$ & by transitivity\tabularnewline
+ & ... & by induction\tabularnewline
+other rules & impossible & since they do not type values of $\star$\tabularnewline
+\end{tabular}
+\end{proof}
+As a corollary
+\begin{cor}
+$\rightarrow$-Canonical forms
+
+If $\vdash a:\left(x:C\right)\rightarrow B$ , and $a\,\textbf{Val}$
+
+$a=\mathsf{fun}\,f\,x\Rightarrow b$ 
+
+or $a=d::_{D,\ensuremath{\ell},o}\left(x:C'\right)\rightarrow B'$,
+$d\,\textbf{Val}$, $D\,\textbf{Val}$, $C'\equiv C$, $B'\equiv B$ 
+\end{cor}
+
+\begin{proof}
+by reflexivity of $\equiv$
+\end{proof}
+\begin{cor}
+$\rightarrow$-Canonical terms
+
+If $\vdash a:\left(x:C\right)\rightarrow B$ , and $a\,\textbf{Val}$
+then $a$is not a type, $a\cancel{=}\star,a\cancel{=}\left(x:C\right)\rightarrow C'$
+\end{cor}
+
+\begin{thm}
+Progress
+
+If $\vdash a\,:\,A$ then either 
+
+$a\,\textbf{Val}$
+
+there exists $a'$ such that $a\rightsquigarrow a'$
+
+or there exists $\ell$, $o$ such that $\textbf{Blame}\:\ensuremath{\ell}\,o\,a$
+\end{thm}
+
+\begin{proof}
+As usual this follows form induction on the typing derivation
+
+\begin{tabular}{lllll}
+$\operatorname{cast-var}$ & $\vdash\star\,:\,\star$ &  &  & \tabularnewline
+ & $\star\,\textbf{Val}$ &  &  & $\operatorname{Val-\star}$\tabularnewline
+$\operatorname{cast-var}$ & $\vdash x:A$ &  &  & impossible in an empty context\tabularnewline
+$\operatorname{cast-conv}$ & $\vdash a:A'$, $A'\equiv A$ &  &  & \tabularnewline
+ & \multicolumn{3}{l}{$a\,\textbf{Val}$, there exists $a'$ such that $a\rightsquigarrow a'$,
+or there exists $\ell$, $o$ such that $\textbf{Blame}\:\ensuremath{\ell}\,o\,a$} & by induction on $\vdash a:A'$\tabularnewline
+$\operatorname{cast-::}$ & $\vdash a:\,A$, $\vdash A:\star$, $\vdash B:\star$ &  &  & \tabularnewline
+ & \multicolumn{3}{l}{$a\,\textbf{Val}$, there exists $a'$ such that $a\rightsquigarrow a'$,
+or there exists $\ell_{a}$, $o_{a}$ such that $\textbf{Blame}\:\ensuremath{\ell}_{a}\,o_{a}\,a$} & by induction\tabularnewline
+ & \multicolumn{3}{l}{$A\,\textbf{Val}$, there exists $A'$ such that $A\rightsquigarrow A'$,
+or there exists $\ell_{A}$, $o_{A}$ such that $\textbf{Blame}\:\ensuremath{\ell}_{A}\,o_{A}\,A$} & by induction\tabularnewline
+ & \multicolumn{3}{l}{$B\,\textbf{Val}$, there exists $B'$ such that $B\rightsquigarrow B'$,
+or there exists $\ell_{B}$, $o_{B}$ such that $\textbf{Blame}\:\ensuremath{\ell}_{B}\,o_{B}\,B$} & by induction\tabularnewline
+ & if $a\rightsquigarrow a'$,  & $a::_{A,\ensuremath{\ell},o}B\rightsquigarrow a'::_{A,\ensuremath{\ell},o}B$ &  & \tabularnewline
+ & if $a\,\textbf{Val}$, $A\rightsquigarrow A'$, & $a::_{A,\ensuremath{\ell},o}B\rightsquigarrow a::_{A',\ensuremath{\ell},o}B$ &  & \tabularnewline
+ & if $a\,\textbf{Val}$, $A\,\textbf{Val}$, $B\rightsquigarrow B'$ & $a::_{A,\ensuremath{\ell},o}B\rightsquigarrow a::_{A,\ensuremath{\ell},o}B'$ &  & \tabularnewline
+ & if $a\,\textbf{Val}$, $A\,\textbf{Val}$, $B\,\textbf{Val}$, &  &  & \tabularnewline
+ &  & $A=\star$ or $A=\left(x:C_{A}\right)\rightarrow D_{A}$ &  & by canonical forms of $\star$\tabularnewline
+ &  & $B=\star$ or $B=\left(x:C_{B}\right)\rightarrow D_{B}$ &  & by canonical forms of $\star$\tabularnewline
+ &  & if $A=\star$, $B=\star$  & $a::_{\star,\ensuremath{\ell},o}\star\rightsquigarrow a$ & \tabularnewline
+ &  & if $A=\left(x:C_{A}\right)\rightarrow D_{A}$, $B=\left(x:C_{B}\right)\rightarrow D_{B}$ &  & \tabularnewline
+ &  &  & $a\cancel{=}\star,a\cancel{=}\left(x:C\right)\rightarrow C'$ & by canonical forms of fun \tabularnewline
+ &  &  & $a::_{A,\ensuremath{\ell}o}B\:\textbf{Val}$ & \tabularnewline
+ &  & if $A=\star$, $B=\left(x:C_{B}\right)\rightarrow D_{B}$  & $\textbf{Blame}\:\ensuremath{\ell}\,o\,\left(a::_{\star,\ensuremath{\ell},o}\left(x:C_{B}\right)\rightarrow D_{B}\right)$ & \tabularnewline
+ &  & if $A=\left(x:C_{A}\right)\rightarrow D_{A}$, $B=\star$ & $\textbf{Blame}\:\ensuremath{\ell}\,o\,\left(a::_{\left(x:C_{A}\right)\rightarrow B_{A},\ensuremath{\ell},o}\star\right)$ & \tabularnewline
+ & \multicolumn{2}{l}{if there exists $\ell_{a}$, $o_{a}$ such that $\textbf{Blame}\:\ensuremath{\ell}_{a}\,o_{a}\,a$} & $\textbf{Blame}\:\ensuremath{\ell}_{a}\,o_{a}\,\left(a::_{A,\ensuremath{\ell},o}B\right)$ & \tabularnewline
+ & \multicolumn{2}{l}{if there exists $\ell_{A}$, $o_{A}$ such that $\textbf{Blame}\:\ensuremath{\ell}_{A}\,o_{A}\,A$} & $\textbf{Blame}\:\ensuremath{\ell}_{A}\,o_{A}\,\left(a::_{A,\ensuremath{\ell},o}B\right)$ & \tabularnewline
+ & \multicolumn{2}{l}{if there exists $\ell_{B}$, $o_{B}$ such that $\textbf{Blame}\:\ensuremath{\ell}_{B}\,o_{B}\,B$} & $\textbf{Blame}\:\ensuremath{\ell}_{B}\,o_{B}\,\left(a::_{A,\ensuremath{\ell},o}B\right)$ & \tabularnewline
+$\operatorname{cast-fun-ty}$ & $\vdash\left(x:A\right)\rightarrow B\,:\,\star$ &  &  & \tabularnewline
+ & $\left(x:A\right)\rightarrow B\,\textbf{Val}$ &  &  & $\operatorname{Val-fun-ty}$\tabularnewline
+$\operatorname{cast-fun-app}$ & $\vdash\mathsf{fun}\,f\,x\Rightarrow b\,:\,\left(x:A\right)\rightarrow B$ &  &  & \tabularnewline
+ & $\mathsf{fun}\,f\,x\Rightarrow b\:\textbf{Val}$ &  &  & $\operatorname{Val-fun}$\tabularnewline
+$\operatorname{cast-fun-app}$ & \multicolumn{2}{l}{$\vdash b\,:\,\left(x:A\right)\rightarrow B$, $\Gamma\vdash a\,:\,A$} & \tabularnewline
+ & \multicolumn{3}{l}{$a\,\textbf{Val}$, there exists $a'$ such that $a\rightsquigarrow a'$,
+or there exists $\ell_{a}$, $o_{a}$ such that $\textbf{Blame}\:\ensuremath{\ell}_{a}\,o_{a}\,a$} & by induction\tabularnewline
+ & \multicolumn{3}{l}{$b\,\textbf{Val}$, there exists $b'$ such that $b\rightsquigarrow b'$,
+or there exists $\ell_{b}$, $o_{b}$ such that $\textbf{Blame}\:\ensuremath{\ell}_{b}\,o_{b}\,b$} & by induction\tabularnewline
+ & if $b\rightsquigarrow b'$, & $b\,a\rightsquigarrow b'\,a$ &  & \tabularnewline
+ & if $b\,\textbf{Val}$, $a\rightsquigarrow a'$, & $b\,a\rightsquigarrow b\,a'$ &  & \tabularnewline
+ & if $b\,\textbf{Val}$, $a\,\textbf{Val}$, & \multicolumn{2}{l}{$b=\mathsf{fun}\,f\,x\Rightarrow c$ or $b=d_{b}::_{D_{b},\ensuremath{\ell}_{b}\,o_{b}}\left(x:A'\right)\rightarrow B'$,
+$d_{b}\,\textbf{Val}$, $D_{b}\,\textbf{Val}$, $A'\equiv A$, $B'\equiv B$\footnote{todo clean up extra conclusions}} & by canonical forms of functions\tabularnewline
+ &  & if $b=\mathsf{fun}\,f\,x\Rightarrow c$ & $\left(\mathsf{fun}\,f\,x\Rightarrow c\right)a\rightsquigarrow c\left[f\coloneqq\mathsf{fun}\,f\,x\Rightarrow c,x\coloneqq a\right]$ & \tabularnewline
+ &  & \multicolumn{2}{l}{$b=d_{b}::_{D_{b},\ensuremath{\ell}_{b},o_{b}}\left(x:A'\right)\rightarrow B'$,
+$d_{b}\,\textbf{Val}$, $D_{b}\,\textbf{Val}$, $A'\equiv A$, $B'\equiv B$} & \tabularnewline
+ &  &  & $\vdash D_{b}:\star$ & \tabularnewline
+ &  &  & $D_{b}=\star$ or $D_{b}=\left(x:A_{D_{b}}\right)\rightarrow B_{D_{b}}$ & by canonical forms of $\star$\tabularnewline
+ &  &  & if $D_{b}=\star$,  & \tabularnewline
+ &  &  & $\textbf{Blame}\:\ensuremath{\ell}_{b}\,o_{b}\,\left(b::_{\star,\ensuremath{\ell}_{b},o_{b}}\left(x:A'\right)\rightarrow B'\right)$ & \tabularnewline
+ &  &  & if $D_{b}=D_{b}=\left(x:A_{D_{b}}\right)\rightarrow B_{D_{b}}$, & \tabularnewline
+ &  &  & let $a_{c}=a::_{A',\ensuremath{\ell}_{b},o_{b}.arg}A_{D_{b}}$ & \tabularnewline
+ &  &  & $\left(d_{b}::_{\left(x:A_{D_{b}}\right)\rightarrow B_{D_{b}},\ensuremath{\ell}_{b},o_{b}}\left(x:A'\right)\rightarrow B'\right)a\rightsquigarrow$ & \tabularnewline
+ &  &  & $\left(d_{b}\,a_{c}\right)::_{B_{D_{b}}\left[x\coloneqq a_{c}\right],\ensuremath{\ell},o.bod[a]}B'\left[x\coloneqq a\right]$ & \tabularnewline
+ & \multicolumn{2}{l}{if there exists $\ell_{b}$, $o_{b}$ such that $\textbf{Blame}\:\ensuremath{\ell}_{b}\,o_{b}\,b$} & $\textbf{Blame}\:\ensuremath{\ell}_{b}\,o_{b}\,\left(b\ a\right)$ & \tabularnewline
+ & \multicolumn{2}{l}{if there exists $\ell_{a}$, $o_{a}$ such that $\textbf{Blame}\:\ensuremath{\ell}_{a}\,o_{a}\,a$} & $\textbf{Blame}\:\ensuremath{\ell}_{a}\,o_{a}\,\left(b\ a\right)$ & \tabularnewline
+\end{tabular}
+\end{proof}
+
+\subsection{Cast Soundness}
+
+\todo{revise}
+
+%% cast soundness
+We can now prove cast soundness.
+
+For any $\lozenge\vdash c:C$, $c'$, $c\rightsquigarrow^{*}c'$,
+if $\textbf{Stuck}\,c'$ then $\textbf{Blame}\:\ensuremath{\ell}\,o\:c'$,
+where $\textbf{Stuck}\,c'$ means $c'$ is not a value and $c'$ does
+not step. This follows by iteration the progress and preservation
+lemmas.
+
+\subsection{Discussion}
+
+\todo{inferablility of inner cast}
+
+\todo{regularity encoding, along with the cast}
+
+Because of the conversion rule and non-termination, cast-checking
+is undecidable. All previous arguments from Chapter 2 apply to why
+this may be acceptable, but the most relevant is that the system should
+only be used through the Elaboration procedure described in the next
+section, which avoids the need to cast check.
+
+\todo{example}
+
+As in the surface languages, the cast language is logically unsound,
+by design.
+
+Just as there are many different flavors of definitional equality
+that could have been used in Chapter 2, there are also many possible
+degrees that runtime equality can be enforced. The \textbf{Blame}
+relation in \ref{fig:cast-blame} outlines the minimal possible checking
+to support cast soundness. For instance\footnote{assuming the data types of chapter 5},
+$\mathtt{head}\,\mathbb{B}\,1\,\left(\mathtt{rep}\,\mathbb{B}\,true\,0\right)$
+will result in blame since $1$ and $0$ have different head constructors.
+But $\mathtt{head}\,\mathbb{B}\,1\,\left(\mathtt{rep}\,\mathbb{B}\,true\,9\right)$
+will not result in blame since $1$ and $9$ have the same head constructor
+and the computation can reduce to $true$. 
+
+It is likely that more aggressive checking is preferable in practice,
+especially in the presence of data types. That is why in our implementation
+we check equalities up to call-by-value. 
+
+This behavior is consistent with the conjectured partial correctness
+of logically unsound Call-by-Value execution for dependent types in
+\cite{jia2010dependent}. 
+
+\todo{move?}
+
+Unlike static type-checking, these runtime checks have runtime costs.
+Since the language allows nontermination, checks can take forever
+to resolve. We don't expect this to be an issue in practice, since
+we could limit the number of steps allowed. Additionally, the implementation
+avoids casts when it knows that blame is impossible. 
+
+\section{Elaboration}
+
+% overview
+Even though the cast language allows us to optimistically assert equalities,
+manually noting every cast would be unrealistically cumbersome. This
+bureaucracy is solved with an elaboration procedure that translates
+(untyped) terms from the surface language into the cast language.
+If the term is well typed in the surface language elaboration will
+produce a term without blamable errors. Terms with unproven equality
+in types are mapped to a cast with enough information to point out
+the original source when an inequality is witnessed. Elaboration serves
+a similar role as the bidirectional type system did in Chapter 2,
+and uses a similar methodology
+
+First we enrich the surface language with location information, $\ell$,
+at every position that could result in a type mismatch in Figure \ref{fig:surface-pre-syntax-loc}.
+Note that the location tags match almost exactly\todo{or will after rewritten}
+with the check annotations of the bidirectional system. For technical
+reasons the set of locations is nonempty, and a specific null location
+$.$ \todo{- instead of . ?}is designated. That null location can
+be used when we need to generate fresh terms, but have no sensible
+location information available. All the meta theory from Chapter 2
+goes through assuming that all locations are equivalent and by generating
+null locations when needed\footnote{For instance, the parallel reduction relation will associate all locations,
+$\frac{M\Rrightarrow M'\quad N\Rrightarrow N'}{\left(x:M_{l}\right)\rightarrow N_{l'}\Rrightarrow\left(x:M'_{l''}\right)\rightarrow N'_{l'''}}\,\textrm{\ensuremath{\Rrightarrow}-fun-ty}$,
+so that the relation does not discriminate over syntaxes that come
+from different locations. While the $max$ function will map terms
+into the null location, $max\left(\left(x:M_{\ensuremath{\ell}}\right)\rightarrow N_{\ensuremath{\ell'}}\right)=max\left(\left(x:max\left(M\right)_{.}\right)\rightarrow max\left(N\right)_{.}\right)$
+so that the output is unique.}\todo{fn a little awk}. We will avoid writing these annotations when
+they are unneeded (explicitly in Figure \ref{fig:surface-pre-syntax-abrev}).
+
+\begin{figure}
+\begin{tabular}{lcll}
+\multicolumn{4}{l}{source labels,}\tabularnewline
+$\ensuremath{\ell}$ & $\Coloneqq$ & ... & \tabularnewline
+ & | & $.$ & no source label\tabularnewline
+\multicolumn{4}{l}{expressions,}\tabularnewline
+$m,n,M,N$ & $\Coloneqq$ & $x$ & variable\tabularnewline
+ & | & $m::_{\ensuremath{\ell}}M^{\ensuremath{\ell}'}$ & annotation\tabularnewline
+ & | & $\star$ & type universe\tabularnewline
+ & | & $\left(x:M_{\ensuremath{\ell}}\right)\rightarrow N_{\ensuremath{\ell'}}$ & function type\tabularnewline
+ & | & $\mathsf{fun}\,f\,x\Rightarrow m$ & function\tabularnewline
+ & | & $m_{\ensuremath{\ell}}\,n$ & application\tabularnewline
+\end{tabular}\caption{Surface Language Syntax, With Locations}
+\label{fig:surface-pre-syntax-loc}
+\end{figure}
+
+\begin{figure}
+\begin{tabular}{lclll}
+$m::_{\ensuremath{\ell}}M^{\ensuremath{\ell}'}$ & written & $m::_{\ensuremath{\ell}}M$ & when & $\ensuremath{\ell}$' is irrelevant\tabularnewline
+$m::_{\ensuremath{\ell}}M$ & written & $m::M$ & when & $\ensuremath{\ell}$ is irrelevant\tabularnewline
+$\left(x:M_{\ensuremath{\ell}}\right)\rightarrow N_{\ensuremath{\ell'}}$ & written & $\left(x:M\right)\rightarrow N$ & when & $\ensuremath{\ell}$, $\ensuremath{\ell}'$ are irrelevant\tabularnewline
+$m_{\ensuremath{\ell}}\,n$ & written & $m_{\ensuremath{}}\,n$ & when & $\ensuremath{\ell}$ is irrelevant\tabularnewline
+\end{tabular}
+
+\caption{Surface Language Abbreviations}
+\label{fig:surface-pre-syntax-abrev}
+\end{figure}
+
+
+\subsection{Examples}
+
+As with bidirectional type checking variable types will be inferred
+by casting the outer type. For example, 
+\begin{example}
+$\vdash(\lambda x\Rightarrow7)::_{\ell}\mathbb{B}\rightarrow\mathbb{B}$
+elaborates to $\vdash(\lambda x\Rightarrow7::_{\mathbb{N}.\ell,.bod[x]}\mathbb{B})$
+\end{example}
+
+Arguments will receive expected types when they are applied. For example, 
+\begin{example}
+$f:\mathbb{B}\rightarrow\mathbb{B}\vdash f_{\ell}7\ :\mathbb{B}$
+elaborates to $f:\mathbb{B}\rightarrow\mathbb{B}\vdash f\left(7::_{\mathbb{N}.\ell,.arg}\mathbb{B}\right)\ :\mathbb{B}$
+\end{example}
+
+Vacuous cast can be created,
+\begin{example}
+$f:\mathbb{N}\rightarrow\mathbb{B}\rightarrow\mathbb{B}\vdash f_{\ell}7_{\ell'}3\ :\mathbb{B}$
+elaborates to $f:\mathbb{N}\rightarrow\mathbb{B}\rightarrow\mathbb{B}\vdash f\left(7::_{\mathbb{N}.\ell,.arg}\mathbb{N}\right)\left(3::_{\mathbb{N}.\ell',.arg}\mathbb{B}\right)\ :\mathbb{B}$
+\end{example}
+
+\todo{dependent type example where cast muddles type}
+
+Unlike in gradual typing, we cannot elaborate arbitrary untyped syntax.
+The underlying type of a cast needs to be known so that a function
+type can swap its argument type at application. For instance, $\lambda x\Rightarrow x$
+will not elaborate since the intended type is not known. Fortunately,
+our experimental testing suggests that a majority of randomly generated
+terms can be elaborated, while only a small minority of terms would
+type-check in the surface language. The programmer can make any term
+elaborate if they annotate the intended type. For instance, $\left(\lambda x\Rightarrow x\right)::*\rightarrow*$
+will elaborate.
+
+\subsection{Elaboration Procedure}
+
+\begin{figure}
+\[
+\frac{x:A\in H}{H\vdash x\,\textbf{Elab}\,x\overrightarrow{\,:\,}A}\operatorname{\overrightarrow{\textbf{Elab}}-var}
+\]
+
+\[
+\frac{\,}{H\vdash\star\,\textbf{Elab}\,\star\overrightarrow{\,:\,}\star}\operatorname{\overrightarrow{\textbf{Elab}}-\star}
+\]
+
+\[
+\frac{H\vdash M\overleftarrow{\,:_{\ell,.}\,}\star\textbf{Elab}\ A\quad H,x:A\vdash N\overleftarrow{\,:_{\ell',.}\,}\star\textbf{Elab}\ B}{H\vdash\left(\left(x:M_{\ensuremath{\ell}}\right)\rightarrow N_{\ensuremath{\ell'}}\right)\textbf{Elab}\left(\left(x:A\right)\rightarrow B\right)\overrightarrow{\,:\,}\star}\operatorname{\overrightarrow{\textbf{Elab}}-fun-ty}
+\]
+
+\[
+\frac{H\vdash m\,\textbf{Elab}\ b\overrightarrow{\,:\,}\left(x:A\right)\rightarrow B\quad H\vdash n\overleftarrow{\,:_{\ell,.arg}\,}A\,\textbf{Elab}\,a}{H\vdash\left(m_{\ell}\,n\right)\textbf{Elab}\left(b\,a\right)\overrightarrow{\,:\,}B\left[x\coloneqq a\right]}\operatorname{\overrightarrow{\textbf{Elab}}-fun-app}
+\]
+
+\[
+\frac{H\vdash n\,\textbf{Elab}\ a\overrightarrow{\,:\,}\left(x:A\right)\rightarrow B\quad H\vdash n\overleftarrow{\,:_{\ell,.arg}\,}A\,\textbf{Elab}\ a}{H\vdash\left(m_{\ell}\,n\right)\textbf{Elab}\left(b\,a\right)\overrightarrow{\,:\,}B\left[x\coloneqq a\right]}\operatorname{\overrightarrow{\textbf{Elab}}-fun-app}
+\]
+
+\[
+\frac{H\vdash M\overleftarrow{\,:_{\ell',.}\,}\star\,\textbf{Elab}\ A\quad H\vdash m\overleftarrow{\,:_{\ell,.}\,}A\,\textbf{Elab}\ a}{H\vdash\left(m::_{\ell}M^{\ell'}\right)\textbf{Elab}\,a\overrightarrow{\,:\,}A}\operatorname{\overrightarrow{\textbf{Elab}}-::}
+\]
+
+\[
+\frac{H,f:\left(x:A\right)\rightarrow B,x:A\vdash m\overleftarrow{\,:_{\ell,o.bod[x]}\,}B\,\textbf{Elab}\ b}{H\vdash\left(\mathsf{fun}\,f\,x\Rightarrow m\right)\overleftarrow{\,:_{\ell,o}\,}\left(x:A\right)\rightarrow B\,\textbf{Elab}\left(\mathsf{fun}\,f\,x\Rightarrow b\right)}\operatorname{\overleftarrow{\textbf{Elab}}-fun}
+\]
+
+\[
+\frac{H\vdash m\,\textbf{Elab}\ a\overrightarrow{\,:\,}A}{H\vdash m\overleftarrow{\,:_{\ell,o}\,}B\ \textbf{Elab}\left(a::_{A,\ensuremath{\ell},o}B\right)}\operatorname{\overleftarrow{\textbf{Elab}}-cast}
+\]
+
+\[
+\frac{H\vdash m\,\textbf{Elab}\ a\overrightarrow{\,:\,}\star}{H\vdash m\overleftarrow{\,:_{\ell,o}\,}\star\ \textbf{Elab}\,a}\operatorname{\overleftarrow{\textbf{Elab}}-conv-\star}
+\]
+
+\todo[inline]{which syntax looks the best? on the left when input, or alway on the
+right like the typing judgment}
+
+\caption{Elaboration}
+\label{fig:elaboration}
+\end{figure}
+
+% rules
+Like the bidirectional rules, the rules for elaboration are broken
+into two judgments, 
+\begin{itemize}
+\item $H\vdash m\overleftarrow{\,:_{\ell,o}\,}A\,\textbf{Elab}\ a$, that
+generates a cast term $a$ from a surface term $m$ given its expected
+type $A$ along with a location $\ell$ and observation $o$ that
+made that assertion
+\item $H\vdash m\,\textbf{Elab}\ a\overrightarrow{\,:\,}A$, that generates
+a cast term $a$ and its type $A$ from a surface term $m$
+\end{itemize}
+The rules for elaboration are presented in Figure \ref{fig:elaboration}.
+Elaboration rules are written in a style of bidirectional type checking.
+However, unlike bidirectional type checking, when checking an inference
+elaboration adds a cast assertion that the two types are equal. Thus
+any conversion checking can be suspended until runtime. Additionally
+we will allow the mode to change at the type universe with the $\operatorname{\overleftarrow{\textbf{Elab}}-conv-\star}$
+rule, this is required to avoid stuck casts at $\star$. As formulated
+here, the elaboration procedure is total. 
+
+There are several desirable properties of elaboration, 
+
+\begin{figure}
+\begin{tabular}{ccc}
+$|x|$ & = & $x$\tabularnewline
+$|\star|$ & = & $\star$\tabularnewline
+$|m::_{\ell}M|$ & = & $|m|$\tabularnewline
+$|\left(x:M_{\ensuremath{\ell}}\right)\rightarrow N_{\ensuremath{\ell'}}|$ & = & $\left(x:|M|\right)\rightarrow|N|$\tabularnewline
+$|m_{\ensuremath{\ell}}\,n|$ & = & $|m|\,|n|$\tabularnewline
+$|\mathsf{fun}\,f\,x\Rightarrow m|$ & = & $\mathsf{fun}\,f\,x\Rightarrow|m|$\tabularnewline
+$|\lozenge|$ & = & $\lozenge$\tabularnewline
+$|\Gamma,x:A|$ & = & $|\Gamma|,x:|A|$\tabularnewline
+$|a::_{A,\ensuremath{\ell},o}B|$ & = & $|a|$\tabularnewline
+$|\left(x:A\right)\rightarrow B|$ & = & $\left(x:|A|\right)\rightarrow|B|$\tabularnewline
+$|\mathsf{fun}\,f\,x\Rightarrow b|$ & = & $\mathsf{fun}\,f\,x\Rightarrow|b|$\tabularnewline
+$|b\,a|$ & = & $|b|\,|a|$\tabularnewline
+$|H,x:M|$ & = & $|H|,x:|M|$\tabularnewline
+\end{tabular}\caption{Erasure}
+\label{fig:erasure}
+\end{figure}
+
+\begin{thm}
+elaborated terms preserve the erasure (defined in \ref{fig:erasure})
+
+if $H\vdash m\,\textbf{Elab}\ a\overrightarrow{\,:\,}A$ then $|m|=|a|$ 
+
+if $H\vdash m\,a\overleftarrow{\,:_{\ensuremath{\ell},o}\,}A\,\textbf{Elab}\,a$
+then $|m|=|a|$ 
+\end{thm}
+
+\begin{proof}
+by mutual induction on the $\textbf{Elab}$ derivations
+
+\begin{tabular}{lll}
+$\operatorname{\overrightarrow{\textbf{Elab}}-var}$ & $|x|=x=|x|$  & \tabularnewline
+$\operatorname{\overrightarrow{\textbf{Elab}}-\star}$ & $|\star|=\star=|\star|$  & \tabularnewline
+$\operatorname{\overrightarrow{\textbf{Elab}}-fun-ty}$ & \multicolumn{2}{l}{$H\vdash M\overleftarrow{\,:_{\ell,.}\,}\star\textbf{Elab}\ A\quad H,x:A\vdash N\overleftarrow{\,:_{\ell',.}\,}\star\textbf{Elab}\ B$}\tabularnewline
+ & $|M|=|A|$ & by induction\tabularnewline
+ & $|N|=|B|$ & by induction\tabularnewline
+ & $|\left(x:M_{\ensuremath{\ell}}\right)\rightarrow N_{\ensuremath{\ell'}}|=\left(x:|M|\right)\rightarrow|N|=\left(x:|A|\right)\rightarrow|B|=|\left(x:A\right)\rightarrow B|$ & \tabularnewline
+$\operatorname{\overrightarrow{\textbf{Elab}}-fun-app}$ & \multicolumn{2}{l}{$H\vdash m\,\textbf{Elab}\ b\overrightarrow{\,:\,}C\quad C\Rrightarrow_{\ast}\left(x:A\right)\rightarrow B\quad H\vdash n\overleftarrow{\,:_{\ell,.arg}\,}A\,\textbf{Elab}\,a$}\tabularnewline
+ & $|m|=|b|$ & by induction\tabularnewline
+ & $|n|=|a|$ & by induction\tabularnewline
+ & $|m_{\ensuremath{\ell}}\,n|=|m|\,|n|=|b|\,|a|=|b\,a|$ & \tabularnewline
+$\operatorname{\overleftarrow{\textbf{Elab}}-fun}$ & \multicolumn{2}{l}{$H,f:\left(x:A\right)\rightarrow B,x:A\vdash m\overleftarrow{\,:_{\ell,o.bod[x]}\,}B\,\textbf{Elab}\ b$}\tabularnewline
+ & $|m|=|b|$ & by induction\tabularnewline
+ & $|\mathsf{fun}\,f\,x\Rightarrow m|=\mathsf{fun}\,f\,x\Rightarrow|m|=\mathsf{fun}\,f\,x\Rightarrow|b|=|\mathsf{fun}\,f\,x\Rightarrow b|$ & \tabularnewline
+$\operatorname{\overrightarrow{\textbf{Elab}}-::}$ & \multicolumn{2}{l}{$H\vdash M\overleftarrow{\,:_{\ell.}\,}\star\,\textbf{Elab}\ A\quad H\vdash m\overleftarrow{\,:_{\ell,.}\,}A\,\textbf{Elab}\ a$}\tabularnewline
+ & $|m|=|a|$ & by induction\tabularnewline
+ & $|m::_{\ell}M|=|m|=|a|$ & \tabularnewline
+$\operatorname{\overleftarrow{\textbf{Elab}}-conv}$ & $H\vdash m\,\textbf{Elab}\ a\overrightarrow{\,:\,}A$, ... & \tabularnewline
+ & $|m|=|a|$ & by induction\tabularnewline
+ & $|m|=|a|=|a::_{A,\ensuremath{\ell},o}A'|$ & \tabularnewline
+\end{tabular}
+\end{proof}
+It follows that whenever an elaborated cast term evaluates, the corresponding
+surface term evaluates consistently 
+\begin{thm}
+Surface language and cast language have consistent evaluation
+
+if $H\vdash m\,\textbf{Elab}\ a\overrightarrow{\,:\,}A$, and $a\rightsquigarrow_{*}\star$
+then $m\rightsquigarrow_{*}\star$ 
+
+if $H\vdash\textbf{Elab}\ m\,a\overrightarrow{\,:\,}A$, and $a\rightsquigarrow_{*}(x:A)\rightarrow B$
+then there exists $N$ and $M$ such that $m\rightsquigarrow_{*}(x:N)\rightarrow M$ 
+\end{thm}
+
+\begin{proof}
+Since $a\rightsquigarrow_{*}a'$ implies $|a|\rightsquigarrow_{*}|a'|$
+and $m\rightsquigarrow_{*}m'$ implies $|m|\rightsquigarrow_{*}|m'|$.
+\end{proof}
+elaborated terms are well-cast in a well formed context \todo{need to define and state H ok}
+\begin{thm}
+elaborated terms are well-cast
+
+for any $H\vdash a\,\textbf{Elab}\,m\overrightarrow{\,:\,}A$ then
+$H\vdash a:A$, $H\vdash A:\star$
+
+for any $H\vdash$, $H\vdash A:\star$ , $H\vdash a\overleftarrow{\,:_{\ell,o}\,}A\,\textbf{Elab}\,m$
+then $H\vdash a:A$ 
+\end{thm}
+
+\begin{proof}
+by mutual induction on $\textbf{Elab}$ derivations
+
+\todo{revise below, causing latex some issues}
+
+\begin{tabular}{lll}
+$\operatorname{\overrightarrow{\textbf{Elab}}-var}$ & $x:A\in H$ & \tabularnewline
+ & $H\vdash A:\star$ & by $H\vdash$\tabularnewline
+ & $H\vdash x:A$ & $\operatorname{cast-var}$\tabularnewline
+$\operatorname{\overrightarrow{\textbf{Elab}}-fun-ty}$ & \multicolumn{2}{l}{$H\vdash M\overleftarrow{\,:_{\ell,.}\,}\star\textbf{Elab}\ A\quad H,x:A\vdash N\overleftarrow{\,:_{\ell',.}\,}\star\textbf{Elab}\ B$}\tabularnewline
+ & $H\vdash A:\star$ & by induction\tabularnewline
+ & $H,x:A\vdash B:\star$ & by induction\tabularnewline
+$\operatorname{\overrightarrow{\textbf{Elab}}-fun-app}$ & \multicolumn{2}{l}{$H\vdash m\,\textbf{Elab}\ b\overrightarrow{\,:\,}C\quad C\Rrightarrow_{\ast}\left(x:A\right)\rightarrow B\quad H\vdash n\overleftarrow{\,:_{\ell,.arg}\,}A\,\textbf{Elab}\,a$}\tabularnewline
+ & $H\vdash b:C$, $H\vdash C:\star$ & by induction\tabularnewline
+ & $H\vdash\left(x:A\right)\rightarrow B:\star$ & by $\Rrightarrow_{\ast}$ preservation\tabularnewline
+ & $H\vdash A:\star$, $H,x:A\vdash B:\star$ & by fun-ty inversion\tabularnewline
+ & $H\vdash b:\left(x:A\right)\rightarrow B$ & $\operatorname{cast-conv}$\tabularnewline
+ & $H\vdash a:A$ & by induction\tabularnewline
+ & $H\vdash B\left[x\coloneqq a\right]:\star$ & by subst preservation\tabularnewline
+ & $H\vdash b\,a\,:\,B\left[x\coloneqq a\right]$ & $\operatorname{cast-fun-app}$\tabularnewline
+$\operatorname{\overleftarrow{\textbf{Elab}}-fun}$ & \multicolumn{2}{l}{$H,f:\left(x:A\right)\rightarrow B,x:A\vdash$, $H,f:\left(x:A\right)\rightarrow B,x:A\vdash B:\star$}\tabularnewline
+ & $H,f:\left(x:A\right)\rightarrow B,x:A\vdash m\overleftarrow{\,:_{\ell,o.bod[x]}\,}B\,\textbf{Elab}\ b$ & \tabularnewline
+ &  & TODO revise!\tabularnewline
+ & $H,f:\left(x:A\right)\rightarrow B,x:A\vdash A:\star$ & by reg\tabularnewline
+ & $H\vdash A:\star$ & by removing free vars\tabularnewline
+ & $H,x:A\vdash B:\star$ & similarly with fun-ty inversion\tabularnewline
+ & $H,f:\left(x:A\right)\rightarrow B,x:A\vdash b:B$ & by induction\tabularnewline
+ & $H\vdash\mathsf{fun}\,f\,x\Rightarrow b\,:\,\left(x:A\right)\rightarrow B$ & $\operatorname{cast-fun}$\tabularnewline
+$\operatorname{\overrightarrow{\textbf{Elab}}-::}$ & \multicolumn{2}{l}{$H\vdash M\overleftarrow{\,:_{\ell.}\,}\star\,\textbf{Elab}\ A\quad H\vdash m\overleftarrow{\,:_{\ell,.}\,}A\,\textbf{Elab}\ a$}\tabularnewline
+ & $H\vdash A:\star$ & by induction\tabularnewline
+ & $H\vdash a:A$ & by induction\tabularnewline
+$\operatorname{\overleftarrow{\textbf{Elab}}-conv}$ & $H\vdash$, $H\vdash A':\star$ , $H\vdash m\,\textbf{Elab}\ a\overrightarrow{\,:\,}A$,
+with some $\ell,o$ & \tabularnewline
+ & $H\vdash a:A$, $H\vdash A:\star$ & by induction\tabularnewline
+ & $H\vdash a::_{A,\ensuremath{\ell},o}B\::\:B$ & $\operatorname{cast-::}$\tabularnewline
+\end{tabular}
+
+Some additional properties are strongly conjectured
+\end{proof}
+\begin{conjecture}
+Every term well typed in the bidirectional surface language elaborates 
+
+if $\Gamma\vdash$, then there exists $H$ such that $\Gamma\,\textbf{Elab}\,H$ 
+
+$\Gamma\vdash m\overrightarrow{\,:\,}M$ then there exists $H$, $a$
+and $A$ such that $\Gamma\,\textbf{Elab}\,H$, $H\vdash m\,\textbf{Elab}\ a\overrightarrow{\,:\,}A$ 
+
+$\Gamma\vdash m\overleftarrow{\,:\,}M$ and given $\ell$, $o$then
+there exists $H$, $a$and $A$ such that $\Gamma\,\textbf{Elab}\,H$,
+$H\vdash\textbf{Elab}\,a\,m\overleftarrow{\,:_{\ell o}\,}A$ 
+\end{conjecture}
+
+Which if true would lead to the corollary
+\begin{conjecture}
+blame never points to something that checked in the bidirectional
+system 
+
+if $\vdash m\overrightarrow{\,:\,}M$, and $\vdash\textbf{Elab}\ m\,a\overrightarrow{\,:\,}A$
+, then for no $a\rightsquigarrow_{*}a'$ will $\textbf{Blame}\:\ensuremath{\ell}\,o\:a'$
+occur 
+
+\todo{revise precisely with lables}
+\end{conjecture}
+
+The last three guarantees are similar to the gradual guarantee \cite{siek_et_al:LIPIcs:2015:5031}
+for gradual typing. 
+
+\section{Suitable Warnings}
+
+As presented here, not every cast corresponds to a reasonable warning.
+For instance, $\left(\lambda x\Rightarrow x\right)::_{\star\rightarrow\star}\star\rightarrow\star$
+is a possible output from elaboration. By the rules given the cast
+will not reduce without input, it is however inert, and will not cause
+blame. In fact since the user only interacts with the surface language,
+any cast $a::_{A}B$ where $|A|\equiv|B|$ will not produce an understandable
+warning, and further should not be a direct source of runtime errors.
+A reasonable first attempt would be to simply remove the casts of
+the form $a::_{A}A$, but this ignores the possibility that casts
+themselves may contain casts\todo{example}. Currently the implementation
+leaves most casts intact and filters our equivalent casts from the
+warnings shown to the user
+
+\todo{as fig}
+
+\begin{tabular}{llllll}
+$Warns($ & $a::_{A,\ensuremath{\ell},o}B$ & $)=$ & $\left\{ (a,\ensuremath{\ell},o,B)\right\} \cup Warns(a)\cup Warns(A)\cup Warns(B)$ & if & $|A|\cancel{\equiv}|B|$\tabularnewline
+$Warns($ & $a::_{A,\ensuremath{\ell},o}B$ & $)=$ & $Warns(a)\cup Warns(A)\cup Warns(B)$ & if & $|A|\equiv|B|$\tabularnewline
+$Warns($ & $\star$ & $)=$ & $\emptyset$ &  & \tabularnewline
+$Warns($ & $x$ & $)=$ & $\emptyset$ &  & \tabularnewline
+$Warns($ & $\left(x:A\right)\rightarrow B$ & $)=$ & $Warns(A)\cup Warns(B)$ &  & \tabularnewline
+$Warns($ & $\mathsf{fun}\,f\,x\Rightarrow b$ & $)=$ & $Warns(b)$ &  & \tabularnewline
+$Warns($ & $b\,a$ & $)=$ & $Warns(a)\cup Warns(b)$ &  & \tabularnewline
+\end{tabular}
+
+Since the $\equiv$ relation is undecidable an approximation can be
+used in practice. Removing impossible casts should be considered like
+a compiler optimization. In Chapter 6 casts will need to be extended,
+and it will be more clear when a cast can through its own error or
+merely exists to hold other casts.
+
+\section{Related Work}
+
+\subsection{Dependent types and equality}
+
+\todo{revise as bulleted list starting with ETT}
+
+Difficulties in dependently typed equality have motivated many research
+projects \cite{HoTTbook,sjoberg2015programming,cockx2021taming}.
+However, these impressive efforts currently require a high level of
+expertise from programmers. Further, since program equivalence is
+undecidable in general, no system will be able to statically verify
+every ``obvious'' equality for arbitrary user defined data types
+and functions. In the meantime systems should trust the programmer
+when they use an unverified equality, and use that advanced research
+to suppress warnings. 
+
+\subsection{Contract Systems}
+
+Several of the tricks and notations in this chapter find their basis
+in the large amount of work on higher order contracts and gradual
+types. Higher order contracts were introduced in \cite{10.1145/581478.581484}
+as a way to dynamically enforce invariants of software interfaces,
+specifically higher order functions% cotracts go back to the 70s aparently, but this seems a reasonable place to start the story, though Bigloo Scheme [28] is cited there.
+The notion of blame dates at least that far back. Swapping the type
+cast of the input argument can be traced directly to that paper's
+use of blame contravarience, though it is presented in a much different
+way. % However the contract language of that paper was somewhat limited.
+
+Contract semantics were revisited in \cite{10.1145/1925844.1926410,10.1007/978-3-642-28869-2_11}
+where a more specific correctness criteria based in blame is presented.
+
+Contract systems still generally rely on users annotating their invariants
+explicitly. Similar to how programmers might include $\mathtt{assert}$s
+in an imperative language. In this thesis annotations are added automatically
+though elaboration.
+
+While there are similarities between contract systems and the cast
+system outlined here, the cast system is designed to address only
+issues with definitional equality in a dependent type theory. Since
+contract systems are generally used in untyped languages with contracts
+written in the host language, definitional equality simply isn't relevant
+in the vast majority of contract systems.
+
+\subsubsection{Gradual Types}
+
+Types can be viewed as a very specific form of contracts, gradual
+type systems allow for a mixing of the static view of data and dynamic
+checking. Often type information can be inferred using standard techniques,
+allowing programmers to write fewer contract annotations. % TODO first paper, DLS2008
+
+Gradual type systems usually achieve this by adding in a $?$ meta
+character to denote imprecise typing information. The first popular
+account of gradual typed semantic's appeared in \cite{siek_et_al:LIPIcs:2015:5031}
+with the alliterative ``gradual guarantee'' which has inspired some
+of the properties in this chapter.
+
+% , which informally asserts that "runtime checks will not change the expected behavour", "runtime checks will not change the expected behavour" and "well typed code won't be blamed"
+
+% and then like an endless back and forth over criteria
+
+Additionally some of the formalism from this chapter was inspired
+by the ``Abstracting gradual typing'' methodology \cite{10.1145/2837614.2837670},
+where static evidence annotations become runtime checks. % Unlike some impressive attempts to gradualize the polymorphic lambda calculus \cite{10.1145/3110283}, our system does not attempt to enforce any parametric properties of the base language. %example?
+% It is unclear if such a restriction would be desirable for a dependently typed language in practice.
+
+This thesis borrows some notational conventions from gradual typing
+such as the $a::A$ construct for type assertions.
+
+A system for gradual dependent types has been preposed in \cite{10.1145/3341692}.
+That paper is largely concerned with establishing decidable type checking
+via an approximate term normalization. However, that system retains
+the intentional style of definitional equality, so that it is possible,
+in principle, to get $vec\,(1+x)\neq vec\,(x+1)$ as a runtime error.
+Additionally it is unclear if adding the $?$ meta-symbol into an
+already very complicated type theory, is easier or harder from the
+programmers perspective.
+
+The common motivation for gradual type systems to gradually convert
+a code base from untyped to (usually simply) typed code. This chapter
+has a much tighter scope then the other work cited here, dealing only
+with equational assumptions. Anyone using a dependent type system
+has already bought into the usefulness of types in general and will
+probably not want fragments of completely untyped code. Converting
+untyped code to dependent typed is far less plausible than gradually
+converting an untyped code base to use simple types\footnote{Especially considering that most real-life codebases will use effects,
+while dependent types and effects are a complicated area of ongoing
+research}.
+
+While the gradual typing goals of mixing static certainty with runtime
+checks are similar to our work here, the approach and details are
+different. Instead of trying to strengthen untyped languages by adding
+types, we take a dependent type system and weaken it with a cast operator.
+This leads to different trade-offs in the design space. For instance,
+we cannot support completely unannotated code, but we do not need
+to complicate the type language with wildcards for uncertainty. However
+it might be reasonable to characterize this work in this chapter as
+gradualizing the definitional equality relation.
+
+\subsubsection{Blame}
+
+Blame is one of the key ideas explored in the contract type and gradual
+types literature\cite{10.1007/978-3-642-00590-9_1,wadler:LIPIcs:2015:5033,10.1145/3110283}.
+Often the reasonableness of a system can be judged by the way blame
+is handled\cite{wadler:LIPIcs:2015:5033}. Blame is treated in \cite{wadler:LIPIcs:2015:5033}
+very similarly to the presentation in this chapter. Though in addition
+to merely blaming a source locations we ensure that a witnessing observation
+can also be made.
+
+\subsection{Refinement Style Approaches}
+
+In this thesis I describe a full-spectrum dependently typed language.
+This means computation can appear uniformly in both term and type
+position. An alternative approach to dependent types is found in refinement
+type systems. Refinement type systems restrict type dependency, possibly
+to specific base types such as $\mathtt{int}$ or $\mathtt{bool}$.
+Under this restriction, it is straightforward to check these decidable
+equalities and some additional properties hold at runtime. One specific
+approach is called \textbf{Hybrid Type Checking} \cite{10.1145/1111037.1111059}\todo{more}.
+Another notable example is \cite{10.1007/1-4020-8141-3_34} which
+describes a refinement system that limits predicates to base types.
+Another example is \cite{10.1145/3093333.3009856}, a refinement system
+treated in a specifically gradual way. A refinement type system with
+higher order features is gradualized in \cite{c4be73a0daf74c9aa4d13483a2c4dd0e}.
+\todo{why is full spectrum better?}
+
+% consider also citing https://www.youtube.com/watch?v=gIYMERs7AZQ https://www.youtube.com/watch?v=EGKeWg2ES0A
