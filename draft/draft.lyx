@@ -81,7 +81,7 @@ todonotes
 \begin_body
 
 \begin_layout Title
-Draft
+Draft (old version)
 \end_layout
 
 \begin_layout Standard
@@ -94,7 +94,7 @@ The abstract should contain a clear and brief statement of the problem,
 ).
  The purpose of an abstract is to help a reader decide if they want to consult
  the complete work.
- 11 As with the title, the abstract is searchable in many databases, including
+ As with the title, the abstract is searchable in many databases, including
  ProQuest Dissertations & Theses Global.
  Include relevant place names, full personal names, and other proper nouns,
  which can be very useful keywords for scholars locating resources.
@@ -826,63 +826,7 @@ error msgs
 \end_layout
 
 \begin_layout Standard
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-%% problem
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-
-If programmers found dependent type systems easier to learn and use, software
- could become more reliable.
- Unfortunately, dependent type systems have yet to see widespread use in
- industry.
- One source of difficulty is the conservative equality checking required
- by most dependent type systems.
- This conservative equality is a source of some of the confusing error messages
- dependent type systems are known for 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "eremondi2019framework"
-literal "false"
-
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Standard
-This error will help the programmer fix the bug in 
-\begin_inset Formula $\mathtt{add}$
-\end_inset
-
-.
- There is evidence that specific examples like this can help clarify the
- type error messages in OCaml 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "10.1145/2951913.2951915"
-literal "false"
-
-\end_inset
-
- and there has been an effort to make refinement type error messages more
- concrete in other systems like Liquid Haskell 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "10.1145/3314221.3314618"
-literal "false"
-
-\end_inset
-
-.
+...
 \end_layout
 
 \begin_layout Part
