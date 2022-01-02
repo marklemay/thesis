@@ -5,21 +5,24 @@
 \section{Introduction} % needs this for some reason?
 
 %% why dependent types?
-Writing correct programs is difficult. While many formal methods approaches make some errors rare or impossible, they often require programmers learn additional syntax and semantics.
-Dependent type systems can offer a simpler approach. In dependent type systems, proofs and properties use the same language and meaning already familiar to functional programmers.
+Writing correct programs is difficult.
+While many formal methods approaches make some errors rare or impossible, they often require programmers learn additional syntax and semantics.
+Dependent type systems can offer a simpler approach.
+In dependent type systems, proofs and properties use the same language and meaning already familiar to functional programmers.
 
-While the type systems of mainstream programing languages allows tracking simple properties, like $\mathtt{7:int}$.
+While the type systems of mainstream programing languages allows tracking simple properties, like $\mathtt{7:int}$ or $\mathtt{not(x):bool}$.
 Dependent types allow complicated properties to be assumed and verified, such as a provably correct sorting function 
 
 \[
 sort\,:\,\left(input:List\,\mathbb{N}\right)\rightarrow\Sigma ls:List\,\mathbb{N}.IsSorted\,input\,ls
 \]
 
-by providing an appropriate term of that type. From the programmer's perspective, the function arrow and the implication arrow are the same.
+by providing an appropriate term of that type.
+From the programmer's perspective, the function arrow and the implication arrow are the same.
 The proof $IsSorted$ is no different then any other term of a datatype like $List$ or $\mathbb{N}$. 
 
 The power of dependent types has been recognized for decades.
-Dependent types form the back bone of several poof system, such as Coq\cite{Coq12}, Lean\cite{10.1007/978-3-030-79876-5_37}, and Agda\cite{norell2007towards}.
+Dependent types form the back bone of several poof systems, such as Coq\cite{Coq12}, Lean\cite{10.1007/978-3-030-79876-5_37}, and Agda\cite{norell2007towards}.
 \todo{not clear these are the best citations, there seems to be little consensus online about how to cite software}
 They have have been proposed as a foundation for mathematics\cite{Martin-Lof-1972,HoTTbook}.
 Dependent types are directly used in several programming languages such as ATS\cite{DependentMLAnapproachtopracticalprogrammingwithdependenttypes} and Idris\cite{brady2013idris}, while influencing many other programing languages such as Haskell and Scala.
@@ -37,7 +40,7 @@ The system has been prototyped\footnote{available at \url{https://github.com/mar
 
 \subsection{Example}
 
-For example, dependent type systems can prevent an index-out-of-bounds error when trying to read the first element a list.
+Dependent type systems can prevent an index-out-of-bounds error when trying to read the first element a list.
 A version of the following type checks in virtually all dependent type systems:
 
 \todo[inline]{expand this example? perhaps at the head of a constant vector first? ``and this reasoning can be abstracted under functions'' }
@@ -57,8 +60,9 @@ A version of the following type checks in virtually all dependent type systems:
 \todo[inline]{make this a ``code'' example?}
 
 Where $\rightarrow$ is a function and $*$ means that the function results in a type.
-$\mathtt{Vec}$ is a list indexed by the type of element it contains and its length, it is a type that depends on its length.
-$\mathtt{rep}$ is a dependent function that produces a list containing a type with a given length, by repeating its input that number of times.
+$\mathtt{Vec}$ is a list indexed by the type of element it contains and its length.
+$\mathtt{Vec}$ is a type that depends on its length.
+$\mathtt{rep}$ is a dependent function that produces a list containing a type with a given length by repeating its input that number of times.
 $\mathtt{head}$ is a dependent function that expects a list of length $\mathtt{add}\,1\,x$, retuning the first element of that non-empty list. 
 
 There is no risk that $\mathtt{head}$ inspects an empty list.
@@ -67,7 +71,7 @@ Luckily in the example the $\mathtt{\mathtt{rep}\,\mathtt{Bool}\,\mathtt{true}\,
 %% This example only scratch the surface of what is possible with dependent types.
 
 Unfortunately, programmers often find dependent type systems difficult to learn and use.
-This resistance has limited the ability of dependent types reach their full potential to help eliminate the bugs that pervade software systems.
+This resistance has limited the ability of dependent types to reach their full potential to help eliminate the bugs that pervade software systems.
 One of the deepest underling reasons for this frustration is the way dependent type systems handle equality.
 
 For example, the following will not type check in any conventional dependent type system with user defined addition,
@@ -77,13 +81,15 @@ For example, the following will not type check in any conventional dependent typ
 \]
 
 While ``obviously'' $1+x=x+1$, in the majority of dependently typed languages, $\mathtt{add}\,1\,x\equiv\mathtt{add}\,x\,1$ is not a ``definitional'' equality.
-``Definitional equality'' is the name for the conservative approximation of equality used by dependent type systems for when two types are ``obviously'' the same.
-This prevents the use of a term of type $\mathtt{Vec}\,\mathtt{Bool}\,\left(\underline{\mathtt{add}\,1\,x}\right)$
-where a term of type $\mathtt{Vec}\,\mathtt{Bool}\,\left(\underline{\mathtt{add}\,x\,1}\right)$
+``Definitional equality'' is the name for the conservative approximation of equality used by dependent type systems for when two types are obstesibly the same.
+This prevents the use of a term of type
+$\mathtt{Vec}\,\mathtt{Bool}\,\left(\underline{\mathtt{add}\,1\,x}\right)$
+where a term of type
+$\mathtt{Vec}\,\mathtt{Bool}\,\left(\underline{\mathtt{add}\,x\,1}\right)$
 is expected.
 Usually when dependent type systems encounter situations like this, they will give an error message and block evaluation until the ``mistake'' is resolved.
 
-In programming, types are used to avoid bad behavior, for instance they are often used to avoid ``stuck'' terms.
+In programming, types are used to avoid bad behavior, for instance, they are often used to avoid ``stuck'' terms.
 If it is the case that $\mathtt{add}\,1\,x\,=\,\mathtt{add}\,x\,1$ the program will never get stuck.
 However, if there is a mistake in the implementation of $\mathtt{add}$, the program might get stuck.
 For instance, if the $\mathtt{add}$ function incorrectly computes $\mathtt{add}\,8\,1=0$ the above function will ``get stuck'' on the input $8$. 
@@ -100,7 +106,8 @@ Which is exactly the kind of specific feedback programers want when correcting c
 
 \section{A Different Workflow}
 
-This thesis advocates an alternative usage of types. In most types systems a programmer can't run programs until the type system is convinced of their correctness\footnote{often requiring a graduate degree and uncommon patients}.
+This thesis advocates an alternative usage of types. In most types systems a programmer can't run programs until the type system is convinced of their correctness\footnote{
+  often requiring a graduate degree and uncommon patience}.
 Where this thesis argues ``the programer is always right (until proven wrong)''.
 This philosophy will likely go over better with programmers.
 
@@ -324,7 +331,7 @@ Lazy evaluation means checking only has to happen up to the outermost type const
 \item Pattern matching can be extended to support checks, and redirect blame as needed. 
 \end{itemize}
 
-\section{The work in this thesis}
+\section{The Work in This Thesis}
 
 \begin{figure}
 \begin{lstlisting}
