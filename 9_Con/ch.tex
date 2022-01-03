@@ -3,18 +3,18 @@
 \thispagestyle{myheadings}
 
 This thesis has attempted to articulate and address a common hesitation around dependent types.
-Programmers do not want do be interrupted.
+Programmers do not want to be interrupted.
 Especially if the interruption is about a chance of an error.
-Addressing this legitimate concern has lead to a new way of treating warnings in a dependent type system.
+Addressing this legitimate concern has led to a new way of treating warnings in a dependent type system.
 By creating a parallel system where checks are made and given runtime behavior, programmers still get all of the benefits, but fewer drawbacks of dependent type systems.
 
-This turned out to be surpassingly more subtle then expected.
+This turned out to be surpassingly more subtle than expected.
 As we saw in Chapter 3, the programmer's intent needs to be inferred, so that a reasonable check can be localized.
 This is possible through an extension to bidirectional type checking.
 Runtime errors complicate the semantics, this issue was sidestepped by applying a new relation that extracts blame.
-Checks need their own runtime behavior, which is strait forward in the pure functional setting.
+Checks need their own runtime behavior, which is straightforward in the pure functional setting.
 
-Further, user defined data turned out to be far more complicated then anticipated.
+Further, user defined data turned out to be far more complicated than anticipated.
 Extending pattern matching to track equalities seems like a clever idea, however the formalism in Chapter 5 is not as simple as we might like.
 It is unclear if a simpler approach is possible.
 
