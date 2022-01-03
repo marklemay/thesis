@@ -1,10 +1,12 @@
-\chapter{a Dependent Type System} \label{chapter:Surface} \thispagestyle{myheadings}
+\chapter{a Dependent Type System}
+\label{chapter:Surface}
+\thispagestyle{myheadings}
 
 \section{Introduction}
 
 Despite the usability issues this thesis hopes to correct, dependent type systems are still one of the most promising technologies for correctness in programming.
 Since proofs and programs are associated there is no additional syntax for programmers to learn.
-The proof systems is predictable from the perspective of a functional programmer.
+The proof system is predictable from the perspective of a functional programmer.
 
 The \textbf{surface language}\todo{is there a better name then surface lang?} presented in this chapter specifies a minimal dependent type system.
 The semantics are intended to be as simple as possible and compatible with other well studied intentional dependent type theories.
@@ -25,10 +27,10 @@ Everything presented in later chapters is designed to reinforce an understanding
 The surface language deviates from a standard dependent type theory to include features to ease programming at the expense of logical correctness.
 Specifically the language allows general recursion, since general recursion is useful for general purpose functional programming.
 Type-in-type is also supported since it simplifies the system for programmers, and makes the meta-theory slightly easier.
-Despite this, type soundness is a achievable and a practical type checking system is given.
+Despite this, type soundness is achievable and a practical type checking system is given.
 
 Though similar systems have been studied over the last few decades this chapter aims to give a self contained presentation, along with examples.
-The surface language has been an good platform to conduct research into full spectrum dependent type theory, and hopefully this exposition will be helpful introduction for other researchers.
+The surface language has been a good platform to conduct research into full spectrum dependent type theory, and hopefully this exposition will be a helpful introduction for other researchers.
 
 \section{Surface Language Syntax}
 
@@ -36,14 +38,14 @@ The surface language has been an good platform to conduct research into full spe
 
 The syntax for the surface language is in Figure \ref{fig:surface-pre-syntax}\todo{formatting figure references}.
 The syntax supports: variables, type annotations, a single type universe, dependent function types, recursive dependent functions, and function applications.
-Type annotations are written with two colons to differentiate it from the formal typing judgments that will appear more frequently in this text, in the implemented language a user of the programming language would use a single colon.
+Type annotations are written with two colons to differentiate it from the formal typing judgments that will appear more frequently in this text. In the implemented language a user of the programming language would use a single colon.
 
 
 There is no destination between types and terms in the syntax\footnote{terms and types are usually separated, except in the syntax of full-spectrum dependent type systems where separating them would require many redundant rules}, both are referred to as expressions.
 However, capital metavariables are used in positions that are intended as types, and lowercase metavariables are used when an expression is intended to be a term, for instance in annotation syntax.
 
 
-% Metavariables that intend to quantify equivalent terms will be noted with primes or subsripts, 
+% Metavariables that intend to quantify equivalent terms will be noted with primes or subscripts, 
 
 % Metavariables that type other metavairbles will often use the same letter
 
@@ -91,32 +93,32 @@ Turnstile notion is abused slightly so that examples can be indexed by other exp
 For instance, we can say $refl_{2_{c}:\mathbb{N}_{c}}\ :\ 2_{c}\doteq_{\mathbb{N}_{c}}2_{c}$ since $\mathbb{N}_{c}:\star$ and $2_{c}:\mathbb{N}_{c}$.
 
 \begin{figure}
-  \begin{tabular}{lllll}
-   & $\vdash\perp_{c}$ & $\coloneqq\left(X:\star\right)\rightarrow X$ & $:\star$ & Void, ``empty'' type, logical false\tabularnewline
-   & $\vdash Unit_{c}$ & $\coloneqq\left(X:\star\right)\rightarrow X\rightarrow X$ & $:\star$ & Unit, logical true\tabularnewline
-   & $\vdash tt_{c}$ & $\coloneqq\lambda-\,x\Rightarrow x$ & $:Unit_{c}$ & trivial proposition, polymorphic identity\tabularnewline
-   & $\vdash\mathbb{B}_{c}$ & $\coloneqq\left(X:\star\right)\rightarrow X\rightarrow X\rightarrow X$ & $:\star$ & booleans\tabularnewline
-   & $\vdash true_{c}$ & $\coloneqq\lambda-\,then\,-\Rightarrow then$ & $:\mathbb{B}_{c}$ & boolean true\tabularnewline
-   & $\vdash false_{c}$ & $\coloneqq\lambda-\,-\,else\Rightarrow else$ & $:\mathbb{B}_{c}$ & boolean false\tabularnewline
-  $x:\mathbb{B}_{c}$ & $\vdash!_{c}x$ & $\coloneqq x\,\mathbb{B}_{c}\,false_{c}\,true_{c}$ & $:\mathbb{B}_{c}$ & boolean not\tabularnewline
-  $x:\mathbb{B}_{c},y:\mathbb{B}_{c}$ & $\vdash x\,\&_{c}\,y$ & $\coloneqq x\,\mathbb{B}_{c}\,y\,false_{c}$ & $:\mathbb{B}_{c}$ & boolean and\tabularnewline
-   & $\vdash\mathbb{N}_{c}$ & $\coloneqq\left(X:\star\right)\rightarrow(X\rightarrow X)\rightarrow X\rightarrow X$ & $:\star$ & natural numbers\tabularnewline
-   & $\vdash0_{c}$ & $\coloneqq\lambda-\,-\,z\Rightarrow z$ & $:\mathbb{N}_{c}$ & \tabularnewline
-   & $\vdash1_{c}$ & $\coloneqq\lambda-\,s\,z\Rightarrow s\,z$ & $:\mathbb{N}_{c}$ & \tabularnewline
-   & $\vdash2_{c}$ & $\coloneqq\lambda-\,s\,z\Rightarrow s\left(s\,z\right)$ & $:\mathbb{N}_{c}$ & \tabularnewline
-   & $\vdash n_{c}$ & $\coloneqq\lambda-\,s\,z\Rightarrow s^{n}\,z$ & $:\mathbb{N}_{c}$ & \tabularnewline
-  $x:\mathbb{N}_{c},y:\mathbb{N}_{c}$ & $\vdash x+_{c}y$ & $\coloneqq\lambda X\,s\,z\Rightarrow x\,X\,s\,\left(y\,X\,s\,z\right)$ & $:\mathbb{N}_{c}$ & \tabularnewline
-  $X:\star,Y:\star$ & $\vdash X\times_{c}Y$ & $\coloneqq\left(Z:\star\right)\rightarrow(X\rightarrow Y\rightarrow Z)\rightarrow Z$ & $:\star$ & pair, logical and\tabularnewline
-  $X:\star,Y:\star$ & $\vdash Either_{c}\,X\,Y$ & $\coloneqq\left(Z:\star\right)\rightarrow(X\rightarrow Z)\rightarrow(Y\rightarrow Z)\rightarrow Z$ & $:\star$ & either, logical or\tabularnewline
-  $X:\star$ & $\vdash\lnot_{c}X$ & $\coloneqq X\rightarrow\perp_{c}$ & $:\star$ & logical negation\tabularnewline
-  $x:\mathbb{N}_{c}$ & $\vdash Even_{c}\,x$ & $\coloneqq\mathbb{N}_{c}\,\star\,\left(\lambda x\Rightarrow\lnot_{c}x\right)\,Unit_{c}$ & $:\star$ & $x$ is an even number\tabularnewline
-  $X:\star,Y:X\rightarrow\star$ & $\vdash\exists_{c}x:X.Y\,x$ & $\coloneqq\left(C:\star\right)\rightarrow\left((x:X)\rightarrow Y\,x\rightarrow C\right)\rightarrow C$ & $:\star$ & dependent pair, logical exists\tabularnewline
-  $X:\star,x_{1}:X,x_{2}:X$ & $\vdash x_{1}\doteq_{X}x_{2}$ & $\coloneqq\left(C:\left(X\rightarrow\star\right)\right)\rightarrow C\,x_{1}\rightarrow C\,x_{2}$ & $:\star$ & Leibniz equality\tabularnewline
-  $X:\star,x:X$ & $\vdash refl_{x:X}$ & $\coloneqq\lambda-\,cx\Rightarrow cx$ & $:x\doteq_{X}x$ & reflexivity\tabularnewline
-  $X:\star,x_{1}:X,x_{2}:X$ & $\vdash sym_{x_{1},x_{2}:X}$ & $\coloneqq\lambda p\,C\Rightarrow p\left(\lambda x\Rightarrow C\,x\rightarrow C\,x_{1}\right)\,\left(\lambda x\Rightarrow x\right)$ & $:x_{1}\doteq_{X}x_{2}\rightarrow x_{2}\doteq_{X}x_{1}$ & symmetry\tabularnewline
-  \end{tabular}
-  
-  \todo[inline]{turn . to => in exists?}
+\begin{tabular}{lllll}
+  & $\vdash\perp_{c}$ & $\coloneqq\left(X:\star\right)\rightarrow X$ & $:\star$ & Void, ``empty'' type, logical false\tabularnewline
+  & $\vdash Unit_{c}$ & $\coloneqq\left(X:\star\right)\rightarrow X\rightarrow X$ & $:\star$ & Unit, logical true\tabularnewline
+  & $\vdash tt_{c}$ & $\coloneqq\lambda-\,x\Rightarrow x$ & $:Unit_{c}$ & trivial proposition, polymorphic identity\tabularnewline
+  & $\vdash\mathbb{B}_{c}$ & $\coloneqq\left(X:\star\right)\rightarrow X\rightarrow X\rightarrow X$ & $:\star$ & booleans\tabularnewline
+  & $\vdash true_{c}$ & $\coloneqq\lambda-\,then\,-\Rightarrow then$ & $:\mathbb{B}_{c}$ & boolean true\tabularnewline
+  & $\vdash false_{c}$ & $\coloneqq\lambda-\,-\,else\Rightarrow else$ & $:\mathbb{B}_{c}$ & boolean false\tabularnewline
+$x:\mathbb{B}_{c}$ & $\vdash!_{c}x$ & $\coloneqq x\,\mathbb{B}_{c}\,false_{c}\,true_{c}$ & $:\mathbb{B}_{c}$ & boolean not\tabularnewline
+$x:\mathbb{B}_{c},y:\mathbb{B}_{c}$ & $\vdash x\,\&_{c}\,y$ & $\coloneqq x\,\mathbb{B}_{c}\,y\,false_{c}$ & $:\mathbb{B}_{c}$ & boolean and\tabularnewline
+  & $\vdash\mathbb{N}_{c}$ & $\coloneqq\left(X:\star\right)\rightarrow(X\rightarrow X)\rightarrow X\rightarrow X$ & $:\star$ & natural numbers\tabularnewline
+  & $\vdash0_{c}$ & $\coloneqq\lambda-\,-\,z\Rightarrow z$ & $:\mathbb{N}_{c}$ & \tabularnewline
+  & $\vdash1_{c}$ & $\coloneqq\lambda-\,s\,z\Rightarrow s\,z$ & $:\mathbb{N}_{c}$ & \tabularnewline
+  & $\vdash2_{c}$ & $\coloneqq\lambda-\,s\,z\Rightarrow s\left(s\,z\right)$ & $:\mathbb{N}_{c}$ & \tabularnewline
+  & $\vdash n_{c}$ & $\coloneqq\lambda-\,s\,z\Rightarrow s^{n}\,z$ & $:\mathbb{N}_{c}$ & \tabularnewline
+$x:\mathbb{N}_{c},y:\mathbb{N}_{c}$ & $\vdash x+_{c}y$ & $\coloneqq\lambda X\,s\,z\Rightarrow x\,X\,s\,\left(y\,X\,s\,z\right)$ & $:\mathbb{N}_{c}$ & \tabularnewline
+$X:\star,Y:\star$ & $\vdash X\times_{c}Y$ & $\coloneqq\left(Z:\star\right)\rightarrow(X\rightarrow Y\rightarrow Z)\rightarrow Z$ & $:\star$ & pair, logical and\tabularnewline
+$X:\star,Y:\star$ & $\vdash Either_{c}\,X\,Y$ & $\coloneqq\left(Z:\star\right)\rightarrow(X\rightarrow Z)\rightarrow(Y\rightarrow Z)\rightarrow Z$ & $:\star$ & either, logical or\tabularnewline
+$X:\star$ & $\vdash\lnot_{c}X$ & $\coloneqq X\rightarrow\perp_{c}$ & $:\star$ & logical negation\tabularnewline
+$x:\mathbb{N}_{c}$ & $\vdash Even_{c}\,x$ & $\coloneqq\mathbb{N}_{c}\,\star\,\left(\lambda x\Rightarrow\lnot_{c}x\right)\,Unit_{c}$ & $:\star$ & $x$ is an even number\tabularnewline
+$X:\star,Y:X\rightarrow\star$ & $\vdash\exists_{c}x:X.Y\,x$ & $\coloneqq\left(C:\star\right)\rightarrow\left((x:X)\rightarrow Y\,x\rightarrow C\right)\rightarrow C$ & $:\star$ & dependent pair, logical exists\tabularnewline
+$X:\star,x_{1}:X,x_{2}:X$ & $\vdash x_{1}\doteq_{X}x_{2}$ & $\coloneqq\left(C:\left(X\rightarrow\star\right)\right)\rightarrow C\,x_{1}\rightarrow C\,x_{2}$ & $:\star$ & Leibniz equality\tabularnewline
+$X:\star,x:X$ & $\vdash refl_{x:X}$ & $\coloneqq\lambda-\,cx\Rightarrow cx$ & $:x\doteq_{X}x$ & reflexivity\tabularnewline
+$X:\star,x_{1}:X,x_{2}:X$ & $\vdash sym_{x_{1},x_{2}:X}$ & $\coloneqq\lambda p\,C\Rightarrow p\left(\lambda x\Rightarrow C\,x\rightarrow C\,x_{1}\right)\,\left(\lambda x\Rightarrow x\right)$ & $:x_{1}\doteq_{X}x_{2}\rightarrow x_{2}\doteq_{X}x_{1}$ & symmetry\tabularnewline
+\end{tabular}
+
+\todo[inline]{turn . to => in exists?}
   
 \todo[inline]{break out eq for a better table}
 
@@ -145,13 +147,13 @@ This can be viewed as a simple looping construct with temporary storage.
 
 Parameterized data types such as pairs and the $Either$ type can also be encoded in this scheme.
 A pair type can be used in any way the two terms it contains can, so the definition states that a pair is at least as good as the curried input to a function.
-The $Either$ type is handled if both possibilities are handled, which is expressed by it's definition.
+The $Either$ type is handled if both possibilities are handled, which is expressed by its definition.
 
 \todo{church encoding citation}
 
-% not necisarily convineint
+% not necessarily convenient
 
-Church encodings provide a theoretically light weight way of working with data in minimal lambda calculus, however they are very inconvenient to work with.
+Church encodings provide a theoretically lightweight way of working with data in minimal lambda calculus, however they are very inconvenient to work with.
 For instance, the predecessor function on natural numbers is good exercise.
 To make the system easier for programmers, data types will be added directly in Chapter 4.
 
@@ -167,7 +169,7 @@ The $Either$ type can be considered as logical or, $Either_{c}\,X\,Y$ can be inh
 
 With dependent types, more interesting logical predicates can be encoded.
 For instance, we can characterize when a number is even with $Even_{c}\,x$.
-We can show that $2$ is even by showing that $Even_{c}\,2_{c}$ is inhabited with with the term $\lambda s\Rightarrow s\,tt_{c}$ .
+We can show that $2$ is even by showing that $Even_{c}\,2_{c}$ is inhabited with the term $\lambda s\Rightarrow s\,tt_{c}$ .
 
 Other predicates are encodable in the style of Calculus of Constructions\cite{10.1016/0890-5401(88)90005-3}.
 For instance, we can encode the existential as $\exists_{c}$, then if we want to show $\exists_{c}x:\mathbb{N}_{c}.\,Even_{c}\,x$ we need to find a suitable inhabitant of that type.
@@ -179,7 +181,7 @@ One of the most potent and interesting propositions is the proposition of equali
 $\doteq$ is referred to as \textbf{Leibniz equality} since two terms are equal when they behave the same on all observations \footnote{The identification of indiscernibles is called \textbf{Leibniz law} in philosophy.
 Leibniz assumed a metaphysical notion of identification of ``substance''s, not a mathematical notion of equality.
 See Section 9 \cite{Leibniz1686}.}\todo{cite the ency of philosophy}.
-We can prove $\doteq$ is an equivalence within the system be proving it is reflexive, symmetric, and transitive.
+We can prove $\doteq$ is an equivalence within the system by proving it is reflexive, symmetric, and transitive.
 Additionally we can prove congruence.
 
 \todo[inline]{footnote on Leibniz equality for alt encoding}
@@ -243,8 +245,8 @@ Recursion can also be used to simulate induction, and this will be heavily relie
 When is an expression reasonable? The expression $\star\star\star\star$ is allowed by the grammar of the language, but seems dubious% since  is not a function, so has no way of being given an input by application.
 Type systems can disallow bad terms like these which in turn avoids bad runtime behavior.
 
-We will present our our type system as a \textbf{Type Assignment System} (TAS).
-Type assignment systems do not require type annotations, and will be easier to work with then other styles of typing that require all variables be annotated \todo{or all everything for MH} \todo{church/curry?}.
+We will present our type system as a \textbf{Type Assignment System} (TAS).
+Type assignment systems do not require type annotations, and will be easier to work with than other styles of typing that require all variables be annotated \todo{or all everything for MH} \todo{church/curry?}.
 Practically this means that the type assignment system may need to infer an unrealistic amount of information from a term and its context for typing.
 This also means that terms do not necessarily have unique typings.
 For instance $\vdash\lambda x\Rightarrow x:\mathbb{N}_{c}\rightarrow\mathbb{N}_{c}$, and $\vdash\lambda x\Rightarrow x:\mathbb{B}_{c}\rightarrow\mathbb{B}_{c}$.
@@ -303,15 +305,15 @@ Finally, $\textrm{ty-conv}$ shows which types are \textbf{convertible} to each o
 % meta-theory type soundness From the programming language perspective
 The most important property of a type system is \textbf{type soundness}\footnote{also called \textbf{type safety}}.
 Type soundness is often motivated with the slogan, ``well typed programs don't get stuck''\cite{MILNER1978348}\footnote{in Milner's original paper, he used ``wrong'' instead of ``stuck''}.
-Given the syntax of the surface language, their is potential for a program to ``get stuck'' when an argument is applied to a non-function constructor.
+Given the syntax of the surface language, there is potential for a program to ``get stuck'' when an argument is applied to a non-function constructor.
 For example, $\star\ 1_{c}$ would be stuck since $\star$ is not a function, so it cannot compute when given the argument $1_{c}$.
 A good type system will make such unreasonable programs impossible.
 
-Type soundness can be shown with a \textbf{progress} and \textbf{preservation}\footnote{also called  \textbf{Subject Reduction}} style proof\cite{WRIGHT199438}\footnote{The first proof published in this style is \cite{WRIGHT199438} though their progress lemma is a bit different form modern presentations.
+Type soundness can be shown with a \textbf{progress} and \textbf{preservation}\footnote{also called  \textbf{Subject Reduction}} style proof\cite{WRIGHT199438}\footnote{The first proof published in this style is \cite{WRIGHT199438} though their progress lemma is a bit different from modern presentations.
 Most relevant textbooks outline forms of this proof for non-dependent type systems.
 For instance, Part 2 of \cite{pierce2002types}, \cite{KOKKE2020102440}, Chapter 11 of \cite{chlipala2017formal}.
 Chapter 3 of \cite{sjoberg2015dependently} has a similar progress and preservation style proof for a dependently typed language.}\todo{cite parts of things in latex?}.\todo{TAPL cites Harper as a co-originator of progress-preservation.
- Maybe just email him?  it might be also good to gice him for intractability (blum stuff).
+ Maybe just email him?  it might be also good to get him for intractability (blum stuff).
  might want to review his book first}
 
 The preservation lemma shows that typing information is invariant over evaluation.
@@ -404,7 +406,7 @@ The $\textrm{\ensuremath{\Rrightarrow}-::-red}$ rule removes a type annotation, 
 The other rules are entirely structural.
 Repeating parallel reductions zero or more times is written $\Rrightarrow_{\ast}$.
 
-While this is a sufficient presentation of definitional equality, others variants of the relation are possible.
+While this is a sufficient presentation of definitional equality, other variants of the relation are possible.
 For instance it is possible to extend the relation with contextual information, type information, explicit proofs of equality (as in Extensional Type Theory), uncomputable relations (as in \cite{jia2010dependent}).
 It is also common to assume the properties of $\equiv$ hold without proof.
 
@@ -603,7 +605,7 @@ Since $max\left(m\right)=max\left(m\right)$ .
 Confluence of $\Rrightarrow_{\ast}$ 
 
 If $m\Rrightarrow_{\ast}\,n'$, $m\Rrightarrow_{\ast}\,n''$, then
-their exists $n'''$ such that $n'\Rrightarrow\,n'''$ ,$n''\Rrightarrow\,n'''$
+there exists $n'''$ such that $n'\Rrightarrow\,n'''$ ,$n''\Rrightarrow\,n'''$
 .
 \end{thm}
 
@@ -851,7 +853,7 @@ $P\equiv\left(x:N\right)\rightarrow M$}\tabularnewline
 other rules & impossible & the term position has the form $\mathsf{fun}\,f\,x\Rightarrow m$\tabularnewline
 \end{tabular}
 \end{proof}
-This allows us to conclude the more strait forward corollary 
+This allows us to conclude the more straightforward corollary 
 \begin{cor}
 $\mathsf{fun}$-Inversion
 
@@ -864,7 +866,7 @@ $\mathsf{fun}$-Inversion
 by noting that $\left(x:N\right)\rightarrow M\equiv\left(x:N\right)\rightarrow M$,
 by reflexivity 
 \end{proof}
-%TODO: Note that the result of this lemma will always produce derivations of equal or smaller hight to the input typing derivation.
+%TODO: Note that the result of this lemma will always produce derivations of equal or smaller height to the input typing derivation.
 % unneeded
 \begin{thm}
 $\Rrightarrow$-Preservation 
@@ -939,7 +941,7 @@ For non-dependently typed programming languages, these steps are easy to charact
 If we characterize computation with the $\Rrightarrow$ relation, the progress lemma holds in a meaningless way since we can always take a reflexive step.
 Thus a more realistic computation relation is needed.
 Ideally one that is not reflexive, is deterministic and that is a sub relation of $\Rrightarrow_{*}$.
-We can choose a call-by-value relation since this meets all the properties required, and is a standard execution strategy, that reflects actual implementations.
+We can choose a call-by-value relation since this meets all the properties required, and is a standard execution strategy that reflects actual implementations.
 
 \begin{figure}
 \begin{tabular}{lcl}
@@ -1105,15 +1107,15 @@ To make a practical type checker we need to insist that the user include some ty
 
 % Annotate all the vars 
 
-There are many possible way to localize the type checking process.
-We could ask that all variable be annotated at binders.
+There are many possible ways to localize the type checking process.
+We could ask that all variables be annotated at binders.
 This is good from a theoretical perspective, since it matches how type contexts are built up.
 
 However note that, our proof of $\lnot1_{c}\doteq_{\mathbb{N}_{c}}0_{c}$ will look like
 
 $\lambda pr\underline{:1_{c}\doteq_{\mathbb{N}_{c}}0_{c}}\Rightarrow pr\,\left(\lambda n:\underline{\left(C:\left(\mathbb{N}_{c}\rightarrow\star\right)\right)\rightarrow C\,1_{c}\rightarrow C\,0_{c}}\Rightarrow n\,\star\,(\lambda-:\underline{\star\Rightarrow Unit_{c}})\,\perp_{c}\right)\,tt_{c}:\underline{\lnot1_{c}\doteq_{\mathbb{N}_{c}}0_{c}}$
 
-More then half of the term is type annotations! Annotating every binding site requires a lot of redundant information.
+More than half of the term is type annotations! Annotating every binding site requires a lot of redundant information.
 Luckily there's a better way.
 
 \subsection{Bidirectional Type Checking}
@@ -1178,7 +1180,7 @@ As mentioned, bidirectional type checking handles higher order functions very we
 For instance, the expression $\vdash(\lambda x\Rightarrow x\,(\lambda y\Rightarrow y)\,2)\overleftarrow{\,:\,}\left(\left(\mathbb{N}\rightarrow\mathbb{N}\right)\rightarrow\mathbb{N}\rightarrow\mathbb{N}\right)\rightarrow\mathbb{N}$ checks because $\vdash(\lambda y\Rightarrow y)\overleftarrow{\,:\,}\left(\mathbb{N}\rightarrow\mathbb{N}\right)$ and $\vdash2\overleftarrow{\,:\,}\mathbb{N}$.
 
 
-Unlike the undirected judgments of the Type Assignment System, the inference rule of the the bidirectional system does not convert, it is unique up to syntax! For example $x:Vec\,3\vdash x\overrightarrow{\,:\,}Vec\,3$, but $x:Vec\,3\cancel{\vdash}x\overrightarrow{\,:\,}Vec\,\left(1+2\right)$.
+Unlike the undirected judgments of the Type Assignment System, the inference rule of the bidirectional system does not convert, it is unique up to syntax! For example $x:Vec\,3\vdash x\overrightarrow{\,:\,}Vec\,3$, but $x:Vec\,3\cancel{\vdash}x\overrightarrow{\,:\,}Vec\,\left(1+2\right)$.
 This could cause unexpected behavior around function applications.
 For instance, if $\Gamma\vdash m\overrightarrow{\,:\,}\mathbb{N}\rightarrow\mathbb{N}$ then $\Gamma\vdash m\:7\overrightarrow{\,:\,}\mathbb{N}$ will infer, but only because the $\rightarrow$ is in the head position of the type $\mathbb{N}\underline{\rightarrow}\mathbb{N}$.
 If $\Gamma\vdash m\overrightarrow{\,:\,}\left(\mathbb{N}\rightarrow\mathbb{N}::\star\right)$ then $::$ is in the head position of $\mathbb{N}\rightarrow\mathbb{N}\underline{::}\star$ and $\Gamma\cancel{\vdash}m\ 7\overrightarrow{\,:\,}\mathbb{N}$ will will not infer.
@@ -1189,7 +1191,7 @@ As in the expression, $\left((\lambda x\Rightarrow x)::\left(\mathbb{N}\rightarr
 
 
 For these reasons, realistic implementations will often evaluate the types needed for $\overleftarrow{ty}-\mathsf{fun}$, and $\operatorname{\overrightarrow{ty}-fun-app}$ into weak head normal form \footnote{as in \cite{COQUAND1996167}}.
-More advanced bidirectional implementations such as Agda\cite{norell2007towards} even preform unification as part of their bidirectional type checking.
+More advanced bidirectional implementations such as Agda\cite{norell2007towards} even perform unification as part of their bidirectional type checking.
 
 \todo[inline]{alternative listed in appendix}
 
@@ -1199,7 +1201,7 @@ More advanced bidirectional implementations such as Agda\cite{norell2007towards}
 
 \todo[inline]{Clearly explain why this is needed for the cast system, annotating every var is cumbersome, constraint solving is iffy when things may be undecidable}
 
-This document opts for the simplest possible presentation, of bidirectional type checking.
+This document opts for the simplest possible presentation of bidirectional type checking.
 There will always be ways to make type inference more powerful, at the cost of complexity.
 
 \subsection{The Bidirectional System is Type Sound}
@@ -1226,7 +1228,7 @@ Therefore the bidirectional system is also type sound.
 In Bidirectional systems, \textbf{annotatability}\footnote{also called \textbf{completeness}} is the property that any expression that types in a TAS will type in the bidirectional system with only additional annotations.
 This property doesn't exactly hold for the bidirectional system presented here.
 For instance, $\vdash\left((\lambda x\Rightarrow x)::\left(\mathbb{N}\rightarrow\mathbb{N}::\star\right)\right)$ type checks in the TAS system, but no amount of annotations will make it check in the bidirectional system.
-Instead we can show that the bidirectional system does not preclude any computation available in the TAS, though annotations may need to be added (or removed% no need to remove if properly biderectional).
+Instead we can show that the bidirectional system does not preclude any computation available in the TAS, though annotations may need to be added (or removed% no need to remove if properly bidirectional).
 We will call this property \textbf{weak annotatability}.
 \begin{thm}
 weak annotatability.
@@ -1248,9 +1250,9 @@ When type systems are used as logics, it is desirable that
 \item There exists an empty type that is uninhabited in the empty context, so the system is \textbf{logically consistent}\footnote{also called \textbf{sound}}.
 \item Type checking is decidable.
 \end{itemize}
-Neither the TAS system or the Bidirectional systems has these properties\footnote{These properties are usually shown be showing that the computation that generates conversion is normalizing.
+Neither the TAS system or the Bidirectional systems has these properties\footnote{These properties are usually shown by showing that the computation that generates conversion is normalizing.
 A proof for a more logical system can be found in Chapter 4\cite{luo1994computation}.
-Another excellent tutorial can be fund in Chapter 2 in \cite{casinghino2014combiningthesis}}.
+Another excellent tutorial can be found in Chapter 2 in \cite{casinghino2014combiningthesis}}.
 % aparently that note from Chris Casinghino is dead http://prosecco.gforge.inria.fr/personal/hritcu/temp/snforcc.pdf
 
 \subsubsection{Logical Inconsistency}
@@ -1286,10 +1288,10 @@ While unproductive non-termination is always a bug, it seems an easy bug to dete
 In mainstream languages, types help to communicate the intent of termination, even though termination is not guaranteed by the type system.
 Importantly, no desirable computation is prevented in order to preserve logical soundness.
 There will never be a way to allow all the terminating computations and exclude all the nonterminating computations.
-A tradeoff must be made, and programmers likely care more about having all possible computations then preventing non-termination.
+A tradeoff must be made, and programmers likely care more about having all possible computations than preventing non-termination.
 Therefore, logical unsoundness seems suitable for a dependently typed programming language.
 
-\todo{argue from the Blum proof?  Allowing non-termination makes writeing termination programs easier.}
+\todo{argue from the Blum proof?  Allowing non-termination makes writing termination programs easier.}
 
 \todo{add ref to inequalities}
 
@@ -1319,7 +1321,7 @@ If there is a procedure to decide type checking we can decide exactly when any P
 Since checking if a PCF function halts is undecidable, type checking here is undecidable.
 
 \end{proof}
-Again this the root of the problem is the non-termination that results by allowing Turing complete computations, which are seem necessary in a realistic programing language.
+Again this the root of the problem is the non-termination that results by allowing Turing complete computations, which seem necessary in a realistic programming language.
 
 Luckily undecidability of type checking is not as bad as it sounds for several reasons.
 First, the pathological terms that cause non-terminating conversion are rarely created on purpose.
@@ -1340,15 +1342,15 @@ Unless type features are considered very carefully, they can often create undeci
 Haskell may be the most popular statically typed language with decidable type checking (though GHC compiler flags that make type checking undecidable are popular).
 Even the Hindley-Milner type checking algorithm that underlies Haskell and ML, has a worst case double exponential complexity, which under normal circumstances would be considered intractable.
 
-In practice these theoretical concerns are irrelevant since programers are not giving the compiler ``worst case'' code.
+In practice these theoretical concerns are irrelevant since programmers are not giving the compiler ``worst case'' code.
 Even if they did, the worst that can happen is the type checking will hang in the compilation process.
 When this happens programmers can fix their code, modify or remove macros, or add typing annotations.
-Programers in conventional languages are already entrusted with almost unlimited power to cause harm.
+Programmers in conventional languages are already entrusted with almost unlimited power to cause harm.
 Programs regularly delete files, read and modify sensitive information, and send emails (some of these are even possible from within the language's macro systems).
-Relatively speaking, undecidable type checking is not a programmers the biggest concern.
+Relatively speaking, undecidable type checking is not a programmer's biggest concern.
 
 Most importantly for the system described in this thesis, users are expected to use the elaboration procedure defined in the next chapter that will bypass the type checking described here.
-% That elaboration procedures is also undecidable, but only for extremely pathological terms.
+% That elaboration procedure is also undecidable, but only for extremely pathological terms.
 
 \section{Related work}
 
@@ -1359,13 +1361,13 @@ In the 1970s, Per Martin-L{\"o}f proposed a system with type-in-type\todo{cite i
 In the 1980s, Cardelli explored the domain semantics of a system with general recursive dependent functions and type-in-type \cite{cardelli1986polymorphic}.
 
 
-The first progress and preservation style proof of type soundness for a language with general recursive dependent functions and type-in-type seem to come form the Trellys Project \cite{sjoberg2012irrelevance}.
+The first progress and preservation style proof of type soundness for a language with general recursive dependent functions and type-in-type seem to come from the Trellys Project \cite{sjoberg2012irrelevance}.
 At the time their language had several additional features not included in the surface language.
 Additionally, the surface language uses a simpler notion of definitional equality resulting in a simpler proof of type soundness.
 Later work in the Trellys Project\cite{casinghino2014combining,casinghino2014combiningthesis} used modalities to separate terminating and non-terminating fragments of the language, to allow both general recursion and logically sound reasoning%, though the annotation burden seems high in retrospect .
 In general, the surface language has been deeply informed by the Trellys project\cite{sjoberg2012irrelevance}\cite{casinghino2014combining,casinghino2014combiningthesis} \cite{sjoberg2015programming} \cite{sjoberg2015dependently} and the Zombie language\footnote{https://github.com/sweirich/trellys} it produced.
 
-\todo{type in type as a well wknown shortcut, videos of Andraj, Conner MB saying it }
+\todo{type in type as a well known shortcut, videos of Andraj, Conner MB saying it }
 
 \todo{section on bidirectional dependent type systems, citing http://www.cse.chalmers.se/\textasciitilde nad/publications/altenkirch-et-al-flops2010.pdf https://www.seas.upenn.edu/\textasciitilde sweirich/papers/congruence-extended.pdf posibly https://arxiv.org/pdf/1203.4716.pdf https://drops.dagstuhl.de/opus/volltexte/2021/13919/pdf/LIPIcs-ITP-2021-24.pdf}
 
@@ -1374,7 +1376,7 @@ In general, the surface language has been deeply informed by the Trellys project
 Several programming language implementations support features of the surface language without a proof of type soundness.
 Pebble\cite{10.1007/3-540-13346-1_1} was a very early language with dependent types, though conversion did not associate alpha equivalent types\todo{if saying alpha need to define it} \footnote{according to \cite{Reinhold89typecheckingis}}.
 Coquand implemented an early bidirectional algorithm to type-check a language with type-in-type\cite{COQUAND1996167}.
-Cayenne \cite{10.1145/289423.289451} is a Haskell like language that combines dependent types with type in type and non-termination.
+Cayenne \cite{10.1145/289423.289451} is a Haskell-like language that combines dependent types with type in type and non-termination.
 Agda supports general recursion and type in type with compiler flags.
 Idris supports similar ``unsafe'' features.
 
@@ -1382,16 +1384,16 @@ Idris supports similar ``unsafe'' features.
 
 \subsection{Other Dependent Type Systems}
 
-There are many flavors of dependent type systems that are similar in spirt to the language presented here, but maintain logical soundness at the expense of computation.
+There are many flavors of dependent type systems that are similar in spirit to the language presented here, but maintain logical soundness at the expense of computation.
 
 
 The Calculus of Constructions (CC, CoC)\cite{10.1016/0890-5401(88)90005-3} is one of the first minimal dependent type systems.
 It contains shockingly few rules, but can express a wide variety of constructions via parametric encodings.
-The systems does not allow type in type, instead type\footnote{called \textbf{prop}, for proposition} lives in a larger universe $\star:\Square$, where $\Square$ is not considered a type.
-Even though the Calculus of Constructions does not allow type-in-type is it is still \textbf{impredicative }in the sense that function types can quantify over $\star$ while still being in $\star$.
+The system does not allow type in type, instead type\footnote{called \textbf{prop}, for proposition} lives in a larger universe $\star:\Square$, where $\Square$ is not considered a type.
+Even though the Calculus of Constructions does not allow type-in-type it is still \textbf{impredicative }in the sense that function types can quantify over $\star$ while still being in $\star$.
 For instance, the polymorphic identity $id:(X:\star)\rightarrow X\rightarrow X$ has type $\star$ so the polymorphic identity can be applied to itself, $id\,\left((X:\star)\rightarrow X\rightarrow X\right)\,id$.
 From the perspective of the surface language this impredictivity is modest, but still causes issues in the presence of classical logical assumptions \todo{Cite}.
-Many of the examples form this chapter are adapted from examples that were first worked out for the Calculus of Constructions.
+Many of the examples from this chapter are adapted from examples that were first worked out for the Calculus of Constructions.
 
 Several other systems were developed that directly extended or modified the Calculus of Constructions.
 The Extended Calculus of Constructions (ECC)\cite{luo1990extended,luo1994computation}, extends the Calculus of Constructions with a predicative hierarchy of universes and dependent pair types.
@@ -1406,11 +1408,11 @@ The Calculus of Constructions has all forms of dependency\footnote{Recommended r
 
 \todo{presumably Barndrct was the first one to put it in a cube, but don't have a good citation}
 
-Pure Type Systems (PTS)\footnote{previously called \textbf{Generalized Type Systems}} generalize the lambda cube to allow any number of type universe with any forms of dependency.
+Pure Type Systems (PTS)\footnote{previously called \textbf{Generalized Type Systems}} generalizes the lambda cube to allow any number of type universes with any forms of dependency.
 Notably this includes the system with one type universe where type-in-type.
 Universe hierarchies can also be embedded in a PTS.
 The system described in this chapter is almost a PTS, except that it contains unrestricted recursion and the method of type annotation is different.
-All pure type systems such as System F and the Calculus of Constructions have corresponding terms in the the Surface Language, by renaming their type universes into the surface language type universe.
+All pure type systems such as System F and the Calculus of Constructions have corresponding terms in the Surface Language, by renaming their type universes into the surface language type universe.
 
 
 \todo{citations for PTS: (Terlouw, 1989; Berardi, 1988; Barendregt, 1991, 1992; Jutting, McKinna, and Pollack, 1994; McKinna and Pollack, 1993; Pollack, 1994).
@@ -1419,7 +1421,7 @@ According to TAPL}
 As previously mentioned Martin L{\"o}f Type Theory (MTLL) \cite{Martin-Lof-1972} is one of the oldest frameworks for dependent type systems.
 MLTT is designed to be open, so that new constructs can be added with the appropriate introduction, elimination, computation, and typing rules.
 The base system comes with a predicative hierarchy of universes, and at least dependently typed functions and a propositional equality type.
-The system has two flavors characterized by it's handling of definitional equality.
+The system has two flavors characterized by its handling of definitional equality.
 If types are only identified by convertibility (as every system described so far) it is called Intentional Type Theory (ITT).
 If the system allows proofs of equality to associate types, it is called Extensional Type Theory (ETT).
 Since MTLL is open ended, the Calculus of Constructions can be added to it as a subsystem\cite{aspinall2004dependent,hofmann1997extensional}\todo{double check these}.
