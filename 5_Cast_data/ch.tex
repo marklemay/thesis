@@ -5,56 +5,48 @@
 \section{Introduction}
 
 % Cast pattern matching is easy!
-Surprisingly, the cast system can be extended with a pattern matching
-construct without unification.
+%Surprisingly, the cast system can be extended with a pattern matching construct without unification.
+In Chapter 3 we used the TAS system and the bidirectional system to guid delaying equality to runtime.
+The TAS corresponds to the cast system, and the bidirectional system corresponds to elaboration.
+Specificly, the bidriectional approach localizes the equality checks.
+In this chapter we will extend these systems for data and patternmatching.
+This will turm out to be much more complicated then the system in chapter 3, since the only equality checks happened at types of the type universe.
+In this chapter we will need to equate terms directly, and those terms will not necissarily have the same type.
 
-Consider the normal forms of data terms. While in standard type theory
-a normal form of data, in a closed context, must have the data constructor
-in head position (justifying the pattern syntax), in the cast language
-the normal form of data will have a stack of zero or more casts applied
-to a value. Casts will be wrapped around constructors during the elaboration
-procedure, and will accumulate during evaluation. If the cast language
-is extended with a path variable that can represent the stack of equalities
-then that stack can be matched and used in the body of the branch.
-Since the type constructor is known, it is possible to check the coverage
-of the patterns against it's constructors. If every constructor is
-accounted for, only blameable data remains. Quantifying over casts
-allows blame to be redirected, so if the program gets stuck in a pattern
-branch it can blame the original faulty assumption. 
+\todo{Revise, pattern matching is a bidirectional thing}
+\todo{formate case consistently}
+If we hope to target the properties of Chapter 3 we need the cast language to be \textbf{cast sound}. 
+Elaboration should satisfy the additional correctness\todo{``gradual correctness''?} properties relative to a type assignment system and bidirectional system.
+In this case we will target the conjectured TAS from Chapter 4, with a first order unification style pattern matching. 
 
-If we hope to target the properties of Chapter 3 we need the cast
-language to be \textbf{cast sound}. Elaboration should satisfy the
-additional correctness\todo{``gradual correctness''?} properties
-relative to a type assignment system and bidirectional system. In
-this case we will target the conjectured TAS from Chapter 4, with
-a first order unification style pattern matching. 
+Despite this, there is an intresting interpertation of data and pattern matching when extended to the cast system.
 
-To account for unreachable patterns, we can record the proof of inequality
-that makes the unification unsatisfiable with an explicit blame syntax.
-It is perfectly possible for a case expression to reduce into such
-an ``unreachable'' branch if a bad scrutinee is inspected. If this
-happens blame will be reflected back onto a specific problematic cast
-of the input.\todo{define path}
+Consider the normal forms of data terms.
+While in standard type theory a normal form of data, in an empty context, must have the data constructor in head position (justifying the pattern syntax).
+In the cast language, the normal form of data, in an empty context, will have a stack of zero or more casts applied to an expression with a data constructor in head position.
+Casts are wrapped around constructors during the elaboration procedure, and will accumulate during evaluation.
+If the cast language is extended with a path variable that can represent the stack of equalities, then that stack can be matched and used in the body of the branch.
+Since the type constructor is known, it is possible to check the coverage of the patterns against it's constructors.
+If every constructor is accounted for, only blameable data remains.
+Quantifying over casts allows blame to be redirected, so if the program gets stuck in a pattern branch it can blame the original faulty assumption.
 
-When we internalize the notion of path we need to support path operations
-that correspond to each of operations used by the unification of the
-bidirectional type system. Specifically we need to index into the
-arguments of data constructors, and data type constructors. We will
-also need to be able to reverse paths and concatenate paths since
-the unification algorithm implicitly uses these properties of equality.
-Finally we need to be a able to remove and append casts from and to
-the endpoints of paths.
+To account for unreachable patterns, we can record the proof of inequality that makes the unification unsatisfiable with explicit syntax, that will expose blame.
+It is perfectly possible for a case expression to reduce into such an ``unreachable'' branch if a scrutinee with obsevably incorrect observations is inspected.
+If this happens blame will be reflected back onto a specific problematic cast of the input.\todo{define path}
 
-During elaboration, after a pattern is unified, we will inject the
-proofs of equality into the branch terms so that they cast check.
-This will require that our notion of paths support congruence. 
+When we internalize the notion of path we need to support path operations that correspond to each of operations used by the unification of the bidirectional type system.
+Specifically we need to index into the arguments of data constructors, and data type constructors.
+We will also need to be able to reverse paths and concatenate paths since the unification algorithm implicitly uses these properties of equality.
+Finally we need to be a able to remove and append casts from and to the endpoints of paths.
+
+During elaboration, after a pattern is unified, we will inject the proofs of equality into the branch terms so that they cast check.
+This will require that our notion of paths support congruence.
 
 \subsection{Examples}
 
 \subsubsection{Head}
 
-For instance if the user case matches the head of $x$ where $x$
-has type $\mathtt{Vec}\,A\,(\mathtt{S}n)$ in the surface language,
+For instance if the user case matches the head of $x$ where $x$ has type $\mathtt{Vec}\,A\,(\mathtt{S}n)$ in the surface language,
 
 \begin{lstlisting}[basicstyle={\ttfamily\small}]
 case x <_:Vec Bool (S n) => Bool> {
@@ -64,15 +56,18 @@ case x <_:Vec Bool (S n) => Bool> {
 
 What can go wrong in the presence of casts?
 \begin{itemize}
-\item a faulty cast assumption may have made $x$ appear to be a Vector
-even when it is not. For instance, $\mathtt{True}::\mathtt{Vec}\,\mathtt{Bool}\,3$
-\item the vector may be empty but cast to look like it is inhabited. For
-instance $\mathtt{Nil}\,\mathtt{Bool}\,::\mathtt{Vec}\,\mathtt{Bool}\,5$
-\item the vector may have a type that is not $\mathtt{Bool}$. For instance
-$\mathtt{Cons}\,\mathtt{Nat}\,3\,...\,...::\mathtt{Vec}\,\mathtt{Bool}\,5$
+\item
+A faulty cast assumption may have made $x$ appear to be a Vector even when it is not.
+For instance, $\mathtt{True}::\mathtt{Vec}\,\mathtt{Bool}\,3$.
+\item 
+The vector may be empty but cast to look like it is inhabited.
+For instance, $\mathtt{Nil}\,\mathtt{Bool}\,::\mathtt{Vec}\,\mathtt{Bool}\,5$.
+\item 
+The vector may have a type that is not $\mathtt{Bool}$.
+For instance, $\mathtt{Cons}\,\mathtt{Nat}\,3\,...\,...::\mathtt{Vec}\,\mathtt{Bool}\,5$.
 \end{itemize}
-To handle these issues elaboration will perform unification resulting
-in the term
+
+To handle these issues elaboration will generate the following cast term with unification
 
 \begin{lstlisting}[basicstyle={\ttfamily\small}]
 case x <_:Vec Bool (S n) => Bool> {
@@ -81,31 +76,28 @@ case x <_:Vec Bool (S n) => Bool> {
 }
 \end{lstlisting}
 
-In the fist branch $A:\star$, $a:A$, $y:\mathtt{Nat}$, while $p$is
-a path variable $p:\mathtt{Vec}\ A\ (\mathtt{S}\,y)\approx\mathtt{Vec}\,\mathtt{Bool}\,(\mathtt{S}\,n)$
-that contains evidence that the two types have been asserted to be
-the same. $InT_{0}p$ extracts the 0th argument from the type constructor
-$p:\mathtt{Vec}\ \underline{A}\ (\mathtt{S}\,y)\approx\mathtt{Vec}\,\underline{\mathtt{Bool}}\,(\mathtt{S}\,n)$
-resulting in the type $InT_{0}p:A\approx\mathtt{Bool}$. The body
-of the branch casts $a$along $InT_{0}p$ to $\mathtt{Bool}$.
+The elaborated case expression covers all possible constructors for the data type constructor $\mathtt{Vec}$. 
+In the fist branch $A:\star$, $a:A$, $y:\mathtt{Nat}$, while $p$ is a path variable that contains evidence that the type of $\mathtt{Cons\,A\,a\,y\,-}$ is $\mathtt{Vec Bool (S n)}$.
+Explicitly, $p:\mathtt{Vec}\ A\ (\mathtt{S}\,y)\approx\mathtt{Vec}\,\mathtt{Bool}\,(\mathtt{S}\,n)$.
+$InT_{0}p$ extracts the 0th argument from the type constructor $p:\mathtt{Vec}\ \underline{A}\ (\mathtt{S}\,y)\approx\mathtt{Vec}\,\underline{\mathtt{Bool}}\,(\mathtt{S}\,n)$ resulting in the type $InT_{0}p:A\approx\mathtt{Bool}$.
+The body of the branch casts $a$ along $InT_{0}\,p$ to $\mathtt{Bool}$.
+Casts are generalized from Chapter 3 to support arbitrary paths.
 
-In the the second branch, $A:\star$, $p:\mathtt{Vec}\ A\ \mathtt{Z}\approx\mathtt{Vec}\,\mathtt{Bool}\,(\mathtt{S}\,y)$
-. The body of the branch encodes the contradiction observed by noting
-$\mathtt{Z}\neq\mathtt{S}\,y$.
+In the the second branch, the pattern mactch gives $A:\star$, $p:\mathtt{Vec}\ A\ \mathtt{Z}\approx\mathtt{Vec}\,\mathtt{Bool}\,(\mathtt{S}\,y)$.
+The body of the branch encodes the contradiction observed by noting $\mathtt{Z}\neq\mathtt{S}\,y$.
 
-Consider the ways $x$could go wrong,
+Since there is no equational assertion, no warnings will be generated for this elaborated term.
+
+Again consider the ways $x$ could go wrong,
 \begin{itemize}
-\item If the case tries to eliminate $\mathtt{True}::\mathtt{Vec}\,\mathtt{Bool}\,3$,
-the type constructor is not matched so the faulty assumption can be
-blamed
-\item If the scrutinee is empty, we will fall into the $\mathtt{Nil}$ branch,
-which will reflect the underling faulty assumption, via the explicit
-blame syntax
-\item If the vector is inhabited by an incorrect type, it will return $3::\mathtt{Bool}$
-with the a cast that rests on the faulty assumption of $\mathtt{Vec}\,\mathtt{Nat}\,5=\mathtt{Vec}\,\mathtt{Bool}\,\,5$.
-If checking is done aggressively this will produce blame immediately.
-If minimal checking is done, the blame will be discovered whenever
-the result is eliminated.
+\item 
+If the case tries to eliminate $\mathtt{True}::\mathtt{Vec}\,\mathtt{Bool}\,3$, the type constructor is not matched so the faulty assumption can be blamed automatically.
+\item 
+If the scrutinee is an empty vector, we will fall into the $\mathtt{Nil}$ branch, which will reflect the underling faulty assumption, via the explicit blame syntax.
+\item
+If the vector is inhabited by an incorrect type, it will return $3::\mathtt{Bool}$ with the a cast that rests on the faulty assumption of $\mathtt{Vec}\,\mathtt{Nat}\,5=\mathtt{Vec}\,\mathtt{Bool}\,\,5$.
+If checking is done aggressively, as in the implementation, this will produce blame immediately.
+If minimal checking is done, the blame will embedded in the resulting term and discovered whenever the output is used.
 \end{itemize}
 
 \subsubsection{Sum}
@@ -118,45 +110,52 @@ case x <_:Vec Nat 2 => Nat> {
 }
 \end{lstlisting}
 
-the elaboration procedure will produce
+The elaboration procedure will produce
 
 \begin{lstlisting}[basicstyle={\ttfamily\small}]
 case x <_:Vec Nat 2 => Nat> {
-| (Cons Nat' i n' (Cons Nat'' j n'' rest):: p1):: p2 => i::InTc0(p2) + j::(InTc0(p1).InTc0(p2))
-| (Nil Nat') :: p => !InTc1(p)
-| (Cons Nat' i n' (Nil Nat''):: p1):: p2 => !InTc1(p1).InTc1(p2) 
+| (Cons Nat' i n' (Cons Nat'' j n'' rest):: p1):: p2 => 
+  i::InTc0(p2) + j::(InTc0(p1).InTc0(p2))
+| (Nil Nat') :: p => 
+  !InTc1(p)
+| (Cons Nat' i n' (Nil Nat''):: p1):: p2 =>
+  !InTc1(p1).InTc1(p2) 
 }
 \end{lstlisting}
 
 \begin{itemize}
-\item in the first branch we have, $p1:\mathtt{Vec}\ Nat''\ (\mathtt{S}\ n'')\approx\mathtt{Vec}\ Nat'\ n'$,
-$p2:\mathtt{Vec}\ Nat''\ (\mathtt{S}\ n')\approx\mathtt{Vec}\ \mathtt{Nat}\ 2$,
-$i:Nat'$, $j:Nat''$
+\item
+In the first branch we have the variables in scope, $p1:\mathtt{Vec}\ Nat''\ (\mathtt{S}\ n'')\approx\mathtt{Vec}\ Nat'\ n'$, $p2:\mathtt{Vec}\ Nat''\ (\mathtt{S}\ n')\approx\mathtt{Vec}\ \mathtt{Nat}\ 2$, $i:Nat'$, $j:Nat''$.
 \begin{itemize}
-\item this means we can deduce $InTc_{0}(p2):Nat'\approx\mathtt{Nat}$,
-and $InTc_{0}(p1)InTc_{0}(p2):Nat''\approx\mathtt{Nat}$
+\item 
+This means we can deduce $InTc_{0}(p2):Nat'\approx\mathtt{Nat}$, and $InTc_{0}(p1)InTc_{0}(p2):Nat''\approx\mathtt{Nat}$.
+\todo[inline]{how should paths be concatenated? ;}
+\item 
+We know from unification what the type and value of every term is supposed to be, so casts can be injected using evidence from the pattern.
 \end{itemize}
-\item in the 2nd branch, $p:\mathtt{Vec}\ Nat''\ 0\approx\mathtt{Vec}\ Nat'\ 2$
+\item 
+In the 2nd branch we have , $p:\mathtt{Vec}\ Nat''\ 0\approx\mathtt{Vec}\ Nat'\ 2$.
 \begin{itemize}
-\item which is unsatisfiable, by $InTc_{1}(p):0\approx2$
+\item 
+Which is contredictory, by $InTc_{1}(p):0\approx2$.
 \end{itemize}
-\item in the 3rd branch, $p1:\mathtt{Vec}\ Nat''\ 0\approx\mathtt{Vec}\ Nat'\ n'$,
-$p2:\mathtt{Vec}\ Nat'\ (\mathtt{S}\ n')\approx\mathtt{Vec}\ \mathtt{Nat}\ 2$, 
+\item 
+In the 3rd branch, $p1:\mathtt{Vec}\ Nat''\ 0\approx\mathtt{Vec}\ Nat'\ n'$, $p2:\mathtt{Vec}\ Nat'\ (\mathtt{S}\ n')\approx\mathtt{Vec}\ \mathtt{Nat}\ 2$. 
 \begin{itemize}
-\item which is unsatisfiable by $InTc_{1}(p1)InTc_{1}(p2):0\approx2$. We
-don't need to know which path is problematic beforehand, only that
-the combination causes trouble.
+\item
+Which is unsatisfiable by $InTc_{1}(p1)InTc_{1}(p2):0\approx2$.
+We don't need to know which sub path is problematic beforehand, only that the combination causes trouble.
+If this branch is reached in an empty context, we can observe a problem in either branch or both.
 \end{itemize}
 \end{itemize}
-We know from unification what the type and value of every term is
-supposed to be, so casts can be injected using evidence from the pattern.
 
-\todo[inline]{Example of a var out of scope that gets set, would require cong in
-all situations}
+\todo[inline]{Example of a var out of scope that gets set, would require cong in all situations}
 
 \subsubsection{Assignment at the type level}
 
-There are more complicated possibilities to consider
+There are more complicated possibilities that need to be addressed.
+For instace, this surface expression that takes in a propositional proof that $2=2$ and uses the named witness to generate a vector of length 2.
+This will typecheck in the surface Langugae.
 
 \begin{lstlisting}[basicstyle={\ttfamily\small}]
 case x <_:Id Nat 2 2 => Vec Bool 2> {
@@ -164,31 +163,38 @@ case x <_:Id Nat 2 2 => Vec Bool 2> {
 }
 \end{lstlisting}
 
-this will elaborate to
+This will elaborate to
 
 \begin{lstlisting}[basicstyle={\ttfamily\small}]
 case x <_:Id Nat 2 2 => Vec Bool 2> {
-| (refl Nat' a)::p => (rep (a::InTc0(p))):: Cong (x=> (A : *) -> A -> Vec Nat x)
-                                                 (CastL (InTC0(p)) (InTC1 p))
-   Nat 9
+| (refl Nat' a)::p => 
+  (rep (a::InTc0(p))):: Cong (x=> (A : *) -> A -> Vec Nat x)
+                             (CastL (InTC0(p)) (InTC1 p))
 }
 \end{lstlisting}
 
-where $Nat':\star$, $a:Nat'$, and $p:\mathtt{Id}\ Nat'\ a\ a\approx\mathtt{Id}\ \mathtt{Nat}\ 2\ 2$.
-Since we have $p:\mathtt{Id}\ Nat'\ a\ a\approx\mathtt{Id}\ \mathtt{Id}\ 2\ 2$,
-$(a::InTC_{0}(p))$ casts $a$ to a $\mathtt{Nat}$ but then we need
-to evidence that $(A:\star)\rightarrow A\rightarrow\mathtt{Vec}\,\mathtt{Nat}\,(a::InTC_{0}(p))\approx(A:\star)\rightarrow A\rightarrow\mathtt{Vec}\,\mathtt{Nat}\,2$.
-This means we fist need congruence to select the portion of interest.
-Ideally we would have a path from $(a::InTC_{0}(p))\approx2$, but
-we only have a path $(InTC_{1}(p)):a\approx2$ . We will use the meta
-operation $CastL$ to produce the path $CastL_{InTC_{0}(p)}\left(InTC_{1}p\right):(a::InTC_{0}p))\approx2$
-.
+Where $Nat':\star$, $a:Nat'$, and $p:\mathtt{Id}\ Nat'\ a\ a\approx\mathtt{Id}\ \mathtt{Nat}\ 2\ 2$.
+Since we have $p:\mathtt{Id}\ Nat'\ a\ a\approx\mathtt{Id}\ \mathtt{Nat}\ 2\ 2$, we can derive $InTC_{0}(p):\ Nat'\ \approx\ \mathtt{Nat}$.
+Which can be used in $a::InTC_{0}(p)$ to cast $a$ from $Nat'$ to $\mathtt{Nat}$.
+But then we need evidence that $(A:\star)\rightarrow A\rightarrow\mathtt{Vec}\,\mathtt{Nat}\,(a::InTC_{0}(p))\approx(A:\star)\rightarrow A\rightarrow\mathtt{Vec}\,\mathtt{Nat}\,2$ to avoid a sperous cast.
+\todo[inline]{avoiding these sperous casts is important for the conjectured gradual correctenss, well typed surface language terms should not generate warnings}
+Fist we need congruence to select the subterm that is of intrest, $(A:\star)\rightarrow A\rightarrow\mathtt{Vec}\,\mathtt{Nat}\,\underline{(a::InTC_{0}(p))}\approx(A:\star)\rightarrow A\rightarrow\mathtt{Vec}\,\mathtt{Nat}\,\underline{2}$.
+The $Cong$ syntax eplixitly embedds a  path into a larger expression, here $Cong_{x=> (A : *) -> A -> \mathtt{Vec} \mathtt{Nat} x} ...$ selects the relevent part of the type.
 
-\subsubsection{need to remove a cast}
+Ideally we would have a path from $a::InTC_{0}(p)\ \approx\ 2$, but we only have a path $InTC_{1}(p)\ :\ a\ \approx\ 2$.
+We will use the $CastL$ to produce the path $CastL_{InTC_{0}(p)}\left(InTC_{1}p\right):(a::InTC_{0}p))\approx2$.
+$CastL$ will be derivable within the extended cast system.
 
-Consider this surface language case that extracts the last element
-from a non-empty list. Assume the function $last:(n:Nat)\rightarrow Vec\,A\,(S\,N)\rightarrow A$
-is in scope.
+\todo[inline]{Make 2 examples?}
+
+\todo[inline]{Note that an arbitrary choice was was made $InTC_{1}(p)$ $InTC_{2}(p)$}
+
+\subsubsection{Need to remove a cast}
+\todo{better name}
+
+Consider this surface language expression that extracts the last element from a non-empty list.
+Assume the function $last:(n:Nat)\rightarrow Vec\,A\,(S\,N)\rightarrow A$ is in scope.
+\todo{or just define the recursive function}
 
 \begin{lstlisting}[basicstyle={\ttfamily\small}]
 case v <_: Vec A (S x) => A > {
@@ -197,47 +203,54 @@ case v <_: Vec A (S x) => A > {
 }
 \end{lstlisting}
 
-this will elaborate into 
+This will elaborate into 
 
 \begin{lstlisting}[basicstyle={\ttfamily\small}]
 case v <_: Vec A (S x) => A > {
-| (Cons A' a' (Z)::q rest) :: p => a' :: rev(inTC1(p))
+| (Cons A' a' (Z)::q rest) :: p => a' :: (inTC1(p))-1
 | (Cons A' a' (S n)::q rest)::p => last n (rest :: p')
 | (Nil A')::p => !TCon1(p)
 }
 \end{lstlisting}
 
-In the 2nd branch we have $A':\star$, $a':A'$, $n:Nat$, $q:Nat\approx Nat$,
-$rest:Vec\,A'\,\left(\left(S\,n\right)::q\right)$, and $p:Vec\,A'\,\left(S\left(\left(S\,n\right)::q\right)\right)\approx Vec\,A\,\left(S\,x\right)$.
-Note that we cannot unify a solution unless we can freely remove casts
-from endpoints, otherwise it becomes impossible to construct a path
-from $Vec\,A'\,\left(\left(S\,n\right)::q\right)\approx Vec\,A\,\left(S\,n\right)$.
-We will need an operator that can remove casts from the endpoints
-of paths that arise from unification, we will call these operators
-$uncastL$ and $uncastR$. With these operations we can match the
-process of surface level unification so that
+\todo[inline]{prettier expressions, rev to -1, in general it might be clearer if cast langauge is always in math mode}
 
-$p'=Cong_{x\Rightarrow Vec\,A'\,x}\left(UncastR\left(refl\right)\right)\circ Cong_{x\Rightarrow Vec\,x\,\left(S\,n\right)}\left(TCon_{0}p\right):Vec\,A'\,\left(\left(S\,n\right)::q\right)\approx Vec\,A\,\left(S\,n\right)$
+In the 2nd branch we have
+  $A':\star$, $a':A'$, $n:\mathtt{Nat}$,
+  $q:\mathtt{Nat}\approx \mathtt{Nat}$,
+  $rest:\mathtt{Vec}\,A'\,\left(\left(\mathtt{S}\,n\right)::q\right)$,
+  and $p:\mathtt{Vec}\,A'\,\left(\mathtt{S}\left(\left(\mathtt{S}\,n\right)::q\right)\right)\approx \mathtt{Vec}\,A\,\left(\mathtt{S}\,x\right)$.
+Elaboration cannot unify a solution unless we can remove casts, otherwise it becomes impossible to construct a path from $n \approx x$
+  from $\mathtt{Vec}\,A'\,\left(\left(\mathtt{S}\,n\right)\underline{::q}\right)\approx \mathtt{Vec}\,A\,\left(\mathtt{S}\,n\right)$, since the cast blocks
+  $\mathtt{S}\,n = \mathtt{S}\,x$ that would be derivable by unification in the surface language.
+We will need an operator that can remove casts from the endpoints of paths that arise from unification.
+We will call these operators $uncastL$ and $uncastR$ and they will be derivable in the cast language.
+With these operations we can match the process of surface level unification so that
 
-In the first branch we have, $A':\star$, $a':A'$, $q:Nat\approx Nat$,
-$rest:Vec\,A'\,\left(Z::q\right)$, and $p:Vec\,A'\,\left(S\left(Z::q\right)\right)\approx Vec\,A\,\left(S\,x\right)$.
-Unification can proceed to derive $TCon_{1}\left(Con_{0}\left(p\right)\right)^{-1}:\ x\approx Z::q$
+$p'\ =\ Cong_{x\Rightarrow \mathtt{Vec}\,A'\,x}\left(UncastR\left(refl\right)\right)\circ Cong_{x\Rightarrow \mathtt{Vec}\,x\,\left(\mathtt{S}\,n\right)}\left(TCon_{0}p\right):\ \mathtt{Vec}\,A'\,\left(\left(\mathtt{S}\,n\right)::q\right)\ \approx\ \mathtt{Vec}\,A\,\left(\mathtt{S}\,n\right)$
+
+Where 
+$UncastR\left(refl\right): \left(\mathtt{S}\,n\right)::q  \approx \mathtt{S}\,n $
+
+In the first branch we have, 
+  $A':\star$, $a':A'$,
+  $q:\mathtt{Nat}\approx \mathtt{Nat}$,
+  $rest:\mathtt{Vec}\,A'\,\left(\mathtt{Z}::q\right)$, 
+  and $p:\mathtt{Vec}\,A'\,\left(\mathtt{S}\left(\mathtt{Z}::q\right)\right)\approx \mathtt{Vec}\,A\,\left(\mathtt{S}\,x\right)$.
+Unification can proceed to derive $TCon_{1}\left(Con_{0}\left(p\right)\right)^{-1}:\ x\approx \mathtt{Z}::q$
 and $TCon_{1}\left(p\right)^{-1}:\ A\approx A'$.
 
-In the ``unreachable'' branch we have $p:Vec\,A'\,Z\approx Vec\,A'\,\left(S\,x\right)$,
-which is contradicted by $TCon_{1}p:Z\approx S\,x$
+In the final branch we have $p:\mathtt{Vec}\,A'\,\mathtt{Z}\approx \mathtt{Vec}\,A'\,\left(\mathtt{S}\,x\right)$,
+which is contradicted by $TCon_{1}p:\mathtt{Z}\approx \mathtt{S}\,x$
 
 \todo[inline]{Example: transitivity, translate out to motive}
 
 \section{Cast Language Pattern Matching}
 
-Pattern matching across dependent data types will allow for observations
-that were impossible before. We can now observe specific arguments
-in type constructors and term constructors. Since function terms can
-appear directly in data type constructors it is now possible to observe
-functions directly. Unfortunately formalizing this syntax seems to
-requires some heavy constructs, see \ref{fig:cast-data} for the extended
-path syntax. 
+Pattern matching across dependent data types will allow for observations that were impossible before.
+We can now observe specific arguments in type constructors and term constructors.
+Since function terms can appear directly in data type constructors it is now possible to observe functions directly.
+Unfortunately formalizing this syntax seems to requires some heavy constructs, see \ref{fig:cast-data} for the extended cast language syntax with paths. 
 
 \todo[inline]{unmatched patterns}
 

@@ -5,24 +5,35 @@ all work related to my thesis document, will eventually become public
 latest draft availible [here](https://github.com/marklemay/thesis/releases)
 
 ## What to Review
-Where are you first confused?
-Where do you first get board?
+* Where are you first confused?
+* Where do you first get board?
+* how much new jargon sould I introduce
+  * name the system `dDyamic`?
+  * better name for the `surface langugae` and `cast langugae`?
+  * `gradual correctness`?
+
 * Chapter 1
   * is a pluasable argument made
+  * spelling grammar
 * Chapter 2
   * proofs correct 
   * formalisms are well motivated
   * formalisms are "standard"
   * prior work is correct
+  * spelling grammar
 * Chapter 3
   * proofs correct 
   * formalisms are well motivated
 * Chapter 4
   * formalisms are well motivated
-  * prior work is correct
+  * prior work is correct, and complete
+* Chapter 5
+  * examples
+* Conclusion
+  * photo ready
 
 ## compile pdf
-need to pull bibliography in with
+get bibliography and fully build with
 ```
 git submodule foreach git pull origin master
 latexmk thesis.tex -pdf
@@ -54,6 +65,7 @@ latexmk thesis.tex -pdf
   - [ ] finalize thesis
   - [ ] Send to commitee (at least 2 weeks before defense)
 - [ ] Feb
+  - [ ] Practice defence
   - [ ] Defend
 ## Remove from the body of the thesis
 - [ ] Rework symbolic execution to work in the cast language

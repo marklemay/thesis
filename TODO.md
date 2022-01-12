@@ -62,10 +62,11 @@ Send to people for review
 * CH2/4 Zach
 * almost done Luara
 * Eric's friends
-* Chapter 6, Fuzzing person 
+* Chapter 5.1, Fuzzing person 
 * internet
 * contact authors about https://arxiv.org/pdf/2107.04859.pdf, should probly invite to defence
   * address concernce that this is novel
+* The EE guy for maintaining the latex
 
 
 defence 
