@@ -221,7 +221,7 @@ In the 2nd branch we have
   $rest:\mathtt{Vec}\,A'\,\left(\left(\mathtt{S}\,n\right)::q\right)$,
   and $p:\mathtt{Vec}\,A'\,\left(\mathtt{S}\left(\left(\mathtt{S}\,n\right)::q\right)\right)\approx \mathtt{Vec}\,A\,\left(\mathtt{S}\,x\right)$.
 Elaboration cannot unify a solution unless we can remove casts, otherwise it becomes impossible to construct a path from $n \approx x$
-  from $\mathtt{Vec}\,A'\,\left(\left(\mathtt{S}\,n\right)\underline{::q}\right)\approx \mathtt{Vec}\,A\,\left(\mathtt{S}\,n\right)$, since the cast blocks
+  from $\mathtt{Vec}\,A'\,\left(\left(\mathtt{S}\,n\right)\underline{::q}\right)\approx \mathtt{Vec}\,A\,\left(\mathtt{S}\,x\right)$, since the cast blocks
   $\mathtt{S}\,n = \mathtt{S}\,x$ that would be derivable by unification in the surface language.
 We will need an operator that can remove casts from the endpoints of paths that arise from unification.
 We will call these operators $uncastL$ and $uncastR$ and they will be derivable in the cast language.
