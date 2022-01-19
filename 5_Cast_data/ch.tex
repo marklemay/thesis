@@ -248,11 +248,9 @@ which is contradicted by $TCon_{1}p:\mathtt{Z}\approx \mathtt{S}\,x$
 \section{Cast Language Pattern Matching}
 
 Pattern matching across dependent data types will allow for observations that were impossible before.
-We can now observe specific arguments in type constructors and term constructors.
-Since function terms can appear directly in data type constructors it is now possible to observe functions directly.
-Unfortunately formalizing this syntax seems to requires some heavy constructs, see \ref{fig:cast-data} for the extended cast language syntax with paths. 
-
-\todo[inline]{unmatched patterns}
+For instance it is now possible to observe specific arguments in type constructors and term constructors.
+Since function terms can appear directly in data type constructors it is now possible to observe functions directly, when they are used in congruence.
+Unfortunately formalizing this system seems fairly complicated, see \ref{fig:cast-data} for the extended cast language syntax with paths. 
 
 \begin{figure}
 \begin{tabular}{lcll}

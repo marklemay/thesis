@@ -713,7 +713,7 @@ concrete assumption
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\overline{p\circ}$
+\begin_inset Formula $\overline{p;}$
 \end_inset
 
 
@@ -3556,6 +3556,19 @@ We have elided most of the structural rules that extract blame from terms,
 \end_layout
 
 \begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+just put them in
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 \begin_inset Float figure
 wide false
 sideways false
@@ -3712,7 +3725,7 @@ clean up notation above
 \begin_layout Plain Layout
 \begin_inset Formula 
 \[
-\frac{C\ \mathbf{Val}\quad C\neq\star}{Assert_{k\Rightarrow C}\ \mathbf{Val}}
+\frac{p\ \mathbf{Val}\quad C\ \mathbf{Val}\quad C\neq\star}{Assert_{p\ k\Rightarrow C}\ \mathbf{Val}}
 \]
 
 \end_inset
@@ -3723,7 +3736,7 @@ clean up notation above
 \begin_layout Plain Layout
 \begin_inset Formula 
 \[
-\frac{p\ \mathbf{Val}\quad q\ \mathbf{Val}}{p\circ q\ \mathbf{Val}}
+\frac{p\ \mathbf{Val}\quad q\ \mathbf{Val}}{p;q\ \mathbf{Val}}
 \]
 
 \end_inset
@@ -3734,7 +3747,7 @@ clean up notation above
 \begin_layout Plain Layout
 \begin_inset Formula 
 \[
-\frac{\ }{kmap,refl\ \mathbf{Val}}
+\frac{\ }{refl\ \mathbf{Val}}
 \]
 
 \end_inset
@@ -3762,10 +3775,6 @@ clean up notation above
 \end_inset
 
 
-\end_layout
-
-\begin_layout Plain Layout
-type and term constructors need not be fully applied.
 \end_layout
 
 \begin_layout Plain Layout
@@ -3806,7 +3815,11 @@ noprefix "false"
 
 .
  As before type level values must have all type level casts reduced, term
- level values are allowed casts as long as they have plausible head form.
+ level values are allowed casts as long as they are plausible and in 
+\series bold
+whnf
+\series default
+ .
 \end_layout
 
 \begin_layout Standard
@@ -3833,8 +3846,34 @@ path reductions
 \begin_layout Plain Layout
 \begin_inset Formula 
 \[
-\frac{\ }{cong_{x\Rightarrow a}\left(Assert_{k\Rightarrow c}\right)\rightsquigarrow Assert_{k\Rightarrow a\left[x\coloneqq c\right]}}
+\frac{\ }{cong_{x\Rightarrow a}\left(Assert_{p\ k\Rightarrow c}\right)\rightsquigarrow Assert_{k\Rightarrow a\left[x\coloneqq castl(c,ty\ p)\right]}}
 \]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+Assert is refl since cong is const over paths
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+given suitable condition on the kcast
+\end_layout
 
 \end_inset
 
@@ -3855,8 +3894,21 @@ path reductions
 \begin_layout Plain Layout
 \begin_inset Formula 
 \[
-\frac{\ }{cong_{x\Rightarrow a}\left(p\circ q\right)\rightsquigarrow\left(cong_{x\Rightarrow a}p\right)\circ\left(cong_{x\Rightarrow a}q\right)}
+\frac{\ }{cong_{x\Rightarrow a}\left(p;q\right)\rightsquigarrow\left(cong_{x\Rightarrow a\left[x\coloneqq cast(x,leftty\ q)\right]}p\right);\left(cong_{x\Rightarrow a}q\right)}
 \]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+this is a mess since now every path needs its endpoints!
+\end_layout
 
 \end_inset
 

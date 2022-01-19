@@ -8,7 +8,7 @@ This thesis explores an alternative workflow and a more liberal handling of equa
 Programmers are given warnings that contain the same information as the type errors that would be given by an existing system.
 Programmers can run these programs optimistically, and they will behave appropriately unless a direct contradiction confirming the warning is found.
 
-This is achieved by localizing the constraints using a new form of elaboration based on bidirectional type inference.
+This is achieved by localizing equality constraints using a new form of elaboration based on bidirectional type inference.
 These local checks, or casts, are given a runtime behavior (similar to those of contract and monitors).
 The elaborated terms have a weakened form of type soundness, they will not get stuck without an explicit counter example.
 
