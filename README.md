@@ -33,10 +33,16 @@ latest draft availible [here](https://github.com/marklemay/thesis/releases)
   * photo ready
 
 ## compile pdf
-get bibliography and fully build with
+get bibliography and fully build bu style pdf with
 ```
 git submodule foreach git pull origin master
 latexmk thesis.tex -pdf
+```
+
+build draft pdf, with notes and double sided margins
+```
+git submodule foreach git pull origin master
+latexmk draft.tex -pdf
 ```
 
 ## Complete

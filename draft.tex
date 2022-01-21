@@ -1,6 +1,6 @@
 % MAIN PREAMBLE 
-\documentclass[12pt,letterpaper]{report}          % Single-sided printing for the library
-%\documentclass[12pt,twoside]{report} % Double-sided printing
+% \documentclass[12pt,letterpaper]{report}          % Single-sided printing for the library
+\documentclass[12pt,twoside]{report} % Double-sided printing
 
 \usepackage[intlimits]{amsmath}
 \usepackage{amsfonts,amssymb}
@@ -26,8 +26,8 @@
 \usepackage{mathtools}
 \usepackage{enumitem}
 \usepackage{multirow}
-\usepackage[disable]{todonotes}
-% \usepackage[textsize=tiny]{todonotes}
+% \usepackage[disable]{todonotes}
+\usepackage[textsize=tiny]{todonotes}
 \usepackage{cancel}
 \usepackage{listings}
 \renewcommand{\lstlistingname}{Listing}
@@ -117,6 +117,9 @@
 %\newcommand{\latex}{\LaTeX\xspace}
 
 \begin{document}
+
+% \onehalfspacing
+\setstretch{1.0}
 
 % front matter
 \include{0_Prelim/prelim}   
