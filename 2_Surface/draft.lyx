@@ -113,265 +113,6 @@ Mark Lemay
 \end_layout
 
 \begin_layout Standard
-Despite the usability issues this thesis hopes to correct, dependent type
- systems are still one of the most promising technologies for correctness
- in programming.
- Since proofs and programs are associated there is no additional syntax
- for programmers to learn.
- The proof systems is predictable from the perspective of a functional programme
-r.
-\end_layout
-
-\begin_layout Standard
-The 
-\series bold
-surface language
-\series default
-
-\begin_inset Flex TODO Note (Margin)
-status open
-
-\begin_layout Plain Layout
-is there a better name then surface lang?
-\end_layout
-
-\end_inset
-
- presented in this chapter specifies a minimal dependent type system.
- The semantics are intended to be as simple as possible and compatible with
- other well studied intentional dependent type theories.
- It has several (but not all) of the standard properties of dependent type
- theory.
- As much as possible, the syntax uses standard modern notation 
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-several alternative syntaxes have existed in the literature.
- In this document the typed polymorphic identity function is written, 
-\begin_inset Formula $\lambda-\,x\Rightarrow x\ :\,\left(X:\star\right)\rightarrow X\rightarrow X$
-\end_inset
-
-.
- In 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "10.1016/0890-5401(88)90005-3"
-literal "false"
-
-\end_inset
-
- it might be written 
-\begin_inset Formula $\left(\lambda X:\star\right)\left(\lambda x:X\right)x\ :\,\left[X:\star\right]\left[x:X\right]X$
-\end_inset
-
-.
- In 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "HoTTbook"
-literal "false"
-
-\end_inset
-
- it might be written 
-\begin_inset Formula $\lambda X.\lambda x.x\ :\,\underset{\left(X:\mathcal{U}\right)}{\prod}X\rightarrow X$
-\end_inset
-
-.
-\end_layout
-
-\end_inset
-
-
-\begin_inset Flex TODO Note (Margin)
-status open
-
-\begin_layout Plain Layout
-Martin Loff/Hoff (TODO pr notation)
-\end_layout
-
-\end_inset
-
-.
- 
-\end_layout
-
-\begin_layout Standard
-The surface language will serve both as foundation for later chapters and
- a self contained technical introduction to dependent types.
- By design, the machinery that deals with equality addressed in later chapters
- should be invisible to programers that use the full system.
- They should only need to think about the surface language.
- Everything presented in later chapters is designed to reinforce an understandin
-g of the surface type system, and make it easier to use.
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-% overview, What
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-The surface language deviates from a standard dependent type theory to include
- features to ease programming at the expense of logical correctness.
- Specifically the language allows general recursion, since general recursion
- is useful for general purpose functional programming.
- Type-in-type is also supported since it simplifies the system for programmers,
- and makes the meta-theory slightly easier.
- Despite this, type soundness is a achievable and a practical type checking
- system is given.
-\end_layout
-
-\begin_layout Standard
-Though similar systems have been studied over the last few decades this
- chapter aims to give a self contained presentation, along with examples.
- The surface language has been an good platform to conduct research into
- full spectrum dependent type theory, and hopefully this exposition will
- be helpful introduction for other researchers.
-\end_layout
-
-\begin_layout Section
-Surface Language Syntax
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-% What syntax
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-The syntax for the surface language is in Figure 
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "fig:surface-pre-syntax"
-plural "false"
-caps "false"
-noprefix "false"
-
-\end_inset
-
-
-\begin_inset Flex TODO Note (Margin)
-status open
-
-\begin_layout Plain Layout
-formatting figure references
-\end_layout
-
-\end_inset
-
-.
- The syntax supports: variables, type annotations, a single type universe,
- dependent function types, recursive dependent functions, and function applicati
-ons.
- Type annotations are written with two colons to differentiate it from the
- formal typing judgments that will appear more frequently in this text,
- in the implemented language a user of the programming language would use
- a single colon.
- 
-\end_layout
-
-\begin_layout Standard
-There is no destination between types and terms in the syntax
-\begin_inset Foot
-status collapsed
-
-\begin_layout Plain Layout
-terms and types are usually separated, except in the syntax of full-spectrum
- dependent type systems where separating them would require many redundant
- rules
-\end_layout
-
-\end_inset
-
-, both are referred to as expressions.
- However, capital metavariables are used in positions that are intended
- as types, and lowercase metavariables are used when an expression is intended
- to be a term, for instance in annotation syntax.
- 
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-% Metavariables that intend to quantify equivalent terms will be noted with
- primes or subsripts, 
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-% Metavariables that type other metavairbles will often use the same letter
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Flex TODO Note (Margin)
-status open
-
-\begin_layout Plain Layout
-more about f being recursive?
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Flex TODO Note (Margin)
-status open
-
-\begin_layout Plain Layout
-extrinsic
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Float figure
-wide false
-sideways false
-status open
-
-\begin_layout Plain Layout
 \begin_inset Tabular
 <lyxtabular version="3" rows="11" columns="4">
 <features tabularvalignment="middle">
@@ -842,47 +583,9 @@ application
 \end_inset
 
 
-\begin_inset Caption Standard
-
-\begin_layout Plain Layout
-Surface Language Syntax
-\end_layout
-
-\end_inset
-
-
-\begin_inset CommandInset label
-LatexCommand label
-name "fig:surface-pre-syntax"
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Standard
-Several standard abbreviations are listed in Figure 
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "fig:surface-pre-syntax-abrev"
-plural "false"
-caps "false"
-noprefix "false"
-
-\end_inset
-
-.
-\begin_inset Float figure
-wide false
-sideways false
-status open
-
-\begin_layout Plain Layout
 \begin_inset Tabular
 <lyxtabular version="3" rows="4" columns="5">
 <features tabularvalignment="middle">
@@ -1127,76 +830,7 @@ when
 
 \end_layout
 
-\begin_layout Plain Layout
-where 
-\begin_inset Formula $fv$
-\end_inset
-
- is a function that returns the set of free variables in an expression
-\begin_inset Caption Standard
-
-\begin_layout Plain Layout
-Surface Language Abbreviations
-\end_layout
-
-\end_inset
-
-
-\begin_inset CommandInset label
-LatexCommand label
-name "fig:surface-pre-syntax-abrev"
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Section
-Examples
-\end_layout
-
 \begin_layout Standard
-The surface system is extremely expressive.
- Several example surface language constructions can be found in 
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "fig:surface-examples"
-plural "false"
-caps "false"
-noprefix "false"
-
-\end_inset
-
-.
- Turnstile notion is abused slightly so that examples can be indexed by
- other expressions that obey type rules.
- For instance, we can say 
-\begin_inset Formula $refl_{2_{c}:\mathbb{N}_{c}}\ :\ 2_{c}\doteq_{\mathbb{N}_{c}}2_{c}$
-\end_inset
-
- since 
-\begin_inset Formula $\mathbb{N}_{c}:\star$
-\end_inset
-
- and 
-\begin_inset Formula $2_{c}:\mathbb{N}_{c}$
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Standard
-\begin_inset Float figure
-wide false
-sideways false
-status open
-
-\begin_layout Plain Layout
 \begin_inset Tabular
 <lyxtabular version="3" rows="22" columns="5">
 <features tabularvalignment="middle">
@@ -2566,748 +2200,8 @@ symmetry
 
 \end_layout
 
-\begin_layout Plain Layout
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-turn .
- to => in exists?
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-break out eq for a better table
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-suc, pred as an example of an unpleasant encoding, also citation
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-trans, cong
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-list, vec, singleton
-\end_layout
-
-\end_inset
-
-
-\begin_inset Caption Standard
-
-\begin_layout Plain Layout
-Example Surface Language Expressions
-\end_layout
-
-\end_inset
-
-
-\begin_inset CommandInset label
-LatexCommand label
-name "fig:surface-examples"
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Subsection
-Church encodings
-\end_layout
-
-\begin_layout Standard
-Data types are expressible using Church encodings, (in the style of System
- F).
- Church encodings embed the elimination principle of a data type into continuati
-ons
-\begin_inset Flex TODO Note (Margin)
-status open
-
-\begin_layout Plain Layout
-not exactly right, not just elimination, recursion is also involved
-\end_layout
-
-\end_inset
-
-.
- For instance Boolean data is eliminated against true and false, two tags
- with no additional data.
- This can also be recognized as the familiar if-then-else construct.
- So 
-\begin_inset Formula $\mathbb{B}_{c}$
-\end_inset
-
- encodes the possibility of choice between two elements, 
-\begin_inset Formula $true_{c}$
-\end_inset
-
- picks the 
-\begin_inset Formula $then$
-\end_inset
-
- branch, and 
-\begin_inset Formula $false_{c}$
-\end_inset
-
- picks the 
-\begin_inset Formula $else$
-\end_inset
-
- branch.
-\end_layout
-
-\begin_layout Standard
-Natural numbers
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-called 
-\series bold
-church numerals
-\end_layout
-
-\end_inset
-
- are encodable with two tags, zero and successor.
- Where successor also contains the result of the preceding number.
- So 
-\begin_inset Formula $\mathbb{N}_{c}$
-\end_inset
-
- encodes those two choices, 
-\begin_inset Formula $(X\rightarrow X)$
-\end_inset
-
- handles the recursive result of the prior number in the successor case,
- and the 
-\begin_inset Formula $X$
-\end_inset
-
- argument specifies how to handle the base case of 
-\begin_inset Formula $0$
-\end_inset
-
-.
- This can be viewed as a simple looping construct with temporary storage.
-\end_layout
-
-\begin_layout Standard
-Parameterized data types such as pairs and the 
-\begin_inset Formula $Either$
-\end_inset
-
- type can also be encoded in this scheme.
- A pair type can be used in any way the two terms it contains can, so the
- definition states that a pair is at least as good as the curried input
- to a function.
- The 
-\begin_inset Formula $Either$
-\end_inset
-
- type is handled if both possibilities are handled, which is expressed by
- it's definition.
-\end_layout
-
-\begin_layout Standard
-\begin_inset Flex TODO Note (Margin)
-status open
-
-\begin_layout Plain Layout
-church encoding citation
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-% not necisarily convineint
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Church encodings provide a theoretically light weight way of working with
- data in minimal lambda calculus, however they are very inconvenient to
- work with.
- For instance, the predecessor function on natural numbers is good exercise.
- To make the system easier for programmers, data types will be added directly
- in Chapter 4.
-\end_layout
-
-\begin_layout Subsection
-Proposition encodings
-\end_layout
-
-\begin_layout Standard
-In general we associate the truth value of a proposition with the inhabitation
- of a type by a meaningful value.
- So, 
-\begin_inset Formula $\perp_{c}$
-\end_inset
-
-, the 
-\begin_inset Quotes eld
-\end_inset
-
-empty
-\begin_inset Quotes erd
-\end_inset
-
- type, can be considered as a false proposition.
- While 
-\begin_inset Formula $Unit_{c}$
-\end_inset
-
- can be considered a trivially true proposition.
-\end_layout
-
-\begin_layout Standard
-Several of the church encoded data types we have seen can also be interpreted
- as logical predicates.
- For instance, the tuple type can be considered as logical and, 
-\begin_inset Formula $X\times_{c}Y$
-\end_inset
-
- can be inhabited exactly when both 
-\family roman
-\series medium
-\shape up
-\size normal
-\emph off
-\bar no
-\strikeout off
-\xout off
-\uuline off
-\uwave off
-\noun off
-\color none
-
-\begin_inset Formula $X$
-\end_inset
-
- and 
-\begin_inset Formula $Y$
-\end_inset
-
- are inhabited.
- The
-\family default
-\series default
-\shape default
-\size default
-\emph default
-\bar default
-\strikeout default
-\xout default
-\uuline default
-\uwave default
-\noun default
-\color inherit
- 
-\begin_inset Formula $Either$
-\end_inset
-
-
-\family roman
-\series medium
-\shape up
-\size normal
-\emph off
-\bar no
-\strikeout off
-\xout off
-\uuline off
-\uwave off
-\noun off
-\color none
- type can be considered as logical or, 
-\family default
-\series default
-\shape default
-\size default
-\emph default
-\bar default
-\strikeout default
-\xout default
-\uuline default
-\uwave default
-\noun default
-\color inherit
-
-\begin_inset Formula $Either_{c}\,X\,Y$
-\end_inset
-
- can be inhabited exactly when either 
-\family roman
-\series medium
-\shape up
-\size normal
-\emph off
-\bar no
-\strikeout off
-\xout off
-\uuline off
-\uwave off
-\noun off
-\color none
-
-\begin_inset Formula $X$
-\end_inset
-
- or 
-\begin_inset Formula $Y$
-\end_inset
-
- is inhabited.
-\end_layout
-
-\begin_layout Standard
-With dependent types, more interesting logical predicates can be encoded.
- For instance, we can characterize when a number is even with 
-\begin_inset Formula $Even_{c}\,x$
-\end_inset
-
-.
- We can show that 
-\begin_inset Formula $2$
-\end_inset
-
- is even by showing that 
-\begin_inset Formula $Even_{c}\,2_{c}$
-\end_inset
-
- is inhabited with with the term 
-\begin_inset Formula $\lambda s\Rightarrow s\,tt_{c}$
-\end_inset
-
- .
-\end_layout
-
-\begin_layout Standard
-Other predicates are encodable in the style of Calculus of Constructions
-\begin_inset CommandInset citation
-LatexCommand cite
-key "10.1016/0890-5401(88)90005-3"
-literal "false"
-
-\end_inset
-
-.
- For instance, we can encode the existential as 
-\begin_inset Formula $\exists_{c}$
-\end_inset
-
-, then if we want to show 
-\begin_inset Formula $\exists_{c}x:\mathbb{N}_{c}.\,Even_{c}\,x$
-\end_inset
-
- we need to find a suitable inhabitant of that type.
- 
-\begin_inset Formula $0$
-\end_inset
-
-is clearly an even number, so our inhabitant could be 
-\begin_inset Formula $\lambda f\Rightarrow f\,0_{c}\,tt_{c}$
-\end_inset
-
-.
- Note that the existential degenerates into the tuple if 
-\begin_inset Formula $Y$
-\end_inset
-
- does not depend on the first element.
- 
-\end_layout
-
-\begin_layout Standard
-One of the most potent and interesting propositions is the proposition of
- equality.
- 
-\begin_inset Formula $\doteq$
-\end_inset
-
- is referred to as 
-\series bold
-Leibniz equality
-\series default
- since two terms are equal when they behave the same on all observations
- 
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-The identification of indiscernibles is called 
-\series bold
-Leibniz law
-\series default
- in philosophy.
- Leibniz assumed a metaphysical notion of identification of 
-\begin_inset Quotes eld
-\end_inset
-
-substance
-\begin_inset Quotes erd
-\end_inset
-
-s, not a mathematical notion of equality.
- See Section 9 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "Leibniz1686"
-literal "false"
-
-\end_inset
-
-.
-\end_layout
-
-\end_inset
-
-
-\begin_inset Flex TODO Note (Margin)
-status open
-
-\begin_layout Plain Layout
-cite the ency of philosophy
-\end_layout
-
-\end_inset
-
-.
- We can prove 
-\begin_inset Formula $\doteq$
-\end_inset
-
- is an equivalence within the system be proving it is reflexive, symmetric,
- and transitive.
- Additionally we can prove congruence.
-\end_layout
-
-\begin_layout Standard
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-footnote on Leibniz equality for alt encoding
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Subsection
-Large Eliminations
-\end_layout
-
-\begin_layout Standard
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-double check large elimination def.
- consistent with the notes here: 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-% https://github.com/RobertHarper/hott-notes/blob/5339576f55a4b7f5d04734370a51174
-91c44b1fe/notes_week5.tex#L155
-\end_layout
-
-\end_inset
-
- .
- would like better explanation
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-It is useful for a type to depend specifically on term level data, this
- is called 
-\series bold
-large elimination
-\series default
-.
- Large elimination can be simulated with type-in-type.
- 
-\end_layout
-
-\begin_layout Standard
-\begin_inset Tabular
-<lyxtabular version="3" rows="2" columns="4">
-<features tabularvalignment="middle">
-<column alignment="left" valignment="top">
-<column alignment="left" valignment="top">
-<column alignment="left" valignment="top">
-<column alignment="left" valignment="top">
-<row>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $toLogic$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\family roman
-\series medium
-\shape up
-\size normal
-\emph off
-\bar no
-\strikeout off
-\xout off
-\uuline off
-\uwave off
-\noun off
-\color none
-\begin_inset Formula $\coloneqq\lambda b\Rightarrow b\,\star\,Unit_{c}\,\perp_{c}$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $:$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\mathbb{B}_{c}\rightarrow\star$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $isPos$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\coloneqq\lambda n\Rightarrow n\,\star\,(\lambda-\Rightarrow Unit_{c})\,\perp_{c}$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $:$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\mathbb{N}_{c}\rightarrow\star$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-</row>
-</lyxtabular>
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-For instance,
-\family roman
-\series medium
-\shape up
-\size normal
-\emph off
-\bar no
-\strikeout off
-\xout off
-\uuline off
-\uwave off
-\noun off
-\color none
- 
-\begin_inset Formula $toLogic$
-\end_inset
-
- can convert a 
-\begin_inset Formula $\mathbb{B}_{c}$
-\end_inset
-
- term into its corresponding logical type, 
-\begin_inset Formula $toLogic\,true_{c}\equiv Unit_{c}$
-\end_inset
-
- while 
-\begin_inset Formula $toLogic\,false_{c}\equiv\perp_{c}$
-\end_inset
-
- .
- 
-\family default
-\series default
-\shape default
-\size default
-\emph default
-\bar default
-\strikeout default
-\xout default
-\uuline default
-\uwave default
-\noun default
-\color inherit
-The expression
-\family roman
-\series medium
-\shape up
-\size normal
-\emph off
-\bar no
-\strikeout off
-\xout off
-\uuline off
-\uwave off
-\noun off
-\color none
- 
-\begin_inset Formula $isPos$
-\end_inset
-
- has similar behavior, going to 
-\begin_inset Formula $\perp_{c}$
-\end_inset
-
- at 
-\begin_inset Formula $0_{c}$
-\end_inset
-
- and 
-\begin_inset Formula $Unit_{c}$
-\end_inset
-
- otherwise.
-\end_layout
-
-\begin_layout Standard
-Note that such functions are not possible in the Calculus of Constructions.
-\end_layout
-
 \begin_layout Subsection
 Inequalities
-\end_layout
-
-\begin_layout Standard
-Large eliminations can be used to prove inequalities that can be hard or
- impossible to express in other minimal dependent type theories such as
- the Calculus of Constructions.
- For instance,
 \end_layout
 
 \begin_layout Standard
@@ -3527,121 +2421,12 @@ boolean true and false are distinct
 
 \end_layout
 
-\begin_layout Standard
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-1st not sensible in CC
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-2 possibly in CC?
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Note that a proof of 
-\begin_inset Formula $\lnot1_{c}\doteq_{\mathbb{N}_{c}}0_{c}$
-\end_inset
-
- is not possible in the Calculus of Constructions
-\begin_inset CommandInset citation
-LatexCommand cite
-key "10.2307/2274575"
-literal "false"
-
-\end_inset
-
-
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-Martin Hofmann excellently motivates the reasoning in the Exercises of 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "hofmann_1997"
-literal "false"
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-.
- 
-\end_layout
-
-\begin_layout Standard
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-citation is actually for an MLTT, but if good enough for Hoff good enough
- for me
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
 \begin_layout Subsection
 Recursion
 \end_layout
 
 \begin_layout Standard
-Additionally, the syntax of functions builds in unrestricted recursion.
- Though not always necessary, recursion can be very helpful for writing
- programs.
- For instance, here is (an inefficient) function that calculates Fibonacci
- numbers.
-\end_layout
-
-\begin_layout Standard
 \begin_inset Formula $\mathsf{fun}\,f\,x\Rightarrow case_{c}\,x\,0_{c}\left(\lambda px\Rightarrow case_{c}\,px\,1_{c}\left(\lambda-\Rightarrow f\left(x-_{c}1\right)+_{c}f\left(x-_{c}2\right)\right)\right)$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Assuming appropriate definitions for 
-\begin_inset Formula $case_{c}$
-\end_inset
-
-, and subtraction.
-\end_layout
-
-\begin_layout Standard
-Recursion can also be used to simulate induction, and this will be heavily
- relied on when data types are added in Chapter 4.
-\end_layout
-
-\begin_layout Standard
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-GCD, recursive types
-\end_layout
-
 \end_inset
 
 
@@ -3652,103 +2437,6 @@ Surface Language Type Assignment System
 \end_layout
 
 \begin_layout Standard
-When is an expression reasonable? The expression 
-\begin_inset Formula $\star\star\star\star$
-\end_inset
-
- is allowed by the grammar of the language, but seems dubious
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-% since  is not a function, so has no way of being given an input by application
-\end_layout
-
-\end_inset
-
-.
- Type systems can disallow bad terms like these which in turn avoids bad
- runtime behavior.
-\end_layout
-
-\begin_layout Standard
-We will present our our type system as a 
-\series bold
-Type Assignment System
-\series default
- (TAS).
- Type assignment systems do not require type annotations, and will be easier
- to work with then other styles of typing that require all variables be
- annotated 
-\begin_inset Flex TODO Note (Margin)
-status open
-
-\begin_layout Plain Layout
-or all everything for MH
-\end_layout
-
-\end_inset
-
- 
-\begin_inset Flex TODO Note (Margin)
-status open
-
-\begin_layout Plain Layout
-church/curry?
-\end_layout
-
-\end_inset
-
-.
- Practically this means that the type assignment system may need to infer
- an unrealistic amount of information from a term and its context for typing.
- This also means that terms do not necessarily have unique typings.
- For instance 
-\begin_inset Formula $\vdash\lambda x\Rightarrow x:\mathbb{N}_{c}\rightarrow\mathbb{N}_{c}$
-\end_inset
-
-, and 
-\begin_inset Formula $\vdash\lambda x\Rightarrow x:\mathbb{B}_{c}\rightarrow\mathbb{B}_{c}$
-\end_inset
-
-.
- 
-\end_layout
-
-\begin_layout Standard
-\begin_inset Flex TODO Note (Margin)
-status open
-
-\begin_layout Plain Layout
-move negative stuff later?
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Flex TODO Note (Margin)
-status open
-
-\begin_layout Plain Layout
-example of an unearased term?
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Float figure
-wide false
-sideways false
-status open
-
-\begin_layout Plain Layout
 \begin_inset Formula 
 \[
 \frac{x:M\in\Gamma}{\Gamma\vdash x\,:\,M}\,\textrm{ty-var}
@@ -3759,7 +2447,7 @@ status open
 
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 \begin_inset Formula 
 \[
 \frac{\Gamma\vdash m\,:\,M}{\Gamma\vdash m::M\,:\,M}\,\textrm{ty-::}
@@ -3770,7 +2458,7 @@ status open
 
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 \begin_inset Formula 
 \[
 \frac{{\color{gray}\ }}{\Gamma\vdash\star\,:\,\star}\,\textrm{ty-}\star
@@ -3781,7 +2469,7 @@ status open
 
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 \begin_inset Formula 
 \[
 \frac{\Gamma\vdash M\,:\,\star\quad\Gamma,x:M\vdash N\,:\,\star}{\Gamma\vdash\left(x:M\right)\rightarrow N\,:\,\star}\,\textrm{ty-fun-ty}
@@ -3792,7 +2480,7 @@ status open
 
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 \begin_inset Formula 
 \[
 \frac{\Gamma\vdash m\,:\,\left(x:N\right)\rightarrow M\quad\Gamma\vdash n\,:\,N}{\Gamma\vdash m\,n\,:\,M\left[x\coloneqq n\right]}\,\textrm{ty-fun-app}
@@ -3803,7 +2491,7 @@ status open
 
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 \begin_inset Formula 
 \[
 \frac{\Gamma,f:\left(x:N\right)\rightarrow M,x:N\vdash m\,:\,M}{\Gamma\vdash\mathsf{fun}\,f\,x\Rightarrow m\,:\,\left(x:N\right)\rightarrow M}\,\textrm{ty-fun}
@@ -3814,7 +2502,7 @@ status open
 
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 \begin_inset Formula 
 \[
 \frac{\Gamma\vdash m\,:\,M\quad M\equiv M'}{\Gamma\vdash m\,:\,M'}\,\textrm{ty-conv}
@@ -3825,612 +2513,6 @@ status open
 
 \end_layout
 
-\begin_layout Plain Layout
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-font stuff
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Caption Standard
-
-\begin_layout Plain Layout
-Surface Language Type Assignment System
-\end_layout
-
-\end_inset
-
-
-\begin_inset CommandInset label
-LatexCommand label
-name "fig:surface-TAS"
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-The rules of the type assignment system are listed in 
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "fig:surface-TAS"
-plural "false"
-caps "false"
-noprefix "false"
-
-\end_inset
-
-
-\begin_inset Foot
-status collapsed
-
-\begin_layout Plain Layout
-There is some question about how much typing information should be coupled
- to the judgment, forcing contexts to be well formed eliminates nonsense
- situation like 
-\begin_inset Formula $x:1_{c}\vdash...$
-\end_inset
-
- by construction, but requires more fork when forming judgments that can
- be distracting.
- The proofs in this section can be done without forcing the context to be
- well formed, the additional constraints are omitted.
-\end_layout
-
-\end_inset
-
-.
- Variables get their type from the typing context.
- Type annotations reflect a correct typing derivation in the 
-\begin_inset Formula $\textrm{ty-::}$
-\end_inset
-
- rule.
- Type-in-type is recognized by the 
-\begin_inset Formula $\textrm{ty-}\star$
-\end_inset
-
- rule.
- The 
-\begin_inset Formula $\textrm{ty-fun-ty}$
-\end_inset
-
- rule forms dependent function types.
- The 
-\begin_inset Formula $\textrm{ty-fun-app}$
-\end_inset
-
- rule shows how to type function application, by substituting the argument
- term directly into the dependent function type.
- Functions are typed with a variable for recursive calls along with a variable
- for their argument 
-\begin_inset Formula $\textrm{ty-fun}$
-\end_inset
-
-.
- Finally, 
-\begin_inset Formula $\textrm{ty-conv}$
-\end_inset
-
- shows which types are 
-\series bold
-convertible
-\series default
- to each other, whether they are equivalent.
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-% meta-theory type soundness
-\end_layout
-
-\end_inset
-
- From the programming language perspective the most important property of
- a type system is 
-\series bold
-type soundness
-\series default
-
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-also called 
-\begin_inset Quotes eld
-\end_inset
-
-type safety
-\begin_inset Quotes erd
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-.
- Type soundness is often motivated with the slogan, 
-\begin_inset Quotes eld
-\end_inset
-
-well typed programs don't get stuck
-\begin_inset Quotes erd
-\end_inset
-
-
-\begin_inset CommandInset citation
-LatexCommand cite
-key "MILNER1978348"
-literal "false"
-
-\end_inset
-
-
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-in Milner's original paper, he used 
-\begin_inset Quotes eld
-\end_inset
-
-wrong
-\begin_inset Quotes erd
-\end_inset
-
- instead of 
-\begin_inset Quotes eld
-\end_inset
-
-stuck
-\begin_inset Quotes erd
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-.
- Given the syntax of the surface language, their is potential for a program
- to 
-\begin_inset Quotes eld
-\end_inset
-
-get stuck
-\begin_inset Quotes erd
-\end_inset
-
- when an argument is applied to a non-function constructor.
- For example, 
-\begin_inset Formula $\star\ 1_{c}$
-\end_inset
-
- would be stuck since 
-\begin_inset Formula $\star$
-\end_inset
-
- is not a function, so it cannot compute when given the argument 
-\family roman
-\series medium
-\shape up
-\size normal
-\emph off
-\bar no
-\strikeout off
-\xout off
-\uuline off
-\uwave off
-\noun off
-\color none
-
-\begin_inset Formula $1_{c}$
-\end_inset
-
-
-\family default
-\series default
-\shape default
-\size default
-\emph default
-\bar default
-\strikeout default
-\xout default
-\uuline default
-\uwave default
-\noun default
-\color inherit
-.
- A good type system will make such unreasonable programs impossible.
-\end_layout
-
-\begin_layout Standard
-Type soundness can be shown with a 
-\series bold
-progress
-\series default
- and 
-\series bold
-preservation
-\series default
-
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-also called 
-\begin_inset Quotes eld
-\end_inset
-
-Subject Reduction
-\begin_inset Quotes erd
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
- style proof
-\begin_inset CommandInset citation
-LatexCommand cite
-key "WRIGHT199438"
-literal "false"
-
-\end_inset
-
-
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-The first proof published in this style is 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "WRIGHT199438"
-literal "false"
-
-\end_inset
-
- though their progress lemma is a bit different form modern presentations.
- Most relevant textbooks outline forms of this proof for non-dependent type
- systems.
- For instance, Part 2 of 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "pierce2002types"
-literal "false"
-
-\end_inset
-
-, 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "KOKKE2020102440"
-literal "false"
-
-\end_inset
-
-, Chapter 11 of 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "chlipala2017formal"
-literal "false"
-
-\end_inset
-
-.
- Chapter 3 of 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "sjoberg2015dependently"
-literal "false"
-
-\end_inset
-
- has a similar progress and preservation style proof for a dependently typed
- language.
-\end_layout
-
-\end_inset
-
-
-\begin_inset Flex TODO Note (Margin)
-status open
-
-\begin_layout Plain Layout
-cite parts of things in latex?
-\end_layout
-
-\end_inset
-
-
-\begin_inset Flex TODO Note (Margin)
-status open
-
-\begin_layout Plain Layout
-TAPL cites Harper as a co-originator of progress-preservation.
-  Maybe just email him?  it might be also good to gice him for intractability
- (blum stuff).
-  might want to review his book first
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-.
- The preservation lemma shows that typing information is invariant over
- evaluation.
- While the progress lemma shows that a single step of evaluation for a well
- typed term in an empty context will not 
-\begin_inset Quotes eld
-\end_inset
-
-get stuck
-\begin_inset Quotes erd
-\end_inset
-
-.
- By iterating these lemmas together, it is possible to show that the type
- system prevents a term from evaluating to the class of bad behavior described
- above.
- For a progress and preservation style proof of a dependently typed language,
- everything hinges on a suitable definition of the 
-\begin_inset Formula $\equiv$
-\end_inset
-
- relation.
-\end_layout
-
-\begin_layout Standard
-The 
-\begin_inset Formula $\equiv$
-\end_inset
-
- relation characterizes when terms are 
-\begin_inset Quotes eld
-\end_inset
-
-obviously
-\begin_inset Quotes erd
-\end_inset
-
- equal, or 
-\begin_inset Quotes eld
-\end_inset
-
-automatically
-\begin_inset Quotes erd
-\end_inset
-
- equal.
- Because the 
-\begin_inset Formula $\equiv$
-\end_inset
-
- relation is usually based on the definition of reductions, rather then
- on extrinsic properties, it is called 
-\series bold
-definitional equality
-\series default
-
-\begin_inset Flex TODO Note (Margin)
-status open
-
-\begin_layout Plain Layout
-is that actually why?
-\end_layout
-
-\end_inset
-
-
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-also called 
-\series bold
-Judgmental Equality
-\series default
-, since it is defined via judgments
-\end_layout
-
-\end_inset
-
-.
- Usually it is desirable to make the definitional equality relation as large
- as possible, since the programmer in the system will get more equalities
- 
-\begin_inset Quotes eld
-\end_inset
-
-for free
-\begin_inset Quotes erd
-\end_inset
-
-.
- This chapter will opt for an easier less powerful 
-\begin_inset Formula $\equiv$
-\end_inset
-
- relation, since Chapter 3 will pose an alternative way to avoid definitional
- equalities entirely.
-\end_layout
-
-\begin_layout Standard
-In a progress and preservation style proof, the 
-\begin_inset Formula $\equiv$
-\end_inset
-
- relation should
-\end_layout
-
-\begin_layout Itemize
-be reflexive, 
-\begin_inset Formula $m\equiv m$
-\end_inset
-
- 
-\end_layout
-
-\begin_layout Itemize
-be symmetric, if 
-\begin_inset Formula $m\equiv m'$
-\end_inset
-
- then 
-\begin_inset Formula $m'\equiv m$
-\end_inset
-
- 
-\end_layout
-
-\begin_layout Itemize
-be transitive, if 
-\begin_inset Formula $m\equiv m'$
-\end_inset
-
- and 
-\begin_inset Formula $m'\equiv m''$
-\end_inset
-
- then 
-\begin_inset Formula $m\equiv m''$
-\end_inset
-
- 
-\end_layout
-
-\begin_layout Itemize
-be closed under substitutions and evaluation, for instance if 
-\begin_inset Formula $m\equiv m'$
-\end_inset
-
- and 
-\begin_inset Formula $n\equiv n'$
-\end_inset
-
- then 
-\begin_inset Formula $m\left[x\coloneqq n\right]\equiv m'\left[x\coloneqq n'\right]$
-\end_inset
-
- 
-\end_layout
-
-\begin_layout Itemize
-distinguish between type constructors, for instance 
-\begin_inset Formula $\star\cancel{\equiv}\left(x:N\right)\rightarrow M$
-\end_inset
-
- 
-\end_layout
-
-\begin_layout Standard
-A particularly simple definition of 
-\begin_inset Formula $\equiv$
-\end_inset
-
- is equating any terms that share a reduct via a system of parallel reductions
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{m\Rrightarrow_{\ast}\,n\quad m'\Rrightarrow_{\ast}\,n}{m\equiv m'}\,\equiv\textrm{-Def}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-this relation
-\end_layout
-
-\begin_layout Itemize
-is reflexive, by definition
-\end_layout
-
-\begin_layout Itemize
-is symmetric, automatically
-\end_layout
-
-\begin_layout Itemize
-is transitive, if 
-\begin_inset Formula $\Rrightarrow_{\ast}$
-\end_inset
-
- is confluent
-\end_layout
-
-\begin_layout Itemize
-is closed under substitution if 
-\begin_inset Formula $\Rrightarrow_{\ast}$
-\end_inset
-
- is closed under substitution, closed under evaluation automatically
-\end_layout
-
-\begin_layout Itemize
-distinguishes type constructors, if they are stable under reduction.
- For instance, if
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-\begin_inset Formula $\forall NM.\left(x:N\right)\rightarrow M\Rrightarrow P$
-\end_inset
-
- implies 
-\begin_inset Formula $P=\left(x:N'\right)\rightarrow M'$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Itemize
-and 
-\begin_inset Formula $\star\Rrightarrow P$
-\end_inset
-
- implies 
-\begin_inset Formula $P=\star$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Itemize
-then 
-\begin_inset Formula $\left(x:N\right)\rightarrow M\cancel{\equiv}\star$
-\end_inset
-
-
-\end_layout
-
-\end_deeper
 \begin_layout Standard
 \begin_inset Float figure
 wide false
@@ -4562,98 +2644,8 @@ name "fig:surface-reduction"
 
 \end_layout
 
-\begin_layout Standard
-Parallel reductions are defined to make confluence easy to prove, by allowing
- the simultaneous evaluation of any available reduction.
- The system of parallel reductions is defined in 
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "fig:surface-reduction"
-plural "false"
-caps "false"
-noprefix "false"
-
-\end_inset
-
- The only interesting rules are 
-\begin_inset Formula $\textrm{\Rrightarrow-fun-app-red}$
-\end_inset
-
- and 
-\begin_inset Formula $\textrm{\Rrightarrow-::-red}$
-\end_inset
-
- since they directly preform reductions.
- The 
-\begin_inset Formula $\textrm{\Rrightarrow-fun-app-red}$
-\end_inset
-
- rule recursively reduces a function given an argument.
- The 
-\begin_inset Formula $\textrm{\Rrightarrow-::-red}$
-\end_inset
-
- rule removes a type annotation, making type annotations definitionally
- irrelevant.
- The other rules are entirely structural.
- Repeating parallel reductions zero or more times is written 
-\begin_inset Formula $\Rrightarrow_{\ast}$
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Standard
-While this is a sufficient presentation of
-\series bold
- 
-\series default
-definitional equality, others variants of the relation are possible.
- For instance it is possible to extend the relation with contextual information,
- type information, explicit proofs of equality (as in Extensional Type Theory),
- uncomputable relations (as in 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "jia2010dependent"
-literal "false"
-
-\end_inset
-
-).
- It is also common to assume the properties of 
-\begin_inset Formula $\equiv$
-\end_inset
-
- hold without proof.
-\end_layout
-
 \begin_layout Subsection
 Definitional Equality
-\end_layout
-
-\begin_layout Standard
-We now have enough information to prove the critical properties of definitional
- equality.
-\begin_inset Flex TODO Note (Margin)
-status open
-
-\begin_layout Plain Layout
-index theorem by chapter
-\end_layout
-
-\end_inset
-
-
-\begin_inset Flex TODO Note (Margin)
-status open
-
-\begin_layout Plain Layout
-would like to combine these?
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Subsubsection
@@ -4745,33 +2737,6 @@ The following rule is admissible for every substitution
 \[
 \frac{m\Rrightarrow m'}{m\left[\sigma\right]\Rrightarrow m'\left[\sigma\right]}\,\textrm{\Rrightarrow-sub-\sigma}
 \]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Flex TODO Note (Margin)
-status open
-
-\begin_layout Plain Layout
-define substitutions, what properties are needed over substitutions?
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Flex TODO Note (Margin)
-status open
-
-\begin_layout Plain Layout
-is this lemma needed or is it just to accommodate stupid binding stuff in
- coq?
-\end_layout
 
 \end_inset
 
@@ -5035,155 +3000,6 @@ by repeated
 
 \begin_layout Subsubsection
 Transitivity
-\end_layout
-
-\begin_layout Standard
-To prove the transitivity of the 
-\begin_inset Formula $\equiv$
-\end_inset
-
-, we will first need to prove that 
-\series bold
-
-\begin_inset Formula $\Rrightarrow_{\ast}$
-\end_inset
-
- 
-\series default
-is 
-\series bold
-confluent
-\series default
-.
- A relation 
-\begin_inset Formula $R$
-\end_inset
-
- is confluent
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-also called 
-\series bold
-Church-Rosser
-\end_layout
-
-\end_inset
-
- when, for all 
-\begin_inset Formula $m,n,n'$
-\end_inset
-
-, if
-\begin_inset Formula $mRn$
-\end_inset
-
- and 
-\family roman
-\series medium
-\shape up
-\size normal
-\emph off
-\bar no
-\strikeout off
-\xout off
-\uuline off
-\uwave off
-\noun off
-\color none
-
-\begin_inset Formula $\:mRn'$
-\end_inset
-
- then their exists
-\family default
-\series default
-\shape default
-\size default
-\emph default
-\bar default
-\strikeout default
-\xout default
-\uuline default
-\uwave default
-\noun default
-\color inherit
- 
-\begin_inset Formula $n''$
-\end_inset
-
- such that 
-\begin_inset Formula $nRn''$
-\end_inset
-
- and 
-\begin_inset Formula $n'Rn''$
-\end_inset
-
-.
- If a relation is confluent, in a sense, specific paths don't matter since
- you can alway rejoin at a future destination.
-\end_layout
-
-\begin_layout Standard
-Since we defined our normalization by parallel reductions we can show confluence
- following the proof in 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "TAKAHASHI1995120"
-literal "false"
-
-\end_inset
-
-
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-also well presented in 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "KOKKE2020102440"
-literal "false"
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-.
- First, define a function 
-\begin_inset Formula $max$
-\end_inset
-
- that takes the maximum possible parallel step, such that if 
-\begin_inset Formula $m\Rrightarrow\,m'$
-\end_inset
-
- then 
-\begin_inset Formula $m'\Rrightarrow\,max\left(m\right)$
-\end_inset
-
- and 
-\begin_inset Formula $m\Rrightarrow\,max\left(m\right)$
-\end_inset
-
-.
- This is referred to as the triangle property (a diagram is presented in
- 
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "fig:shape-diagrams"
-plural "false"
-caps "false"
-noprefix "false"
-
-\end_inset
-
-).
 \end_layout
 
 \begin_layout Standard
@@ -5700,19 +3516,6 @@ otherwise
 </cell>
 </row>
 </lyxtabular>
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Flex TODO Note (Margin)
-status open
-
-\begin_layout Plain Layout
-for example
-\end_layout
 
 \end_inset
 
@@ -10305,7 +8108,11 @@ By induction on typing derivations,
 \begin_inset Text
 
 \begin_layout Plain Layout
-by stability of fun-ty
+by stability of 
+\begin_inset Formula $\textrm{ty-fun}$
+\end_inset
+
+
 \end_layout
 
 \end_inset
@@ -10341,7 +8148,7 @@ by reflexivity of
 \begin_inset Formula $\equiv$
 \end_inset
 
- , extended with previous equalities
+ (of contexts), extended with previous equalities
 \end_layout
 
 \end_inset
@@ -10604,26 +8411,6 @@ by noting that
 , by reflexivity 
 \end_layout
 
-\begin_layout Standard
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-%TODO: Note that the result of this lemma will always produce derivations
- of equal or smaller hight to the input typing derivation.
-\end_layout
-
-\begin_layout Plain Layout
-
-% unneeded
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
 \begin_layout Theorem
 \begin_inset Formula $\Rrightarrow$
 \end_inset
@@ -10637,6 +8424,384 @@ The following rule is admissible
 \[
 \frac{\Gamma\vdash m:M\quad m\Rrightarrow m'}{\Gamma\vdash m':M}
 \]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+xxxxxxxxxxxxxxxxxxxxxxx
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="7" columns="2">
+<features tabularvalignment="middle">
+<column alignment="left" valignment="top">
+<column alignment="left" valignment="top">
+<row>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathsf{fun}\,f\,x\Rightarrow m\Rrightarrow\mathsf{fun}\,f\,x\Rightarrow m'$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\textrm{\Rrightarrow-fun}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\Gamma\vdash\mathsf{fun}\,f\,x\Rightarrow m'\,:\,\left(x:N\right)\rightarrow M$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+by induction
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\Gamma,f:\left(x:N\right)\rightarrow M,x:N\vdash m'$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+by fun-inversion
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\begin_inset Formula $\Gamma\vdash n'\,:\,N$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+by induction
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\Gamma\vdash m'\left[f\coloneqq\mathsf{fun}\,f\,x\Rightarrow m',x\coloneqq n'\right]:M\left[x\coloneqq n'\right]$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+by substitution preservation 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $M\left[x\coloneqq n'\right]\equiv M\left[x\coloneqq n\right]$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+by substitution by steps, 
+\begin_inset Formula $\equiv$
+\end_inset
+
+ symmetry
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\Gamma\vdash m'\left[f\coloneqq\mathsf{fun}\,f\,x\Rightarrow m',x\coloneqq n'\right]:M\left[x\coloneqq n\right]$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\textrm{ty-conv}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="6" columns="2">
+<features tabularvalignment="middle">
+<column alignment="left" valignment="top">
+<column alignment="left" valignment="top">
+<row>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\Gamma\vdash m\,:\,\left(x:N\right)\rightarrow M$
+\end_inset
+
+, 
+\begin_inset Formula $m\Rrightarrow m'$
+\end_inset
+
+, 
+\begin_inset Formula $n\Rrightarrow n'$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\Gamma\vdash m'\,:\,\left(x:N\right)\rightarrow M$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+by induction
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\Gamma\vdash n'\,:\,N$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+by induction
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\Gamma\vdash m'\,n':\,M\left[x\coloneqq n'\right]$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\textrm{ty-fun-app}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $M\left[x\coloneqq n'\right]\equiv M\left[x\coloneqq n\right]$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+by substitution by steps, 
+\begin_inset Formula $\equiv$
+\end_inset
+
+ symmetry
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\Gamma\vdash m'\,n':\,M\left[x\coloneqq n\right]$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\textrm{ty-conv}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
 
 \end_inset
 

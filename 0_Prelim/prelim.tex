@@ -115,10 +115,13 @@
 % List of Abbrevs is NOT optional (Martha Wellman likes all abbrevs listed)
 \chapter*{List of Abbreviations}
 
-{\bf The list below must be in alphabetical order as per BU library instructions or it will be returned to you for re-ordering.}
+% {\bf The list below must be in alphabetical order as per BU library instructions or it will be returned to you for re-ordering.}
 
+\todo[inline]{would be nice to match the formmatting of the above, but I think this satisfies the requirements}
 % https://tex.stackexchange.com/questions/492175/how-to-generate-list-of-abbreviations-in-latex
+% https://tex.stackexchange.com/questions/86666/how-to-create-both-list-of-abbreviations-and-list-of-nomenclature-using-nomencl/87223
 
+\printacronyms[name={}]
 % \begin{center}
 %   \begin{tabular}{lll}
 %     \hspace*{2em} & \hspace*{1in} & \hspace*{4.5in} \\

@@ -4,6 +4,7 @@
 **/*.fls
 **/*.log
 **/*.lyx~
+**/*.lyx#
 
 thesis.pdf
 thesis.blg
