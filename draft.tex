@@ -1,4 +1,3 @@
-% MAIN PREAMBLE 
 % \documentclass[12pt,letterpaper]{report}          % Single-sided printing for the library
 \documentclass[12pt,twoside]{report} % Double-sided printing
 
@@ -6,6 +5,12 @@
 \usepackage[textsize=tiny]{todonotes}
 
 \input{preamble.tex}
+
+\usepackage{datetime2}
+\usepackage{draftwatermark}
+% TODO: gihub info  \url{https://github.com/marklemay/thesis}
+% \DraftwatermarkOptions{text={\begin{tabular}{l}Mark Lemay Thesis Draft\\ \today \end{tabular}}}
+\DraftwatermarkOptions{text={Mark Lemay Thesis Draft, \today}}
 
 \begin{document}
 

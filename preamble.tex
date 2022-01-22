@@ -17,6 +17,7 @@
 \usepackage{xspace}
 \usepackage{epstopdf} 
 \usepackage{subfig}
+\usepackage[figuresleft]{rotating}
 % from lyx.
 \usepackage{xcolor}
 \usepackage{array}
@@ -32,6 +33,8 @@
 \PassOptionsToPackage{normalem}{ulem}
 \usepackage{ulem}
 
+% \usepackage[printonlyused,withpage]{acronym}
+\usepackage{acro}
 
 
 %%% graphicx and pdf creation
@@ -84,6 +87,61 @@
 \providecommand{\factname}{Fact}
 \providecommand{\lemmaname}{Lemma}
 \providecommand{\theoremname}{Theorem}
+
+%TODO make these clickable
+\newcommand{\Fref}[1]{Figure \ref{fig:#1}}
+
+% jargon
+%TODO perhaps something that will handle capitalization and pluralization better?
+% \newcommand{\slang}{surface language}
+\acsetup{first-style=short}
+
+\DeclareAcronym{TAS}{
+  short=TAS,
+  long=Type Assignment System
+}
+\DeclareAcronym{CC}{
+  short=CC,
+  long=Calculus of Constructions
+}
+\DeclareAcronym{ECC}{
+  short=ECC,
+  long=Extended Calculus of Constructions
+}
+\DeclareAcronym{ICC}{
+  short=ICC,
+  long=Implicit Calculus of Constructions
+}
+\DeclareAcronym{PTS}{
+  short=PTS,
+  long=Pure Type Systems
+}
+\DeclareAcronym{MTLL}{
+  short=MTLL,
+  long=Martin L{\"o}f Type Theory
+}
+\DeclareAcronym{ITT}{
+  short=ITT,
+  long=Intentional Type Theory
+}
+\DeclareAcronym{ETT}{
+  short=ETT,
+  long=Extensional Type Theory
+}
+
+
+
+
+
+
+
+% from https://tex.stackexchange.com/questions/277758/typesetting-a-calculus-grammar
+% todo would need to figure out how to line up multiple grammars, and specify identifiers
+\newenvironment{grammar}[2]
+ {\begin{tabular}{@{\qquad}>{$}l<{$}@{\qquad}l@{}}
+  \multicolumn{1}{@{}l@{}}{$#1$}&\multicolumn{1}{l@{}}{\hspace{-2em}#2}\\}
+ {\end{tabular}}
+
 
 
 %\usepackage{psfrag}

@@ -57,6 +57,8 @@ Formatting
   * coloerizing inductive hypothises?
   * greying out wf conditions that can be hidden
 * listing the git location and hash
+* try to clean up the formalizms with https://users.cs.northwestern.edu/~jesse/code/latex/ottalt/ottalt.pdf
+* http://lists.seas.upenn.edu/pipermail/types-list/2019/002163.html
 
 Send to people for review
 * CH2/4 Zach
