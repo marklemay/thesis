@@ -13057,6 +13057,168 @@ other lemmas not needed for this proof, par max is par, inversions?
 \end_layout
 
 \begin_layout Subsection
+Regularity
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\Gamma\,\mathbf{ok}\quad x:M\in\Gamma}{\Gamma\vdash_{r}x\,:\,M}\,\textrm{ty-var}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\Gamma\vdash_{r}m\,:\,M}{\Gamma\vdash_{r}m::M\,:\,M}\,\textrm{ty-::}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\Gamma\,\mathbf{ok}}{\Gamma\vdash_{r}\star\,:\,\star}\,\textrm{ty-}\star
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\Gamma\vdash_{r}M\,:\,\star\quad\Gamma,x:M\vdash_{r}N\,:\,\star}{\Gamma\vdash_{r}\left(x:M\right)\rightarrow N\,:\,\star}\,\textrm{ty-fun-ty}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\Gamma\vdash_{r}m\,:\,\left(x:N\right)\rightarrow M\quad\Gamma\vdash_{r}n\,:\,N}{\Gamma\vdash_{r}m\,n\,:\,M\left[x\coloneqq n\right]}\,\textrm{ty-fun-app}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\Gamma,f:\left(x:N\right)\rightarrow M,x:N\vdash_{r}m\,:\,M}{\Gamma\vdash_{r}\mathsf{fun}\,f\,x\Rightarrow m\,:\,\left(x:N\right)\rightarrow M}\,\textrm{ty-fun}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\Gamma\vdash_{r}m\,:\,M\quad\Gamma\vdash_{r}M\equiv M'\,:\,\star}{\Gamma\vdash_{r}m\,:\,M'}\,\textrm{ty-conv}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\Gamma\vdash_{r}m\,:\,M\quad\Gamma\vdash_{r}m'\,:\,M\quad m\Rrightarrow m''\quad m'\Rrightarrow m''}{\Gamma\vdash_{r}m\equiv m'\,:\,M}\,\textrm{def}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\ }{\lozenge\,\mathbf{ok}}\,\textrm{emp-ok}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\Gamma\vdash_{r}M:\star\quad\Gamma\,\mathbf{ok}}{\Gamma,x:M\,\mathbf{ok}}\,\textrm{emp-ok}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Conjecture
+The regular system has progress and preservation it is type sound
+\end_layout
+
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Additionally, 
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Conjecture
+Regularity
+\end_layout
+
+\begin_layout Conjecture
+If 
+\begin_inset Formula $\Gamma\vdash_{r}m:M$
+\end_inset
+
+ then 
+\begin_inset Formula $\Gamma\vdash_{r}M:\star$
+\end_inset
+
+ and 
+\begin_inset Formula $\Gamma\,\mathbf{ok}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+It is possible to prove type soundness directly but it involves a more subtle
+ mutual induction.
+\end_layout
+
+\begin_layout Standard
+Given this we will use the regular system from now on without subscript.
+\end_layout
+
+\begin_layout Subsection
 Type checking is impractical
 \end_layout
 
@@ -14240,722 +14402,6 @@ If there is a procedure to decide type checking we can decide exactly when
  any PCF function halts.
  Since checking if a PCF function halts is undecidable, type checking here
  is undecidable.
-\end_layout
-
-\begin_layout Standard
-Again this the root of the problem is the non-termination that results by
- allowing Turing complete computations, which are seem necessary in a realistic
- programing language.
-\end_layout
-
-\begin_layout Standard
-Luckily undecidability of type checking is not as bad as it sounds for several
- reasons.
- First, the pathological terms that cause non-terminating conversion are
- rarely created on purpose.
- In the bidirectional system, conversion checks will only happen at limited
- positions, and it is possible to use a counter to warn or give errors at
- code positions that do not convert because normalization takes too long.
- Heuristic methods of conversion checking seem to work well enough in practice
- even without a counter.
- It is also possible to embed proofs of conversion directly into the syntax
- 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "sjoberg2012irrelevance"
-literal "false"
-
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Standard
-Many dependent type systems, such as Agda, Coq, and Lean, aspire to decidable
- type checking.
- However these systems allow extremely fast growing functions to be encoded
- (such as Ackerman's function).
- A fast growing function can generate a very large index that can be used
- to check some concrete but unpredictable property, (how many Turing machines
- whose code is smaller then 
-\begin_inset Formula $n$
-\end_inset
-
- halt in 
-\begin_inset Formula $n$
-\end_inset
-
- steps?).
- When this kind of computation is lifted to the type level, type checking
- is computationally infeasible, to say the least.
-\end_layout
-
-\begin_layout Standard
-\begin_inset Flex TODO Note (Margin)
-status open
-
-\begin_layout Plain Layout
-make sure I'm not missing any langs, C#...?
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Many mainstream programming languages have undecidable type checking.
- If a language admits a sufficiently powerful macro or preprocessor system
- that can modify typing, this would make type checking undecidable (this
- makes the type system of C, C++
-\begin_inset Foot
-status collapsed
-
-\begin_layout Plain Layout
-apparently even the grammar of C++ is undecidable
-\end_layout
-
-\end_inset
-
-, Scala, and Rust undecidable).
- Unless type features are considered very carefully, they can often create
- undecidable type checking (Java generics, C++ templates, Scala implicit
- parameters
-\begin_inset Foot
-status collapsed
-
-\begin_layout Plain Layout
-without a maximum search depth
-\end_layout
-
-\end_inset
-
- and OCaml modules, make type checking undecidable in those languages).
- Haskell may be the most popular statically typed language with decidable
- type checking (though GHC compiler flags that make type checking undecidable
- are popular).
- Even the Hindley-Milner type checking algorithm that underlies Haskell
- and ML, has a worst case double exponential complexity, which under normal
- circumstances would be considered intractable.
-\end_layout
-
-\begin_layout Standard
-In practice these theoretical concerns are irrelevant since programers are
- not giving the compiler 
-\begin_inset Quotes eld
-\end_inset
-
-worst case
-\begin_inset Quotes erd
-\end_inset
-
- code.
- Even if they did, the worst that can happen is the type checking will hang
- in the compilation process.
- When this happens programmers can fix their code, modify or remove macros,
- or add typing annotations.
- Programers in conventional languages are already entrusted with almost
- unlimited power to cause harm.
- Programs regularly delete files, read and modify sensitive information,
- and send emails (some of these are even possible from within the language's
- macro systems).
- Relatively speaking, undecidable type checking is not a programmers the
- biggest concern.
-\end_layout
-
-\begin_layout Standard
-Most importantly for the system described in this thesis, users are expected
- to use the elaboration procedure defined in the next chapter that will
- bypass the type checking described here.
- 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-% That elaboration procedures is also undecidable, but only for extremely
- pathological terms.
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Section
-Related work
-\end_layout
-
-\begin_layout Subsection
-Bad logics, ok programming languages?
-\end_layout
-
-\begin_layout Standard
-Unsound logical systems that work as programming languages go back to at
- least Church's lambda calculus which was originally intended to be part
- of a foundation for mathematics
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-\begin_inset Quotes eld
-\end_inset
-
-There may, indeed, be other applications of the system than its use as a
- logic.
-\begin_inset Quotes erd
-\end_inset
-
-[Church, 1932, p.349, A Set of Postulates for the Foundation of Logic]
-\end_layout
-
-\end_inset
-
-.
- In the 1970s, Per Martin-Löf proposed a system with type-in-type
-\begin_inset Flex TODO Note (Margin)
-status open
-
-\begin_layout Plain Layout
-cite it?
-\end_layout
-
-\end_inset
-
- that was shown logically unsound by Girard (as described in the introduction
- in 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "Martin-Lof-1972"
-literal "false"
-
-\end_inset
-
-).
- In the 1980s, Cardelli explored the domain semantics of a system with general
- recursive dependent functions and type-in-type 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "cardelli1986polymorphic"
-literal "false"
-
-\end_inset
-
-.
- 
-\end_layout
-
-\begin_layout Standard
-The first progress and preservation style proof of type soundness for a
- language with general recursive dependent functions and type-in-type seem
- to come form the Trellys Project 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "sjoberg2012irrelevance"
-literal "false"
-
-\end_inset
-
-.
- At the time their language had several additional features not included
- in the surface language.
- Additionally, the surface language uses a simpler notion of definitional
- equality resulting in a simpler proof of type soundness.
- Later work in the Trellys Project
-\begin_inset CommandInset citation
-LatexCommand cite
-key "casinghino2014combining,casinghino2014combiningthesis"
-literal "false"
-
-\end_inset
-
- used modalities to separate terminating and non-terminating fragments of
- the language, to allow both general recursion and logically sound reasoning
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-%, though the annotation burden seems high in retrospect
-\end_layout
-
-\end_inset
-
- .
- In general, the surface language has been deeply informed by the Trellys
- project
-\begin_inset CommandInset citation
-LatexCommand cite
-key "sjoberg2012irrelevance"
-literal "false"
-
-\end_inset
-
-
-\begin_inset CommandInset citation
-LatexCommand cite
-key "casinghino2014combining,casinghino2014combiningthesis"
-literal "false"
-
-\end_inset
-
- 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "sjoberg2015programming"
-literal "false"
-
-\end_inset
-
- 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "sjoberg2015dependently"
-literal "false"
-
-\end_inset
-
- and the Zombie language
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-https://github.com/sweirich/trellys
-\end_layout
-
-\end_inset
-
- it produced.
-\end_layout
-
-\begin_layout Standard
-\begin_inset Flex TODO Note (Margin)
-status open
-
-\begin_layout Plain Layout
-type in type as a well wknown shortcut, videos of Andraj, Conner MB saying
- it 
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Flex TODO Note (Margin)
-status open
-
-\begin_layout Plain Layout
-section on bidirectional dependent type systems, citing http://www.cse.chalmers.se/
-~nad/publications/altenkirch-et-al-flops2010.pdf https://www.seas.upenn.edu/~sweiric
-h/papers/congruence-extended.pdf posibly https://arxiv.org/pdf/1203.4716.pdf
- https://drops.dagstuhl.de/opus/volltexte/2021/13919/pdf/LIPIcs-ITP-2021-24.pdf
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Subsection
-Implementations
-\end_layout
-
-\begin_layout Standard
-Several programming language implementations support features of the surface
- language without a proof of type soundness.
- Pebble
-\begin_inset CommandInset citation
-LatexCommand cite
-key "10.1007/3-540-13346-1_1"
-literal "false"
-
-\end_inset
-
- was a very early language with dependent types, though conversion did not
- associate alpha equivalent types
-\begin_inset Flex TODO Note (Margin)
-status open
-
-\begin_layout Plain Layout
-if saying alpha need to define it
-\end_layout
-
-\end_inset
-
- 
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-according to 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "Reinhold89typecheckingis"
-literal "false"
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-.
- Coquand implemented an early bidirectional algorithm to type-check a language
- with type-in-type
-\begin_inset CommandInset citation
-LatexCommand cite
-key "COQUAND1996167"
-literal "false"
-
-\end_inset
-
-.
- Cayenne 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "10.1145/289423.289451"
-literal "false"
-
-\end_inset
-
- is a Haskell like language that combines dependent types with type in type
- and non-termination.
- Agda supports general recursion and type in type with compiler flags.
- Idris supports similar 
-\begin_inset Quotes eld
-\end_inset
-
-unsafe
-\begin_inset Quotes erd
-\end_inset
-
- features.
-\end_layout
-
-\begin_layout Standard
-\begin_inset Flex TODO Note (Margin)
-status open
-
-\begin_layout Plain Layout
-macro for type in type
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Subsection
-Other Dependent Type Systems
-\end_layout
-
-\begin_layout Standard
-There are many flavors of dependent type systems that are similar in spirt
- to the language presented here, but maintain logical soundness at the expense
- of computation.
- 
-\end_layout
-
-\begin_layout Standard
-The Calculus of Constructions (CC, CoC)
-\begin_inset CommandInset citation
-LatexCommand cite
-key "10.1016/0890-5401(88)90005-3"
-literal "false"
-
-\end_inset
-
- is one of the first minimal dependent type systems.
- It contains shockingly few rules, but can express a wide variety of constructio
-ns via parametric encodings.
- The systems does not allow type in type, instead type
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-called 
-\series bold
-prop
-\series default
-, for proposition
-\end_layout
-
-\end_inset
-
- lives in a larger universe 
-\begin_inset Formula $\star:\Square$
-\end_inset
-
-, where 
-\begin_inset Formula $\Square$
-\end_inset
-
- is not considered a type.
- Even though the Calculus of Constructions does not allow type-in-type is
- it is still 
-\series bold
-impredicative 
-\series default
-in the sense that function types can quantify over 
-\begin_inset Formula $\star$
-\end_inset
-
- while still being in 
-\begin_inset Formula $\star$
-\end_inset
-
-.
- For instance, the polymorphic identity 
-\begin_inset Formula $id:(X:\star)\rightarrow X\rightarrow X$
-\end_inset
-
- has type 
-\begin_inset Formula $\star$
-\end_inset
-
- so the polymorphic identity can be applied to itself, 
-\begin_inset Formula $id\,\left((X:\star)\rightarrow X\rightarrow X\right)\,id$
-\end_inset
-
-.
- From the perspective of the surface language this impredictivity is modest,
- but still causes issues in the presence of classical logical assumptions
- 
-\begin_inset Flex TODO Note (Margin)
-status open
-
-\begin_layout Plain Layout
-Cite
-\end_layout
-
-\end_inset
-
-.
- Many of the examples form this chapter are adapted from examples that were
- first worked out for the Calculus of Constructions.
-\end_layout
-
-\begin_layout Standard
-Several other systems were developed that directly extended or modified
- the Calculus of Constructions.
- The Extended Calculus of Constructions (ECC)
-\begin_inset CommandInset citation
-LatexCommand cite
-key "luo1990extended,luo1994computation"
-literal "false"
-
-\end_inset
-
-, extends the Calculus of Constructions with a predicative hierarchy of
- universes and dependent pair types.
- The Implicit Calculus of Constructions (ICC)
-\begin_inset CommandInset citation
-LatexCommand cite
-key "10.1007/3-540-45413-6_27,10.1007/978-3-540-78499-9_26"
-literal "false"
-
-\end_inset
-
- presents an extrinsic typing system
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-Sometimes called 
-\series bold
-Curry-style
-\series default
-, in contrast to intrinsic systems which are sometimes called 
-\series bold
-Church-style
-\series default
-.
-\end_layout
-
-\end_inset
-
-, unlike the Type Assignment System presented in this chapter, the Implicit
- Calculus of Constructions allows implicit qualification over terms in addition
- to explicit quantification over terms (also a hierarchy of universes, and
- a universe of 
-\begin_inset Quotes eld
-\end_inset
-
-sets
-\begin_inset Quotes erd
-\end_inset
-
-).
- Other extensions to the Calculus of Constructions that are primarily concerned
- with data will be surveyed in Chapter 4.
-\end_layout
-
-\begin_layout Standard
-The lambda cube is a system for relating 8 interesting typed lambda caluli
- to each other.
- Presuming terms should always depend on terms, there are 3 additional dimension
-s of dependency: term depending on types, types dependent on types, and
- types depending on terms.
- The simply typed lambda calculus has only term dependency.
- System F additionally allows Types to depend on types.
- The Calculus of Constructions has all forms of dependency
-\begin_inset Foot
-status collapsed
-
-\begin_layout Plain Layout
-Recommended reading Chapter 14 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "sorensen2006lectures"
-literal "false"
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Standard
-\begin_inset Flex TODO Note (Margin)
-status open
-
-\begin_layout Plain Layout
-presumably Barndrct was the first one to put it in a cube, but don't have
- a good citation
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Pure Type Systems (PTS)
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-previously called 
-\series bold
-Generalized Type Systems
-\end_layout
-
-\end_inset
-
- generalize the lambda cube to allow any number of type universe with any
- forms of dependency.
- Notably this includes the system with one type universe where type-in-type.
- Universe hierarchies can also be embedded in a PTS.
- The system described in this chapter is almost a PTS, except that it contains
- unrestricted recursion and the method of type annotation is different.
- All pure type systems such as System F and the Calculus of Constructions
- have corresponding terms in the the Surface Language, by renaming their
- type universes into the surface language type universe.
- 
-\end_layout
-
-\begin_layout Standard
-\begin_inset Flex TODO Note (Margin)
-status open
-
-\begin_layout Plain Layout
-citations for PTS: (Terlouw, 1989; Berardi, 1988; Barendregt, 1991, 1992;
- Jutting, McKinna, and Pollack, 1994; McKinna and Pollack, 1993; Pollack,
- 1994).
- According to TAPL
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-As previously mentioned Martin Löf Type Theory (MTLL) 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "Martin-Lof-1972"
-literal "false"
-
-\end_inset
-
- is one of the oldest frameworks for dependent type systems.
- MLTT is designed to be open, so that new constructs can be added with the
- appropriate introduction, elimination, computation, and typing rules.
- The base system comes with a predicative hierarchy of universes, and at
- least dependently typed functions and a propositional equality type.
- The system has two flavors characterized by it's handling of definitional
- equality.
- If types are only identified by convertibility (as every system described
- so far) it is called Intentional Type Theory (ITT).
- If the system allows proofs of equality to associate types, it is called
- Extensional Type Theory (ETT).
- Since MTLL is open ended, the Calculus of Constructions can be added to
- it as a subsystem
-\begin_inset CommandInset citation
-LatexCommand cite
-key "aspinall2004dependent,hofmann1997extensional"
-literal "false"
-
-\end_inset
-
-
-\begin_inset Flex TODO Note (Margin)
-status open
-
-\begin_layout Plain Layout
-double check these
-\end_layout
-
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Standard
-\begin_inset Flex TODO Note (Margin)
-status open
-
-\begin_layout Plain Layout
-go back to Russle?
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Flex TODO Note (Margin)
-status open
-
-\begin_layout Plain Layout
-solving universe constraints?
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Flex TODO Note (Margin)
-status open
-
-\begin_layout Plain Layout
-cite the autosubst proof
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Standard

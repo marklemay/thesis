@@ -4,30 +4,30 @@
 
 \section{Introduction}
 
-Despite the usability issues this thesis hopes to correct, dependent type systems are still one of the most promising technologies for correctness in programming.
+Despite the usability issues this thesis hopes to correct, dependent type systems are still one of the most promising technologies for correct programming.
 Since proofs are programs, there is no additional syntax for programmers to learn.
 The proof system is predictable from the perspective of a functional programmer. 
 \todo{awk sentence}
 
-The \textbf{surface language}\todo{is there a better name then surface lang?} presented in this chapter provides a syntax for a minimal dependent type system.
+The \textbf{surface type system}\todo{is there a better name then surface lang?} presented in this chapter provides a minimal dependent type system.
 The rules of the type system are intended to be as simple as possible and compatible with other well studied intentional dependent type theories.
 It has several (but not all) of the standard properties of dependent type theory.
 As much as possible, the syntax uses standard modern notation\footnote{
-  several alternative syntaxes have existed in the literature.
+  Several alternative syntaxes have existed in the literature.
   In this document the typed polymorphic identity function is written, $\lambda-\,x\Rightarrow x\ :\,\left(X:\star\right)\rightarrow X\rightarrow X$.
   In \cite{10.1016/0890-5401(88)90005-3} it might be written $\left(\lambda X:\star\right)\left(\lambda x:X\right)x\ :\,\left[X:\star\right]\left[x:X\right]X$.
   In \cite{HoTTbook} it might be written $\lambda X.\lambda x.x\ :\,\underset{\left(X:\mathcal{U}\right)}{\prod}X\rightarrow X$.}\todo{Martin Loff/Hoff (TODO pr notation)}.
 
-The \textbf{surface type system} will serve both as foundation for later chapters and a self contained technical introduction to dependent types.
+The surface type system will serve both as foundation for later chapters and a self contained technical introduction to dependent types.
 By design, the machinery that deals with equality addressed in later chapters should be invisible to programers that use the full system.
 Programmers should only need to think about the surface system.
 Everything presented in later chapters is designed to reinforce an understanding of the surface type system, and make it easier to use.
 
 % overview, What
 The surface language deviates from a standard dependent type theory to include features for programming at the expense of logical correctness.
-Specifically the language allows general recursion, since general recursion is useful for general programming.
-Type-in-type is also supported since it simplifies the system for programmers, and makes the meta-theory slightly easier.
-Despite this, type soundness is achievable and a practical type checking system is given.
+Specifically the language allows general recursion, since general recursion is useful for programmers.
+Type-in-type is also supported since it simplifies the system, and makes the meta-theory slightly easier.
+Despite this, type soundness is achievable, and a practical type checking system is given.
 
 Though similar systems have been studied over the last few decades this chapter aims to give a self contained presentation, along with examples.
 The surface language has been a good platform to conduct research into full spectrum dependent type theory, and hopefully this exposition will be a helpful introduction for other researchers.
@@ -40,10 +40,11 @@ The syntax supports: variables, type annotations, a single type universe, depend
 Type annotations are written with two colons to differentiate it from the formal typing judgments that will appear more frequently in this text.
 In the implemented language a user of the programming language would use a single colon.
 
-There is no destination between types and terms in the syntax\footnote{
+There is no distinction between types and terms in the syntax\footnote{
   terms and types are usually separated, except in the syntax of full-spectrum dependent type systems where separating them would require many redundant rules.
   }, both are referred to as expressions.
-However, capital metavariables are used in positions that are intended as types, and lowercase metavariables are used when an expression is intended to be a term, for instance in annotation syntax.
+However, capital metavariables are used in positions that are intended as types, and lowercase metavariables are used when an expression is intended to be a term.
+For instance, in annotation syntax where $m::M$ means $m$ can be a term and $M$ should be a type.
 % Metavariables that intend to quantify equivalent terms will be noted with primes or subscripts, 
 % Metavariables that type other metavairbles will often use the same letter
 
@@ -97,9 +98,9 @@ For instance, we can say $refl_{2_{c}:\mathbb{N}_{c}}\ :\ 2_{c}\doteq_{\mathbb{N
 
 \begin{sidewaysfigure}
 \begin{tabular}{lllll}
-  & $\vdash\perp_{c}$ & $\coloneqq\left(X:\star\right)\rightarrow X$ & $:\star$ & Void, ``empty'' type, logical false\tabularnewline
+  & $\vdash\perp_{c}$ & $\coloneqq\left(X:\star\right)\rightarrow X$ & $:\star$ & \makecell[l]{Void, ``empty'' type,\\ logical false}\tabularnewline
   & $\vdash Unit_{c}$ & $\coloneqq\left(X:\star\right)\rightarrow X\rightarrow X$ & $:\star$ & Unit, logical true\tabularnewline
-  & $\vdash tt_{c}$ & $\coloneqq\lambda-\,x\Rightarrow x$ & $:Unit_{c}$ & trivial proposition, polymorphic identity\tabularnewline
+  & $\vdash tt_{c}$ & $\coloneqq\lambda-\,x\Rightarrow x$ & $:Unit_{c}$ & \makecell[l]{trivial proposition,\\ polymorphic identity}\tabularnewline
   & $\vdash\mathbb{B}_{c}$ & $\coloneqq\left(X:\star\right)\rightarrow X\rightarrow X\rightarrow X$ & $:\star$ & booleans\tabularnewline
   & $\vdash true_{c}$ & $\coloneqq\lambda-\,then\,-\Rightarrow then$ & $:\mathbb{B}_{c}$ & boolean true\tabularnewline
   & $\vdash false_{c}$ & $\coloneqq\lambda-\,-\,else\Rightarrow else$ & $:\mathbb{B}_{c}$ & boolean false\tabularnewline
@@ -115,7 +116,7 @@ $X:\star,Y:\star$ & $\vdash X\times_{c}Y$ & $\coloneqq\left(Z:\star\right)\right
 $X:\star,Y:\star$ & $\vdash Either_{c}\,X\,Y$ & $\coloneqq\left(Z:\star\right)\rightarrow(X\rightarrow Z)\rightarrow(Y\rightarrow Z)\rightarrow Z$ & $:\star$ & either, logical or\tabularnewline
 $X:\star$ & $\vdash\lnot_{c}X$ & $\coloneqq X\rightarrow\perp_{c}$ & $:\star$ & logical negation\tabularnewline
 $x:\mathbb{N}_{c}$ & $\vdash Even_{c}\,x$ & $\coloneqq\mathbb{N}_{c}\,\star\,\left(\lambda x\Rightarrow\lnot_{c}x\right)\,Unit_{c}$ & $:\star$ & $x$ is an even number\tabularnewline
-$X:\star,Y:X\rightarrow\star$ & $\vdash\exists_{c}x:X\Rightarrow Y\,x$ & $\coloneqq\left(C:\star\right)\rightarrow\left((x:X)\rightarrow Y\,x\rightarrow C\right)\rightarrow C$ & $:\star$ & dependent pair, logical exists\tabularnewline
+$X:\star,Y:X\rightarrow\star$ & $\vdash\exists_{c}x:X\Rightarrow Y\,x$ & $\coloneqq\left(C:\star\right)\rightarrow\left((x:X)\rightarrow Y\,x\rightarrow C\right)\rightarrow C$ & $:\star$ & \makecell[l]{dependent pair,\\ logical exists}\tabularnewline
 $X:\star,x_{1}:X,x_{2}:X$ & $\vdash x_{1}\doteq_{X}x_{2}$ & $\coloneqq\left(C:\left(X\rightarrow\star\right)\right)\rightarrow C\,x_{1}\rightarrow C\,x_{2}$ & $:\star$ & Leibniz equality\tabularnewline
 $X:\star,x:X$ & $\vdash refl_{x:X}$ & $\coloneqq\lambda-\,cx\Rightarrow cx$ & $:x\doteq_{X}x$ & reflexivity\tabularnewline
 % $X:\star,x_{1}:X,x_{2}:X$ & $\vdash sym_{x_{1},x_{2}:X}$ & $\coloneqq\lambda p\,C\Rightarrow p\left(\lambda x\Rightarrow C\,x\rightarrow C\,x_{1}\right)\,\left(\lambda x\Rightarrow x\right)$ & $:x_{1}\doteq_{X}x_{2}\rightarrow x_{2}\doteq_{X}x_{1}$ & symmetry\tabularnewline
@@ -149,27 +150,28 @@ The $Either$ type is handled if both possibilities are handled, so it is defined
 \todo{church encoding citation?}
 
 % not necessarily convenient
-Church encodings provide a theoretically lightweight way of working with data in minimal lambda calculus, however they are inconvenient to work with.
+Church encodings provide a theoretically lightweight way of working with data in minimal lambda calculus, however they are inconvenient.
 For instance, the predecessor function on natural numbers is not as simple as its behavior would imply.
 To make the system easier for programmers, data types will be added directly in Chapter 4.
 
 \subsection{Proposition encodings}
 
 In general we associate the truth value of a proposition with the inhabitation of a type by a meaningful value.
-This meaningful inhabitant corresponds directly to a proof.
-So, $\perp_{c}$, the ``empty'' type, can be considered as a false proposition.
-While $Unit_{c}$ can be considered a trivially true proposition, since it has only one good inhabitant.
+This meaningful inhabitant corresponds to a proof.
+So, $\perp_{c}$, the ``empty'' type, can be interpreted as a false proposition.
+While $Unit_{c}$ can be interpreted as a trivially true proposition, since it has only one good inhabitant.
 
 Several of the church encoded data types we have seen can also be interpreted as logical predicates.
-For instance, the tuple type can be considered as logical and, $X\times_{c}Y$ can be inhabited exactly when both $X$ and $Y$ are inhabited.
-The $Either$ type can be considered as logical or, $Either_{c}\,X\,Y$ can be inhabited exactly when either $X$ or $Y$ is inhabited.
+For instance, the tuple type can be interpreted as logical and, $X\times_{c}Y$ can be inhabited exactly when both $X$ and $Y$ are inhabited.
+The $Either$ type can be interpreted as logical or, $Either_{c}\,X\,Y$ can be inhabited exactly when either $X$ or $Y$ is inhabited.
 
 With dependent types, more interesting logical predicates can be encoded.
 For instance, we can characterize when a number is even with $Even_{c}\,x$.
 We can show that $2$ is even by showing that $Even_{c}\,2_{c}$ is inhabited with the term $\lambda s\Rightarrow s\,tt_{c}$.
 
 Other predicates are encodable in the style of Calculus of Constructions\cite{10.1016/0890-5401(88)90005-3}.
-For instance, we can encode the existential as $\exists_{c}$, then if we want to show $\exists_{c}x:\mathbb{N}_{c}\Rightarrow\,Even_{c}\,x$ we need to find a suitable inhabitant of that type.
+For instance, we can encode the existential as $\exists_{c}$ as shown in \Fref{surface-examples}.
+Then if we want to show $\exists_{c}x:\mathbb{N}_{c}\Rightarrow\,Even_{c}\,x$ we need to find a suitable inhabitant of that type.
 $0$ is clearly an even number, so our inhabitant could be $\lambda f\Rightarrow f\,0_{c}\,tt_{c}$.
 Note that the existential is equivalent to the tuple if $Y$ does not depend on the value of $X$.
 
@@ -178,7 +180,8 @@ $\doteq$ is referred to as \textbf{Leibniz equality} since two terms are equal w
   The identification of indiscernibles is called \textbf{Leibniz law} in philosophy.
   Leibniz assumed a metaphysical notion of identification of ``substance''s, not a mathematical notion of equality.
   See Section 9 \cite{Leibniz1686}.}\todo{cite the ency of philosophy}.
-We can prove $\doteq$ is an equivalence within the system by proving it is reflexive, symmetric, and transitive.\todo{give example}.
+We can prove $\doteq$ is an equivalence within the system by proving it is reflexive, symmetric, and transitive.
+\todo{give example}
 % Additionally we can prove congruence.
 \todo[inline]{talk more about congruence}
 \todo[inline]{footnote on Leibniz equality for alt encoding}
@@ -186,7 +189,7 @@ We can prove $\doteq$ is an equivalence within the system by proving it is refle
 \subsection{Large Eliminations}
 
 \todo[inline]{double check large elimination def.
-consistent with the notes here: % https://github.com/RobertHarper/hott-notes/blob/5339576f55a4b7f5d04734370a5117491c44b1fe/notes_week5.tex#L155 .
+consistent with the notes % https://github.com/RobertHarper/hott-notes/blob/5339576f55a4b7f5d04734370a5117491c44b1fe/notes_week5.tex#L155 .
 would like better explanation}
 
 It is useful for a type to depend specifically on term level data, this is called \textbf{large elimination}.
@@ -197,7 +200,7 @@ Large elimination can be simulated with type-in-type.
   $isPos$ & $\coloneqq\lambda n\Rightarrow n\,\star\,(\lambda-\Rightarrow Unit_{c})\,\perp_{c}$ & $:$ & $\mathbb{N}_{c}\rightarrow\star$\tabularnewline
 \end{tabular}
   
-For instance, $toLogic$ can convert a $\mathbb{B}_{c}$ term into its corresponding logical type, $toLogic\,true_{c}\equiv Unit_{c}$ while $toLogic\,false_{c}\equiv\perp_{c}$ .
+For instance, $toLogic$ can convert a $\mathbb{B}_{c}$ term into its corresponding logical type, $toLogic\ true_{c}\,\equiv\, Unit_{c}$ while $toLogic\ false_{c}\, \equiv\, \perp_{c}$.
 The expression $isPos$ has similar behavior, going to $\perp_{c}$ at $0_{c}$ and $Unit_{c}$ otherwise.
 
 Note that such functions are not possible in the Calculus of Constructions.
@@ -208,9 +211,9 @@ Large eliminations can be used to prove inequalities that can be hard or impossi
 For instance,
 
 \begin{tabular}{lcll}
-  $\lambda pr\Rightarrow pr\,\left(\lambda x\Rightarrow x\right)\,\perp_{c}$ & : & $\lnot_{c}\star\doteq_{\star}\perp_{c}$ & the type universe is distinct from Logical False\tabularnewline
-  $\lambda pr\Rightarrow pr\,\left(\lambda x\Rightarrow x\right)\,tt_{c}$ & : & $\lnot_{c}Unit_{c}\doteq_{\star}\perp_{c}$ & Logical True is distinct from Logical False\tabularnewline
-  $\lambda pr\Rightarrow pr\,toLogic\,tt_{c}$ & : & $\lnot true_{c}\doteq_{\mathbb{B}_{c}}false_{c}$ & boolean true and false are distinct\tabularnewline
+  $\lambda pr\Rightarrow pr\,\left(\lambda x\Rightarrow x\right)\,\perp_{c}$ & : & $\lnot_{c}\star\doteq_{\star}\perp_{c}$ & \makecell{the type universe is distinct\\ from Logical False}\tabularnewline
+  $\lambda pr\Rightarrow pr\,\left(\lambda x\Rightarrow x\right)\,tt_{c}$ & : & $\lnot_{c}Unit_{c}\doteq_{\star}\perp_{c}$ &  \makecell{Logical True is distinct\\ from Logical False}\tabularnewline
+  $\lambda pr\Rightarrow pr\,toLogic\,tt_{c}$ & : & $\lnot true_{c}\doteq_{\mathbb{B}_{c}}false_{c}$ &  \makecell{boolean true and false\\ are distinct}\tabularnewline
   $\lambda pr\Rightarrow pr\,isPos\,tt_{c}$ & : & $\lnot1_{c}\doteq_{\mathbb{N}_{c}}0_{c}$ & 1 and 0 are distinct\tabularnewline
   \end{tabular}
   
@@ -219,12 +222,12 @@ For instance,
 \todo[inline]{2 possibly in CC?}
 
 Note that a proof of $\lnot1_{c}\doteq_{\mathbb{N}_{c}}0_{c}$ is not possible in the Calculus of Constructions\cite{10.2307/2274575}\footnote{
-  Martin Hofmann excellently motivates the reasoning in the Exercises of \cite{hofmann_1997}}.
+  Martin Hofmann excellently motivates the reasoning in the exercises of \cite{hofmann_1997}}.
 \todo[inline]{citation is actually for an MLTT, but if good enough for Hoff good enough for me}
 
 \subsection{Recursion}
 
-Additionally, the syntax of functions builds in unrestricted recursion.
+Additionally, the syntax of functions build in unrestricted recursion.
 Though not always necessary, recursion can be very helpful for writing programs.
 For instance, here is (an inefficient) function that calculates Fibonacci numbers.
 
@@ -233,14 +236,14 @@ $\mathsf{fun}\,f\,x\Rightarrow case_{c}\,x\,0_{c}\left(\lambda px\Rightarrow cas
 Assuming appropriate definitions for $case_{c}$, and subtraction.
 
 Recursion can also be used to simulate induction. 
-We won't see much of recursion until Chapter 4, when data types are introduced and larger examples are more possible.
+We won't see much of recursion until Chapter 4, when data types are introduced and larger examples are easier to express.
 \todo[inline]{GCD, recursive types?}
 
 \section{Surface Language Type Assignment System}
 
 When is an expression reasonable? The expression $\star\star\star\star$ is allowed by the grammar of the language, but seems dubious.
 %Since $\star$  is not a function,  it has no way of being given an input by application.
-Type systems can disallow bad terms like these which in turn avoids bad runtime behavior.
+Type systems can disallow bad terms like these which in turn prevents bad runtime behavior.
 
 We will present our type system as a \textbf{type assignment system} (\ac{TAS}).
 Type assignment systems do not require type annotations, and will be easier to work with than other styles of typing that require variables to be annotated.
@@ -346,10 +349,9 @@ this relation
 \item is closed under substitution if $\Rrightarrow_{\ast}$ is closed under
 substitution, closed under evaluation automatically
 \item distinguishes type constructors, if they are stable under reduction.
-For instance, if
+For instance,
 \begin{itemize}
-\item $\forall NM.\left(x:N\right)\rightarrow M\Rrightarrow P$ implies
-$P=\left(x:N'\right)\rightarrow M'$
+\item if $\forall NM.\left(x:N\right)\rightarrow M\Rrightarrow P$ implies $P=\left(x:N'\right)\rightarrow M'$
 \item and $\star\Rrightarrow P$ implies $P=\star$
 \item then $\left(x:N\right)\rightarrow M\cancel{\equiv}\star$
 \end{itemize}
@@ -407,6 +409,12 @@ While this is a sufficient presentation of definitional equality, other variants
 For instance it is possible to extend the relation with contextual information, type information, explicit proofs of equality (as in Extensional Type Theory), uncomputable relations (as in \cite{jia2010dependent}).
 It is also common to assume the properties of $\equiv$ hold without proof.
 
+Some lemmas need to quantify over simultaneous substitutions.
+These simultaneous substitutions will be quantified with the variables $\sigma$, $\tau$.
+For instance, if $\sigma(x) = \star$ and $\sigma(y) = 1_c$, then $x y[sigma]\ =\ \star\ 1_c$
+
+\todo{what properties are needed over substitutions?}
+
 \subsection{Definitional Equality}
 
 We now have enough information to prove the critical properties of definitional equality.
@@ -453,7 +461,6 @@ The following rule is admissible for every substitution $\sigma$
 \]
 \end{lem}
 
-\todo{define substitutions, what properties are needed over substitutions?}
 
 \todo{is this lemma needed or is it just to accommodate stupid binding stuff
 in coq?}
@@ -472,10 +479,10 @@ The following rule is admissible
 \frac{m\Rrightarrow m'\quad\sigma\Rrightarrow\tau}{m\left[\sigma\right]\Rrightarrow m'\left[\tau\right]}\,\textrm{\ensuremath{\Rrightarrow}-sub}
 \]
 \end{lem}
-
 \begin{proof}
 by induction on the $\Rrightarrow$ relation.
 \end{proof}
+
 \begin{lem}
 $\Rrightarrow_{\ast}$ is closed under substitutions that step.
 \[
@@ -504,15 +511,7 @@ $\equiv$ is closed under substituted reduction.
 \]
 
 \begin{proof}
-Since
-
-\begin{tabular}{ll}
-$m\Rrightarrow_{\ast}m$ & $\textrm{\ensuremath{\Rrightarrow_{\ast}}-refl}$\tabularnewline
-$m\left[x\coloneqq n\right]\Rrightarrow_{\ast}m\left[x\coloneqq n'\right]$ & by repeated $\textrm{\ensuremath{\Rrightarrow_{\ast}}-sub}$\tabularnewline
-$m\left[x\coloneqq n'\right]\Rrightarrow_{\ast}m\left[x\coloneqq n'\right]$ & $\textrm{\ensuremath{\Rrightarrow_{\ast}}-refl}$\tabularnewline
-$m\left[x\coloneqq n\right]\equiv m\left[x\coloneqq n'\right]$ & $\equiv\textrm{-Def}$\tabularnewline
-\end{tabular}
-\todo{location of QED box}
+By repeated $\textrm{\ensuremath{\Rrightarrow_{\ast}}-sub}$ and $\equiv\textrm{-Def}$
 \end{proof}
 
 \subsubsection{Transitivity}
@@ -525,15 +524,16 @@ Since we defined our normalization by parallel reductions we can show confluence
 The approach is motivated by the diagrams in \Fref{shape-diagrams}.
 First, define a function $max$ that takes the maximum possible parallel step, % such that if $m\Rrightarrow\,m'$ then $m'\Rrightarrow\,max\left(m\right)$ and $m\Rrightarrow\,max\left(m\right)$.
 
-\begin{tabular}{ccccc}
-$max($ & $\left(\mathsf{fun}\,f\,x\Rightarrow m\right)\,n$ & $)=$ & $max\left(m\right)\left[f\coloneqq\mathsf{fun}\,f\,x\Rightarrow max\left(m\right),x\coloneqq max\left(n\right)\right]$ & otherwise\tabularnewline
-$max($ & $x$ & $)=$ & $x$ & \tabularnewline
-$max($ & $m::M$ & $)=$ & $max\left(m\right)$ & \tabularnewline
-$max($ & $\star$ & $)=$ & $\star$ & \tabularnewline
-$max($ & $\left(x:M\right)\rightarrow N$ & $)=$ & $\left(x:max\left(M\right)\right)\rightarrow max\left(N\right)$ & \tabularnewline
-$max($ & $\mathsf{fun}\,f\,x\Rightarrow m$ & $)=$ & $\mathsf{fun}\,f\,x\Rightarrow max\left(m\right)$ & \tabularnewline
-$max($ & $m\,n$ & $)=$ & $max\left(m\right)\,max\left(n\right)$ & \tabularnewline
-\end{tabular}
+% \begin{tabular}{cccc}
+% $max($ & $\left(\mathsf{fun}\,f\,x\Rightarrow m\right)\,n$ & $)=$ & $max\left(m\right)\left[f\coloneqq\mathsf{fun}\,f\,x\Rightarrow max\left(m\right),x\coloneqq max\left(n\right)\right]$ \tabularnewline
+%   &   &   &  otherwise\tabularnewline
+% $max($ & $x$ & $)=$ & $x$ \tabularnewline
+% $max($ & $m::M$ & $)=$ & $max\left(m\right)$ \tabularnewline
+% $max($ & $\star$ & $)=$ & $\star$ \tabularnewline
+% $max($ & $\left(x:M\right)\rightarrow N$ & $)=$ & $\left(x:max\left(M\right)\right)\rightarrow max\left(N\right)$ \tabularnewline
+% $max($ & $\mathsf{fun}\,f\,x\Rightarrow m$ & $)=$ & $\mathsf{fun}\,f\,x\Rightarrow max\left(m\right)$ \tabularnewline
+% $max($ & $m\,n$ & $)=$ & $max\left(m\right)\,max\left(n\right)$ \tabularnewline
+% \end{tabular}
 
 \todo{for example}
 
@@ -614,7 +614,7 @@ It follows that
 \begin{thm}
 $\equiv$ is transitive
 
-if $m\equiv m'$ and $m'\equiv m''$ then $m\equiv m''$
+If $m\equiv m'$ and $m'\equiv m''$ then $m\equiv m''$
 \end{thm}
 
 \begin{proof}
@@ -977,9 +977,80 @@ This follows by iterating the progress and preservation lemmas.
 
 
 \subsection{Regularity}
-There is some question about how much typing information should be coupled to the judgment, forcing contexts to be well formed eliminates nonsense situations like $x:1_{c}\vdash...$ by construction, but requires more fork when forming judgments that can be distracting.
-The proofs in this section can be done without forcing the context to be well formed, the additional constraints are omitted.
-\todo[inline]{regularity!}
+The rules in \Fref{surface-TAS} allow for invalid constructions in the context.
+For instance, $x:1_{c}\vdash...$.
+Additionally, it is not required that both ends of a conversion are well typed.
+
+Though these restrictions are not required for type soundness, it will be convenient to exclude these possibilities by adding the following restrictions in \Fref{surface-tas-reg}.
+
+
+\begin{figure}
+% \[
+% \frac{\Gamma\,\mathbf{ok}\quad x:M\in\Gamma}{\Gamma\vdash_{r}x\,:\,M}\,\textrm{ty-var}
+% \]
+
+% \[
+% \frac{\Gamma\vdash_{r}m\,:\,M}{\Gamma\vdash_{r}m::M\,:\,M}\,\textrm{ty-::}
+% \]
+
+% \[
+% \frac{\Gamma\,\mathbf{ok}}{\Gamma\vdash_{r}\star\,:\,\star}\,\textrm{ty-}\star
+% \]
+
+% \[
+% \frac{\Gamma\vdash_{r}M\,:\,\star\quad\Gamma,x:M\vdash_{r}N\,:\,\star}{\Gamma\vdash_{r}\left(x:M\right)\rightarrow N\,:\,\star}\,\textrm{ty-fun-ty}
+% \]
+
+% \[
+% \frac{\Gamma\vdash_{r}m\,:\,\left(x:N\right)\rightarrow M\quad\Gamma\vdash_{r}n\,:\,N}{\Gamma\vdash_{r}m\,n\,:\,M\left[x\coloneqq n\right]}\,\textrm{ty-fun-app}
+% \]
+
+% \[
+% \frac{\Gamma,f:\left(x:N\right)\rightarrow M,x:N\vdash_{r}m\,:\,M}{\Gamma\vdash_{r}\mathsf{fun}\,f\,x\Rightarrow m\,:\,\left(x:N\right)\rightarrow M}\,\textrm{ty-fun}
+% \]
+
+% \[
+% \frac{\Gamma\vdash_{r}m\,:\,M\quad\Gamma\vdash_{r}M\equiv M'\,:\,\star}{\Gamma\vdash_{r}m\,:\,M'}\,\textrm{ty-conv}
+% \]
+
+% \[
+% \frac{\Gamma\vdash_{r}m\,:\,M\quad\Gamma\vdash_{r}m'\,:\,M\quad m\Rrightarrow m''\quad m'\Rrightarrow m''}{\Gamma\vdash_{r}m\equiv m'\,:\,M}\,\textrm{def}
+% \]
+
+% \[
+% \frac{\ }{\lozenge\,\mathbf{ok}}\,\textrm{emp-ok}
+% \]
+
+% \[
+% \frac{\Gamma\vdash_{r}M:\star\quad\Gamma\,\mathbf{ok}}{\Gamma,x:M\,\mathbf{ok}}\,\textrm{emp-ok}
+% \]
+\caption{Type assignment system (regular)}
+\label{fig:surface-tas-reg}
+\end{figure}
+
+Given these restrictions we can conclude.
+
+\begin{conjecture}
+The regular system has progress and preservation it is type sound
+\end{conjecture}
+
+Additionally, 
+%
+\begin{conjecture}
+Regularity
+
+If $\Gamma\vdash_{r}m:M$ then $\Gamma\vdash_{r}M:\star$ and $\Gamma\,\mathbf{ok}$
+\end{conjecture}
+
+It is possible to prove type soundness directly but it involves a
+more subtle mutual induction.
+
+Given this we will use the regular system from now on without subscript.
+
+
+% There is some question about how much typing information should be coupled to the judgment, forcing contexts to be well formed eliminates nonsense situations like $x:1_{c}\vdash...$ by construction, but requires more fork when forming judgments that can be distracting.
+% The proofs in this section can be done without forcing the context to be well formed, the additional constraints are omitted.
+% \todo[inline]{regularity!}
 
 \subsection{Type checking is impractical}
 
@@ -1012,7 +1083,7 @@ $\lambda pr\underline{:1_{c}\doteq_{\mathbb{N}_{c}}0_{c}}\Rightarrow pr\,\left(\
 
 More than half of the term is type annotations!
 Annotating every binding site requires a lot of redundant information.
-% Further the thoury would need to deal with all the binders evaluating
+% Further the theory would need to deal with all the binders evaluating
 Luckily there's a better way.
 
 \subsection{Bidirectional Type Checking}
@@ -1210,6 +1281,8 @@ If there is a procedure to decide type checking we can decide exactly when any P
 Since checking if a PCF function halts is undecidable, type checking here is undecidable.
 
 \end{proof}
+Decidability of type checking is often used as a proxy for efficient typechecking.
+
 Again this the root of the problem is the non-termination that results by allowing as many computations as possible, which seem necessary in a realistic programming language.
 
 Luckily undecidability of type checking is not as bad as it sounds for several reasons.
