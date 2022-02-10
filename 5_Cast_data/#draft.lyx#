@@ -2429,6 +2429,37 @@ Judgment Forms
 
 \end_layout
 
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+I suspect that 
+\begin_inset Formula $\varGamma\vdash a:A$
+\end_inset
+
+ and 
+\begin_inset Formula $\varGamma\vdash a\sqsupseteq a':A'$
+\end_inset
+
+ could be merged into a single judgment, with 
+\begin_inset Formula $\varGamma\vdash a:A$
+\end_inset
+
+ being shorthand for 
+\begin_inset Formula $\varGamma\vdash a\sqsupseteq a:A$
+\end_inset
+
+ .
+ But will keep them seperate for now.
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Section
 Definitional equality
 \end_layout
@@ -2485,6 +2516,25 @@ associates casts at the same endpoints.
 \end_layout
 
 \begin_layout Section
+Lump substitution
+\end_layout
+
+\begin_layout Standard
+structurally recusive, except at variables
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\left\{ ...,x_{p},..._{L'}\right\} \left[x_{p}\coloneqq L\right]=L\cup\left\{ ...\left[x_{p}\coloneqq L\right],..._{L'\left[x_{p}\coloneqq L\right]}\right\} $
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+also injects the type lumps
+\end_layout
+
+\begin_layout Section
 Typing Rules
 \end_layout
 
@@ -2492,28 +2542,6 @@ Typing Rules
 \begin_inset Formula 
 \[
 \frac{x:A\ \in\varGamma}{\varGamma\vdash x:A}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{x_{p}:a\approx b\ \in\varGamma}{\varGamma\vdash x_{p}:a\approx b}??typing??
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{\ }{\varGamma\vdash\star:\star}
 \]
 
 \end_inset
@@ -2538,7 +2566,14 @@ Typing Rules
 \end_layout
 
 \begin_layout Standard
-...
+\begin_inset Formula 
+\[
+\frac{\ }{\varGamma\vdash\star:\star}
+\]
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -2553,7 +2588,40 @@ Typing Rules
 \end_layout
 
 \begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\Gamma\vdash b\,:\,\prod x:A\rightarrow B\quad\Gamma\vdash a\,:\,A}{\Gamma\vdash b\,a\,:\,B\left[x\coloneqq a\right]}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\Gamma,f:\prod x:A\rightarrow B,x:A\vdash b\,:\,B}{\Gamma\vdash\mathsf{fun}\,f\,x\Rightarrow b\,:\,\left(x:A\right)\rightarrow B}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 ...
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\Gamma\vdash a\,:\,A\quad\Gamma\vdash A\equiv A':\,\star}{\Gamma\vdash a\,:\,A'}\,\textrm{ty-conv}
+\]
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
@@ -2789,6 +2857,114 @@ L=\left\{ ..._{L'}\right\} \\
 \end_layout
 
 \begin_layout Subsection
+operators on lumps 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\varGamma\vdash l\sqsupseteq\prod x:A.B:\star}{\varGamma\vdash Arg\,l\sqsupseteq A}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+since a lump may associate any number of terms, the arg operator will only
+ operate over endpiots that are dependent function types
+\end_layout
+
+\begin_layout Example
+\begin_inset Formula $Arg\left\{ \prod x:\mathbb{N}.Vec\,x\sim\mathbb{B}\rightarrow\mathbb{B},7\sim\mathbb{B}\rightarrow\mathbb{B}_{\left\{ \star\sim\mathbb{N}\right\} }\right\} \sqsupseteq\mathbb{B}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Example
+\begin_inset Formula $Arg\left\{ \prod x:\mathbb{N}.Vec\,x\sim\mathbb{B}\rightarrow\mathbb{B},7\sim\mathbb{B}\rightarrow\mathbb{B}_{\left\{ \star\sim\mathbb{N}\right\} }\right\} \sqsupseteq\mathbb{\mathbb{N}}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Example
+\begin_inset Formula $Arg\left\{ \prod x:\mathbb{N}.Vec\,x\sim\mathbb{B}\rightarrow\mathbb{B},7\sim\mathbb{B}\rightarrow\mathbb{B}_{\left\{ \star\sim\mathbb{N}\right\} }\right\} \cancel{\sqsupseteq}Arg7$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\begin{array}{c}
+\varGamma\vdash l\sqsupseteq\prod x:A.B:\star\\
+\varGamma\vdash a\sqsupseteq a':A
+\end{array}}{\varGamma\vdash Bod\left[a\right]\,l\sqsupseteq B\left[a'\right]}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+will accept every endpoint 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+double check this
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Example
+\begin_inset Formula $L=\left\{ \prod x:\mathbb{N}.Vec\,x\sim\mathbb{B}\rightarrow\mathbb{B},7\sim\mathbb{B}\rightarrow\mathbb{B}_{\left\{ \star\sim\mathbb{N}\right\} }\right\} $
+\end_inset
+
+
+\end_layout
+
+\begin_layout Example
+\begin_inset Formula $Bod\left[1\right]L\sqsupseteq Vec\,1$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Example
+\begin_inset Formula $Bod\left[\left\{ 1\sim2\right\} \right]L\sqsupseteq Vec\,1,Vec\,2$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Example
+\begin_inset Formula $Bod\left[\left\{ 1\sim True_{\mathbb{B}\sim\mathbb{N}}\right\} \right]L\sqsupseteq Vec\,1,\mathbb{B}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Example
+\begin_inset Formula $Bod\left[1::Arg\,L\right]L\sqsupseteq Vec\,1,Vec\,\left(1::Arg\,L\right),\mathbb{B}$
+\end_inset
+
+ since definitional equality asociates casts with the same endpoints and
+ endpoints are only associated up to definitional equality
+\end_layout
+
+\begin_layout Subsection
 other endpoints
 \end_layout
 
@@ -2801,6 +2977,29 @@ we would like the endpoint relation to otherwise be reflexive
 \[
 \frac{\varGamma\vdash a:A}{\varGamma\vdash a\sqsupseteq a:A}
 \]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+however this means 
+\begin_inset Formula $\left\{ 1\sim2\right\} \sqsupseteq\left\{ 1\sim2\right\} :\mathbb{N}$
+\end_inset
+
+.
+ which can lead to types with unclear meanings, like 
+\begin_inset Formula $Vec\ \left\{ 1\sim2\right\} $
+\end_inset
+
+.
+ If this wierdness is not needed, remove it
+\end_layout
 
 \end_inset
 
@@ -2853,10 +3052,6 @@ other rules mimick thier typing judgments
 \end_inset
 
 
-\end_layout
-
-\begin_layout Standard
-...
 \end_layout
 
 \begin_layout Example
@@ -2938,6 +3133,17 @@ revise
 yes
 \end_layout
 
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\varGamma\vdash b\ \sqsupseteq\ b':\left(x:A'\right)\rightarrow B'\quad\varGamma\vdash a\sqsupseteq\ a':A'}{\varGamma\vdash b\,a\ \sqsupseteq\ b'\,a'\ :\ B'\left[x\coloneqq a'\right]}
+\]
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Section
 CBV
 \end_layout
@@ -3008,6 +3214,32 @@ Casts can be bumped out of the way....
 \end_layout
 
 \begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\ }{\left\{ ...,L,..._{L'}\right\} \ \rightsquigarrow\ L\cup\left\{ ..._{L}\right\} }
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+casts accumulate
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\ }{\left(a::L\right)::L'\ \rightsquigarrow\ a::L\cup L'}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 need to formalize the endpoints of and Arged Lump
 \end_layout
 
@@ -3018,7 +3250,7 @@ can constrain the type
 \begin_layout Standard
 \begin_inset Formula 
 \[
-\frac{\ }{Arg\left\{ \prod x:A.B\sim_{\ell,o}\prod x:A'.B',...,\prod x:A''.B'',...,x_{p},..._{L}\right\} \ \rightsquigarrow\ \left\{ A\sim_{\ell,o.Arg}A',...,A'',...,Arg\,\left\{ x_{pL}\right\} ,..._{\left\{ \star\right\} }\right\} }
+\frac{\ }{Arg\left\{ \prod x:A.B\sim_{\ell,o}\prod x:A'.B',...,\prod x:A''.B'',...,x_{p},..._{L}\right\} \ \rightsquigarrow\ \left\{ A\sim_{\ell,o.Arg}A',...,A'',...,Arg\,\left\{ x_{p}\ _{L}\right\} ,..._{\left\{ \star\right\} }\right\} }
 \]
 
 \end_inset
@@ -3027,24 +3259,33 @@ can constrain the type
 \end_layout
 
 \begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
 Injecting the lump variable into a {} seems a little hacky.
 \end_layout
 
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{\ }{Bod\left[a\right]\left\{ \prod x:A.B\sim_{\ell,o}\prod x:A'.B',...,\prod x:A''.B'',...,x_{p}\right\} \ \rightsquigarrow\ \left\{ B\left[a\right]\sim_{\ell,o.Bod\left[a\right]}B'\left[a\right],...,B''\left[a\right],...,Bod\left[a\right]\,\left\{ x_{pL}\right\} ,..._{\left\{ \star\right\} }\right\} }
-\]
-
 \end_inset
 
 
 \end_layout
 
 \begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+yupes only need to be connected up to lump vars, since they will complete
+ the type puzzle when tehy are substitutted
+\end_layout
+
+\end_inset
+
+
 \begin_inset Formula 
 \[
-\frac{\ }{Arg\left\{ \prod x:A.B\sim_{\ell,o}\prod x:A'.B',...,\prod x:A''.B'',...,x_{p},...\right\} \ \rightsquigarrow\ \left\{ A\sim_{\ell,o.Arg}A',...,A'',...,Arg\,x_{p},..._{\left\{ \star\right\} }\right\} }
+\frac{L=\left\{ \prod x:A.B\sim_{\ell,o}\prod x:A'.B',...,\prod x:A''.B'',...,x_{p},..._{L'}\right\} }{Bod\left[a\right]L\ \rightsquigarrow\ \left\{ B\left[a::Arg\,L\right]\sim_{\ell,o.Bod\left[a\right]}B'\left[a::Arg\,L\right],...,B''\left[a::Arg\,L\right],...,Bod\left[a::Arg\,L\right]\,\left\{ x_{p}\ _{L'}\right\} ,..._{\left\{ \star\right\} }\right\} }
 \]
 
 \end_inset
@@ -3056,8 +3297,239 @@ Injecting the lump variable into a {} seems a little hacky.
 ...
 \end_layout
 
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\ }{\left(\left(\mathsf{fun}\,f\,x\Rightarrow b\right)::L\right)a\ \rightsquigarrow\ b\left[\mathsf{fun}\,f\,x\Rightarrow b,a::Arg\,L\right]::Bod\left[a\right]\,L}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\ }{\begin{array}{c}
+\left\{ \left(\mathsf{fun}\,f\,x\Rightarrow b\right)\sim_{\ell,o}\left(\mathsf{fun}\,f\,x\Rightarrow b'\right),...,\left(\mathsf{fun}\,f\,x\Rightarrow b'\right),..._{\left\{ L\right\} }\right\} a\\
+\rightsquigarrow\\
+\left\{ \left(\mathsf{fun}\,f\,x\Rightarrow b\right)\left(a::Arg\,L\right)\sim_{\ell,o.app\left[a::Arg\,L\right]}\left(\mathsf{fun}\,f\,x\Rightarrow b'\right)\left(a::Arg\,L\right),...,\left(\mathsf{fun}\,f\,x\Rightarrow b''\right)\left(a::Arg\,L\right),..._{\left\{ Bod\left[a\right]L\right\} }\right\} 
+\end{array}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+no path variable are allowed, every element must be a function
+\end_layout
+
+\begin_layout Example
+\begin_inset Formula $\left\{ \left(\lambda x.x\right)\sim_{\ell,o}\left(\lambda x.x+3\right),\left(\lambda x.x+\left\{ 3\sim x\right\} \right)\right\} 2$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Example
+\begin_inset Formula $\rightsquigarrow\left\{ \left(\lambda x.x\right)2\sim_{\ell,o.app\left[2\right]}\left(\lambda x.x+3\right)2,\left(\lambda x.x+\left\{ 3\sim x\right\} \right)2\right\} $
+\end_inset
+
+
+\end_layout
+
+\begin_layout Example
+\begin_inset Formula $\rightsquigarrow\left\{ 2\sim_{\ell,o}5,2+\left\{ 3\sim5\right\} \right\} $
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+and
+\end_layout
+
+\begin_layout Example
+\begin_inset Formula $\left\{ \left(\lambda x.\left\{ 3\sim x\right\} \right)\right\} 2$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Example
+\begin_inset Formula $\rightsquigarrow\left\{ \left\{ 3\sim2\right\} \right\} \rightsquigarrow\left\{ 3\sim2\right\} $
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\ }{\left(\left(\mathsf{fun}\,f\,x\Rightarrow b\right)::L\right)a\ \rightsquigarrow\ b\left[\mathsf{fun}\,f\,x\Rightarrow b,a::Arg\,L\right]::Bod\left[a\right]\,L}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+...
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\ }{\left(\left(\mathsf{fun}\,f\,x\Rightarrow b\right)::L\right)a\ \rightsquigarrow\ b\left[\mathsf{fun}\,f\,x\Rightarrow b,a::Arg\,L\right]::Bod\left[a\right]\,L}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+standard rules
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\ }{\left(\mathsf{fun}\,f\,x\Rightarrow b\right)a\ \rightsquigarrow\ b\left[\mathsf{fun}\,f\,x\Rightarrow b,a\right]}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Values
+\end_layout
+
+\begin_layout Standard
+first atomic values, values that are not lumps
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\ }{\left(\mathsf{fun}\,f\,x\Rightarrow b\right)\ AVal}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\ }{\star\ AVal}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{a\ AVal}{a\ Val}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{L\ Val}{\left(\mathsf{fun}\,f\,x\Rightarrow b\right)::L\ Val}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\begin{array}{c}
+\forall a\in L,\ a\,AVal\\
+\forall b\sim b'\in L,\ b\,AVal\ b'\,AVal
+\end{array}}{L\ Val}
+\]
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Section
 Blame
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{a\sim_{\ell,o}b\in L\quad\mathbf{head}\,a\neq\mathbf{head}\,b}{Blame\ \ell,o\ L}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{a\sim_{\ell,o}b\in L\quad Blame\ \ell,o\,a}{Blame\ \ell,o\ L}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{a\sim_{\ell,o}b\in L\quad Blame\ \ell,o\,b}{Blame\ \ell,o\ L}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\begin{array}{c}
+L=\left\{ ..._{L'}\right\} \\
+Blame\ \ell,o\ L'
+\end{array}}{Blame\ \ell,o\ L}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{Blame\ \ell,o\ L}{Blame\ \ell,o\ a::L}
+\]
+
+\end_inset
+
+ 
 \end_layout
 
 \begin_layout Standard
@@ -5087,60 +5559,8 @@ data...
 conv...
 \end_layout
 
-\begin_layout Section
-cbv
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{\begin{array}{c}
-\varGamma\vdash b\ :\ b^{L}:B^{L}\approx b^{R}:B^{R}\\
-\varGamma\vdash a\ :\ a^{L}:A^{L}\approx a^{R}:A^{R}\\
-\varGamma\uparrow\vdash p:b^{L}:B^{L}\approx_{-:\varGamma\uparrow}b^{L}':\prod x:A^{L}.C^{L}\\
-\varGamma\downarrow\vdash q:b^{R}:B^{R}\approx_{-:\varGamma\downarrow}b^{R}':\prod x:A^{R}.C^{R}\\
-\varGamma\uparrow\vdash p\ Slice\ p',\ p^{A^{L}},\ p^{C^{L}}\\
-\varGamma\uparrow\vdash p':b^{L}:B^{L}\approx_{-:\varGamma\uparrow}d^{L}:\prod x:A^{L}'.C^{L}'\\
-\varGamma\uparrow\vdash p^{A^{L}}:A^{L}:\star\approx_{-:\varGamma\uparrow}A^{L}':\star\\
-\varGamma\uparrow,x:A^{L}\vdash p^{C^{L}}:C^{L}':\star\approx_{-:\varGamma,x:A^{L}',}C^{L}:\star\\
-\varGamma\downarrow\vdash q\ Slice\ q',\ q^{A^{R}},\ q^{C^{R}}\\
-...
-\end{array}}{\begin{array}{c}
-\varGamma\vdash_{k}\left(b::\begin{array}{c}
-k=L,p\\
-k=R,q
-\end{array}\right)a\\
-\rightsquigarrow\left(b::\begin{array}{c}
-k=L,p'\\
-k=R,q'
-\end{array}\right)\left(a::\begin{array}{c}
-k=L,p^{A^{L}}\\
-k=R,p^{A^{R}}
-\end{array}\right)::\begin{array}{c}
-k=L,p^{C^{L}}\left[a::p^{A^{L}}\right]\\
-k=R,q^{C^{R}}\left[a?\right]
-\end{array}\\
-:\ ?:C^{L}\left[a^{L}\right]\approx?:C^{R}\left[a^{R}\right]
-\end{array}}...??
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-but will be weird if a sub path wiggles into another ctx! which seems to
- be protected by the ctx annotation.
- requires this awkward identity, 
-\begin_inset Formula $C^{L}\left[a::p^{A^{L}}::?\right]\equiv C^{L}\left[a^{L}\right]$
-\end_inset
-
- where ? is magically extracted by the path
-\end_layout
-
 \begin_layout Part
-Old Formalisms
+Old OLD Formalisms
 \end_layout
 
 \begin_layout Section

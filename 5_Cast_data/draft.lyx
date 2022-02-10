@@ -1020,7 +1020,7 @@ cast expressions,
 <cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
-\begin_layout  resulting in incomple
+\begin_layout Plain Layout
 \begin_inset Formula $a,b$
 \end_inset
 
@@ -1036,7 +1036,7 @@ cast expressions,
 <cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
-\begin_layout  resulting in incomple
+\begin_layout Plain Layout
 \begin_inset Formula $\Coloneqq$
 \end_inset
 
@@ -1048,7 +1048,7 @@ cast expressions,
 <cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
-\begin_layout  resulting in incomple
+\begin_layout Plain Layout
 \begin_inset Formula $x$
 \end_inset
 
@@ -1060,7 +1060,7 @@ cast expressions,
 <cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
-\begin_layout  resulting in incomple
+\begin_layout Plain Layout
 
 \end_layout
 
@@ -1080,7 +1080,7 @@ cast expressions,
 <cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
-\begin_layout  resulting in incomple
+\begin_layout Plain Layout
 |
 \end_layout
 
@@ -1089,7 +1089,7 @@ cast expressions,
 <cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
-\begin_layout  resulting in incomple
+\begin_layout Plain Layout
 \begin_inset Formula $L$
 \end_inset
 
@@ -1112,7 +1112,7 @@ cast expressions,
 <cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
-\begin_layout  resulting in incomple
+\begin_layout Plain Layout
 
 \end_layout
 
@@ -1121,7 +1121,7 @@ cast expressions,
 <cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
-\begin_layout  resulting in incomple
+\begin_layout Plain Layout
 |
 \end_layout
 
@@ -1130,7 +1130,7 @@ cast expressions,
 <cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
-\begin_layout  resulting in incomple
+\begin_layout Plain Layout
 \begin_inset Formula $a::L$
 \end_inset
 
@@ -1142,7 +1142,7 @@ cast expressions,
 <cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
-\begin_layout  resulting in incomple
+\begin_layout Plain Layout
 cast
 \end_layout
 
@@ -1153,7 +1153,7 @@ cast
 <cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
-\begin_layout  resulting in incomple
+\begin_layout Plain Layout
 
 \end_layout
 
@@ -1162,7 +1162,7 @@ cast
 <cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
-\begin_layout  resulting in incomple
+\begin_layout Plain Layout
 |
 \end_layout
 
@@ -1171,7 +1171,7 @@ cast
 <cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
-\begin_layout  resulting in incomple
+\begin_layout Plain Layout
 \begin_inset Formula $\star$
 \end_inset
 
@@ -1183,7 +1183,7 @@ cast
 <cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
-\begin_layout  resulting in incomple
+\begin_layout Plain Layout
 
 \end_layout
 
@@ -1194,7 +1194,7 @@ cast
 <cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
-\begin_layout  resulting in incomple
+\begin_layout Plain Layout
 
 \end_layout
 
@@ -1203,7 +1203,7 @@ cast
 <cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
-\begin_layout  resulting in incomple
+\begin_layout Plain Layout
 |
 \end_layout
 
@@ -1212,7 +1212,7 @@ cast
 <cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
-\begin_layout  resulting in incomple
+\begin_layout Plain Layout
 \begin_inset Formula $\left(x:A\right)\rightarrow B$
 \end_inset
 
@@ -1224,7 +1224,7 @@ cast
 <cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
-\begin_layout  resulting in incomple
+\begin_layout Plain Layout
 
 \end_layout
 
@@ -1235,7 +1235,7 @@ cast
 <cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
-\begin_layout  resulting in incomple
+\begin_layout Plain Layout
 
 \end_layout
 
@@ -1244,7 +1244,7 @@ cast
 <cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
-\begin_layout  resulting in incomple
+\begin_layout Plain Layout
 |
 \end_layout
 
@@ -1253,7 +1253,7 @@ cast
 <cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
-\begin_layout  resulting in incomple
+\begin_layout Plain Layout
 \begin_inset Formula $\mathsf{fun}\,f\,x\Rightarrow b$
 \end_inset
 
@@ -1265,7 +1265,7 @@ cast
 <cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
-\begin_layout  resulting in incomple
+\begin_layout Plain Layout
 
 \end_layout
 
@@ -1276,7 +1276,7 @@ cast
 <cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
-\begin_layout  resulting in incomple
+\begin_layout Plain Layout
 
 \end_layout
 
@@ -1285,7 +1285,7 @@ cast
 <cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
-\begin_layout  resulting in incomple
+\begin_layout Plain Layout
 |
 \end_layout
 
@@ -1294,7 +1294,7 @@ cast
 <cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
-\begin_layout  resulting in incomple
+\begin_layout Plain Layout
 \begin_inset Formula $b\,a$
 \end_inset
 
@@ -1306,7 +1306,7 @@ cast
 <cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
-\begin_layout  resulting in incomple
+\begin_layout Plain Layout
 
 \end_layout
 
@@ -2808,6 +2808,29 @@ we would like the endpoint relation to otherwise be reflexive
 \end_layout
 
 \begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+however this means 
+\begin_inset Formula $\left\{ 1\sim2\right\} \sqsupseteq\left\{ 1\sim2\right\} :\mathbb{N}$
+\end_inset
+
+.
+ which can lead to types with unclear meanings, like 
+\begin_inset Formula $Vec\ \left\{ 1\sim2\right\} $
+\end_inset
+
+.
+ If this wierdness is not needed, remove it
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 other rules mimick thier typing judgments
 \end_layout
 
@@ -3018,7 +3041,7 @@ can constrain the type
 \begin_layout Standard
 \begin_inset Formula 
 \[
-\frac{\ }{Arg\left\{ \prod x:A.B\sim_{\ell,o}\prod x:A'.B',...,\prod x:A''.B'',...,x_{p},...\right\} \ \rightsquigarrow\ \left\{ A\sim_{\ell,o.Arg}A',...,A'',...,Arg\,x_{p},..._{\left\{ \star\right\} }\right\} }
+\frac{\ }{Arg\left\{ \prod x:A.B\sim_{\ell,o}\prod x:A'.B',...,\prod x:A''.B'',...,x_{p},..._{L}\right\} \ \rightsquigarrow\ \left\{ A\sim_{\ell,o.Arg}A',...,A'',...,Arg\,\left\{ x_{pL}\right\} ,..._{\left\{ \star\right\} }\right\} }
 \]
 
 \end_inset
@@ -3027,20 +3050,13 @@ can constrain the type
 \end_layout
 
 \begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{\ }{Bod\left[a\right]\left\{ \prod x:A.B\sim_{\ell,o}\prod x:A'.B',...,\prod x:A''.B'',...,x_{p}\right\} \ \rightsquigarrow\ \left\{ B\left[a\right]\sim_{\ell,o.Bod\left[a\right]}B'\left[a\right],...,B''\left[a\right],...,Bod\left[a\right]\,x_{p},..._{\left\{ \star\right\} }\right\} }
-\]
-
-\end_inset
-
-
+Injecting the lump variable into a {} seems a little hacky.
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
 \[
-\frac{\ }{Arg\left\{ \prod x:A.B\sim_{\ell,o}\prod x:A'.B',...,\prod x:A''.B'',...,x_{p},...\right\} \ \rightsquigarrow\ \left\{ A\sim_{\ell,o.Arg}A',...,A'',...,Arg\,x_{p},..._{\left\{ \star\right\} }\right\} }
+\frac{\ }{Bod\left[a\right]\left\{ \prod x:A.B\sim_{\ell,o}\prod x:A'.B',...,\prod x:A''.B'',...,x_{p}\right\} \ \rightsquigarrow\ \left\{ B\left[a\right]\sim_{\ell,o.Bod\left[a\right]}B'\left[a\right],...,B''\left[a\right],...,Bod\left[a\right]\,\left\{ x_{pL}\right\} ,..._{\left\{ \star\right\} }\right\} }
 \]
 
 \end_inset
@@ -5083,60 +5099,8 @@ data...
 conv...
 \end_layout
 
-\begin_layout Section
-cbv
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{\begin{array}{c}
-\varGamma\vdash b\ :\ b^{L}:B^{L}\approx b^{R}:B^{R}\\
-\varGamma\vdash a\ :\ a^{L}:A^{L}\approx a^{R}:A^{R}\\
-\varGamma\uparrow\vdash p:b^{L}:B^{L}\approx_{-:\varGamma\uparrow}b^{L}':\prod x:A^{L}.C^{L}\\
-\varGamma\downarrow\vdash q:b^{R}:B^{R}\approx_{-:\varGamma\downarrow}b^{R}':\prod x:A^{R}.C^{R}\\
-\varGamma\uparrow\vdash p\ Slice\ p',\ p^{A^{L}},\ p^{C^{L}}\\
-\varGamma\uparrow\vdash p':b^{L}:B^{L}\approx_{-:\varGamma\uparrow}d^{L}:\prod x:A^{L}'.C^{L}'\\
-\varGamma\uparrow\vdash p^{A^{L}}:A^{L}:\star\approx_{-:\varGamma\uparrow}A^{L}':\star\\
-\varGamma\uparrow,x:A^{L}\vdash p^{C^{L}}:C^{L}':\star\approx_{-:\varGamma,x:A^{L}',}C^{L}:\star\\
-\varGamma\downarrow\vdash q\ Slice\ q',\ q^{A^{R}},\ q^{C^{R}}\\
-...
-\end{array}}{\begin{array}{c}
-\varGamma\vdash_{k}\left(b::\begin{array}{c}
-k=L,p\\
-k=R,q
-\end{array}\right)a\\
-\rightsquigarrow\left(b::\begin{array}{c}
-k=L,p'\\
-k=R,q'
-\end{array}\right)\left(a::\begin{array}{c}
-k=L,p^{A^{L}}\\
-k=R,p^{A^{R}}
-\end{array}\right)::\begin{array}{c}
-k=L,p^{C^{L}}\left[a::p^{A^{L}}\right]\\
-k=R,q^{C^{R}}\left[a?\right]
-\end{array}\\
-:\ ?:C^{L}\left[a^{L}\right]\approx?:C^{R}\left[a^{R}\right]
-\end{array}}...??
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-but will be weird if a sub path wiggles into another ctx! which seems to
- be protected by the ctx annotation.
- requires this awkward identity, 
-\begin_inset Formula $C^{L}\left[a::p^{A^{L}}::?\right]\equiv C^{L}\left[a^{L}\right]$
-\end_inset
-
- where ? is magically extracted by the path
-\end_layout
-
 \begin_layout Part
-Old Formalisms
+Old OLD Formalisms
 \end_layout
 
 \begin_layout Section
