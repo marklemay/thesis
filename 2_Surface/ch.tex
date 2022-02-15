@@ -13,20 +13,20 @@ The \textbf{surface type system}\todo{is there a better name then surface lang?}
 The rules of the type system are intended to be as simple as possible and compatible with other well studied intentional dependent type theories.
 It has several (but not all) of the standard properties of dependent type theory.
 As much as possible, the syntax uses standard modern notation\footnote{
-  Several alternative syntaxes have existed in the literature.
+  Several alternative syntaxes exist in the literature.
   In this document the typed polymorphic identity function is written, $\lambda-\,x\Rightarrow x\ :\,\left(X:\star\right)\rightarrow X\rightarrow X$.
   In \cite{10.1016/0890-5401(88)90005-3} it might be written $\left(\lambda X:\star\right)\left(\lambda x:X\right)x\ :\,\left[X:\star\right]\left[x:X\right]X$.
   In \cite{HoTTbook} it might be written $\lambda X.\lambda x.x\ :\,\underset{\left(X:\mathcal{U}\right)}{\prod}X\rightarrow X$.}\todo{Martin Loff/Hoff (TODO pr notation)}.
 
 The surface type system will serve both as foundation for later chapters and a self contained technical introduction to dependent types.
-By design, the machinery that deals with equality addressed in later chapters should be invisible to programers that use the full system.
-Programmers should only need to think about the surface system.
+Even when useing the full system described in later chapters, programmers will only need to think about the surface system.
+By design, the machinery that deals with equality addressed in later chapters will be invisible to programers.
 Everything presented in later chapters is designed to reinforce an understanding of the surface type system, and make it easier to use.
 
 % overview, What
 The surface language deviates from a standard dependent type theory to include features for programming at the expense of logical correctness.
 Specifically the language allows general recursion, since general recursion is useful for programmers.
-Type-in-type is also supported since it simplifies the system, and makes the meta-theory slightly easier.
+\Tit is also supported since it simplifies the system, and makes the meta-theory slightly easier.
 Despite this, type soundness is achievable, and a practical type checking system is given.
 
 Though similar systems have been studied over the last few decades this chapter aims to give a self contained presentation, along with examples.
@@ -193,7 +193,7 @@ consistent with the notes % https://github.com/RobertHarper/hott-notes/blob/5339
 would like better explanation}
 
 It is useful for a type to depend specifically on term level data, this is called \textbf{large elimination}.
-Large elimination can be simulated with type-in-type.
+Large elimination can be simulated with \tit.
 
 \begin{tabular}{llll}
   $toLogic$ & $\coloneqq\lambda b\Rightarrow b\,\star\,Unit_{c}\,\perp_{c}$ & $:$ & $\mathbb{B}_{c}\rightarrow\star$\tabularnewline
@@ -293,7 +293,7 @@ These issues will be addressed when the more practical, bidirectional type syste
 The rules of the type assignment system are listed in \Fref{surface-TAS}.
 Variables get their type from the typing context.
 Type annotations reflect a correct typing derivation in the $\textrm{ty-::}$\todo{font stuff} rule.
-Type-in-type is recognized by the $\textrm{ty-}\star$ rule.
+\Tit is recognized by the $\textrm{ty-}\star$ rule.
 The $\textrm{ty-fun-ty}$ rule forms dependent function types.
 The $\textrm{ty-fun-app}$ rule shows how to type function application, by substituting the argument term directly into the dependent function type.
 Functions are typed with a variable for recursive calls along with a variable for their argument $\textrm{ty-fun}$.
@@ -1230,7 +1230,7 @@ $\mathsf{fun}\,f\,x\Rightarrow f\,x\qquad:\perp_{c}$
 
 It is possible to encode Girard's paradox, producing another source of logical unsoundness.
 \begin{example}
-Every Type is Inhabited (by Type-in-type)
+Every Type is Inhabited (by \tit)
 
 \todo{full example}
 
@@ -1239,7 +1239,7 @@ Every Type is Inhabited (by Type-in-type)
 
 A subtle form of recursive behavior can be built out of Gerard's paradox\cite{Reinhold89typecheckingis}, but this behavior is no worse than the unrestricted recursion already allowed.
 
-% I am unaware of anyone accidentally deriving a falsehood from type-in-type.
+% I am unaware of anyone accidentally deriving a falsehood from \tit.
 
 Operationally, logical inconsistency will be recognized by programmers as non-termination.
 Non-termination seems not to matter for programming languages in practice.
@@ -1256,7 +1256,7 @@ Therefore, logical unsoundness seems suitable for a dependently typed programmin
 \todo{add ref to inequalities}
 
 While the surface language supports proofs, not every term typed in the surface language is a proof.
-Terms can still be called proofs as long as the safety of recursion and type-in-type are checked externally.
+Terms can still be called proofs as long as the safety of recursion and \tit are checked externally.
 In this sense, the listed example inequalities are proofs, as they make no use of general recursion (so all recursions are well founded) and universes are used in a safe way (universe hierarchies could be assigned).
 In an advanced implementation, an automated process could supply warnings when constructs are used in potentially unsafe ways.
 Traditional software testing can be used to discover if there are actual proof bugs.
@@ -1321,10 +1321,10 @@ Most importantly for the system described in this thesis, users are expected to 
 \subsection{Bad logics, ok programming languages?}
 
 Unsound logical systems that work as programming languages go back to at least Church's lambda calculus which was originally intended to be part of a foundation for mathematics\footnote{``There may, indeed, be other applications of the system than its use as a logic.''{[}Church, 1932, p.349, A Set of Postulates for the Foundation of Logic{]}}.\todo{proper citation}
-In the 1970s, Per Martin-L{\"o}f proposed a system with type-in-type\todo{cite it?} that was shown logically unsound by Girard (as described in the introduction in \cite{Martin-Lof-1972}).
-In the 1980s, Cardelli explored the domain semantics of a system with general recursive dependent functions and type-in-type\cite{cardelli1986polymorphic}.
+In the 1970s, Per Martin-L{\"o}f proposed a system with \tit\todo{cite it?} that was shown logically unsound by Girard (as described in the introduction in \cite{Martin-Lof-1972}).
+In the 1980s, Cardelli explored the domain semantics of a system with general recursive dependent functions and \tit\cite{cardelli1986polymorphic}.
 
-The first progress and preservation style proof of type soundness for a language with general recursive dependent functions and type-in-type seem to come from the Trellys Project\cite{sjoberg2012irrelevance}.
+The first progress and preservation style proof of type soundness for a language with general recursive dependent functions and \tit seem to come from the Trellys Project\cite{sjoberg2012irrelevance}.
 At the time their language had several additional features not included in the surface language.
 Additionally, the surface language uses a simpler notion of definitional equality resulting in a simpler proof of type soundness.
 Later work in the Trellys Project\cite{casinghino2014combining,casinghino2014combiningthesis} used modalities to separate terminating and non-terminating fragments of the language, to allow both general recursion and logically sound reasoning.%, though the annotation burden seems high in retrospect .
@@ -1337,12 +1337,10 @@ In general, the surface language has been deeply informed by the Trellys project
 
 Several programming language implementations support features of the surface language without a proof of type soundness.
 Pebble\cite{10.1007/3-540-13346-1_1} was a very early language with dependent types, though conversion did not associate alpha\todo{if saying alpha need to define it} equivalent types\footnote{according to \cite{Reinhold89typecheckingis}}.
-Coquand implemented an early bidirectional algorithm to type-check a language with type-in-type\cite{COQUAND1996167}.
-Cayenne\cite{10.1145/289423.289451} is a Haskell-like language that combines dependent types with type in type and non-termination.
-Agda supports general recursion and type in type with compiler flags.
+Coquand implemented an early bidirectional algorithm to type-check a language with \tit\cite{COQUAND1996167}.
+Cayenne\cite{10.1145/289423.289451} is a Haskell-like language that combines dependent types with \tit and non-termination.
+Agda supports general recursion and \tit with compiler flags.
 Idris supports similar ``unsafe'' features.
-
-\todo{macro for type in type}
 
 \subsection{Other Dependent Type Systems}
 
@@ -1350,8 +1348,8 @@ There are many flavors of dependent type systems that are similar in spirit to t
 
 The Calculus of Constructions (\ac{CC}, CoC)\cite{10.1016/0890-5401(88)90005-3} is one of the first minimal dependent type systems.
 It contains shockingly few rules, but can express a wide variety of constructions via parametric encodings.
-The system does not allow type-in-type, instead type\footnote{called \textbf{prop}, for proposition} lives in a larger universe $\star:\Square$, where $\Square$ is not considered a type.
-Even though the Calculus of Constructions does not allow type-in-type it is still \textbf{impredicative} in the sense that function types can quantify over $\star$ while still being in $\star$.
+The system does not allow \tit, instead type\footnote{called \textbf{prop}, for proposition} lives in a larger universe $\star:\Square$, where $\Square$ is not considered a type.
+Even though the Calculus of Constructions does not allow \tit it is still \textbf{impredicative} in the sense that function types can quantify over $\star$ while still being in $\star$.
 For instance, the polymorphic identity $id:(X:\star)\rightarrow X\rightarrow X$ has type $\star$ so the polymorphic identity can be applied to itself, $id\,\left((X:\star)\rightarrow X\rightarrow X\right)\,id$.
 From the perspective of the surface language this impredictivity is modest, but still causes issues in the presence of classical logical assumptions. \todo{Cite}
 Many of the examples from this chapter are adapted from examples that were first worked out for the Calculus of Constructions.
@@ -1370,7 +1368,7 @@ System F additionally allows Types to depend on types.
 The Calculus of Constructions has all forms of dependency\footnote{Recommended reading Chapter 14 \cite{sorensen2006lectures}}.
 
 Pure Type Systems (\ac{PTS})\footnote{previously called \textbf{Generalized Type Systems}} generalizes the lambda cube to allow any number of type universes with any forms of dependency.
-Notably this includes the system with one type universe where type-in-type.
+Notably this includes the system with one type universe where \tit.
 Universe hierarchies can also be embedded in a \ac{PTS}.
 The system described in this chapter is almost a \ac{PTS}, except that it contains unrestricted recursion and the method of type annotation is different.
 All pure type systems such as System F and the Calculus of Constructions have corresponding terms in the Surface Language, by renaming their type universes into the surface language type universe.

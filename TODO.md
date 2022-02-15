@@ -1,3 +1,8 @@
+By wed,
+* better images
+* tablet notes
+
+
 admin
 * follow up with GRS spring semester extention
 * ask Alley to chair

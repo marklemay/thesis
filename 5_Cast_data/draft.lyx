@@ -113,6 +113,57 @@ Mark Lemay
 \end_layout
 
 \begin_layout Standard
+The following revises the previous attempt.
+ To differentiate it from the prior 
+\begin_inset Quotes eld
+\end_inset
+
+path
+\begin_inset Quotes erd
+\end_inset
+
+ style formalization, the new multi-endpoint constructs are called 
+\begin_inset Quotes eld
+\end_inset
+
+lumps
+\begin_inset Quotes erd
+\end_inset
+
+.
+ This name is expected to change.
+ Further cleanup is expected, but otherwise the mistakes should all be small.
+\end_layout
+
+\begin_layout Section
+outline
+\end_layout
+
+\begin_layout Itemize
+fudge definitional equality
+\end_layout
+
+\begin_layout Itemize
+connected finite sets instead of paths
+\end_layout
+
+\begin_layout Standard
+questions,
+\end_layout
+
+\begin_layout Itemize
+seems like the formalization could be reduced
+\end_layout
+
+\begin_layout Itemize
+Some Lumps could be replaced with expressions
+\end_layout
+
+\begin_layout Section
+Formalism
+\end_layout
+
+\begin_layout Standard
 \begin_inset Flex TODO Note (inline)
 status open
 
@@ -127,7 +178,7 @@ inline document
 
 \begin_layout Standard
 \begin_inset Tabular
-<lyxtabular version="3" rows="54" columns="4">
+<lyxtabular version="3" rows="40" columns="4">
 <features tabularvalignment="middle">
 <column alignment="left" valignment="top">
 <column alignment="center" valignment="top">
@@ -217,7 +268,7 @@ path var,
 \begin_inset Text
 
 \begin_layout Plain Layout
-assertion index,
+pattern,
 \end_layout
 
 \end_inset
@@ -252,683 +303,6 @@ assertion index,
 </row>
 <row>
 <cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $k$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell multicolumn="1" alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-assertion assumption,
-\end_layout
-
-\end_inset
-</cell>
-<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $kin$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\Coloneqq$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $k=left$
-\end_inset
-
- | 
-\begin_inset Formula $k=right$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell multicolumn="1" alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-assertion maps,
-\end_layout
-
-\end_inset
-</cell>
-<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $kmap$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\Coloneqq$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\overline{kin,}$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell multicolumn="1" alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-casts under assumption,
-\end_layout
-
-\end_inset
-</cell>
-<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $kcast$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\Coloneqq$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\overline{kmap,p;}$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell multicolumn="1" alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-path exp.,
-\end_layout
-
-\end_inset
-</cell>
-<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $p,p'$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\Coloneqq$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $x_{p}$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-path variable
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-|
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $Cong_{k\Rightarrow a}^{\overline{q}:\varGamma\approx\varGamma',p:A\approx B}$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-congruence
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-|
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $Assert_{o,\ell,a:A,b:B}^{\overline{q}:\varGamma\approx\varGamma',p:A\approx B}$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-concrete assumption
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-|
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\overline{p;}$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="none" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-concatenated paths
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-|
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $p^{-1}$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="none" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-reverse a path
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-|
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $inTC_{i}\,p$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="none" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-extract the 
-\begin_inset Formula $i$
-\end_inset
-
-type argument from a data type constructor
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-|
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $inC_{i}\,p$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="none" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-extract the 
-\begin_inset Formula $i$
-\end_inset
-
-type argument from a data constructor
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell multicolumn="1" alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-cast pattern,
-\end_layout
-
-\end_inset
-</cell>
-<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell multicolumn="2" alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="left" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -952,15 +326,11 @@ cast pattern,
 
 \end_inset
 </cell>
-<cell alignment="left" valignment="top" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
 \begin_inset Formula $x$
-\end_inset
-
- | 
-\begin_inset Formula $\left(d\,\overline{patc}\right)::x_{p}$
 \end_inset
 
 
@@ -968,7 +338,48 @@ cast pattern,
 
 \end_inset
 </cell>
-<cell alignment="none" valignment="top" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+|
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\left(d\overline{patc}::x_{p}\right)$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -1459,7 +870,7 @@ data elim.
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $!_{kcast}$
+\begin_inset Formula $!_{L}$
 \end_inset
 
 
@@ -1472,88 +883,6 @@ data elim.
 
 \begin_layout Plain Layout
 force blame
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-|
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $a::kcast$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="left" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-cast
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-|
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\left\{ a\sim_{k,p}b\right\} $
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-assert same
 \end_layout
 
 \end_inset
@@ -1661,7 +990,7 @@ o
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $o.App[a]$
+\begin_inset Formula $o.App_{a}$
 \end_inset
 
 
@@ -1950,7 +1279,7 @@ Lumps
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\left\{ \overline{a},\overline{b\sim c},\overline{x_{p}}_{L'}\right\} $
+\begin_inset Formula $\left\{ \overline{a},\overline{b\sim c},\overline{x_{p}}\right\} _{L}$
 \end_inset
 
 
@@ -2032,7 +1361,7 @@ Lumps
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $Bod\left[a\right]\ L$
+\begin_inset Formula $Bod_{a}\ L$
 \end_inset
 
 
@@ -2073,7 +1402,7 @@ Lumps
 \begin_inset Text
 
 \begin_layout Plain Layout
-...
+
 \end_layout
 
 \end_inset
@@ -2102,6 +1431,18 @@ Lumps
 \begin_inset Text
 
 \begin_layout Plain Layout
+|
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $TCon_{i}\ L$
+\end_inset
+
 
 \end_layout
 
@@ -2111,6 +1452,38 @@ Lumps
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+|
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $DCon_{i}\ L$
+\end_inset
+
 
 \end_layout
 
@@ -2366,6 +1739,88 @@ contexts,
 \end_inset
 </cell>
 </row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+|
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\Gamma,\mathsf{data}\,D\,:\,\Delta\rightarrow\star\,\left\{ \overline{|\,d\,:\,\varTheta\rightarrow D\overline{a}}\right\} $
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+data definition
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+|
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\Gamma,\mathsf{data}\,D\,:\,\Delta\rightarrow\star$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+abstract data
+\end_layout
+
+\end_inset
+</cell>
+</row>
 </lyxtabular>
 
 \end_inset
@@ -2399,7 +1854,7 @@ Judgment Forms
 \begin_layout Standard
 \begin_inset Formula 
 \[
-\varGamma\vdash l\ \mathbf{ok}
+\varGamma\vdash L\ \mathbf{ok}
 \]
 
 \end_inset
@@ -2410,7 +1865,7 @@ Judgment Forms
 \begin_layout Standard
 \begin_inset Formula 
 \[
-\varGamma\vdash l\ \mathbf{connected}
+\varGamma\vdash L\ \mathbf{connected}
 \]
 
 \end_inset
@@ -2429,12 +1884,47 @@ Judgment Forms
 
 \end_layout
 
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+I suspect that 
+\begin_inset Formula $\varGamma\vdash a:A$
+\end_inset
+
+ and 
+\begin_inset Formula $\varGamma\vdash a\sqsupseteq a':A'$
+\end_inset
+
+ could be merged into a single judgment, with 
+\begin_inset Formula $\varGamma\vdash a:A$
+\end_inset
+
+ being shorthand for 
+\begin_inset Formula $\varGamma\vdash a\sqsupseteq a:A$
+\end_inset
+
+ or 
+\begin_inset Formula $\varGamma\vdash a\sqsupseteq b:A$
+\end_inset
+
+ .
+ But will keep them separate for now.
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Section
 Definitional equality
 \end_layout
 
 \begin_layout Standard
-Assume a congruent equivelence that 
+Assume a congruent equivalence that 
 \end_layout
 
 \begin_layout Itemize
@@ -2478,10 +1968,212 @@ associates casts at the same endpoints.
 \end_inset
 
  implies 
-\begin_inset Formula $\varGamma\vdash a::L\ \equiv\ a'::L'\ :\ A$
+\begin_inset Formula $\varGamma\vdash a::L\ \equiv\ a'::L'\ :\ B$
 \end_inset
 
  
+\end_layout
+
+\begin_layout Section
+Lump substitution
+\end_layout
+
+\begin_layout Standard
+structurally recursive, except at variables
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\left\{ ...,x_{p},...\right\} _{L'}\left[x_{p}\coloneqq L\right]=L\cup\left\{ ...\left[x_{p}\coloneqq L\right],...\right\} _{\left(\mathbf{ty}\,L\right)\cup L'}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+also injects the type lumps
+\end_layout
+
+\begin_layout Section
+Lumping Rules
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\ }{\varGamma\vdash\left\{ \star\right\} \ \mathbf{ok}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+better symbol
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\begin{array}{c}
+\varGamma\vdash L\ \mathbf{connected}\\
+\mathbf{ty}\ L=L'\\
+\varGamma\vdash L'\ \mathbf{ok}\\
+\forall a\sim b\in L,\quad\varGamma\vdash a:A\quad\varGamma\vdash b:B\quad\varGamma\vdash L'\sqsupseteq A\quad\varGamma\vdash L'\sqsupseteq B\\
+\forall a\in L,\quad\varGamma\vdash a\sqsupseteq a':A\quad\varGamma\vdash L'\sqsupseteq A\\
+\forall x_{p}\in L,\quad x_{p}:a\approx b\in\varGamma\quad\varGamma\vdash a:A\quad\varGamma\vdash L'\sqsupseteq A\quad\varGamma\vdash b:B\quad\varGamma\vdash L'\sqsupseteq B
+\end{array}}{\varGamma\vdash L_{L'}\ \mathbf{ok}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+every endpoint it connected and every type is connected.
+ 
+\end_layout
+
+\begin_layout Section
+Connected
+\end_layout
+
+\begin_layout Standard
+singletons are connected
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\ }{\varGamma\vdash\left\{ a_{\left\{ ...\right\} }\right\} \ \mathbf{connected}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+further connections can be built up by connecting endpoints
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\begin{array}{c}
+\varGamma\vdash a\ \mathbf{connected}\\
+\varGamma\vdash a\sqsupseteq a':A\\
+\varGamma\vdash L\sqsupseteq a':A\\
+\varGamma\vdash L\ \mathbf{connected}
+\end{array}}{\varGamma\vdash\left\{ a\right\} \cup L\ \mathbf{connected}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\begin{array}{c}
+\varGamma\vdash L\sqsupseteq a:A\\
+\varGamma\vdash L\ \mathbf{connected}
+\end{array}}{\varGamma\vdash\left\{ a\sim b\right\} \cup L\ \mathbf{connected}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\begin{array}{c}
+\varGamma\vdash L\sqsupseteq b:B\\
+\varGamma\vdash L\ \mathbf{connected}
+\end{array}}{\varGamma\vdash\left\{ a\sim b\right\} \cup L\ \mathbf{connected}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\begin{array}{c}
+x_{p}:a\approx b\in\varGamma\\
+\varGamma\vdash L\sqsupseteq a:A\\
+\varGamma\vdash L\ \mathbf{connected}
+\end{array}}{\varGamma\vdash x_{p}\cup L\ \mathbf{connected}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\begin{array}{c}
+x_{p}:a\approx b\in\varGamma\\
+\varGamma\vdash L\sqsupseteq b:B\\
+\varGamma\vdash L\ \mathbf{connected}
+\end{array}}{\varGamma\vdash x_{p}\cup L\ \mathbf{connected}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Example
+\begin_inset Formula $\left\{ 1\sim2,S\left\{ 0\sim5\right\} _{\left\{ \mathbb{N}\right\} },6\sim7\right\} _{\left\{ \mathbb{N}\right\} }\ \mathbf{ok}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Example
+since 
+\begin_inset Formula $S\left\{ 0\sim5_{\left\{ \mathbb{N}\right\} }\right\} \sqsupseteq1$
+\end_inset
+
+,
+\begin_inset Formula $6$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Example
+every endpoint is connected up to 
+\series bold
+normalization
+\series default
+ and 
+\series bold
+casts
+\end_layout
+
+\begin_layout Example
+every type of every endpoint is connected
+\end_layout
+
+\begin_layout Standard
+Will need to be a little flexible with connections
+\end_layout
+
+\begin_layout Example
+\begin_inset Formula $\left\{ True\sim1::\left\{ \mathbb{N}\sim\mathbb{B}\right\} ,1::\left\{ \mathbb{N}\sim\mathbb{B}\right\} \sim False_{\left\{ \mathbb{B}\right\} }\right\} \ \mathbf{ok}$
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
@@ -2492,28 +2184,6 @@ Typing Rules
 \begin_inset Formula 
 \[
 \frac{x:A\ \in\varGamma}{\varGamma\vdash x:A}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{x_{p}:a\approx b\ \in\varGamma}{\varGamma\vdash x_{p}:a\approx b}??typing??
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{\ }{\varGamma\vdash\star:\star}
 \]
 
 \end_inset
@@ -2538,7 +2208,18 @@ Typing Rules
 \end_layout
 
 \begin_layout Standard
-...
+\begin_inset Formula 
+\[
+\frac{\ }{\varGamma\vdash\star:\star}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+functions
 \end_layout
 
 \begin_layout Standard
@@ -2553,17 +2234,9 @@ Typing Rules
 \end_layout
 
 \begin_layout Standard
-...
-\end_layout
-
-\begin_layout Section
-Lumping Rules
-\end_layout
-
-\begin_layout Standard
 \begin_inset Formula 
 \[
-\frac{\ }{\varGamma\vdash\left\{ \star\right\} \ \mathbf{ok}}
+\frac{\Gamma\vdash b\,:\,\prod x:A\rightarrow B\quad\Gamma\vdash a\,:\,A}{\Gamma\vdash b\,a\,:\,B\left[x\coloneqq a\right]}
 \]
 
 \end_inset
@@ -2574,12 +2247,22 @@ Lumping Rules
 \begin_layout Standard
 \begin_inset Formula 
 \[
-\frac{\begin{array}{c}
-L\ \mathbf{connected}\\
-L=\left\{ ..._{L'}\right\} \\
-\varGamma\vdash L'\ \mathbf{ok}\\
-\forall a.\varGamma\vdash L\sqsupseteq a:A,\quad L'\sqsupseteq A
-\end{array}}{\varGamma\vdash L_{L'}\ \mathbf{ok}}
+\frac{\Gamma,f:\prod x:A\rightarrow B,x:A\vdash b\,:\,B}{\Gamma\vdash\mathsf{fun}\,f\,x\Rightarrow b\,:\,\left(x:A\right)\rightarrow B}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+data
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\mathsf{data}\,D\,\Delta\in\Gamma}{\Gamma\vdash D\,:\,\Delta\rightarrow\star}
 \]
 
 \end_inset
@@ -2588,64 +2271,26 @@ L=\left\{ ..._{L'}\right\} \\
 \end_layout
 
 \begin_layout Standard
-every endpont it connected and every type is connected.
- Revise, 
-\end_layout
+\begin_inset Formula 
+\[
+\frac{d\,:\,\varTheta\rightarrow D\overline{a}\in\Gamma}{\Gamma\vdash d\,:\,\varTheta\rightarrow D\overline{a}}
+\]
 
-\begin_layout Itemize
-\begin_inset Formula $\forall A?$
 \end_inset
 
 
 \end_layout
 
-\begin_layout Itemize
-instead of endpoints, consider elements
-\end_layout
-
-\begin_layout Itemize
-add typing conditions on elements
-\end_layout
-
-\begin_layout Example
-\begin_inset Formula $\left\{ 1\sim2,S\left\{ 0\sim5_{\left\{ \mathbb{N}\right\} }\right\} ,6\sim7_{\left\{ \mathbb{N}\right\} }\right\} \ \mathbf{ok}$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Example
-since 
-\begin_inset Formula $S\left\{ 0\sim5_{\left\{ \mathbb{N}\right\} }\right\} \sqsupseteq1$
-\end_inset
-
-,
-\begin_inset Formula $S\left\{ 0\sim5_{\left\{ \mathbb{N}\right\} }\right\} \sqsupseteq6$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Example
-every endpoint is connected up to 
-\series bold
-normalization
-\series default
- and 
-\series bold
-casts
-\end_layout
-
-\begin_layout Example
-evey type of every endpoint is connected
+\begin_layout Subsection
+conversion
 \end_layout
 
 \begin_layout Standard
-Will need to be a little flexble with connections
-\end_layout
+\begin_inset Formula 
+\[
+\frac{\Gamma\vdash a\,:\,A\quad\Gamma\vdash A\equiv A':\,\star}{\Gamma\vdash a\,:\,A'}\,\textrm{ty-conv}
+\]
 
-\begin_layout Example
-\begin_inset Formula $\left\{ True\sim1::\left\{ \mathbb{N}\sim\mathbb{B}\right\} ,1::\left\{ \mathbb{N}\sim\mathbb{B}\right\} \sim False_{\left\{ \mathbb{B}\right\} }\right\} \ \mathbf{ok}$
 \end_inset
 
 
@@ -2693,7 +2338,7 @@ but each term my contain sub terms
 \end_layout
 
 \begin_layout Standard
-and we need that each one is fuged with it's own cast
+and we need that each one is fudged with it's own cast
 \end_layout
 
 \begin_layout Standard
@@ -2721,7 +2366,7 @@ lump endpoints
 \[
 \frac{\begin{array}{c}
 \varGamma\vdash a\in L\\
-L=\left\{ ..._{L'}\right\} \\
+L=\left\{ ...\right\} _{L'}\\
 \varGamma\vdash a\sqsupseteq a':A\\
 \varGamma\vdash L'\sqsupseteq B:\star
 \end{array}}{\varGamma\vdash L\sqsupseteq a'::L'\ :\ B}
@@ -2737,9 +2382,19 @@ L=\left\{ ..._{L'}\right\} \\
 \[
 \frac{\begin{array}{c}
 \varGamma\vdash a\sim b\in L\\
-\varGamma\vdash a\sqsupseteq a':A\\
-...
-\end{array}}{\varGamma\vdash L\sqsupseteq a':A}
+\varGamma\vdash a:A
+\end{array}}{\varGamma\vdash L\sqsupseteq a:A}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{\begin{array}{c}
+\varGamma\vdash a\sim b\in L\\
+\varGamma\vdash b:B
+\end{array}}{\varGamma\vdash L\sqsupseteq b:B}
 \]
 
 \end_inset
@@ -2751,10 +2406,10 @@ L=\left\{ ..._{L'}\right\} \\
 \begin_inset Formula 
 \[
 \frac{\begin{array}{c}
-\varGamma\vdash b\sim a\in L\\
-\varGamma\vdash a\sqsupseteq a':A\\
-...
-\end{array}}{\varGamma\vdash L\sqsupseteq a':A}
+\varGamma\vdash x_{p}\in L\\
+\varGamma\vdash x_{p}:a\approx b\\
+\varGamma\vdash a:A
+\end{array}}{\varGamma\vdash L\sqsupseteq a:A}
 \]
 
 \end_inset
@@ -2765,22 +2420,153 @@ L=\left\{ ..._{L'}\right\} \\
 \frac{\begin{array}{c}
 \varGamma\vdash x_{p}\in L\\
 \varGamma\vdash x_{p}:a\approx b\\
-\varGamma\vdash a\sqsupseteq a':A\\
-...
-\end{array}}{\varGamma\vdash L\sqsupseteq a':A}????
+\varGamma\vdash b:B
+\end{array}}{\varGamma\vdash L\sqsupseteq b:B}
 \]
 
 \end_inset
 
 
+\end_layout
+
+\begin_layout Subsection
+operators on lumps 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\varGamma\vdash l\sqsupseteq\prod x:A.B:\star}{\varGamma\vdash Arg\,l\sqsupseteq A}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+since a lump may associate any number of terms, the arg operator will only
+ operate over endpoints that are dependent function types
+\end_layout
+
+\begin_layout Example
+\begin_inset Formula $Arg\left\{ \prod x:\mathbb{N}.Vec\,x\sim\mathbb{B}\rightarrow\mathbb{B},7\sim\mathbb{B}\rightarrow\mathbb{B}_{\left\{ \star\sim\mathbb{N}\right\} }\right\} \sqsupseteq\mathbb{B}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Example
+\begin_inset Formula $Arg\left\{ \prod x:\mathbb{N}.Vec\,x\sim\mathbb{B}\rightarrow\mathbb{B},7\sim\mathbb{B}\rightarrow\mathbb{B}_{\left\{ \star\sim\mathbb{N}\right\} }\right\} \sqsupseteq\mathbb{\mathbb{N}}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Example
+\begin_inset Formula $Arg\left\{ \prod x:\mathbb{N}.Vec\,x\sim\mathbb{B}\rightarrow\mathbb{B},7\sim\mathbb{B}\rightarrow\mathbb{B}_{\left\{ \star\sim\mathbb{N}\right\} }\right\} \cancel{\sqsupseteq}Arg7$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 \begin_inset Formula 
 \[
 \frac{\begin{array}{c}
-\varGamma\vdash x_{p}\in L\\
-\varGamma\vdash x_{p}:b\approx a\\
-\varGamma\vdash a\sqsupseteq a':A\\
-....
-\end{array}}{\varGamma\vdash L\sqsupseteq a':A}????
+\varGamma\vdash l\sqsupseteq\prod x:A.B:\star\\
+\varGamma\vdash a\sqsupseteq a':A
+\end{array}}{\varGamma\vdash Bod\left[a\right]\,l\sqsupseteq B\left[a'\right]}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+will accept every endpoint 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+double check this
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+App!!!!!!!!!!!!!!!
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Example
+\begin_inset Formula $L=\left\{ \prod x:\mathbb{N}.Vec\,x\sim\mathbb{B}\rightarrow\mathbb{B},7\sim\mathbb{B}\rightarrow\mathbb{B}_{\left\{ \star\sim\mathbb{N}\right\} }\right\} $
+\end_inset
+
+
+\end_layout
+
+\begin_layout Example
+\begin_inset Formula $Bod\left[1\right]L\sqsupseteq Vec\,1$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Example
+\begin_inset Formula $Bod\left[\left\{ 1\sim2\right\} \right]L\sqsupseteq Vec\,1,Vec\,2$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Example
+\begin_inset Formula $Bod\left[\left\{ 1\sim True_{\mathbb{B}\sim\mathbb{N}}\right\} \right]L\sqsupseteq Vec\,1,\mathbb{B}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Example
+\begin_inset Formula $Bod\left[1::Arg\,L\right]L\sqsupseteq Vec\,1,Vec\,\left(1::Arg\,L\right),\mathbb{B}$
+\end_inset
+
+ since definitional equality associates casts with the same endpoints and
+ endpoints are only associated up to definitional equality
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\begin{array}{c}
+\varGamma\vdash l\sqsupseteq D\overline{a}\end{array}}{\varGamma\vdash TCon_{i}\,l\sqsupseteq a_{i}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\begin{array}{c}
+\varGamma\vdash l\sqsupseteq d\overline{a}\end{array}}{\varGamma\vdash DCon_{i}\,l\sqsupseteq a_{i}}
 \]
 
 \end_inset
@@ -2799,7 +2585,18 @@ we would like the endpoint relation to otherwise be reflexive
 \begin_layout Standard
 \begin_inset Formula 
 \[
-\frac{\varGamma\vdash a:A}{\varGamma\vdash a\sqsupseteq a:A}
+\frac{x:A\in\varGamma}{\varGamma\vdash x\sqsupseteq x:A}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\ }{\varGamma\vdash\star\sqsupseteq\star:\star}
 \]
 
 \end_inset
@@ -2831,13 +2628,39 @@ however this means
 \end_layout
 
 \begin_layout Standard
-other rules mimick thier typing judgments
+along with 2 rules of conversion
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
 \[
 \frac{\varGamma\vdash a\sqsupseteq a':A\quad\varGamma\vdash a'\equiv a'':A}{\varGamma\vdash a\sqsupseteq a'':A}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\varGamma\vdash a\sqsupseteq a':A\quad\varGamma\vdash A\equiv A':\star}{\varGamma\vdash a\sqsupseteq a':A'}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+other rules mimic their typing judgments
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\varGamma\vdash a\sqsupseteq a':A'\quad\varGamma\vdash L\sqsupseteq A'\quad\varGamma\vdash L\sqsupseteq B}{\varGamma\vdash a::L\sqsupseteq a'::L\ :\ B}
 \]
 
 \end_inset
@@ -2876,10 +2699,6 @@ other rules mimick thier typing judgments
 \end_inset
 
 
-\end_layout
-
-\begin_layout Standard
-...
 \end_layout
 
 \begin_layout Example
@@ -2943,22 +2762,72 @@ other rules mimick thier typing judgments
 \end_layout
 
 \begin_layout Standard
-The typeing restriction protects type boundries.
+The typing restriction protects type boundaries.
 \end_layout
 
 \begin_layout Standard
-revise 
+\begin_inset Formula 
+\[
+\frac{\varGamma\vdash d\sqsupseteq a':A\quad\varGamma\vdash a'\equiv a'':A}{\varGamma\vdash a\sqsupseteq a'':A}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+data 
 \end_layout
 
 \begin_layout Standard
-\begin_inset Formula $\left\{ rep\sim not_{\left\{ \left(x:\mathbb{N}\right)\rightarrow Vec\,x\sim\mathbb{B\rightarrow B}\right\} }\right\} \left\{ 7\sim True_{\left\{ \mathbb{N}\sim\mathbb{B}\right\} }\right\} ?\sqsupseteq?\ not\,\left(7::\left\{ \mathbb{N}\sim\mathbb{B}\right\} \right):\mathbb{B}$
+\begin_inset Formula 
+\[
+\frac{D:...\in\varGamma}{\varGamma\vdash D\sqsupseteq D:\Delta\rightarrow\star}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{d:...\in\varGamma}{\varGamma\vdash d\sqsupseteq d:\Delta\rightarrow d...}
+\]
+
 \end_inset
 
 
 \end_layout
 
 \begin_layout Standard
-yes
+...
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\mathsf{case}\,\overline{a,}\,\left\{ \overline{|\,\overline{patc\Rightarrow}b}\overline{|\,\overline{patc'_{\ell}}}\right\} $
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+...
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\begin{array}{c}
+\varGamma\vdash L\sqsupseteq a:A\\
+\varGamma\vdash L\sqsupseteq b:B\\
+hd\,a\neq hd\,b\\
+\varGamma\vdash C:\star
+\end{array}}{\varGamma\vdash!_{L}\sqsupseteq!_{L}:C}
+\]
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
@@ -3031,17 +2900,9 @@ Casts can be bumped out of the way....
 \end_layout
 
 \begin_layout Standard
-need to formalize the endpoints of and Arged Lump
-\end_layout
-
-\begin_layout Standard
-can constrain the type 
-\end_layout
-
-\begin_layout Standard
 \begin_inset Formula 
 \[
-\frac{\ }{Arg\left\{ \prod x:A.B\sim_{\ell,o}\prod x:A'.B',...,\prod x:A''.B'',...,x_{p},..._{L}\right\} \ \rightsquigarrow\ \left\{ A\sim_{\ell,o.Arg}A',...,A'',...,Arg\,\left\{ x_{pL}\right\} ,..._{\left\{ \star\right\} }\right\} }
+\frac{\ }{\left\{ ...,L,..._{L'}\right\} \ \rightsquigarrow\ L\cup\left\{ ..._{L}\right\} }
 \]
 
 \end_inset
@@ -3050,14 +2911,129 @@ can constrain the type
 \end_layout
 
 \begin_layout Standard
-Injecting the lump variable into a {} seems a little hacky.
+casts accumulate
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
 \[
-\frac{\ }{Bod\left[a\right]\left\{ \prod x:A.B\sim_{\ell,o}\prod x:A'.B',...,\prod x:A''.B'',...,x_{p}\right\} \ \rightsquigarrow\ \left\{ B\left[a\right]\sim_{\ell,o.Bod\left[a\right]}B'\left[a\right],...,B''\left[a\right],...,Bod\left[a\right]\,\left\{ x_{pL}\right\} ,..._{\left\{ \star\right\} }\right\} }
+\frac{\ }{\left(a::L\right)::L'\ \rightsquigarrow\ a::\left(L\cup L'\right)}
 \]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+lump operations evaluate as expected
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\ }{Arg\left\{ \prod x:A.B\sim_{\ell,o}\prod x:A'.B',...,\prod x:A''.B'',...,x_{p},..\right\} _{L}\ \rightsquigarrow\ \left\{ A\sim_{\ell,o.Arg}A',...,A'',...,Arg\,\left\{ x_{p}\right\} _{L},...\right\} _{\left\{ \star\right\} }}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+Injecting the lump variable into a {} seems a little hacky.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+types only need to be connected up to lump vars, since they will complete
+ the type puzzle when they are substituted
+\end_layout
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{L=\left\{ \prod x:A.B\sim_{\ell,o}\prod x:A'.B',...,\prod x:A''.B'',...,x_{p},...\right\} _{L'}}{Bod\left[a\right]L\ \rightsquigarrow\ \left\{ B\left[a::Arg\,L\right]\sim_{\ell,o.Bod\left[a\right]}B'\left[a::Arg\,L\right],...,B''\left[a::Arg\,L\right],...,Bod\left[a::Arg\,L\right]\,\left\{ x_{p}\right\} _{L'},...\right\} _{\left\{ \star\right\} }}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{L=\left\{ D_{\Delta}\overline{a}\sim_{\ell,o}D_{\Delta}\overline{a'},...,D_{\Delta}\overline{a''},...,x_{p},..._{L'}\right\} }{TCon_{i}\ L\rightsquigarrow\ \left\{ a_{i}\sim_{\ell,o.TCon_{i}}a'_{i},...,a''_{i},...,TCon_{i}\,\left\{ x_{p}\ _{L'}\right\} ,..._{\left\{ \Delta\overline{TCon_{j}\ L},j<i\right\} }\right\} }
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+will need to recalculate the type of the index, based on the telescope and
+ prior indixcies
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+data constructors commute out
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\ }{\left\{ D_{\Delta}\overline{a}\sim_{\ell,o}D_{\Delta}\overline{a'},...,D_{\Delta}\overline{a''},..._{L}\right\} \ \rightsquigarrow\ D_{\Delta}\overline{\left\{ a_{i}\sim_{\ell,o}a'_{i},...,a''_{i},...,x_{p},..._{!!!'}\right\} }::L}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\ }{\left\{ d_{\Delta}\overline{a}\sim_{\ell,o}d_{\Delta}\overline{a'},...,d_{\Delta}\overline{a''},..._{L}\right\} \ \rightsquigarrow\ d_{\Delta}\overline{\left\{ a_{i}\sim_{\ell,o}a'_{i},...,a''_{i},...,x_{p},..._{!!!'}\right\} }::L}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+this rule is not exactly correct, since the underling term doesn't exactly
+ type currently
+\end_layout
 
 \end_inset
 
@@ -3068,8 +3044,360 @@ Injecting the lump variable into a {} seems a little hacky.
 ...
 \end_layout
 
+\begin_layout Standard
+eliminations happen around casts
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\ }{\left(\left(\mathsf{fun}\,f\,x\Rightarrow b\right)::L\right)a\ \rightsquigarrow\ b\left[\mathsf{fun}\,f\,x\Rightarrow b,a::Arg\,L\right]::Bod\left[a\right]\,L}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\ }{\begin{array}{c}
+\left\{ \left(\mathsf{fun}\,f\,x\Rightarrow b\right)\sim_{\ell,o}\left(\mathsf{fun}\,f\,x\Rightarrow b'\right),...,\left(\mathsf{fun}\,f\,x\Rightarrow b'\right),..._{\left\{ L\right\} }\right\} a\\
+\rightsquigarrow\\
+\left\{ \left(\mathsf{fun}\,f\,x\Rightarrow b\right)\left(a::Arg\,L\right)\sim_{\ell,o.app\left[a::Arg\,L\right]}\left(\mathsf{fun}\,f\,x\Rightarrow b'\right)\left(a::Arg\,L\right),...,\left(\mathsf{fun}\,f\,x\Rightarrow b''\right)\left(a::Arg\,L\right),..._{\left\{ Bod\left[a\right]L\right\} }\right\} 
+\end{array}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+no path variable are allowed, every element must be a function
+\end_layout
+
+\begin_layout Example
+\begin_inset Formula $\left\{ \left(\lambda x.x\right)\sim_{\ell,o}\left(\lambda x.x+3\right),\left(\lambda x.x+\left\{ 3\sim x\right\} \right)\right\} 2$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Example
+\begin_inset Formula $\rightsquigarrow\left\{ \left(\lambda x.x\right)2\sim_{\ell,o.app\left[2\right]}\left(\lambda x.x+3\right)2,\left(\lambda x.x+\left\{ 3\sim x\right\} \right)2\right\} $
+\end_inset
+
+
+\end_layout
+
+\begin_layout Example
+\begin_inset Formula $\rightsquigarrow\left\{ 2\sim_{\ell,o}5,2+\left\{ 3\sim5\right\} \right\} $
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+and
+\end_layout
+
+\begin_layout Example
+\begin_inset Formula $\left\{ \left(\lambda x.\left\{ 3\sim x\right\} \right)\right\} 2$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Example
+\begin_inset Formula $\rightsquigarrow\left\{ \left\{ 3\sim2\right\} \right\} \rightsquigarrow\left\{ 3\sim2\right\} $
+\end_inset
+
+
+\end_layout
+
+\begin_layout Example
+\begin_inset Formula $True::\left\{ \mathbb{N}\sim\mathbb{B}\right\} _{\left\{ \star\right\} }:\mathbb{B}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Example
+\begin_inset Formula $True::\left\{ \mathbb{N}\sim\mathbb{B}\right\} _{\left\{ \star\right\} }:\mathbb{N}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Example
+\begin_inset Formula $True::\left\{ \mathbb{N}\sim\mathbb{B}\right\} _{\left\{ \star\right\} }\sqsupseteq True:\mathbb{B}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Example
+\begin_inset Formula $True::\left\{ \mathbb{N}\sim\mathbb{B}\right\} _{\left\{ \star\right\} }\sqsupseteq True::\left\{ \mathbb{N}\sim\mathbb{B}\right\} _{\left\{ \star\right\} }:\mathbb{N}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Example
+\begin_inset Formula $True::\left\{ \mathbb{N}\sim\mathbb{B}\right\} _{\left\{ \star\right\} }\sqsupseteq True::\left\{ \mathbb{N}\sim ofjosdfij,ofjosdfij\sim\mathbb{B}\right\} _{\left\{ ...\right\} }:\mathbb{N}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Example
+\begin_inset Formula $\left\{ 1\sim3\right\} _{\left\{ \star\right\} }::\left\{ \mathbb{N}\sim\mathbb{B}\right\} _{\left\{ \star\right\} }\sqsupseteq1:\mathbb{N}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Example
+\begin_inset Formula $\left\{ 1\sim3\right\} _{\left\{ \star\right\} }::\left\{ \mathbb{N}\sim\mathbb{B}\right\} _{\left\{ \star\right\} }\sqsupseteq1:\mathbb{N}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\ }{\left(\left(\mathsf{fun}\,f\,x\Rightarrow b\right)::L\right)a\ \rightsquigarrow\ b\left[\mathsf{fun}\,f\,x\Rightarrow b,a::Arg\,L\right]::Bod\left[a\right]\,L}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+standard rules
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\ }{\left(\mathsf{fun}\,f\,x\Rightarrow b\right)a\ \rightsquigarrow\ b\left[\mathsf{fun}\,f\,x\Rightarrow b,a\right]}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Values
+\end_layout
+
+\begin_layout Standard
+first atomic values, values that are not lumps.
+ They prevent 
+\begin_inset Formula $\left\{ \left\{ \left\{ \star\right\} \right\} \right\} \ Val$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\ }{\star\ AVal}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{\ }{\prod x:A.B\ AVal}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\ }{\left(\mathsf{fun}\,f\,x\Rightarrow b\right)\ AVal}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\overline{a}\ Val}{D\overline{a}\ AVal}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+there is some flexibility weather indices should be treated in a CBV way
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\overline{a}\ Val}{d\overline{a}\ AVal}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+there is some flexibility weather indices should be treated in a CBV way
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{a\ AVal}{a\ Val}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{L\ Val}{\left(\mathsf{fun}\,f\,x\Rightarrow b\right)::L\ Val}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\begin{array}{c}
+\forall a\in L,\ a\,AVal\\
+\forall b\sim b'\in L,\ b\,AVal\ b'\,AVal
+\end{array}}{L\ Val}
+\]
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Section
 Blame
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{a\sim_{\ell,o}b\in L\quad\mathbf{head}\,a\neq\mathbf{head}\,b}{Blame\ \ell,o\ L}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{a\sim_{\ell,o}b\in L\quad Blame\ \ell,o\,a}{Blame\ \ell,o\ L}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{a\sim_{\ell,o}b\in L\quad Blame\ \ell,o\,b}{Blame\ \ell,o\ L}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\begin{array}{c}
+L=\left\{ ..._{L'}\right\} \\
+Blame\ \ell,o\ L'
+\end{array}}{Blame\ \ell,o\ L}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{Blame\ \ell,o\ L}{Blame\ \ell,o\ a::L}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{Blame\ \ell,o\ a_{i}}{Blame\ \ell,o\ D\overline{a}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{Blame\ \ell,o\ a_{i}}{Blame\ \ell,o\ d\overline{a}}
+\]
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
