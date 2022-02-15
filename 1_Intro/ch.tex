@@ -89,17 +89,17 @@ $\mathtt{Vec}\,\mathtt{Bool}\,\left(\underline{\mathtt{add}\,x\,1}\right)$
 is expected.
 Usually when dependent type systems encounter situations like this, they will give an error message and prevent the programmer from doing more work until the ``mistake'' is resolved.
 
-In programming, types are used to avoid bad behavior, for instance, they are often used to avoid ``stuck'' terms.
+In programming, types are used to avoid bad behavior.
+For instance, they are often used to avoid ``stuck'' terms.
 If it is the case that $\mathtt{add}\,1\,x\,=\,\mathtt{add}\,x\,1$ the program will never get stuck.
-However, if there is a mistake in the implementation of $\mathtt{add}$, then $\mathtt{add}\,1\,x\,\cancel{=}\,\mathtt{add}\,x\,1$.
-The program might get stuck.
+However, if there is a mistake in the implementation of $\mathtt{add}$, then it is possible $\mathtt{add}\,1\,x\,\cancel{=}\,\mathtt{add}\,x\,1$ and the program might get stuck.
 For instance, if the $\mathtt{add}$ function incorrectly computes $\mathtt{add}\,8\,1=0$ the above function will ``get stuck'' on the input $8$.
 
 While the intent and properties of the $\mathtt{add}$ function are clear to programmers from its name and type, this information is unavailable to the type system.
 If the programmer made a mistake in the definition of addition, such that for some $x$, $\mathtt{add}\,1\,x\,\cancel{=}\,\mathtt{add}\,x\,1$, the system will not provide hints on which $x$ witnesses this inequality.
 Worse, the type system may even make it difficult to experiment with the $\mathtt{add}$ function, which makes repairing an actual bug difficult.
 
-Why stop programmers when there is a type ``error''? \todo{Awk, in HM it makes sense to block}
+Why stop programmers when there is a definitional equality ``error''? \todo{Awk, in HM it makes sense to block}
 
 There appears to be no reason! Alternatively, we can track unclear equalities and if the program ``gets stuck'', we are able to stop the program execution and provide a concrete witness for the inequality at runtime.
 If the buggy add function above is encountered at runtime, we can give a runtime error stating $\mathtt{add}\,1\,8=9\,\neq\,0=\mathtt{add}\,8\,1$.
@@ -174,7 +174,7 @@ By switching to the proposed workflow, type errors become type warnings, and the
 If there are no warnings, the programmer could call their program a proof along the lines of the Curry-Howard correspondence\footnote{
   In the system presented here the programmer will need to manually verify termination
 }\todo{cite?}.
-If there is value in a type error it comes from the message itself and not the hard stop it puts to programming.
+If there is value in a type error it comes from the message itself and not the inconvenience it causes programmers.
 
 The proposed workflow is necessary, since often the type system is too conservative and the programmer is correct in implicitly asserting an equality that is not provable within the system.
 That the programmer may need to go outside the conservative bounds of definitional equality has been recognized since the earliest dependent type theories \cite{Martin-Lof-1972} and difficulties in dependently typed equality have motivated many research projects \cite{HoTTbook,sjoberg2015programming,cockx2021taming}.
@@ -185,8 +185,8 @@ In practice, every dependently typed language has a way to assume equalities, ev
 The proposed workflow presented in this thesis is justified by:
 \begin{itemize}
 \item The strict relation between warnings and runtime errors.
-A runtime error will always correspond exactly to a reported warning, always adding specificity to the warning that was presented.
-\item A form of type soundness holds, programs will never ``get stuck'' unless a concrete counter example to a type assertion is found.
+A runtime error will always correspond exactly to a reported warning, always validating the warning with a specific example.
+\item A form of type soundness holds, programs will never ``get stuck'' unless a concrete witness of warning is found.
 \item Programs that type check against a model type system will not have warnings, and therefore cannot have errors.
 \item Other than warnings and errors the runtime behavior is similar to a conventional type theory.
 % this is actually true, even in a normalizing theory, the runtime behavior is standard
@@ -271,7 +271,7 @@ Here we can rest on our intuition that functions that act the same are the same.
 Finally it is perfectly possible that there is a bug in the code invalidating one of the assumptions.
 There are two options for the programmer:
 \begin{itemize}
-\item reformulate the above code so that there are no warnings, formally proving all the required properties in the language (this is possible but would take prohibitive effort and require substantial changes)
+\item reformulate the above code so that there are no warnings, formally proving all the required properties in the language (this is possible but would take prohibitive effort)
 \item exercise the $step$ function using standard software testing techniques.
 If the interpreter does not preserve types, then a concrete counter example can be found.
 \end{itemize}
@@ -290,7 +290,7 @@ Specifically,
 \item The type system in this thesis is a \textbf{full spectrum} dependent type system.
 The full-spectrum approach is the most uniform approach to dependent type theory, computation behaves the same at the term and type level.
 This is contrasted with a leveled theory where terms embedded in types may have different or limited behavior\footnote{this is the approach taken in ATS, and refinement type systems}.
-The full-spectrum approach is popular with theorem provers and has been dvocated by many authors \cite{10.1145/289423.289451,norell2007towards,brady2013idris,sjoberg2012irrelevance}.
+The full-spectrum approach is popular with theorem provers and has been advocated by many authors \cite{10.1145/289423.289451,norell2007towards,brady2013idris,sjoberg2012irrelevance}.
 While the full spectrum approach offers tradeoffs (it is harder to deal with effects), it seems to be the most predictable from the programmer's perspective.
 \item Data types and pattern matching are essential to practical programming, so they are included in the implementation.
 While it is theoretically possible to simulate data types via church encodings, they are too awkward for programmers to work with, and would complicate the runtime errors this system hopes to deliver.
@@ -301,11 +301,11 @@ While there is some dispute about how essential general recursion is,
 there is no mainstream general purpose programming language that restricts termination.
 Allowing nontermination weakens the system when considered as a logic (any proposition can be given a nonterminating inhabitant).
 This removes any justification for a type universe hierarchy, so the system will support type-in-type.
-Similarly non-strict data definitions are allowed in the implementations.
+Similarly non-strict data definitions are allowed.
 \item Aside from the non-termination and runtime errors mentioned above, effects will not be allowed.
 Even though effects seem essential to mainstream programing, they are a very complicated area of active research that will not be considered here.
-In this sense the language will be a ``pure'' functional language like Haskell.
-As in Haskell, effects can be simulated through with the available constructs.
+The language studied is a ``pure'' (in the sense  Haskell) functional language.
+As in Haskell, effects can be simulated with other language constructs.
 \end{itemize}
 It is possible to imagine a system where a wide range of properties are held optimistically and tested at runtime.
 However the bulk of this thesis will only deal with equality, since that relation is uniquely fundamental to dependent type systems.
@@ -321,8 +321,8 @@ What does it mean when a term is a list of length $\mathtt{Bool}$?
 \item Terms can ``get stuck'' in new ways. 
 What happens when an equality check is used as a function by being applied with an argument?
 What happens when a check blocks a pattern match?
-\item Equality is not decidable at many types even in the empty context.
-For instance, functions $\mathtt{Nat}\rightarrow\mathtt{Nat}$ do not have decidable equality.
+\item Equality is not decidable at many types, even in the empty context.
+For instance, functions of type $\mathtt{Nat}\rightarrow\mathtt{Nat}$ do not have decidable equality.
 Therefore the types that embed them do not have decidable equality.
 \end{itemize}
 These problems are solved by extending dependent type theory with a cast checking operator.
@@ -330,49 +330,54 @@ This cast operator will ``get stuck'' if there is a discrepancy, and we can show
 \begin{itemize}
 \item A system is needed to localize casts, these can be generated by extending a \textbf{bidirectional} typing procedure to insert checks when it would statically check equality.
 Without a reasonable way to localize checks, the work in this thesis would be infeasible.
-\item When an argument is applied to a cast operator, new casts can be computed using similar logic to that of contracts and monitors\cite{10.1145/581478.581484}.
+\item When an argument is applied to a cast operator, new casts can be computed. % using similar logic to that of contracts and monitors\cite{10.1145/581478.581484}.
 \item Once the casts are inserted, evaluations are possible.
-Lazy evaluation means checking only has to happen up to the outermost type constructor, avoiding issues of undecidability.
-\item Pattern matching can be extended to support checks, and redirect blame as needed.
+Lazy evaluation means checking only has to happen up to the outermost type constructor, avoiding issues of undecidable equality.
+\item Pattern matching can be extended to support equality evidence.
+The branches of the pattern match can modify and use this evidence.
+Unsatisfiable branches can redirect blame as needed.
 \end{itemize}
 
 \section{The Work in This Thesis}
 
-\begin{figure}
-\begin{lstlisting}[basicstyle={\ttfamily\tiny}]
-Surface language (ch. 2,4)
-{syntax {typed syntax {bidirectionally typed syntax}       }           }
-                      |                            |               |
-elaboration (ch. 3)   |without warnings            | with warnings |
-                      |                            |               |
-                      vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-   {                   cast system (ch. 3)                             }
+% \begin{figure}
+% \begin{lstlisting}[basicstyle={\ttfamily\tiny}]
+% Surface language (ch. 2,4)
+% {syntax {typed syntax {bidirectionally typed syntax}       }           }
+%                       |                            |               |
+% elaboration (ch. 3)   |without warnings            | with warnings |
+%                       |                            |               |
+%                       vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+%    {                   cast system (ch. 3)                             }
 
-\end{lstlisting}
+% \end{lstlisting}
 
-\todo[inline]{better graphics, ch 5}
+% \todo[inline]{better graphics, ch 5}
 
-\caption{Systems in This Thesis}
-\label{fig:intro-thesis-workflow-1}
-\end{figure}
+% \caption{Systems in This Thesis}
+% \label{fig:intro-thesis-workflow-1}
+% \end{figure}
 
 While apparently a simple idea, the technical details required to manage checks that delay until runtime in a dependently typed language is fairly involved.
+To make the presentation easier, features will be added to the language in stages.
 
 \todo[inline]{This should probably be expanded}
 \begin{itemize}
-\item Chapter 2 describes a dependently typed language intended to model standard dependent type theories (called the\textbf{ Surface Language}), proves \textbf{type soundness}, and presents a bidirectional type checking procedure system intended to model standard type checking.
-Standard type soundness results are presented.
-\item Chapter 3 describes a dependently typed language with embedded equality checks, called the \textbf{cast language}.
+\item Chapter 2 describes a dependently typed language (without data) intended to model standard dependent type theories, called the \textbf{Surface Language}.
+\textbf{Type soundness} is proven and a bidirectional type checking procedure system is presented.
+Though the system is not original, the proof presented is the simplest complete progress and preservation style proof I am aware of for a dependent type system.   
+\item Chapter 3 describes a dependently typed language (without data) with embedded equality checks, called the \textbf{cast language}.
 The cast language has its own version of type soundness, called \textbf{cast soundness}.
-Which is proven correct, using a similar strategy to the type soundness proof of Chapter 2.
+Cast soundness is proven for the language, using a similar strategy to the type soundness proof of Chapter 2.
 An Elaboration procedure takes most (untyped) terms of the surface syntax into terms in the cast language.
-Several desirable properties for elaboration are presented and conjectured.
-\item Chapter 4 reviews how dependent data and pattern matching can be added to the surface language.
+Several desirable properties for elaboration are presented. % and conjectured.
+\item Chapter 4 reviews how dependent data and pattern matching can be added to the surface language and explores some of the issues of data in a dependent type system.
 \item Chapter 5 shows how to extend the cast language with dependent data and pattern matching.
-\item Chapter 6 discusses other ideas related to usability, such as automated testing and runtime proof search.
+Surprisingly the inclusion of dependent data requires a much more complicated system then Chapter 3, since finer observations are observable.
+\item Chapter 6 discusses other ideas related to usability and future work, such as automated testing and runtime proof search.
+These systems are made feasible given the more flexible approach to equality addressed in the rest of the thesis.
 \end{itemize}
 Versions of the proof of type soundness in Chapter 2, and the cast soundness in Chapter 3 have been formally proven in Coq.
-Properties in chapter 4 and 5 are only conjectured correct.
+% Properties in chapter 4 and 5 are only conjectured correct.
 
-Those interested in exploring the meta-theory of a ``standard'' dependent type theory can read Chapters 2 and 4 which can serve as a self contained tutorial.
-
+Those interested in exploring the type soundness and type checking of a ``standard'' dependent type theory can read Chapters 2 and 4 which can serve as a self contained tutorial.
