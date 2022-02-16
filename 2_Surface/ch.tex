@@ -26,7 +26,7 @@ Everything presented in later chapters is designed to reinforce an understanding
 % overview, What
 The surface language deviates from a standard dependent type theory to include features for programming at the expense of logical correctness.
 Specifically the language allows general recursion, since general recursion is useful for programmers.
-\Tit is also supported since it simplifies the system, and makes the meta-theory slightly easier.
+\Tit{} is also supported since it simplifies the system, and makes the meta-theory slightly easier.
 Despite this, type soundness is achievable, and a practical type checking system is given.
 
 Though similar systems have been studied over the last few decades this chapter aims to give a self contained presentation, along with examples.
@@ -150,7 +150,8 @@ The $Either$ type is handled if both possibilities are handled, so it is defined
 \todo{church encoding citation?}
 
 % not necessarily convenient
-Church encodings provide a theoretically lightweight way of working with data in minimal lambda calculus, however they are inconvenient.
+Church encodings provide a theoretically lightweight way of working with data in a minimal lambda calculus.
+However, they are inconvenient.
 For instance, the predecessor function on natural numbers is not as simple as its behavior would imply.
 To make the system easier for programmers, data types will be added directly in Chapter 4.
 
@@ -162,8 +163,10 @@ So, $\perp_{c}$, the ``empty'' type, can be interpreted as a false proposition.
 While $Unit_{c}$ can be interpreted as a trivially true proposition, since it has only one good inhabitant.
 
 Several of the church encoded data types we have seen can also be interpreted as logical predicates.
-For instance, the tuple type can be interpreted as logical and, $X\times_{c}Y$ can be inhabited exactly when both $X$ and $Y$ are inhabited.
-The $Either$ type can be interpreted as logical or, $Either_{c}\,X\,Y$ can be inhabited exactly when either $X$ or $Y$ is inhabited.
+For instance, the tuple type can be interpreted as logical $and$.
+$X\times_{c}Y$ can be inhabited when both $X$ and $Y$ are inhabited.
+The $Either$ type can be interpreted as logical $or$.
+$Either_{c}\,X\,Y$ can be inhabited when either $X$ or $Y$ is inhabited.
 
 With dependent types, more interesting logical predicates can be encoded.
 For instance, we can characterize when a number is even with $Even_{c}\,x$.
@@ -175,7 +178,7 @@ Then if we want to show $\exists_{c}x:\mathbb{N}_{c}\Rightarrow\,Even_{c}\,x$ we
 $0$ is clearly an even number, so our inhabitant could be $\lambda f\Rightarrow f\,0_{c}\,tt_{c}$.
 Note that the existential is equivalent to the tuple if $Y$ does not depend on the value of $X$.
 
-One of the most potent and interesting propositions is the proposition of equality.
+One of the most interesting propositions is the proposition of equality.
 $\doteq$ is referred to as \textbf{Leibniz equality} since two terms are equal when they behave the same on all predicates\footnote{
   The identification of indiscernibles is called \textbf{Leibniz law} in philosophy.
   Leibniz assumed a metaphysical notion of identification of ``substance''s, not a mathematical notion of equality.
@@ -193,7 +196,7 @@ consistent with the notes % https://github.com/RobertHarper/hott-notes/blob/5339
 would like better explanation}
 
 It is useful for a type to depend specifically on term level data, this is called \textbf{large elimination}.
-Large elimination can be simulated with \tit.
+Large elimination can be simulated with \tit{}.
 
 \begin{tabular}{llll}
   $toLogic$ & $\coloneqq\lambda b\Rightarrow b\,\star\,Unit_{c}\,\perp_{c}$ & $:$ & $\mathbb{B}_{c}\rightarrow\star$\tabularnewline
@@ -246,58 +249,56 @@ When is an expression reasonable? The expression $\star\star\star\star$ is allow
 Type systems can disallow bad terms like these which in turn prevents bad runtime behavior.
 
 We will present our type system as a \textbf{type assignment system} (\ac{TAS}).
-Type assignment systems do not require type annotations, and will be easier to work with than other styles of typing that require variables to be annotated.
+Type assignment systems are convineint to study the theory of a dependently typed language, becuase they do not require type annotations. %and will be easier to work with than other styles of typing that require variables to be annotated.
 % For instance, $\mathsf{fun}\,f\,x\Rightarrow m$ does not require a type be given for $f$ or $a$.
 \todo{church/curry?}
-Practically this means that the type assignment system may need to infer an unrealistic amount of information from a term and its context for typing.
+Practically this means that the type assignment system may need to infer an unrealistic amount of information if used as a type checking algorithm.
 This also means that terms do not necessarily have unique typings.
-For instance $\vdash\lambda x\Rightarrow x:\mathbb{N}_{c}\rightarrow\mathbb{N}_{c}$, and $\vdash\lambda x\Rightarrow x:\mathbb{B}_{c}\rightarrow\mathbb{B}_{c}$.
-These issues will be addressed when the more practical, bidirectional type system is introduced. 
+For instance $\tasys\lambda x\Rightarrow x:\mathbb{N}_{c}\rightarrow\mathbb{N}_{c}$, and $\tasys\lambda x\Rightarrow x:\mathbb{B}_{c}\rightarrow\mathbb{B}_{c}$.
+These issues will be addressed when the more practical, \bidir{} type system is introduced. 
 \todo{move negative stuff later?}
 
 \begin{figure}
 \[
-\frac{x:M\in\Gamma}{\Gamma\vdash x\,:\,M}\,\textrm{ty-var}
+\frac{x:M\in\Gamma}{\Gamma\tasys x\,:\,M}\,\rulename{ty-var}
 \]
 
 \[
-\frac{\Gamma\vdash m\,:\,M}{\Gamma\vdash m::M\,:\,M}\,\textrm{ty-::}
+\frac{\Gamma\tasys m\,:\,M}{\Gamma\tasys m::M\,:\,M}\,\rulename{ty-::}
 \]
 
 \[
-\frac{{\color{gray}\ }}{\Gamma\vdash\star\,:\,\star}\,\textrm{ty-}\star
+\frac{{\color{gray}\ }}{\Gamma\tasys\star\,:\,\star}\,\rulename{ty-\star}
 \]
 
 \[
-\frac{\Gamma\vdash M\,:\,\star\quad\Gamma,x:M\vdash N\,:\,\star}{\Gamma\vdash\left(x:M\right)\rightarrow N\,:\,\star}\,\textrm{ty-fun-ty}
+\frac{\Gamma\tasys M\,:\,\star\quad\Gamma,x:M\tasys N\,:\,\star}{\Gamma\tasys\left(x:M\right)\rightarrow N\,:\,\star}\,\rulename{ty-\mathsf{fun}-ty}
 \]
 
 \[
-\frac{\Gamma\vdash m\,:\,\left(x:N\right)\rightarrow M\quad\Gamma\vdash n\,:\,N}{\Gamma\vdash m\,n\,:\,M\left[x\coloneqq n\right]}\,\textrm{ty-fun-app}
+\frac{\Gamma\tasys m\,:\,\left(x:N\right)\rightarrow M\quad\Gamma\tasys n\,:\,N}{\Gamma\tasys m\,n\,:\,M\left[x\coloneqq n\right]}\,\rulename{ty-\mathsf{fun}-app}
 \]
 
 \[
-\frac{\Gamma,f:\left(x:N\right)\rightarrow M,x:N\vdash m\,:\,M}{\Gamma\vdash\mathsf{fun}\,f\,x\Rightarrow m\,:\,\left(x:N\right)\rightarrow M}\,\textrm{ty-fun}
+\frac{\Gamma,f:\left(x:N\right)\rightarrow M,x:N\tasys m\,:\,M}{\Gamma\tasys\mathsf{fun}\,f\,x\Rightarrow m\,:\,\left(x:N\right)\rightarrow M}\,\rulename{ty-\mathsf{fun}}
 \]
 
 \[
-\frac{\Gamma\vdash m\,:\,M\quad M\equiv M'}{\Gamma\vdash m\,:\,M'}\,\textrm{ty-conv}
+\frac{\Gamma\tasys m\,:\,M\quad M\equiv M'}{\Gamma\tasys m\,:\,M'}\,\rulename{ty-conv}
 \]
-
-\todo[inline]{font stuff}
 
 \caption{Surface Language Type Assignment System}
 \label{fig:surface-TAS}
 \end{figure}
 
 The rules of the type assignment system are listed in \Fref{surface-TAS}.
-Variables get their type from the typing context.
-Type annotations reflect a correct typing derivation in the $\textrm{ty-::}$\todo{font stuff} rule.
-\Tit is recognized by the $\textrm{ty-}\star$ rule.
-The $\textrm{ty-fun-ty}$ rule forms dependent function types.
-The $\textrm{ty-fun-app}$ rule shows how to type function application, by substituting the argument term directly into the dependent function type.
-Functions are typed with a variable for recursive calls along with a variable for their argument $\textrm{ty-fun}$.
-Finally, $\textrm{ty-conv}$ shows which types are \textbf{convertible} to each other, whether they are equivalent.
+Variables get their type from the typing contextb by the \rulename{ty-var} rule.
+Type annotations reflect a correct typing derivation in the \rulename{ty-::} rule.
+\Tit{} is recognized by the \rulename{ty-\star} rule.
+The \rulename{ty-\mathsf{fun}-ty} rule forms dependent function types.
+The \rulename{ty-\mathsf{fun}-app} rule shows how to type function application, by substituting the argument term directly into the dependent function type.
+Functions are typed with a variable for recursive reference along with a variable for the argument in \rulename{ty-\mathsf{fun}}.
+Finally, \rulename{ty-conv} alows type derivations to be \textbf{converted} to an equivelent type.
 
 % meta-theory type soundness From the programming language perspective
 The most important property of a type system is \textbf{type soundness}\footnote{also called \textbf{type safety}}.
@@ -321,7 +322,7 @@ While the progress lemma shows that a single step of evaluation for a well typed
 By iterating these lemmas together, it is possible to show that the type system prevents a term from evaluating to the class of bad behavior described above.
 For a progress and preservation style proof of a dependently typed language, everything hinges on a suitable definition of the $\equiv$ relation.
 
-The $\equiv$ relation characterizes when terms are ``obviously'' equal, or ``automatically'' equal.
+The $\equiv$ relation characterizes when terms are ``obviously'' or ``automatically'' equal.
 Because the $\equiv$ relation is usually based on the definition of computation, rather then on extrinsic properties, it is called \textbf{definitional equality}\todo{is that actually why?}\footnote{also called \textbf{Judgmental Equality}, since it is defined via judgments}.
 Usually it is desirable to make the definitional equality relation as large as possible, since the programmer in the system will get more equalities ``for free''.
 This chapter will opt for an easier (but less powerful) $\equiv$ relation, since Chapter 3 will give an alternative way to avoid definitional equalities during type checking.
@@ -338,7 +339,7 @@ In a progress and preservation style proof, the $\equiv$ relation should
 A particularly simple definition of $\equiv$ arises by equating any terms that share a reduct via a system of parallel reductions
 
 \[
-\frac{m\Rrightarrow_{\ast}\,n\quad m'\Rrightarrow_{\ast}\,n}{m\equiv m'}\,\equiv\textrm{-Def}
+\frac{m\Rrightarrow_{\ast}\,n\quad m'\Rrightarrow_{\ast}\,n}{m\equiv m'}\,\rulename{\equiv-Def}
 \]
 
 this relation 
@@ -358,40 +359,40 @@ For instance,
 \end{itemize}
 \begin{figure}
 \[
-\frac{m\Rrightarrow m'\quad n\Rrightarrow n'}{\left(\mathsf{fun}\,f\,x\Rightarrow m\right)n\Rrightarrow m'\left[f\coloneqq\mathsf{fun}\,f\,x\Rightarrow m',x\coloneqq n'\right]}\,\textrm{\ensuremath{\Rrightarrow}-fun-app-red}
+\frac{m\Rrightarrow m'\quad n\Rrightarrow n'}{\left(\mathsf{fun}\,f\,x\Rightarrow m\right)n\Rrightarrow m'\left[f\coloneqq\mathsf{fun}\,f\,x\Rightarrow m',x\coloneqq n'\right]}\,\rulename{\Rrightarrow-\mathsf{fun}-app-red}
 \]
 \[
-\frac{m\Rrightarrow m'}{m::M\Rrightarrow m'}\,\textrm{\ensuremath{\Rrightarrow}-::-red}
-\]
-
-\[
-\frac{\,}{x\Rrightarrow x}\,\textrm{\ensuremath{\Rrightarrow}-var}
-\]
-\[
-\frac{m\Rrightarrow m'\quad M\Rrightarrow M'}{m::M\Rrightarrow m'::M'}\,\textrm{\ensuremath{\Rrightarrow}-::}
+\frac{m\Rrightarrow m'}{m::M\Rrightarrow m'}\,\rulename{\Rrightarrow-::-red}
 \]
 
 \[
-\frac{\,}{\star\Rrightarrow\star}\,\textrm{\ensuremath{\Rrightarrow}-}\star
+\frac{\,}{x\Rrightarrow x}\,\rulename{\Rrightarrow-var}
+\]
+\[
+\frac{m\Rrightarrow m'\quad M\Rrightarrow M'}{m::M\Rrightarrow m'::M'}\,\rulename{\Rrightarrow-::}
 \]
 
 \[
-\frac{M\Rrightarrow M'\quad N\Rrightarrow N'}{\left(x:M\right)\rightarrow N\Rrightarrow\left(x:M'\right)\rightarrow N'}\,\textrm{\ensuremath{\Rrightarrow}-fun-ty}
+\frac{\,}{\star\Rrightarrow\star}\,\rulename{\Rrightarrow-}\star
 \]
 
 \[
-\frac{m\Rrightarrow m'}{\mathsf{fun}\,f\,x\Rightarrow m\,\Rrightarrow\,\mathsf{fun}\,f\,x\Rightarrow m'}\,\textrm{\ensuremath{\Rrightarrow}-fun}
+\frac{M\Rrightarrow M'\quad N\Rrightarrow N'}{\left(x:M\right)\rightarrow N\Rrightarrow\left(x:M'\right)\rightarrow N'}\,\rulename{\Rrightarrow-\mathsf{fun}-ty}
 \]
 
 \[
-\frac{m\Rrightarrow m'\quad n\Rrightarrow n'}{m\,n\Rrightarrow m'\,n'}\,\textrm{\ensuremath{\Rrightarrow}-fun-app}
+\frac{m\Rrightarrow m'}{\mathsf{fun}\,f\,x\Rightarrow m\,\Rrightarrow\,\mathsf{fun}\,f\,x\Rightarrow m'}\,\rulename{\Rrightarrow-\mathsf{fun}}
 \]
 
 \[
-\frac{\,}{m\Rrightarrow_{\ast}m}\,\textrm{\ensuremath{\Rrightarrow_{\ast}}-refl}
+\frac{m\Rrightarrow m'\quad n\Rrightarrow n'}{m\,n\Rrightarrow m'\,n'}\,\rulename{\Rrightarrow-\mathsf{fun}-app}
+\]
+
+\[
+\frac{\,}{m\Rrightarrow_{\ast}m}\,\rulename{\Rrightarrow_{\ast}-refl}
 \]
 \[
-\frac{m\Rrightarrow_{\ast}m'\quad m'\Rrightarrow m''}{m\Rrightarrow_{\ast}m''}\,\textrm{\ensuremath{\Rrightarrow_{\ast}}-trans}
+\frac{m\Rrightarrow_{\ast}m'\quad m'\Rrightarrow m''}{m\Rrightarrow_{\ast}m''}\,\rulename{\Rrightarrow_{\ast}-trans}
 \]
 
 \caption{Surface Language Parallel Reductions}
@@ -399,9 +400,10 @@ For instance,
 \end{figure}
   
 Parallel reductions are defined to make confluence easy to prove, by allowing the simultaneous evaluation of any available reduction.
-The system of parallel reductions is defined in \Fref{surface-reduction} The only interesting rules are $\textrm{\ensuremath{\Rrightarrow}-fun-app-red}$ and $\textrm{\ensuremath{\Rrightarrow}-::-red}$ since they directly preform reductions.
-The $\textrm{\ensuremath{\Rrightarrow}-fun-app-red}$ rule recursively reduces a function given an argument.
-The $\textrm{\ensuremath{\Rrightarrow}-::-red}$ rule removes a type annotation, making type annotations definitionally irrelevant.
+The system of parallel reductions is defined in \Fref{surface-reduction}.
+The only interesting rules are \rulename{\Rrightarrow-\mathsf{fun}-app-red} and \rulename{\Rrightarrow-::-red} since they directly preform reductions.
+The \rulename{\Rrightarrow-\mathsf{fun}-app-red} rule recursively reduces a function given an argument.
+The \rulename{\Rrightarrow-::-red} rule removes a type annotation, making type annotations definitionally irrelevant.
 The other rules are entirely structural.
 Repeating parallel reductions zero or more times is written $\Rrightarrow_{\ast}$.
 
@@ -411,7 +413,7 @@ It is also common to assume the properties of $\equiv$ hold without proof.
 
 Some lemmas need to quantify over simultaneous substitutions.
 These simultaneous substitutions will be quantified with the variables $\sigma$, $\tau$.
-For instance, if $\sigma(x) = \star$ and $\sigma(y) = 1_c$, then $x y[sigma]\ =\ \star\ 1_c$
+For instance, if $\sigma(x) = \star$ and $\sigma(y) = 1_c$, then instead of writing $(x\ y)[x \coloneqq \star,y \coloneqq 1_c]\ =\ (\star\ 1_c)$ we would write $(x\ y)[\sigma]\ =\ (\star\ 1_c)$.
 
 \todo{what properties are needed over substitutions?}
 
@@ -427,7 +429,7 @@ $\Rrightarrow$ is reflexive.
 The following rule is admissible,
 
 \[
-\frac{\,}{m\Rrightarrow\,m}\,\textrm{\ensuremath{\Rrightarrow}-refl}
+\frac{\,}{m\Rrightarrow\,m}\,\rulename{\Rrightarrow-refl}
 \]
 \end{lem}
 
@@ -443,7 +445,7 @@ $\equiv$ is reflexive.
 
 The following rule is admissible,
 \[
-\frac{\,}{m\equiv m}\,\textrm{\ensuremath{\equiv}-refl}
+\frac{\,}{m\equiv m}\,\rulename{\equiv-refl}
 \]
 \end{lem}
 
@@ -457,7 +459,7 @@ $\Rrightarrow$ is closed under substitutions.
 
 The following rule is admissible for every substitution $\sigma$
 \[
-\frac{m\Rrightarrow m'}{m\left[\sigma\right]\Rrightarrow m'\left[\sigma\right]}\,\textrm{\ensuremath{\Rrightarrow}-sub-\ensuremath{\sigma}}
+\frac{m\Rrightarrow m'}{m\left[\sigma\right]\Rrightarrow m'\left[\sigma\right]}\,\rulename{\Rrightarrow-sub-\sigma}
 \]
 \end{lem}
 
@@ -465,8 +467,8 @@ The following rule is admissible for every substitution $\sigma$
 \todo{is this lemma needed or is it just to accommodate stupid binding stuff
 in coq?}
 \begin{proof}
-by induction on the $\Rrightarrow$ relation, using $\textrm{\ensuremath{\Rrightarrow}-refl}$
-in the $\textrm{\ensuremath{\Rrightarrow}-var}$ case.
+by induction on the $\Rrightarrow$ relation, using \rulename{\Rrightarrow-refl}
+in the \rulename{\Rrightarrow-var} case.
 \end{proof}
 \begin{lem}
 $\Rrightarrow$ is closed under substitutions that step.
@@ -476,7 +478,7 @@ Where $\sigma\Rrightarrow\tau$ means for every $x$, $\sigma\left(x\right)\Rright
 \todo{awk}
 The following rule is admissible
 \[
-\frac{m\Rrightarrow m'\quad\sigma\Rrightarrow\tau}{m\left[\sigma\right]\Rrightarrow m'\left[\tau\right]}\,\textrm{\ensuremath{\Rrightarrow}-sub}
+\frac{m\Rrightarrow m'\quad\sigma\Rrightarrow\tau}{m\left[\sigma\right]\Rrightarrow m'\left[\tau\right]}\,\rulename{\Rrightarrow-sub}
 \]
 \end{lem}
 \begin{proof}
@@ -486,7 +488,7 @@ by induction on the $\Rrightarrow$ relation.
 \begin{lem}
 $\Rrightarrow_{\ast}$ is closed under substitutions that step.
 \[
-\frac{m\Rrightarrow_{\ast}m'\quad\sigma\Rrightarrow\tau}{m\left[\sigma\right]\Rrightarrow_{\ast}\,m'\left[\tau\right]}\,\textrm{\ensuremath{\Rrightarrow_{\ast}}-sub}
+\frac{m\Rrightarrow_{\ast}m'\quad\sigma\Rrightarrow\tau}{m\left[\sigma\right]\Rrightarrow_{\ast}\,m'\left[\tau\right]}\,\rulename{\Rrightarrow_{\ast}-sub}
 \]
 is admissible 
 \end{lem}
@@ -497,7 +499,7 @@ by induction on the $\Rrightarrow_{\ast}$ relation.
 \begin{lem}
 $\equiv$ is closed under substitutions that step.
 \[
-\frac{m\equiv m'\quad\sigma\Rrightarrow\tau}{m\left[\sigma\right]\equiv m'\left[\tau\right]}\,\textrm{\ensuremath{\equiv}-sub}
+\frac{m\equiv m'\quad\sigma\Rrightarrow\tau}{m\left[\sigma\right]\equiv m'\left[\tau\right]}\,\rulename{\equiv-sub}
 \]
 is admissible.
 \end{lem}
@@ -511,93 +513,102 @@ $\equiv$ is closed under substituted reduction.
 \]
 
 \begin{proof}
-By repeated $\textrm{\ensuremath{\Rrightarrow_{\ast}}-sub}$ and $\equiv\textrm{-Def}$
+By repeated $\rulename{\Rrightarrow_{\ast}-sub}$ and $\equiv\rulename{-Def}$
 \end{proof}
 
 \subsubsection{Transitivity}
 
 To prove the transitivity of the $\equiv$, we will first need to prove that \textbf{$\Rrightarrow_{\ast}$ }is \textbf{confluent}.
-A relation $R$ is confluent\footnote{also called \textbf{Church-Rosser}} when, for all $m,n,n'$, if $mRn$ and $\:mRn'$ then their exists $n''$ such that $nRn''$. % and $n'Rn''$.
+A relation $R$ is confluent\footnote{also called \textbf{Church-Rosser}} when, for all $m$, $n$, $n'$, if $mRn$ and $\:mRn'$ then exists exists $n''$ such that $nRn''$. % and $n'Rn''$.
 If a relation is confluent, in a sense, specific paths don't matter since you can alway rejoin at a future destination.
 
-Since we defined our normalization by parallel reductions we can show confluence following the proof in \cite{TAKAHASHI1995120}\footnote{also well presented in \cite{KOKKE2020102440}}.
-The approach is motivated by the diagrams in \Fref{shape-diagrams}.
-First, define a function $max$ that takes the maximum possible parallel step, % such that if $m\Rrightarrow\,m'$ then $m'\Rrightarrow\,max\left(m\right)$ and $m\Rrightarrow\,max\left(m\right)$.
-
-% \begin{tabular}{cccc}
-% $max($ & $\left(\mathsf{fun}\,f\,x\Rightarrow m\right)\,n$ & $)=$ & $max\left(m\right)\left[f\coloneqq\mathsf{fun}\,f\,x\Rightarrow max\left(m\right),x\coloneqq max\left(n\right)\right]$ \tabularnewline
-%   &   &   &  otherwise\tabularnewline
-% $max($ & $x$ & $)=$ & $x$ \tabularnewline
-% $max($ & $m::M$ & $)=$ & $max\left(m\right)$ \tabularnewline
-% $max($ & $\star$ & $)=$ & $\star$ \tabularnewline
-% $max($ & $\left(x:M\right)\rightarrow N$ & $)=$ & $\left(x:max\left(M\right)\right)\rightarrow max\left(N\right)$ \tabularnewline
-% $max($ & $\mathsf{fun}\,f\,x\Rightarrow m$ & $)=$ & $\mathsf{fun}\,f\,x\Rightarrow max\left(m\right)$ \tabularnewline
-% $max($ & $m\,n$ & $)=$ & $max\left(m\right)\,max\left(n\right)$ \tabularnewline
-% \end{tabular}
-
-\todo{for example}
 
 \begin{figure}
-Triangle Property
-
-$\ensuremath{\forall{\color{red}m},{\color{red}m'}.\:{\color{red}m\Rrightarrow m'}\:\mathrm{implies}\:{\color{red}m'}{\color{blue}\Rrightarrow max\left(m\right)}}$
-
-\begin{tikzcd}
-\mathbin{\color{red}m} \tarrow[red]{r} \arrow[lightgray]{d} & \mathbin{\color{red}m'} \tarrow[blue]{ld} \\
-\mathbin{\color{blue}max(m)}                  &              
-\end{tikzcd}
-
-Diamond Property
-
-$\forall{\color{red}m},{\color{red}m'},{\color{red}m''}.\:{\color{red}m\Rrightarrow m'}\:\wedge\:{\color{red}m\Rrightarrow m''}\:\mathrm{implies}\:{\color{red}m'}{\color{blue}\Rrightarrow max\left(m\right)}$
-
-\begin{tikzcd}
-               & {\color{red}m} \tarrow[red]{rd} \tarrow[red]{ld} \arrow[lightgray]{dd} &                \\
-{\color{red}m'} \tarrow[blue]{rd} &                                       & {\color{red}m''} \tarrow[blue]{ld} \\
-               & {\color{blue}max(m)}                                &               
-\end{tikzcd}
-
-Confluence
-
-$\forall{\color{red}m},{\color{red}n},{\color{red}n'}.\:{\color{red}m\Rrightarrow_{\ast}n}\:\wedge\:{\color{red}m\Rrightarrow_{\ast}n'}\:\mathrm{implies}\:\exists{\color{blue}n'''}.\:{\color{red}n}{\color{blue}\Rrightarrow_{\ast}{\color{blue}n'''}}\:\wedge\:{\color{red}n'}{\color{blue}\Rrightarrow{\color{blue}n'''}}$
-
-\begin{tikzcd}
-% TODO look into proper subscripting of arrow heads
-              & {\color{red}m} \tarrow[red]{rd}[label={[pos=1,inner sep=0,outer sep=0]0:${\ast}$}]{} \tarrow[red]{ld}[label={[pos=1,inner sep=0,outer sep=0]0:${\ast}$}]{} &              \\
-{\color{red}n'}  \tarrow[blue]{rd}[label={[pos=1,inner sep=0,outer sep=0]0:${\ast}$}]{} &                         & {\color{red}n''} \tarrow[blue]{ld}[label={[pos=1,inner sep=0,outer sep=0]0:${\ast}$}]{} \\
-              & {\color{blue}{\color{blue}n'''}}                      &                              
-\end{tikzcd}
-
-\todo[inline]{absorb these diagrams into the proofs}
-
-\caption{Rewriting Diagrams}
-\label{fig:shape-diagrams}
+  Triangle Property
+  
+  $\forall{\color{red}m},{\color{red}m'}.\:{\color{red}m\Rrightarrow m'}\:\mathrm{implies}\:{\color{red}m'}{\color{blue}\Rrightarrow max\left(m\right)}$
+  
+  \begin{tikzcd}
+  \mathbin{\color{red}m} \tarrow[red]{r} \arrow[lightgray]{d} & \mathbin{\color{red}m'} \tarrow[blue]{ld} \\
+  \mathbin{\color{blue}max(m)}                  &              
+  \end{tikzcd}
+  
+  Diamond Property
+  
+  $\forall{\color{red}m},{\color{red}m'},{\color{red}m''}.\:{\color{red}m\Rrightarrow m'}\:\wedge\:{\color{red}m\Rrightarrow m''}\:\mathrm{implies}\:{\color{red}m'}{\color{blue}\Rrightarrow max\left(m\right)}$
+  
+  \begin{tikzcd}
+                 & {\color{red}m} \tarrow[red]{rd} \tarrow[red]{ld} \arrow[lightgray]{dd} &                \\
+  {\color{red}m'} \tarrow[blue]{rd} &                                       & {\color{red}m''} \tarrow[blue]{ld} \\
+                 & {\color{blue}max(m)}                                &               
+  \end{tikzcd}
+  
+  Confluence
+  
+  $\forall{\color{red}m},{\color{red}n},{\color{red}n'}.\:{\color{red}m\Rrightarrow_{\ast}n}\:\wedge\:{\color{red}m\Rrightarrow_{\ast}n'}\:\mathrm{implies}\:\exists{\color{blue}n'''}.\:{\color{red}n}{\color{blue}\Rrightarrow_{\ast}{\color{blue}n'''}}\:\wedge\:{\color{red}n'}{\color{blue}\Rrightarrow{\color{blue}n'''}}$
+  
+  \begin{tikzcd}
+  % TODO look into proper subscripting of arrow heads
+                & {\color{red}m} \tarrow[red]{rd}[label={[pos=1,inner sep=0,outer sep=0]0:${\ast}$}]{} \tarrow[red]{ld}[label={[pos=1,inner sep=0,outer sep=0]0:${\ast}$}]{} &              \\
+  {\color{red}n'}  \tarrow[blue]{rd}[label={[pos=1,inner sep=0,outer sep=0]0:${\ast}$}]{} &                         & {\color{red}n''} \tarrow[blue]{ld}[label={[pos=1,inner sep=0,outer sep=0]0:${\ast}$}]{} \\
+                & {\color{blue}{\color{blue}n'''}}                      &                              
+  \end{tikzcd}
+  
+  \todo[inline]{absorb these diagrams into the proofs}
+  
+  \caption{Rewriting Diagrams}
+  \label{fig:shape-diagrams}
 \end{figure}
+  
+
+Since type equivelence is defined by parallel reductions we can show confluence following the proof in \cite{TAKAHASHI1995120}\footnote{also well presented in \cite{KOKKE2020102440}}.
+The approach is motivated by the diagrams in \Fref{shape-diagrams}.
+
+First, we define a function $\textbf{max}$ in \Fref{surface-max-step}.
+$\textbf{max}$ takes the maximum possible parallel step, such that if $m\Rrightarrow\,m'$ then $m'\Rrightarrow\,\textbf{max}\left(m\right)$. % and $m\Rrightarrow\,max\left(m\right)$.
+
+\begin{figure}
+\begin{tabular}{cccc}
+$\textbf{max}($ & $\left(\mathsf{fun}\,f\,x\Rightarrow m\right)\,n$ & $)=$ & $\textbf{max}\left(m\right)\left[f\coloneqq\mathsf{fun}\,f\,x\Rightarrow \textbf{max}\left(m\right),x\coloneqq \textbf{max}\left(n\right)\right]$ \tabularnewline
+  &   &   &  otherwise\tabularnewline
+$\textbf{max}($ & $x$ & $)=$ & $x$ \tabularnewline
+$\textbf{max}($ & $m::M$ & $)=$ & $\textbf{max}\left(m\right)$ \tabularnewline
+$\textbf{max}($ & $\star$ & $)=$ & $\star$ \tabularnewline
+$\textbf{max}($ & $\left(x:M\right)\rightarrow N$ & $)=$ & $\left(x:\textbf{max}\left(M\right)\right)\rightarrow \textbf{max}\left(N\right)$ \tabularnewline
+$\textbf{max}($ & $\mathsf{fun}\,f\,x\Rightarrow m$ & $)=$ & $\mathsf{fun}\,f\,x\Rightarrow \textbf{max}\left(m\right)$ \tabularnewline
+$\textbf{max}($ & $m\,n$ & $)=$ & $\textbf{max}\left(m\right)\,\textbf{max}\left(n\right)$ \tabularnewline
+\end{tabular}
+\caption{$\textbf{max}$}
+\label{fig:surface-max-step}
+\end{figure}
+
+\todo{for example}
 
 \begin{lem}
 Triangle Property of $\Rrightarrow$
 
-If $m\Rrightarrow\,m'$ then $m'\Rrightarrow max\left(m\right)$ .
+If $m\Rrightarrow\,m'$ then $m'\Rrightarrow \textbf{max}\left(m\right)$ .
 \end{lem}
 
 \begin{proof}
 by induction on the derivation $m\Rrightarrow\,m'$, with the only interesting cases are where a reduction is not taken
 \begin{casenv}
-\item in the case of $\textrm{\ensuremath{\Rrightarrow}-::}$ , $m'\Rrightarrow max\left(m\right)$
-by $\textrm{\ensuremath{\Rrightarrow}-::-red}$
-\item in the case of $\textrm{\ensuremath{\Rrightarrow}-fun-app}$ , $m'\Rrightarrow max\left(m\right)$
-by $\textrm{\ensuremath{\Rrightarrow}-fun-app-red}$ \todo{fix formatting}
+\item in the case of \rulename{\Rrightarrow-::} , $m'\Rrightarrow \textbf{max}\left(m\right)$
+by \rulename{\Rrightarrow-::-red}
+\item in the case of \rulename{\Rrightarrow-\mathsf{fun}-app} , $m'\Rrightarrow \textbf{max}\left(m\right)$
+by \rulename{\Rrightarrow-\mathsf{fun}-app-red} \todo{fix formatting}
 \end{casenv}
 \end{proof}
 \begin{lem}
 Diamond Property of $\Rrightarrow$
 
-If $m\Rrightarrow\,m'$, $m\Rrightarrow\,m''$, implies $m'\Rrightarrow\,max\left(m\right)$
-,$m''\Rrightarrow\,max\left(m\right)$ . 
+If $m\Rrightarrow\,m'$, $m\Rrightarrow\,m''$, implies $m'\Rrightarrow\,\textbf{max}\left(m\right)$
+,$m''\Rrightarrow\,\textbf{max}\left(m\right)$ . 
 \end{lem}
 
 \begin{proof}
-Since $max\left(m\right)=max\left(m\right)$ . 
+By thr triangle property.
+  % Since $\textbf{max}\left(m\right)=\textbf{max}\left(m\right)$ . 
 \end{proof}
 \begin{thm}
 Confluence of $\Rrightarrow_{\ast}$ 
@@ -631,9 +642,10 @@ $\equiv$ is an equivalence relation.
 
 \subsubsection{Stability}
 Next we must confirm that type constructors are stable over parallel reduction.
-The core concern is that $\left(x:N\right)\rightarrow M\cancel{\equiv}\star$.
-And the entire $\equiv$ relation is degenerate.
-But we will need stronger lemmas for the rest of the proof.
+Specifically, $\left(x:N\right)\rightarrow M\cancel{\equiv}\star$.
+If type constructors are associated, the entire $\equiv$ relation is degenerate.
+Since defintitional equality is defined in terms of reduction, it is sufficient to show that $\left(x:N\right)\rightarrow M\cancel{\Rrightarrow}\star$.
+We will prove slightly stronger lemmas about reduction that confirms this fact.
 
 \begin{lem}
 Stability of $\rightarrow$ over $\Rrightarrow_{\ast}$
@@ -644,8 +656,8 @@ $\forall N,M,P.\left(x:N\right)\rightarrow M\Rrightarrow_{\ast}P\:\mathrm{implie
 \begin{proof}
 by induction on $\Rrightarrow_{\ast}$
 \begin{casenv}
-  \item $\textrm{\ensuremath{\Rrightarrow_{\ast}}-refl}$ follows directly
-  \item $\textrm{\ensuremath{\Rrightarrow_{\ast}}-trans}$ via the induction hypothesis and noting only the $\textrm{\ensuremath{\Rrightarrow}-fun-ty}$ rule is possible as a step
+  \item $\rulename{\Rrightarrow_{\ast}-refl}$ follows directly
+  \item $\rulename{\Rrightarrow_{\ast}-trans}$ via the induction hypothesis and noting only the $\rulename{\Rrightarrow-\mathsf{fun}-ty}$ rule is possible as a step
 \end{casenv}
 \end{proof}
 Therefore the we can derive an important fact about $\equiv$
@@ -664,7 +676,8 @@ By the definition of $\equiv$ and the lemma above.
 \subsection{Preservation}
 
 A useful property of a type systems is that evaluation preserves type\footnote{
-   Similar proofs for dependent type systems can be found in Chapter 3 of \cite{luo1994computation}, Section 3.1 of \cite{10.1007/3-540-45413-6_27}(including eta expansion in an implicit system), and in the appendix of \cite{sjoberg2012irrelevance}}.
+   Similar proofs for dependent type systems can be found in Chapter 3 of \cite{luo1994computation}, Section 3.1 of \cite{10.1007/3-540-45413-6_27}(including eta expansion in an implicit system), in the appendix of \cite{sjoberg2012irrelevance}, and formalized in the the examples of Autosubst\cite{SchaeferEtAl:2015:Autosubst:-Reasoning}.
+   }.
 \todo{push this further up?}
 
 We need several more technical lemmas before we can prove that $\Rrightarrow_{\ast}$ is type preserving.
@@ -679,7 +692,7 @@ Context Weakening
 
 The following rule is admissible
 \[
-\frac{\Gamma\vdash n:N}{\Gamma,\Gamma'\vdash n:N}
+\frac{\Gamma\tasys n:N}{\Gamma,\Gamma'\tasys n:N}
 \]
 \end{thm}
 
@@ -693,7 +706,7 @@ The following rule is admissible\footnote{
   This lemma is sufficient for our informal account of variable substitution and binding.
   A fully formal account will be sensitive to the specific binding strategy, and may need to prove this lemma as a corollary from simultaneous substitutions}
 \[
-\frac{\Gamma\vdash n:N\quad\Gamma,x:N,\Gamma'\vdash m:M}{\Gamma,\Gamma'\left[x\coloneqq n\right]\vdash m\left[x\coloneqq n\right]:M\left[x\coloneqq n\right]}
+\frac{\Gamma\tasys n:N\quad\Gamma,x:N,\Gamma'\tasys m:M}{\Gamma,\Gamma'\left[x\coloneqq n\right]\tasys m\left[x\coloneqq n\right]:M\left[x\coloneqq n\right]}
 \]
 \end{lem}
 
@@ -701,8 +714,8 @@ The following rule is admissible\footnote{
 by induction on typing derivations
 
 \begin{casenv}
-  \item \textrm{ty-var} follows by weakening the substituted term
-  \item \textrm{ty-conv} follows from $\equiv\textrm{-Def}$ and that $\Rrightarrow_{\ast}$ is closed under substitution
+  \item \rulename{ty-var} follows by weakening the substituted term
+  \item \rulename{ty-conv} follows from $\equiv\rulename{-Def}$ and that $\Rrightarrow_{\ast}$ is closed under substitution
   \item All other cases follow directly or by induction
 \end{casenv}
 \end{proof}
@@ -711,11 +724,11 @@ We extend the notion of definitional equality to contexts in \Fref{surface-Conte
 
 \begin{figure}
 \[
-\frac{\ }{\lozenge\equiv\lozenge}\,\textrm{\ensuremath{\equiv}-ctx-empty}
+\frac{\ }{\lozenge\equiv\lozenge}\,\rulename{\equiv-ctx-empty}
 \]
 
 \[
-\frac{\Gamma\equiv\Gamma'\quad M\equiv M'}{\Gamma,x:M\equiv\Gamma',x:M'}\,\textrm{\ensuremath{\equiv}-ctx-ext}
+\frac{\Gamma\equiv\Gamma'\quad M\equiv M'}{\Gamma,x:M\equiv\Gamma',x:M'}\,\rulename{\equiv-ctx-ext}
 \]
 
 \caption{Definitionally Equal Contexts}
@@ -727,7 +740,7 @@ Context Preservation
 
 the following rule is admissible
 \[
-\frac{\Gamma\vdash n:N\quad\Gamma\equiv\Gamma'}{\Gamma'\vdash n:N}
+\frac{\Gamma\tasys n:N\quad\Gamma\equiv\Gamma'}{\Gamma'\tasys n:N}
 \]
 \end{lem}
 
@@ -735,8 +748,8 @@ the following rule is admissible
 by induction over typing derivations
 
 \begin{casenv}
-  \item \textrm{ty-var} follows since $\equiv$ is symmetric
-% \item \textrm{ty-fun-ty} and \textrm{ty-fun} ...
+  \item \rulename{ty-var} follows since $\equiv$ is symmetric
+% \item \rulename{ty-\mathsf{fun}-ty} and \rulename{ty-\mathsf{fun}} ...
   \item All other cases follow directly or by induction
 \end{casenv}
 \end{proof}
@@ -749,7 +762,7 @@ However this induction does not go through directly, and the induction hypothesi
 $\mathsf{fun}$-Inversion (generalized)
 
 \[
-\frac{\Gamma\vdash\mathsf{fun}\,f\,x\Rightarrow m\,:\,P\quad P\equiv\left(x:N\right)\rightarrow M}{\Gamma,f:\left(x:N\right)\rightarrow M,x:N\vdash m:M}
+\frac{\Gamma\tasys\mathsf{fun}\,f\,x\Rightarrow m\,:\,P\quad P\equiv\left(x:N\right)\rightarrow M}{\Gamma,f:\left(x:N\right)\rightarrow M,x:N\tasys m:M}
 \]
 
 is admissible. 
@@ -759,8 +772,8 @@ is admissible.
 By induction on typing derivations,
 
 \begin{casenv}
-  \item \textrm{ty-fun} follows by the stability of \textrm{ty-fun} and preservation of contexts
-  \item \textrm{ty-conv} follows by transitivity of $\equiv$ and induction
+  \item \rulename{ty-\mathsf{fun}} follows by the stability of \rulename{ty-\mathsf{fun}} and preservation of contexts
+  \item \rulename{ty-conv} follows by transitivity of $\equiv$ and induction
   \item All other cases impossible
 \end{casenv}
 
@@ -770,7 +783,7 @@ This allows us to conclude the more straightforward corollary
 $\mathsf{fun}$-Inversion
 
 \[
-\frac{\Gamma\vdash\mathsf{fun}\,f\,x\Rightarrow m\,:\,\left(x:N\right)\rightarrow M}{\Gamma,f:\left(x:N\right)\rightarrow M,x:N\vdash m:M}
+\frac{\Gamma\tasys\mathsf{fun}\,f\,x\Rightarrow m\,:\,\left(x:N\right)\rightarrow M}{\Gamma,f:\left(x:N\right)\rightarrow M,x:N\tasys m:M}
 \]
 \end{cor}
 
@@ -784,43 +797,52 @@ $\Rrightarrow$-Preservation
 
 The following rule is admissible
 \[
-\frac{\Gamma\vdash m:M\quad m\Rrightarrow m'}{\Gamma\vdash m':M}
+\frac{\Gamma\tasys m:M\quad m\Rrightarrow m'}{\Gamma\tasys m':M}
 \]
 \end{thm}
 
 \begin{proof}
-by induction on the typing derivation $\Gamma\vdash m:M$, specializing on $m\Rrightarrow m'$,
+by induction on the typing derivation $\Gamma\tasys m:M$, specializing on $m\Rrightarrow m'$,
 \todo{formatting}
 \begin{casenv}
-  \item \textrm{ty-::} when \textrm{\ensuremath{\Rrightarrow}-::}, we must show $\Gamma\vdash m'::M':\,M$ from $m\Rrightarrow m'$, $M\Rrightarrow M'$, $\Gamma\vdash m'\,:\,M$.
+  \item \rulename{ty-::} when \rulename{\Rrightarrow-::}, we must show $\Gamma\tasys m'::M':\,M$.
+  %  from $m\Rrightarrow m'$, $M\Rrightarrow M'$, and $\Gamma\tasys m'\,:\,M$.
+   \newline
    \begin{tabular}{ll}
-    $\Gamma\vdash m'\,:\,M$ & by induction\tabularnewline
-    $M\equiv M'$ & by promoting $M\Rrightarrow M'$\tabularnewline
-    $\Gamma\vdash m'\,:\,M'$ & $\textrm{ty-conv}$\tabularnewline
-    $\Gamma\vdash m'::M':\,M'$ & $\textrm{ty-::}$\tabularnewline
+    $\Gamma\tasys m'\,:\,M$ & by induction\tabularnewline
+    $M\equiv M'$ & by $M\Rrightarrow M'$\tabularnewline
+    $\Gamma\tasys m'\,:\,M'$ & by \rulename{ty-conv}\tabularnewline
+    $\Gamma\tasys m'::M':\,M'$ & by \rulename{ty-::}\tabularnewline
     $M'\equiv M$ & by symmetry\tabularnewline
-    $\Gamma\vdash m'::M':\,M$ & \textrm{ty-conv}\tabularnewline
+    $\Gamma\tasys m'::M':\,M$ & by \rulename{ty-conv}\tabularnewline
   \end{tabular}
-  \item \textrm{ty-fun-ty} when \textrm{\ensuremath{\Rrightarrow}-fun-ty} by preservation of contexts
-  \item \textrm{ty-fun-app} when \textrm{\ensuremath{\Rrightarrow}-fun-app-red}, we must show $\Gamma\vdash m'\left[f\coloneqq\mathsf{fun}\,f\,x\Rightarrow m',x\coloneqq n'\right]:M\left[x\coloneqq n\right]$ from $\Gamma\vdash n\,:\,N$, $\Gamma\vdash\mathsf{fun}\,f\,x\Rightarrow m\,:\,\left(x:N\right)\rightarrow M$, $m\Rrightarrow m'$, and $n\Rrightarrow n'$
+  \item \rulename{ty-\mathsf{fun}-ty} when \rulename{\Rrightarrow-\mathsf{fun}-ty} by preservation of contexts
+  \item \rulename{ty-\mathsf{fun}-app} when \rulename{\Rrightarrow-\mathsf{fun}-app-red}, we must show 
+    \newline
+    $\Gamma\tasys m'\left[f\coloneqq\mathsf{fun}\,f\,x\Rightarrow m',x\coloneqq n'\right]:M\left[x\coloneqq n\right]$
+    \newline
+     from $\Gamma\tasys n\,:\,N$, $\Gamma\tasys\mathsf{fun}\,f\,x\Rightarrow m\,:\,\left(x:N\right)\rightarrow M$, $m\Rrightarrow m'$, and $n\Rrightarrow n'$.
+  \newline
   \begin{tabular}{ll}
-    $\mathsf{fun}\,f\,x\Rightarrow m\Rrightarrow\mathsf{fun}\,f\,x\Rightarrow m'$ & $\textrm{\ensuremath{\Rrightarrow}-fun}$\tabularnewline
-    $\Gamma\vdash\mathsf{fun}\,f\,x\Rightarrow m'\,:\,\left(x:N\right)\rightarrow M$ & by induction\tabularnewline
-    $\Gamma,f:\left(x:N\right)\rightarrow M,x:N\vdash m'$ & by fun-inversion\tabularnewline
-    $\Gamma\vdash n'\,:\,N$ & by induction\tabularnewline
-    $\Gamma\vdash m'\left[f\coloneqq\mathsf{fun}\,f\,x\Rightarrow m',x\coloneqq n'\right]:M\left[x\coloneqq n'\right]$ & by substitution preservation \tabularnewline
-    $M\left[x\coloneqq n'\right]\equiv M\left[x\coloneqq n\right]$ & by substitution by steps, $\equiv$ symmetry\tabularnewline
-    $\Gamma\vdash m'\left[f\coloneqq\mathsf{fun}\,f\,x\Rightarrow m',x\coloneqq n'\right]:M\left[x\coloneqq n\right]$ & $\textrm{ty-conv}$\tabularnewline
+    $\mathsf{fun}\,f\,x\Rightarrow m\Rrightarrow\mathsf{fun}\,f\,x\Rightarrow m'$ & by \rulename{\Rrightarrow-\mathsf{fun}}\tabularnewline
+    $\Gamma\tasys\mathsf{fun}\,f\,x\Rightarrow m'\,:\,\left(x:N\right)\rightarrow M$ & by induction\tabularnewline
+    $\Gamma,f:\left(x:N\right)\rightarrow M,x:N\tasys m'$ & by fun-inversion\tabularnewline
+    $\Gamma\tasys n'\,:\,N$ & by induction\tabularnewline
+    \makecell[l]{$\Gamma\tasys m'\left[f\coloneqq\mathsf{fun}\,f\,x\Rightarrow m',x\coloneqq n'\right]$\\$\ :M\left[x\coloneqq n'\right]$} & by substitution preservation \tabularnewline
+    $M\left[x\coloneqq n'\right]\equiv M\left[x\coloneqq n\right]$ & by substitution by steps\tabularnewline
+    \makecell[l]{$\Gamma\tasys m'\left[f\coloneqq\mathsf{fun}\,f\,x\Rightarrow m',x\coloneqq n'\right]$\\$\ :M\left[x\coloneqq n\right]$} & by \rulename{ty-conv}\tabularnewline
   \end{tabular}
-  \item \textrm{ty-fun-app} when \textrm{\ensuremath{\Rrightarrow}-fun-app}, we must show $\Gamma\vdash m'\,n':\,M\left[x\coloneqq n\right]$ from $\Gamma\vdash n\,:\,N$, $\Gamma\vdash m\,:\,\left(x:N\right)\rightarrow M$, $m\Rrightarrow m'$, $n\Rrightarrow n'$
+  \item \rulename{ty-\mathsf{fun}-app} when \rulename{\Rrightarrow-\mathsf{fun}-app}, we must show 
+  \newline
+  $\Gamma\tasys m'\,n':\,M\left[x\coloneqq n\right]$ from $\Gamma\tasys n\,:\,N$, $\Gamma\tasys m\,:\,\left(x:N\right)\rightarrow M$, $m\Rrightarrow m'$, $n\Rrightarrow n'$
+  \newline
   \begin{tabular}{ll}
-    $\Gamma\vdash m\,:\,\left(x:N\right)\rightarrow M$, $m\Rrightarrow m'$,
     $n\Rrightarrow n'$ & \tabularnewline
-    $\Gamma\vdash m'\,:\,\left(x:N\right)\rightarrow M$ & by induction\tabularnewline
-    $\Gamma\vdash n'\,:\,N$ & by induction\tabularnewline
-    $\Gamma\vdash m'\,n':\,M\left[x\coloneqq n'\right]$ & $\textrm{ty-fun-app}$\tabularnewline
-    $M\left[x\coloneqq n'\right]\equiv M\left[x\coloneqq n\right]$ & by substitution by steps, $\equiv$ symmetry\tabularnewline
-    $\Gamma\vdash m'\,n':\,M\left[x\coloneqq n\right]$ & $\textrm{ty-conv}$\tabularnewline
+    $\Gamma\tasys m'\,:\,\left(x:N\right)\rightarrow M$ & by induction\tabularnewline
+    $\Gamma\tasys n'\,:\,N$ & by induction\tabularnewline
+    $\Gamma\tasys m'\,n':\,M\left[x\coloneqq n'\right]$ & \rulename{ty-\mathsf{fun}-app}\tabularnewline
+    $M\left[x\coloneqq n'\right]\equiv M\left[x\coloneqq n\right]$ & by substitution by steps\tabularnewline
+    $\Gamma\tasys m'\,n':\,M\left[x\coloneqq n\right]$ & \rulename{ty-conv}\tabularnewline
   \end{tabular}
   \item All other cases follow directly or by induction
 \end{casenv}
@@ -828,7 +850,8 @@ by induction on the typing derivation $\Gamma\vdash m:M$, specializing on $m\Rri
 
 \subsection{Progress}
 
-The second key theorem to show is preservation, computation is finished or a further step can be taken.
+The second key theorem to show is called progress.
+For a well typed term in an empty context, then a further step can be taken or computation is finished.
 For non-dependently typed programming languages, these steps are easy to characterize, but for dependent types there are issues.\todo{awk}
 If we characterize computation with the $\Rrightarrow$ relation, the progress lemma holds in a meaningless way since we can always take a reflexive step.
 Thus a less reflexive relation is needed.
@@ -890,34 +913,27 @@ the following rule is admissible
 
 Thus $\rightsquigarrow$ also preserves types.
 
-We will need a technical lemma that determines the form of a value of function type in an empty context
+We will need a technical lemma that determines the syntax a value of function type must be in an empty context
 
 \begin{lem}
   $\mathsf{fun}$-Canonical form (generalized)
-  \end{lem}
-  
-  \begin{proof}
-  If $\vdash v\,:\,P$ and $P\equiv\left(x:N\right)\rightarrow M$ then $v=\mathsf{fun}\,f\,x\Rightarrow m$.
-
+  If $\tasys v\,:\,P$ and $P\equiv\left(x:N\right)\rightarrow M$ then $v=\mathsf{fun}\,f\,x\Rightarrow m$.
+\end{lem}
+\begin{proof}
 by induction on the typing derivation
 
-\begin{tabular}{lll}
-$\textrm{ty-fun}$ & $\vdash\mathsf{fun}\,f\,x\Rightarrow m\,:\,\left(x:N\right)\rightarrow M$ & follows immediately\tabularnewline
-$\textrm{ty-conv}$ & $\vdash v\,:\,P$, $\vdash v\,:\,P'$, $P\equiv P'$ & \tabularnewline
-  & $P'\equiv\left(x:N\right)\rightarrow M$ & by transitivity, symmetry\tabularnewline
-  & $v=\mathsf{fun}\,f\,x\Rightarrow m$ & by induction\tabularnewline
-$\textrm{ty-}\star$ & $\vdash\star\,:\,\star$, $\star\equiv\left(x:N\right)\rightarrow M$ & \tabularnewline
-  & $\star\cancel{\equiv}\left(x:N\right)\rightarrow M$ & by the stability of $\equiv$\tabularnewline
-$\textrm{ty-fun-ty}$ & $\vdash\left(x:M\right)\rightarrow N\,:\,\star$, $\star\equiv\left(x:N\right)\rightarrow M$ & \tabularnewline
-  & $\star\cancel{\equiv}\left(x:N\right)\rightarrow M$ & by the stability of $\equiv$\tabularnewline
-other rules & impossible & since they do not type values\tabularnewline
-\end{tabular}
+\begin{casenv}
+\item \rulename{ty-\mathsf{fun}} follows immediately
+\item \rulename{ty-conv} by the equivelence of $\equiv$ and induction
+\item \rulename{ty-\star}, \rulename{ty-\mathsf{fun}-ty} are impossible, by the stability of $\equiv$
+\item other rules  are impossible, since they do not type values
+\end{casenv}
 \end{proof}
 as a corollary,
 \begin{cor}
 $\mathsf{fun}$-Canonical form (generalized)
 
-If $\vdash v\,:\,\left(x:N\right)\rightarrow M$ then \textup{$v=\mathsf{fun}\,f\,x\Rightarrow m$.}
+If $\tasys v\,:\,\left(x:N\right)\rightarrow M$ then \textup{$v=\mathsf{fun}\,f\,x\Rightarrow m$.}
 \end{cor}
 
 \todo{note that by only considering values, we can avoid the problematic
@@ -927,42 +943,37 @@ Finally we can prove the progress theorem.
 \begin{thm}
 Progress 
 
-If $\vdash m\,:\,M$ then $m$ is a value or there exists $m'$ such that $m\rightsquigarrow m'$
+If $\tasys m\,:\,M$ then $m$ is a value or there exists $m'$ such that $m\rightsquigarrow m'$
 \end{thm}
 
 \begin{proof}
 As usual this follows form induction on the typing derivation
 
-\begin{tabular}{llll}
-\multicolumn{4}{l}{$\textrm{ty-}\star$}\tabularnewline
-  & $\vdash\star\,:\,\star$ &  & \tabularnewline
-  & $\star$is a value &  & \tabularnewline
-\multicolumn{4}{l}{$\textrm{ty-var}$}\tabularnewline
-  & $\vdash x\,:\,M$ &  & impossible in an empty context\tabularnewline
-\multicolumn{4}{l}{$\textrm{ty-conv}$}\tabularnewline
-  & $\vdash m:M'$, $M'\equiv M$ &  & \tabularnewline
-  & \multicolumn{2}{l}{$m$ is a value or there exists $m'$ such that $m\rightsquigarrow m'$} & by induction on $\vdash m\,:\,M'$\tabularnewline
-\multicolumn{4}{l}{$\textrm{ty-::}$}\tabularnewline
-  & $\vdash m::M\,:\,M$, $\vdash m\,:\,M$ &  & \tabularnewline
-  & \multicolumn{2}{l}{$m$ is a value or there exists $m'$ such that $m\rightsquigarrow m'$} & by induction\tabularnewline
-  & if $m$ is a value,  & $m::M\rightsquigarrow m$ & \tabularnewline
-  & if $m\rightsquigarrow m'$,  & $m::M\rightsquigarrow m'::M$ & \tabularnewline
-\multicolumn{4}{l}{$\textrm{ty-fun-ty}$}\tabularnewline
-  & $\vdash\left(x:M\right)\rightarrow N\,:\,\star$ &  & \tabularnewline
-  & $\left(x:M\right)\rightarrow N$ is a value &  & \tabularnewline
-\multicolumn{4}{l}{$\textrm{ty-fun}$}\tabularnewline
-  & $\vdash\mathsf{fun}\,f\,x\Rightarrow m\,:\,\left(x:N\right)\rightarrow M$ &  & \tabularnewline
-  & $\mathsf{fun}\,f\,x\Rightarrow m$ is a value &  & \tabularnewline
-\multicolumn{4}{l}{$\textrm{ty-fun-app}$}\tabularnewline
-  & \multicolumn{2}{l}{$\vdash m\,:\,\left(x:N\right)\rightarrow M$, $\Gamma\vdash n\,:\,N$} & \tabularnewline
-  & \multicolumn{2}{l}{$m$ is a value or there exists $m'$ such that $m\rightsquigarrow m'$} & by induction\tabularnewline
-  & \multicolumn{2}{l}{$n$ is a value or there exists $n'$ such that $n\rightsquigarrow n'$} & by induction\tabularnewline
-  & if $m\rightsquigarrow m'$,  & $m\,n\rightsquigarrow m'\,n$ & \tabularnewline
-  & if $m$ is a value, $n\rightsquigarrow n'$,  & $m\,n\rightsquigarrow m\,n'$ & \tabularnewline
-  & if $m$ is a value, $n$ is a value,  & $m=\mathsf{fun}\,f\,x\Rightarrow p$ & by canonical forms of functions\tabularnewline
-  &  & $\left(\mathsf{fun}\,f\,x\Rightarrow p\right)n\rightsquigarrow p\left[f\coloneqq\mathsf{fun}\,f\,x\Rightarrow p,x\coloneqq n\right]$ & \tabularnewline
-\end{tabular}
+\begin{casenv}
+  \item \rulename{ty-\star}, $\star$ is a value 
+  \item \rulename{ty-var}, impossible in an empty context
+  \item \rulename{ty-conv}, by induction
+  \item \rulename{ty-::}, we have a typing derivation concluding $\tasys m::M\,:\,M$.
+  By induction, $m$ is a value or there exists $m'$ such that $m\rightsquigarrow m'$.
+  \begin{casenv}
+    \item if $m$ is a value, then $m::M\rightsquigarrow m$ 
+    \item if $m\rightsquigarrow m'$,then $m::M\rightsquigarrow m'::M$
+  \end{casenv}
+  \item \rulename{ty-\mathsf{fun}-ty}, $\left(x:M\right)\rightarrow N$ is a value
+  \item \rulename{ty-\mathsf{fun}}, $\mathsf{fun}\,f\,x\Rightarrow m$ is a value
+  \item \rulename{ty-\mathsf{fun}-app}, we have a typing derivation concluding $\tasys m\,n\ :\ M\left[x\coloneqq n\right]$ with the premisies $\tasys m\,:\,\left(x:N\right)\rightarrow M$, $\Gamma\tasys n\,:\,N$.
+  By induction, $m$ is a value or there exists $m'$ such that $m\rightsquigarrow m'$.
+  By induction, $n$ is a value or there exists $n'$ such that $n\rightsquigarrow n'$.
+  \begin{casenv}
+    \item if $m\rightsquigarrow m'$, then $m\,n\rightsquigarrow m'\,n$
+    \item if $m$ is a value, and $n\rightsquigarrow n'$,  then $m\,n\rightsquigarrow m\,n'$
+    \item if $m$ is a value, and $n$ is a value, then $m=\mathsf{fun}\,f\,x\Rightarrow p$ by canonical forms of functions.
+      The term steps $\left(\mathsf{fun}\,f\,x\Rightarrow p\right)n\rightsquigarrow p\left[f\coloneqq\mathsf{fun}\,f\,x\Rightarrow p,x\coloneqq n\right]$
+  \end{casenv}
+\end{casenv}
+
 \end{proof}
+\todo{awk}
 Progress via call-by-value can be seen as a specific sub-strategy of $\Rrightarrow$.
 An interpreter is always free to take any $\Rrightarrow$, but if it is unclear which $\Rrightarrow$ to take, either it is a value and no further steps are required, or can fall back on $\rightsquigarrow$ until the the outermost computation has completed.
 
@@ -973,77 +984,87 @@ This follows by iterating the progress and preservation lemmas.
 
 \todo{be explicit about the disconnect between type computation via par, and term level cbv}
 
-\todo{other lemmas not needed for this proof, par max is par, inversions?}
+% \todo{other lemmas not needed for this proof, par max is par, inversions?}
 
 
 \subsection{Regularity}
 The rules in \Fref{surface-TAS} allow for invalid constructions in the context.
-For instance, $x:1_{c}\vdash...$.
+For instance, $x:1_{c}\tasys...$ is allowed by the context grammar.
 Additionally, it is not required that both ends of a conversion are well typed.
-
-Though these restrictions are not required for type soundness, it will be convenient to exclude these possibilities by adding the following restrictions in \Fref{surface-tas-reg}.
+For instance, $\tasys\ \star\ :\ (\lambda - \Rightarrow \star)\,(\star\,\star)$ is typeable by conversion.
 
 
 \begin{figure}
-% \[
-% \frac{\Gamma\,\mathbf{ok}\quad x:M\in\Gamma}{\Gamma\vdash_{r}x\,:\,M}\,\textrm{ty-var}
-% \]
+\[
+\frac{\Gamma\,\mathbf{ok}\quad x:M\in\Gamma}{\Gamma\tasysr{}x\,:\,M}\,\rulename{ty-var}
+\]
 
-% \[
-% \frac{\Gamma\vdash_{r}m\,:\,M}{\Gamma\vdash_{r}m::M\,:\,M}\,\textrm{ty-::}
-% \]
+\[
+\frac{\Gamma\tasysr{}m\,:\,M}{\Gamma\tasysr{}m::M\,:\,M}\,\rulename{ty-::}
+\]
 
-% \[
-% \frac{\Gamma\,\mathbf{ok}}{\Gamma\vdash_{r}\star\,:\,\star}\,\textrm{ty-}\star
-% \]
+\[
+\frac{\Gamma\,\mathbf{ok}}{\Gamma\tasysr{}\star\,:\,\star}\,\rulename{ty-\star}
+\]
 
-% \[
-% \frac{\Gamma\vdash_{r}M\,:\,\star\quad\Gamma,x:M\vdash_{r}N\,:\,\star}{\Gamma\vdash_{r}\left(x:M\right)\rightarrow N\,:\,\star}\,\textrm{ty-fun-ty}
-% \]
+\[
+\frac{\Gamma\tasysr{}M\,:\,\star\quad\Gamma,x:M\tasysr{}N\,:\,\star}{\Gamma\tasysr{}\left(x:M\right)\rightarrow N\,:\,\star}\,\rulename{ty-\mathsf{fun}-ty}
+\]
 
-% \[
-% \frac{\Gamma\vdash_{r}m\,:\,\left(x:N\right)\rightarrow M\quad\Gamma\vdash_{r}n\,:\,N}{\Gamma\vdash_{r}m\,n\,:\,M\left[x\coloneqq n\right]}\,\textrm{ty-fun-app}
-% \]
+\[
+\frac{\Gamma\tasysr{}m\,:\,\left(x:N\right)\rightarrow M\quad\Gamma\tasysr{}n\,:\,N}{\Gamma\tasysr{}m\,n\,:\,M\left[x\coloneqq n\right]}\,\rulename{ty-\mathsf{fun}-app}
+\]
 
-% \[
-% \frac{\Gamma,f:\left(x:N\right)\rightarrow M,x:N\vdash_{r}m\,:\,M}{\Gamma\vdash_{r}\mathsf{fun}\,f\,x\Rightarrow m\,:\,\left(x:N\right)\rightarrow M}\,\textrm{ty-fun}
-% \]
+\[
+\frac{\Gamma,f:\left(x:N\right)\rightarrow M,x:N\tasysr{}m\,:\,M}{\Gamma\tasysr{}\mathsf{fun}\,f\,x\Rightarrow m\,:\,\left(x:N\right)\rightarrow M}\,\rulename{ty-\mathsf{fun}}
+\]
 
-% \[
-% \frac{\Gamma\vdash_{r}m\,:\,M\quad\Gamma\vdash_{r}M\equiv M'\,:\,\star}{\Gamma\vdash_{r}m\,:\,M'}\,\textrm{ty-conv}
-% \]
+\[
+\frac{\Gamma\tasysr{}m\,:\,M\quad\Gamma\tasysr{}M\equiv M'\,:\,\star}{\Gamma\tasysr{}m\,:\,M'}\,\rulename{ty-conv}
+\]
 
-% \[
-% \frac{\Gamma\vdash_{r}m\,:\,M\quad\Gamma\vdash_{r}m'\,:\,M\quad m\Rrightarrow m''\quad m'\Rrightarrow m''}{\Gamma\vdash_{r}m\equiv m'\,:\,M}\,\textrm{def}
-% \]
+\[
+\frac{\Gamma\tasysr{}m\,:\,M\quad\Gamma\tasysr{}m'\,:\,M\quad m\Rrightarrow m''\quad m'\Rrightarrow m''}{\Gamma\tasysr{}m\equiv m'\,:\,M}\,\rulename{def}
+\]
 
-% \[
-% \frac{\ }{\lozenge\,\mathbf{ok}}\,\textrm{emp-ok}
-% \]
+\[
+\frac{\ }{\lozenge\,\mathbf{ok}}\,\rulename{emp-ok}
+\]
 
-% \[
-% \frac{\Gamma\vdash_{r}M:\star\quad\Gamma\,\mathbf{ok}}{\Gamma,x:M\,\mathbf{ok}}\,\textrm{emp-ok}
-% \]
+\[
+\frac{\Gamma\tasysr{}M:\star\quad\Gamma\,\mathbf{ok}}{\Gamma,x:M\,\mathbf{ok}}\,\rulename{emp-ok}
+\]
 \caption{Type assignment system (regular)}
 \label{fig:surface-tas-reg}
 \end{figure}
 
-Given these restrictions we can conclude.
+Though these restrictions are not required for type soundness, it will be convenient to exclude these possibilities by adding additional restrictions to the \ac{TAS}.
+The updated system is presented in \Fref{surface-tas-reg}.
+The $\mathbf{ok}$ forces contexts to only contain well typed types.
+The new conversion rule, restricts conversion to well typed types.
+
+
+Given these restrictions we can conclude some convineint regularity properties.
+\begin{thm}
+  Regularity
+  
+  If $\Gamma\tasysr{}m:M$ then $\Gamma\tasysr{}M:\star$ and $\Gamma\,\mathbf{ok}$
+\end{thm}
+\begin{proof}
+  by induction on typing derivations
+\end{proof}
+
+
+
 
 \begin{conjecture}
 The regular system has progress and preservation it is type sound
 \end{conjecture}
 
 Additionally, 
-%
-\begin{conjecture}
-Regularity
 
-If $\Gamma\vdash_{r}m:M$ then $\Gamma\vdash_{r}M:\star$ and $\Gamma\,\mathbf{ok}$
-\end{conjecture}
 
-It is possible to prove type soundness directly but it involves a
-more subtle mutual induction.
+It is possible to prove type soundness directly but it involves a more subtle mutual induction.
 
 Given this we will use the regular system from now on without subscript.
 
@@ -1070,7 +1091,7 @@ But there are infinitely other possibilities.
 Worse, if there is an error, it may be impossible to localize to a specific region of code.
 To make a practical type checker we need to insist that the user include some type annotations.
 
-\section{Bidirectional Surface Language}
+\section{\Bidir{} Surface Language}
 
 % Annotate all the vars 
 There are many possible ways to localize the type checking process.
@@ -1086,14 +1107,14 @@ Annotating every binding site requires a lot of redundant information.
 % Further the theory would need to deal with all the binders evaluating
 Luckily there's a better way.
 
-\subsection{Bidirectional Type Checking}
+\subsection{\Bidir{} Type Checking}
 
-\textbf{Bidirectional type checking} is a popular form of lightweight type inference, which strikes a good compromise between the required type annotations and the simplicity of the procedure, allowing for localized errors\footnote{\cite{christiansen2013bidirectional} is a good tutorial, \cite{10.1145/3450952} is a survey of the technique}.
-In the usual bidirectional typing schemes, annotations are only required at the top-level, or around a function that is directly applied to an argument\footnote{more generally when an elimination reduction is possible.}.
+\textbf{\Bidir{} type checking} is a popular form of lightweight type inference, which strikes a good compromise between the required type annotations and the simplicity of the procedure, allowing for localized errors\footnote{\cite{christiansen2013\bidir{}} is a good tutorial, \cite{10.1145/3450952} is a survey of the technique}.
+In the usual \bidir{} typing schemes, annotations are only required at the top-level, or around a function that is directly applied to an argument\footnote{more generally when an elimination reduction is possible.}.
 For example $(\lambda x\Rightarrow x+x)7$ would need to be written $\left((\lambda x\Rightarrow x+x)::\mathbb{N}\rightarrow\mathbb{N}\right)7$.
 Since programers rarely write functions that are immediately evaluated, this style of type checking usually only needs top level functions to be annotated\footnote{Even in Haskell, with full Hindley-Milner type inference, top level type annotations are encouraged.}\todo{ref style guide.
 the point was similarly made in Agda thesis.}.
-In fact, almost every example in \Fref{surface-examples} has enough annotations to type check bidirectionally without further information.
+In fact, almost every example in \Fref{surface-examples} has enough annotations to type check \bidir{}{}ly without further information.
 
 \todo{note popularity}
 
@@ -1122,10 +1143,10 @@ Checking judgments force terms that could have multiple typings in the \ac{TAS} 
 \frac{\Gamma\vdash m\overleftarrow{\,:\,}M}{\Gamma\vdash m::M\overrightarrow{\,:\,}M}\operatorname{\overrightarrow{ty}-::}
 \]
 \[
-\frac{\Gamma\vdash M\overleftarrow{\,:\,}\star\quad\Gamma,x:M\vdash N\overleftarrow{\,:\,}\star}{\Gamma\vdash\left(x:M\right)\rightarrow N\overrightarrow{\,:\,}\star}\operatorname{\overrightarrow{ty}-fun-ty}
+\frac{\Gamma\vdash M\overleftarrow{\,:\,}\star\quad\Gamma,x:M\vdash N\overleftarrow{\,:\,}\star}{\Gamma\vdash\left(x:M\right)\rightarrow N\overrightarrow{\,:\,}\star}\operatorname{\overrightarrow{ty}-\mathsf{fun}-ty}
 \]
 \[
-\frac{\Gamma\vdash m\overrightarrow{\,:\,}\left(x:N\right)\rightarrow M\quad\Gamma\vdash n\overleftarrow{\,:\,}N}{\Gamma\vdash m\,n\overrightarrow{\,:\,}M\left[x\coloneqq n\right]}\operatorname{\overrightarrow{ty}-fun-app}
+\frac{\Gamma\vdash m\overrightarrow{\,:\,}\left(x:N\right)\rightarrow M\quad\Gamma\vdash n\overleftarrow{\,:\,}N}{\Gamma\vdash m\,n\overrightarrow{\,:\,}M\left[x\coloneqq n\right]}\operatorname{\overrightarrow{ty}-\mathsf{fun}-app}
 \]
 \[
 \frac{\Gamma,f:\left(x:N\right)\rightarrow M,x:N\vdash m\overleftarrow{\,:\,}M}{\Gamma\vdash\mathsf{fun}\,f\,x\Rightarrow m\overleftarrow{\,:\,}\left(x:N\right)\rightarrow M}\operatorname{\overleftarrow{ty}-\mathsf{fun}}
@@ -1134,18 +1155,18 @@ Checking judgments force terms that could have multiple typings in the \ac{TAS} 
 \frac{\Gamma\vdash m\overrightarrow{\,:\,}M\quad M\equiv M'}{\Gamma\vdash m\overleftarrow{\,:\,}M'}\operatorname{\overleftarrow{ty}-conv}
 \]
 
-\caption{Surface Language Bidirectional Typing Rules}
+\caption{Surface Language \Bidir{} Typing Rules}
 \label{fig:surface-bityping-rules}
 \end{figure}
-    
+
 % review the typing rule 
-The surface language supports bidirectional type-checking over the pre-syntax with the rules in \Fref{surface-bityping-rules}.
+The surface language supports \bidir{} type-checking over the pre-syntax with the rules in \Fref{surface-bityping-rules}.
 The rules are almost the same as before except that typing direction is now explicit in the judgment.
 
-As mentioned, bidirectional type checking handles higher order functions very well.
+As mentioned, \bidir{} type checking handles higher order functions very well.
 For instance, the expression $\vdash(\lambda x\Rightarrow x\,(\lambda y\Rightarrow y)\,2)\overleftarrow{\,:\,}\left(\left(\mathbb{N}\rightarrow\mathbb{N}\right)\rightarrow\mathbb{N}\rightarrow\mathbb{N}\right)\rightarrow\mathbb{N}$ checks because $\vdash(\lambda y\Rightarrow y)\overleftarrow{\,:\,}\left(\mathbb{N}\rightarrow\mathbb{N}\right)$ and $\vdash2\overleftarrow{\,:\,}\mathbb{N}$.
 
-Unlike the undirected judgments of the Type Assignment System, the inference rule of the bidirectional system does not convert
+Unlike the undirected judgments of the Type Assignment System, the inference rule of the \bidir{} system does not convert
 The inference, it is unique up to syntax!
 For example $x:Vec\,3\vdash x\overrightarrow{\,:\,}Vec\,3$, but $x:Vec\,3\cancel{\vdash}x\overrightarrow{\,:\,}Vec\,\left(1+2\right)$.
 This could cause unexpected behavior around function applications.
@@ -1156,25 +1177,25 @@ The similar issue is possible around check rules around function definitions.
 For instance, $\vdash\left((\lambda x\Rightarrow x)::\mathbb{N}\rightarrow\mathbb{N}\right)\ \overrightarrow{\,:\,}\mathbb{N}\rightarrow\mathbb{N}$ will infer, but if computation blocks the $\rightarrow$ from being in the head position, inference will be impossible.
 As in the expression, $\left((\lambda x\Rightarrow x)::\left(\mathbb{N}\rightarrow\mathbb{N}\underline{::}\star\right)\right)$ which will not infer.
 
-For these reasons, realistic implementations will often evaluate the types needed for $\overleftarrow{ty}-\mathsf{fun}$, and $\operatorname{\overrightarrow{ty}-fun-app}$ into weak head normal form\footnote{as in \cite{COQUAND1996167}}.
-More advanced bidirectional implementations such as Agda\cite{norell2007towards} even perform unification as part of their bidirectional type checking.
+For these reasons, realistic implementations will often evaluate the types needed for $\overleftarrow{ty}-\mathsf{fun}$, and $\operatorname{\overrightarrow{ty}-\mathsf{fun}-app}$ into weak head normal form\footnote{as in \cite{COQUAND1996167}}.
+More advanced \bidir{} implementations such as Agda\cite{norell2007towards} even perform unification as part of their \bidir{} type checking.
 
 \todo[inline]{alternative listed in appendix}
 \todo[inline]{what else does the algorithm infer not listed here}
 \todo[inline]{More about extending the system so constraint solving can happen under a check judgment }
 \todo[inline]{Clearly explain why this is needed for the cast system, annotating every var is cumbersome, constraint solving is iffy when things may be undecidable}
 
-This document opts for the simplest possible presentation of bidirectional type checking.
+This document opts for the simplest possible presentation of \bidir{} type checking.
 There will always be ways to make type inference more powerful, at the cost of complexity.
 
-\subsection{The Bidirectional System is Type Sound}
+\subsection{The \Bidir{} System is Type Sound}
 
-It is possible to prove bidirectional type systems are type sound directly\cite{nanevski2005dependent}.
+It is possible to prove \bidir{} type systems are type sound directly\cite{nanevski2005dependent}.
 But it would be difficult for the system described here since type annotations evaluate away, complicating preservation.
-Alternatively we can show that a bidirectional typing judgment implies a type assignment system typing judgment.
+Alternatively we can show that a \bidir{} typing judgment implies a type assignment system typing judgment.
 
 \begin{thm}
-Bidirectional implies \ac{TAS}
+\Bidir{} implies \ac{TAS}
 
 if $\Gamma\vdash m\overrightarrow{\,:\,}M$ then $\Gamma\vdash m\,:\,M$
 
@@ -1182,16 +1203,16 @@ if $\Gamma\vdash m\overleftarrow{\,:\,}M$ then $\Gamma\vdash m\,:\,M$
 \end{thm}
 
 \begin{proof}
-by mutual induction on the bidirectional typing derivations.
+by mutual induction on the \bidir{} typing derivations.
 \end{proof}
-Therefore the bidirectional system is also type sound.
+Therefore the \bidir{} system is also type sound.
 
-\subsection{The \ac{TAS} System is weakly annotatable by the Bidirectional System}
+\subsection{The \ac{TAS} System is weakly annotatable by the \Bidir{} System}
 
-In Bidirectional systems, \textbf{annotatability}\footnote{also called \textbf{completeness}} is the property that any expression that types in a \ac{TAS} will type in the bidirectional system with only additional annotations.
-This property doesn't exactly hold for the bidirectional system presented here.
-For instance, $\vdash\left((\lambda x\Rightarrow x)::\left(\mathbb{N}\rightarrow\mathbb{N}::\star\right)\right)$ type checks in the \ac{TAS} system, but no amount of annotations will make it check in the bidirectional system.
-Instead we can show that the bidirectional system does not preclude any computation available in the \ac{TAS}, though annotations may need to be added (or removed).% no need to remove if properly bidirectional).
+In \Bidir{} systems, \textbf{annotatability}\footnote{also called \textbf{completeness}} is the property that any expression that types in a \ac{TAS} will type in the \bidir{} system with only additional annotations.
+This property doesn't exactly hold for the \bidir{} system presented here.
+For instance, $\vdash\left((\lambda x\Rightarrow x)::\left(\mathbb{N}\rightarrow\mathbb{N}::\star\right)\right)$ type checks in the \ac{TAS} system, but no amount of annotations will make it check in the \bidir{} system.
+Instead we can show that the \bidir{} system does not preclude any computation available in the \ac{TAS}, though annotations may need to be added (or removed).% no need to remove if properly \bidir{}).
 We will call this property \textbf{weak annotatability}.
 \begin{thm}
 weak annotatability.
@@ -1213,7 +1234,7 @@ When type systems are used as logics, it is desirable that
 \item There exists a type that is uninhabited in the empty context, so the system is \textbf{logically consistent}\footnote{also called \textbf{logically sound}}.
 \item Type checking is decidable.
 \end{itemize}
-Neither the \ac{TAS} system or the Bidirectional systems has these properties\footnote{These properties are usually shown by showing that the computation that generates definitional equality is normalizing.
+Neither the \ac{TAS} system or the \Bidir{} systems has these properties\footnote{These properties are usually shown by showing that the computation that generates definitional equality is normalizing.
 A proof for a more logical system can be found in Chapter 4\cite{luo1994computation}.
 Another excellent tutorial can be found in Chapter 2 in \cite{casinghino2014combiningthesis}}.
 % aparently that note from Chris Casinghino is dead http://prosecco.gforge.inria.fr/personal/hritcu/temp/snforcc.pdf
@@ -1230,7 +1251,7 @@ $\mathsf{fun}\,f\,x\Rightarrow f\,x\qquad:\perp_{c}$
 
 It is possible to encode Girard's paradox, producing another source of logical unsoundness.
 \begin{example}
-Every Type is Inhabited (by \tit)
+Every Type is Inhabited (by \tit{})
 
 \todo{full example}
 
@@ -1239,7 +1260,7 @@ Every Type is Inhabited (by \tit)
 
 A subtle form of recursive behavior can be built out of Gerard's paradox\cite{Reinhold89typecheckingis}, but this behavior is no worse than the unrestricted recursion already allowed.
 
-% I am unaware of anyone accidentally deriving a falsehood from \tit.
+% I am unaware of anyone accidentally deriving a falsehood from \tit{}.
 
 Operationally, logical inconsistency will be recognized by programmers as non-termination.
 Non-termination seems not to matter for programming languages in practice.
@@ -1256,7 +1277,7 @@ Therefore, logical unsoundness seems suitable for a dependently typed programmin
 \todo{add ref to inequalities}
 
 While the surface language supports proofs, not every term typed in the surface language is a proof.
-Terms can still be called proofs as long as the safety of recursion and \tit are checked externally.
+Terms can still be called proofs as long as the safety of recursion and \tit{} are checked externally.
 In this sense, the listed example inequalities are proofs, as they make no use of general recursion (so all recursions are well founded) and universes are used in a safe way (universe hierarchies could be assigned).
 In an advanced implementation, an automated process could supply warnings when constructs are used in potentially unsafe ways.
 Traditional software testing can be used to discover if there are actual proof bugs.
@@ -1287,7 +1308,7 @@ Again this the root of the problem is the non-termination that results by allowi
 
 Luckily undecidability of type checking is not as bad as it sounds for several reasons.
 First, the pathological terms that cause non-terminating conversion are rarely created on purpose.
-In the bidirectional system, conversion checks will only happen at limited positions, and it is possible to use a counter to warn or give errors at code positions that do not convert because normalization takes too long.
+In the \bidir{} system, conversion checks will only happen at limited positions, and it is possible to use a counter to warn or give errors at code positions that do not convert because normalization takes too long.
 Heuristic methods of conversion checking seem to work well enough in practice even without a counter.
 It is also possible to embed proofs of conversion directly into the syntax\cite{sjoberg2012irrelevance}.
 
@@ -1321,25 +1342,29 @@ Most importantly for the system described in this thesis, users are expected to 
 \subsection{Bad logics, ok programming languages?}
 
 Unsound logical systems that work as programming languages go back to at least Church's lambda calculus which was originally intended to be part of a foundation for mathematics\footnote{``There may, indeed, be other applications of the system than its use as a logic.''{[}Church, 1932, p.349, A Set of Postulates for the Foundation of Logic{]}}.\todo{proper citation}
-In the 1970s, Per Martin-L{\"o}f proposed a system with \tit\todo{cite it?} that was shown logically unsound by Girard (as described in the introduction in \cite{Martin-Lof-1972}).
-In the 1980s, Cardelli explored the domain semantics of a system with general recursive dependent functions and \tit\cite{cardelli1986polymorphic}.
+In the 1970s, Per Martin-L{\"o}f proposed a system with \tit{}\todo{cite it?} that was shown logically unsound by Girard (as described in the introduction in \cite{Martin-Lof-1972}).
+In the 1980s, Cardelli explored the domain semantics of a system with general recursive dependent functions and \tit{}\cite{cardelli1986polymorphic}.
+Independently, Viggo and Stoltenberg-Hansen\cite{PALMGREN1990135} explored the domain semantics of Martin-L{\"o}f's type theory with a fixed point operator.
+\todo{Per Martin-L{\"o}f anticipated this work in unpublished lectures and an Abstract.}
 
-The first progress and preservation style proof of type soundness for a language with general recursive dependent functions and \tit seem to come from the Trellys Project\cite{sjoberg2012irrelevance}.
+The first progress and preservation style proof of type soundness for a language with general recursive dependent functions and \tit{} seem to come from the Trellys Project\cite{sjoberg2012irrelevance}.
 At the time their language had several additional features not included in the surface language.
 Additionally, the surface language uses a simpler notion of definitional equality resulting in a simpler proof of type soundness.
 Later work in the Trellys Project\cite{casinghino2014combining,casinghino2014combiningthesis} used modalities to separate terminating and non-terminating fragments of the language, to allow both general recursion and logically sound reasoning.%, though the annotation burden seems high in retrospect .
 In general, the surface language has been deeply informed by the Trellys project\cite{sjoberg2012irrelevance,casinghino2014combining,casinghino2014combiningthesis,sjoberg2015programming,sjoberg2015dependently} and the Zombie language\footnote{https://github.com/sweirich/trellys} it produced.
 
 \todo{type in type as a well known shortcut, videos of Andraj, Conner MB saying it }
-\todo{section on bidirectional dependent type systems, citing http://www.cse.chalmers.se/\textasciitilde nad/publications/altenkirch-et-al-flops2010.pdf https://www.seas.upenn.edu/\textasciitilde sweirich/papers/congruence-extended.pdf posibly https://arxiv.org/pdf/1203.4716.pdf https://drops.dagstuhl.de/opus/volltexte/2021/13919/pdf/LIPIcs-ITP-2021-24.pdf}
+\todo{section on \bidir{} dependent type systems, citing http://www.cse.chalmers.se/\textasciitilde nad/publications/altenkirch-et-al-flops2010.pdf https://www.seas.upenn.edu/\textasciitilde sweirich/papers/congruence-extended.pdf posibly https://arxiv.org/pdf/1203.4716.pdf https://drops.dagstuhl.de/opus/volltexte/2021/13919/pdf/LIPIcs-ITP-2021-24.pdf}
 
 \subsection{Implementations}
 
 Several programming language implementations support features of the surface language without a proof of type soundness.
 Pebble\cite{10.1007/3-540-13346-1_1} was a very early language with dependent types, though conversion did not associate alpha\todo{if saying alpha need to define it} equivalent types\footnote{according to \cite{Reinhold89typecheckingis}}.
-Coquand implemented an early bidirectional algorithm to type-check a language with \tit\cite{COQUAND1996167}.
-Cayenne\cite{10.1145/289423.289451} is a Haskell-like language that combines dependent types with \tit and non-termination.
-Agda supports general recursion and \tit with compiler flags.
+Coquand implemented an early \bidir{} algorithm to type-check a language with \tit{}\cite{COQUAND1996167}.
+Cayenne\cite{10.1145/289423.289451} is a Haskell-like language that combines dependent types with \tit{} and non-termination.
+$\Pi$$\Sigma$\cite{10.1007/978-3-642-12251-4_5} is a language with \tit{} and several features for a dependently typed core calculus outlined here.
+Like here $\Pi$$\Sigma$ advocates seperating terminaition concerns from type soundness concerns, though I am unaware if type soundness was ever established.
+Agda supports general recursion and \tit{} with compiler flags.
 Idris supports similar ``unsafe'' features.
 
 \subsection{Other Dependent Type Systems}
@@ -1348,8 +1373,8 @@ There are many flavors of dependent type systems that are similar in spirit to t
 
 The Calculus of Constructions (\ac{CC}, CoC)\cite{10.1016/0890-5401(88)90005-3} is one of the first minimal dependent type systems.
 It contains shockingly few rules, but can express a wide variety of constructions via parametric encodings.
-The system does not allow \tit, instead type\footnote{called \textbf{prop}, for proposition} lives in a larger universe $\star:\Square$, where $\Square$ is not considered a type.
-Even though the Calculus of Constructions does not allow \tit it is still \textbf{impredicative} in the sense that function types can quantify over $\star$ while still being in $\star$.
+The system does not allow \tit{}, instead type\footnote{called \textbf{prop}, for proposition} lives in a larger universe $\star:\Square$, where $\Square$ is not considered a type.
+Even though the Calculus of Constructions does not allow \tit{} it is still \textbf{impredicative} in the sense that function types can quantify over $\star$ while still being in $\star$.
 For instance, the polymorphic identity $id:(X:\star)\rightarrow X\rightarrow X$ has type $\star$ so the polymorphic identity can be applied to itself, $id\,\left((X:\star)\rightarrow X\rightarrow X\right)\,id$.
 From the perspective of the surface language this impredictivity is modest, but still causes issues in the presence of classical logical assumptions. \todo{Cite}
 Many of the examples from this chapter are adapted from examples that were first worked out for the Calculus of Constructions.
@@ -1368,7 +1393,7 @@ System F additionally allows Types to depend on types.
 The Calculus of Constructions has all forms of dependency\footnote{Recommended reading Chapter 14 \cite{sorensen2006lectures}}.
 
 Pure Type Systems (\ac{PTS})\footnote{previously called \textbf{Generalized Type Systems}} generalizes the lambda cube to allow any number of type universes with any forms of dependency.
-Notably this includes the system with one type universe where \tit.
+Notably this includes the system with one type universe where \tit{}.
 Universe hierarchies can also be embedded in a \ac{PTS}.
 The system described in this chapter is almost a \ac{PTS}, except that it contains unrestricted recursion and the method of type annotation is different.
 All pure type systems such as System F and the Calculus of Constructions have corresponding terms in the Surface Language, by renaming their type universes into the surface language type universe.
@@ -1389,24 +1414,14 @@ Since \ac{MTLL} is open ended, the Calculus of Constructions can be added to it 
 \todo{cite the autosubst proof}
 
 
-% https://pdf.sciencedirectassets.com/271596/1-s2.0-S0168007200X00942/1-s2.0-0168007290900443/main.pdf?X-Amz-Security-Token=IQoJb3JpZ2luX2VjEG0aCXVzLWVhc3QtMSJGMEQCIFSli4A8K6FDZecOEBrODsSRQkWf4kVLsAT8ZTE8hsISAiBEQ6Kexg6qllUf926MZuCvcA%2FEFEUozoJnapDBmZQYQCqDBAiW%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAQaDDA1OTAwMzU0Njg2NSIMofc2RU%2FY4QY5OGCvKtcDR%2FY4Qk%2BOjYeJG9I2d5x%2Fn0hOp%2FQ6dNlKvgQhyjylK40YH4%2BY0Xp%2Fqy%2FqDPT622K87pG05gpAwEaQODVLZMZpSTOAXHeNrIWSwkQz%2FDnAxeh4LG6NC%2Ba78yQvDrImMkXNWixj4UvSnChCnCk1KFNPS4%2BZLDDFIo1JEwX6Ti1co93vfht%2B0q26M50r9IzLYFFX1q1xpBeCOt2Rm8PZ5z0%2F%2FlXbQVqIZzV%2FzoVYwewzobYgkfGsqiAR%2FcSeamDVf9UczzhIWcro7Xxt9PM7xLG4A7j%2F6evpKhY0cMn6RQ%2F8wxR4q5CqBx2RP94zhFvpqQfnwIw4Pw8a6zaOSNArI65woo%2FoovPQPcXdBI5BBqLypyeclSDKjfUaQlt3TjryGp7GRQYu3yQOEshuuYgVHQbermZZ14spwRZyt01U7gEB2tQUVv6uGq28I%2B6XzDIg1EkNJSSQwj2HfOvEvz%2BiurAIeyTASIZZXUp440u0YcUymlZQOeIlbC1aCMUAwmfmrPAEnPpE0UmxmppwEYi%2B4nwkbVot9B3hVncEDv5Tc%2F6YPIBXz5pvzYd7U1dtQbASA1d8yw%2FvS8tkLVk3iSn%2FHMTHN7glTATI%2BxdSUB7FoXukZI0UErmum3RYMIvJwY8GOqYBuD0K83IG8ZJj9sT2sK8%2BExWpzsTyS9NuK9k2%2BIphxvGseCQDOS%2FkZ00Z4%2FoMKGsW5usij33h6iln5RX%2FTVYrJEQWbDwxPqHM%2FTGDXLRMkN2Ni%2FfsMqhje4Tf6fQEqVYnZSCY57XWGOdumXNRK%2Bc9bqt8ULVTi3rm9Ae0h94xbBH0RZ4wIojAP3UUJObFOvOVwtxHcISIR4KZppMEpsegCYFhM1ioBw%3D%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20220125T212203Z&X-Amz-SignedHeaders=host&X-Amz-Expires=300&X-Amz-Credential=ASIAQ3PHCVTY6JCOWDYF%2F20220125%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=eae79226f4116531e09756602064aacbd78aeb5318627b95ad7cc2664419b4ef&hash=7c1c6924ff3612229d9b08d6152eaaccf1532809166de22361c62f72741c7995&host=68042c943591013ac2b2430a89b270f6af2c76d8dfd086a07176afe7c76c2c61&pii=0168007290900443&tid=spdf-213da1c0-275e-4ffc-b583-87a65c2752b5&sid=f84470ba9318804a1a3b5cd6991bbda08f86gxrqa&type=client
 
-% The system presented in Martin-LGf [9], or variants thereof, is often referred to
-% as total type theory. Martin-Lbf has extended total type theory to partial type
-% theory by introducing an iteration type J2 and an element w E Q (see Section 4
-% below) which, for example, allowed him to define a fixed point operator within
-% the theory. Partial type theory turns out to be inconsistent when considered as a
-% logic in the sense that each type is non-empty, including the type iVO for absurdity,
-% which hence is true. Nonetheless, partial type theory is a perfectly good set
-% theory and programming language. Unable to give a satisfactory standard
-% interpretation of partial type theory, Martin-Lof [8] gave a domain interpretation
-% in which each expression for an element of a type (this we call a term) is
-% interpreted into a fixed domain. A presentation of this interpretation using
-% information systems is given in Eklund [5].
+% \bidir{}
+% [109] Benjamin C. Pierce and David N. Turner. Local type inference. ACM Transactions on Programming Languages and Systems, 22(1):1–44, January 2000.
 
-% We wish to thank Per Martin-L6f for his help to increase our understanding of
-% intuitionistic type theory, through seminars and informal conversations. In
-% particular, we believe he was the first to suggest interpreting the Z-type using
-% initial segments of domains. After the completion of this paper, the abstract
-% Martin-Liif [10] was brought to our attention, indicating that Martin-Lof more
-% than anticipated many of our results. We also thank D
+% cbn
+%  Vilhelm Sj¨oberg and Aaron Stump. Equality, quasi-implicit products, and large
+% eliminations. In ITRS 2010: Proceedings of the 5th workshop on Intersection
+% Types and Related Systems, 2010. doi: 10.4204/EPTCS.45.7.
+
+
+% atosubst
