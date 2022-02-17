@@ -17,7 +17,26 @@ open import Relation.Binary.PropositionalEquality hiding ([_])
 
 
 
-preservation~>p :  {n : ℕ} {Γ : Ctx {n}} {a a' aTy : _}
+
+_==ctx_ : {n : ℕ} -> (Γ Γ' : pCtx {n}) -> Set
+Γ ==ctx Γ' = {ty : _} -> {Ty : _}
+  -> (v : Fin _)
+  -> In  Γ v Ty -> Σ _ \ ty' -> Σ _ \ Ty' ->  Σ (In  Γ' v Ty') \ _ -> ty == ty'
+  
+
+
+preservation-ctx== :  {n : ℕ} {Γ Γ' : pCtx {n}} {a aTy : _}
+  -> Γ |- a :: aTy -> Γ ==ctx Γ' 
+  -> Γ' |- a :: aTy
+preservation-ctx== (Var v x) eq = {!!}
+preservation-ctx== TyU eq = {!!}
+preservation-ctx== (Pi x x₁) eq = {!!}
+preservation-ctx== (Fun x x₁ x₂) eq = {!!}
+preservation-ctx== (App x x₁) eq = {!!}
+preservation-ctx== (Ann x x₁) eq = Ann (preservation-ctx== x eq) (preservation-ctx== x₁ eq)
+preservation-ctx== (Conv x x₁) eq = {!!}
+
+preservation~>p :  {n : ℕ} {Γ : pCtx {n}} {a a' aTy : _}
   -> Γ |- a :: aTy  -> a ~>p a'
   -> Γ |- a' :: aTy
 preservation~>p (Var v x) x₁ = {!!}

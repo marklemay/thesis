@@ -1,0 +1,745 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+\usepackage{xcolor}
+\usepackage{tikz-cd}
+\tikzcdset{%
+    triple line/.code={\tikzset{%
+        double equal sign distance, % replace by double distance = 'measure' 
+        double=\pgfkeysvalueof{/tikz/commutative diagrams/background color}}},
+    quadruple line/.code={\tikzset{%
+        double equal sign distance, % replace by double distance = 'measure'
+        double=\pgfkeysvalueof{/tikz/commutative diagrams/background color}}},
+    Rrightarrow/.code={\tikzcdset{triple line}\pgfsetarrows{tikzcd implies cap-tikzcd implies}},
+    RRightarrow/.code={\tikzcdset{quadruple line}\pgfsetarrows{tikzcd implies cap-tikzcd implies}}
+}    
+\newcommand*{\tarrow}[2][]{\arrow[Rrightarrow, #1]{#2}\arrow[dash, shorten >= 0.5pt, #1]{#2}}
+\newcommand*{\qarrow}[2][]{\arrow[RRightarrow, #1]{#2}\arrow[equal, double distance = 0.25pt, shorten >= 1.28pt, #1]{#2}}
+\end_preamble
+\use_default_options true
+\begin_modules
+todonotes
+theorems-ams
+\end_modules
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize letterpaper
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 2cm
+\topmargin 2cm
+\rightmargin 2cm
+\bottommargin 2cm
+\headheight 2cm
+\headsep 2cm
+\footskip 2cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 2
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Chapter 5 (draft): Data Rules
+\end_layout
+
+\begin_layout Author
+Mark Lemay
+\end_layout
+
+\begin_layout Standard
+temporary
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\mathbb{N},\mathbb{B}:\star$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\ }{\varGamma\vdash\mathbb{N}\sqsupseteq\mathbb{N}:\star}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{\ }{\varGamma\vdash\mathbb{B}\sqsupseteq\mathbb{B}:\star}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{\ }{\mathbb{N}\ \mathbf{Val}}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{\ }{\mathbb{B}\ \mathbf{Val}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Endpoint Rules
+\end_layout
+
+\begin_layout Standard
+some of these 
+\begin_inset Quotes eld
+\end_inset
+
+ok
+\begin_inset Quotes erd
+\end_inset
+
+ checks may be redundant.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\ }{\varGamma\vdash\star\sqsupseteq\star:\star}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\begin{array}{c}
+\varGamma\vdash L\ \mathbf{ok}\\
+\varGamma\vdash L\sqsupseteq A:\star\\
+\varGamma\vdash L\sqsupseteq B:\star\\
+\varGamma\vdash a\sqsupseteq a':A
+\end{array}}{\varGamma\vdash a::L\sqsupseteq a'::L:B}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\begin{array}{c}
+\varGamma\vdash L\ \mathbf{ok}\\
+\varGamma\vdash L\sqsupseteq A:\star\\
+\varGamma\vdash L\sqsupseteq B:\star\\
+\varGamma\vdash a\sqsupseteq a':A
+\end{array}}{\varGamma\vdash a::L\sqsupseteq a'::L:B}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\begin{array}{c}
+\varGamma\vdash\left\{ \overline{a,}\right\} _{L'}\ \mathbf{ok}\\
+a\in\overline{a}\\
+\varGamma\vdash a\sqsupseteq a':A\\
+\varGamma\vdash L'\sqsupseteq B:\star
+\end{array}}{\varGamma\vdash\left\{ \overline{a,}\right\} _{L'}\sqsupseteq a'::L'\ :\ B}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\begin{array}{c}
+c\in\left\{ a,b\right\} \\
+\varGamma\vdash c\sqsupseteq c':C'\\
+\varGamma\vdash L\sqsupseteq c':C'\\
+\varGamma\vdash L\sqsupseteq D:\star\\
+\varGamma\vdash L\ \mathbf{ok}
+\end{array}}{\varGamma\vdash a\sim_{\ell,o}^{L}b\sqsupseteq a'::L\ :\ B}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Endpoint Conversions
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\begin{array}{c}
+\varGamma\vdash a\sqsupseteq a':A'\\
+\varGamma\vdash A'\equiv B:\star
+\end{array}}{\varGamma\vdash a\sqsupseteq a':B}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\begin{array}{c}
+\varGamma\vdash a\sqsupseteq a':A'\\
+\varGamma\vdash a'\equiv b:A'
+\end{array}}{\varGamma\vdash a\sqsupseteq b:A'}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Empty
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\ }{.\ \mathbf{Empty}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Step
+\end_layout
+
+\begin_layout Standard
+the exact order doesn't really matter for most of these rules.
+ But it will be helpful if it is made deterministic 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{L\rightsquigarrow L'}{\left\{ \overline{a,}\right\} _{L}\rightsquigarrow\left\{ \overline{a,}\right\} _{L'}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{L\ \mathbf{Val}\quad\overline{a}\ \mathbf{Val}\quad\star\in\overline{a}}{\left\{ \overline{a,}\star,\overline{b,}\right\} _{L}\rightsquigarrow\left\{ \overline{a,}\overline{b,}\right\} _{L}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+not determinisic...
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{L\ \mathbf{Val}\quad\overline{a}\rightsquigarrow\overline{a'}}{\left\{ \overline{a,}\right\} _{L}\rightsquigarrow\left\{ \overline{a',}\right\} _{L}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{L\ \mathbf{Val}\quad\overline{a}\ \mathbf{Val}\quad b\ \mathbf{Val}\quad b::L'}{\left\{ \overline{a,}b::L',\overline{c,}\right\} _{L}\rightsquigarrow\left\{ \overline{a,}b,\overline{c,}\right\} _{L'\cup L}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+perhaps it is easier to include 
+\begin_inset Formula $\cup$
+\end_inset
+
+ as a sintax, instead of an operator? but needs to deal with the type of
+ the type,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\ }{\left\{ \star\right\} _{\star}\rightsquigarrow\star}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\ }{\star\sim_{\ell,o}^{\star}\star\rightsquigarrow\star}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\quad}{\left(a::L\right)::L'\rightsquigarrow a'::\left(L\cup L'\right)}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\ }{a::L'\sim_{\ell,o}^{L}b\rightsquigarrow a\sim_{\ell,o}^{L\cup L'}b}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{\ }{a\sim_{\ell,o}^{L}b::L'\rightsquigarrow a\sim_{\ell,o}^{L\cup L'}b}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+structrural rules, perhaps invest in evaluation contexts
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{L\rightsquigarrow L'}{a::L\rightsquigarrow a::L'}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{a\rightsquigarrow a'\quad L\ \mathbf{Val}}{a::L\rightsquigarrow a'::L}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{L\rightsquigarrow L'}{a\sim_{\ell,o}^{L}b\rightsquigarrow a\sim_{\ell,o}^{L'}b}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{a\rightsquigarrow a'}{a\sim_{\ell,o}^{L}b\rightsquigarrow a'\sim_{\ell,o}^{L}b}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{b\rightsquigarrow b'}{a\sim_{\ell,o}^{L}b\rightsquigarrow a\sim_{\ell,o}^{L}b'}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Values
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\ }{\star\ \mathbf{Val}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Blame
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{a\ \mathbf{Blame}_{\ell,o}\quad a\in\overline{a,}}{\left\{ \overline{a,}\right\} _{\star}\ \mathbf{Blame}_{\ell,o}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{L\ \mathbf{Blame}_{\ell,o}}{a::L\ \mathbf{Blame}_{\ell,o}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\mathbf{head}\ a\neq\mathbf{head}\ b\quad}{a\sim_{\ell,o}^{L}b\ \mathbf{Blame}_{\ell,o}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{L\ \mathbf{Blame}_{\ell,o}}{a\sim_{\ell,o}^{L}b\ \mathbf{Blame}_{\ell,o}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{c\in\left\{ a,b\right\} \quad c\ \mathbf{Blame}_{\ell,o}}{a\sim_{\ell,o}^{L}b\ \mathbf{Blame}_{\ell,o}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Definitional equality
+\end_layout
+
+\begin_layout Standard
+(consider untyped varient)
+\end_layout
+
+\begin_layout Standard
+equality has these properties, the exact definition may differ, and some
+ of these properties would be hard to build directly
+\end_layout
+
+\begin_layout Standard
+respects evaluation
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{a\rightsquigarrow a'\quad\varGamma\vdash a:A}{\varGamma\vdash a\equiv a':A}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Assume a congruent equivalence that 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\varGamma\vdash a\equiv a':A\quad\varGamma,x:A\vdash b:B}{\varGamma\vdash b\left[x\Coloneqq a\right]\equiv b\left[x\Coloneqq a'\right]:B\left[x\Coloneqq a\right]}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\varGamma\vdash a:A}{\varGamma\vdash a\equiv a:A}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\varGamma\vdash a\equiv b:A}{\varGamma\vdash b\equiv a:A}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\varGamma\vdash a\equiv b:A\quad\varGamma\vdash b\equiv c:A}{\varGamma\vdash b\equiv c:A}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+associates trivial casts with uncast terms
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\varGamma\vdash a:A}{\varGamma\vdash a\equiv a::\left\{ A\right\} _{\star}:A}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+associates casts at the same endpoints
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\varGamma\vdash a\equiv a':A\quad\varGamma\vdash a::L\ :B\quad\varGamma\vdash a'::L'\ :B}{\varGamma\vdash a::L\ \equiv\ a'::L'\ :\ B}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+ok
+\end_layout
+
+\begin_layout Standard
+just going to alow okness to imply connectedness, seems easier then 2 seperate
+ judgments
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\ }{\varGamma\vdash\star\ \mathbf{ok}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\begin{array}{c}
+\varGamma\vdash a\ \mathbf{ok}\\
+\varGamma\vdash A\ \mathbf{ok}\\
+\varGamma\vdash a\sqsupseteq a':A'\\
+\varGamma\vdash A\sqsupseteq A':\star
+\end{array}}{\varGamma\vdash\left\{ a\right\} _{A}\ \mathbf{ok}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\begin{array}{c}
+\varGamma\vdash L\ \mathbf{ok}\\
+L=\left\{ \overline{a,}\right\} _{L'}\\
+\varGamma\vdash b\ \mathbf{ok}\\
+\varGamma\vdash b\sqsupseteq a':A'\\
+\varGamma\vdash L\sqsupseteq a':A'\\
+\varGamma\vdash L'\ \mathbf{ok}\\
+\varGamma\vdash L'\sqsupseteq A':\star
+\end{array}}{\varGamma\vdash\left\{ b,\overline{a,}\right\} _{L'}\ \mathbf{ok}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\begin{array}{c}
+\varGamma\vdash A\ \mathbf{ok}\\
+\varGamma\vdash L\ \mathbf{ok}\\
+\varGamma\vdash a\sqsupseteq a':A'\\
+\varGamma\vdash L\sqsupseteq A':\star
+\end{array}}{\varGamma\vdash a::L\ \mathbf{ok}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\begin{array}{c}
+\varGamma\vdash L\ \mathbf{ok}\\
+\varGamma\vdash a\sqsupseteq a':A'\\
+\varGamma\vdash L\sqsupseteq A':\star\\
+\varGamma\vdash b\sqsupseteq b':A'
+\end{array}}{\varGamma\vdash a\sim_{\ell,o}^{L}b\ \mathbf{ok}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

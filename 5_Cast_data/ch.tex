@@ -187,6 +187,14 @@ $CastL$ will be derivable within the extended cast system.
 
 \todo[inline]{Make 2 examples?}
 
+sometimes congruence is needed even when variables are not used
+
+\begin{lstlisting}[basicstyle={\ttfamily\small}]
+  case x <x: Nat => Vec Bool x> {
+  | 7 => rep 7
+  }
+  \end{lstlisting}
+
 \todo[inline]{Note that an arbitrary choice was was made $InTC_{1}(p)$ $InTC_{2}(p)$}
 
 \subsubsection{Need to remove a cast}

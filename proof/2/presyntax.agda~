@@ -56,7 +56,7 @@ data pCtx : {n : ℕ} -> Set where
   pExt : {n : ℕ} -> (Γ : pCtx {n}) -> (a : PreSyntax {n}) -> pCtx {suc n}
 
 postulate
-  In : {n : ℕ} -> (Γ : pCtx {n}) -> (v : Fin n) -> (ty : PreSyntax {n}) -> Set
+  In : {n : ℕ} -> (Γ : pCtx {n}) -> (v : Fin n) -> (ty : PreSyntax {n})  -> Set
 
 postulate
 --  pLookup : {n : ℕ} (Γ : pCtx n) -> (i : Fin n)  -> PreSyntax {n}

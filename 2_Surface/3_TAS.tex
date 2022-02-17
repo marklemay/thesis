@@ -21,7 +21,9 @@ These issues will be addressed when the more practical, \bidir{} type system is 
 \]
 
 \[
-\frac{\Gamma\tasys m\,:\,M}{\Gamma\tasys m::M\,:\,M}\,\rulename{ty-::}
+\frac{\Gamma\tasys m\,:\,M \quad \Gamma\tasys M\,:\,\star\
+}{\Gamma\tasys m::M\,:\,M}
+\,\rulename{ty-::}
 \]
 
 \[
@@ -414,7 +416,7 @@ $\forall N,M,P.\left(x:N\right)\rightarrow M\Rrightarrow_{\ast}P\:\mathrm{implie
 by induction on $\Rrightarrow_{\ast}$
 \begin{casenv}
   \item $\rulename{\Rrightarrow_{\ast}-refl}$ follows directly
-  \item $\rulename{\Rrightarrow_{\ast}-trans}$ via the induction hypothesis and noting only the $\rulename{\Rrightarrow-\mathsf{fun}-ty}$ rule is possible as a step
+  \item $\rulename{\Rrightarrow_{\ast}-trans}$ follows via the induction hypothesis and noting only the $\rulename{\Rrightarrow-\mathsf{fun}-ty}$ rule is possible as a step
 \end{casenv}
 \end{proof}
 Therefore the we can derive an important fact about $\equiv$
@@ -562,10 +564,11 @@ The following rule is admissible
 by induction on the typing derivation $\Gamma\tasys m:M$, specializing on $m\Rrightarrow m'$,
 \todo{formatting}
 \begin{casenv}
-  \item \rulename{ty-::} when \rulename{\Rrightarrow-::}, we must show $\Gamma\tasys m'::M':\,M$.
-   from $m\Rrightarrow m'$, $M\Rrightarrow M'$, and $\Gamma\tasys m'\,:\,M$.
+  \item \rulename{ty-::} when \rulename{\Rrightarrow-::}, we must show $\Gamma\tasys m'::M':\,M$ and $\Gamma\tasys M':\star$
+   from $m\Rrightarrow m'$, $M\Rrightarrow M'$, $\Gamma\tasys m'\,:\,M$, and $\Gamma\tasys M\,:\,\star$.
    \newline
    \begin{tabular}{ll}
+    $\Gamma\tasys M':\star$ & by induction\tabularnewline
     $\Gamma\tasys m'\,:\,M$ & by induction\tabularnewline
     $M\equiv M'$ & by $M\Rrightarrow M'$\tabularnewline
     $\Gamma\tasys m'\,:\,M'$ & by \rulename{ty-conv}\tabularnewline
