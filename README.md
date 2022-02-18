@@ -72,8 +72,7 @@ latexmk draft.tex -pdf
 - [ ] Feb
   - [x] redo data
   - [x] revise introduction
-  - [ ] revise Surface Language chapter
-  - [ ] revise Cast Language chapter
+  - [ ] revise Surface Language chapter, Cast Language chapter
   - [ ] send draft to committee
   - [ ] reimplement
   - [ ] ICFP submission

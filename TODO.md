@@ -1,8 +1,3 @@
-By wed,
-* better images
-* tablet notes
-
-
 admin
 * follow up with GRS spring semester extention
 * ask Alley to chair
@@ -52,8 +47,6 @@ the design of CastCIC."
 
 
 Formatting
-* department
-* alternative single sppaced draft.tex for better printing
 * nice looking multi tabbed proof format?
 * validity/regularity
 * note on equality
@@ -73,7 +66,7 @@ Send to people for review
 * internet
 * contact authors about https://arxiv.org/pdf/2107.04859.pdf, should probly invite to defence
   * address concernce that this is novel
-* The EE guy for maintaining the latex
+* The thank EE guy for maintaining the latex
 
 
 defence 
