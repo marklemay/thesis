@@ -8,29 +8,30 @@ latest draft available [here](https://github.com/marklemay/thesis/releases)
 * Where are you first confused?
 * Where do you first get board?
 * how much new jargon should I introduce
- * name the system `dDyamic`?
- * better name for the `surface language` and `cast language`?
- * `gradual correctness`?
- 
+  * name the system `dDyamic`?
+  * better name for the `surface language` and `cast language`?
+  * `gradual correctness`?
+
+
 * Chapter 1
- * is a plausible argument made
- * spelling, grammar
+  * is a plausible argument made
+  * spelling, grammar
 * Chapter 2
- * proofs correct
- * formalisms are well motivated
- * formalisms are "standard"
- * prior work is complete and well represented
- * spelling, grammar
+  * proofs correct
+  * formalisms are well motivated
+  * formalisms are "standard"
+  * prior work is complete and well represented
+  * spelling, grammar
 * Chapter 3
- * proofs correct
- * formalisms are well motivated
+  * proofs correct
+  * formalisms are well motivated
 * Chapter 4
- * formalisms are well motivated
- * prior work is correct, and complete
+  * formalisms are well motivated
+  * prior work is correct, and complete
 * Chapter 5
- * examples
+  * examples
 * Conclusion
- * photo ready
+  * photo ready
  
 ## compile pdf
 get bibliography and fully build bu style pdf with
@@ -48,39 +49,39 @@ latexmk draft.tex -pdf
 ## Complete
 * 6/16/2021 thesis proposal
 - [x] June
- - [x] Propose
- - [x] extended abstract submission
+  - [x] Propose
+  - [x] extended abstract submission
 - [x] July
- - [x] reworked data
+  - [x] reworked data
 - [x] August
- - [x] Begin a submission to [CPP](https://popl22.sigplan.org/home/CPP-2022)
+  - [x] Begin a submission to [CPP](https://popl22.sigplan.org/home/CPP-2022)
 - [x] September
- - [x] Submit to [CPP](https://popl22.sigplan.org/home/CPP-2022)
- - [x] Produce some larger examples
+  - [x] Submit to [CPP](https://popl22.sigplan.org/home/CPP-2022)
+  - [x] Produce some larger examples
 - [x] October
- - [x] draft Surface Language chapter
+  - [x] draft Surface Language chapter
 - [x] November
- - [x] draft Cast Language chapter
- - [x] draft Surface Data chapter
+  - [x] draft Cast Language chapter
+  - [x] draft Surface Data chapter
 - [x] December
- - [x] draft introduction
- - [x] draft conclusion
+  - [x] draft introduction
+  - [x] draft conclusion
 - [x] Jan
- - [x] discovered mistake in handling of data
+  - [x] discovered mistake in handling of data
 ## Plan
 - [ ] Feb
- - [x] redo data
- - [x] revise introduction
- - [ ] revise Surface Language chapter
- - [ ] revise Cast Language chapter
- - [ ] send draft to committee
- - [ ] reimplement
- - [ ] ICFP submission
+  - [x] redo data
+  - [x] revise introduction
+  - [ ] revise Surface Language chapter
+  - [ ] revise Cast Language chapter
+  - [ ] send draft to committee
+  - [ ] reimplement
+  - [ ] ICFP submission
 - [ ] March
- - [ ] rewrite Data chapter
- - [ ] revise final 3 chapters
- - [ ] Practice defense
- - [ ] Defend
+  - [ ] rewrite Data chapter
+  - [ ] revise final 3 chapters
+  - [ ] Practice defense
+  - [ ] Defend
 ## Remove from the body of the thesis
 - [ ] Rework symbolic execution to work in the cast language
 - [ ] draft testing chapter
@@ -89,3 +90,10 @@ latexmk draft.tex -pdf
 ## TODO
 * formatting
 * join one of the writing groups/workshops?
+
+## Related
+* https://github.com/marklemay/boston-university-thesis-template
+* https://github.com/marklemay/thesis-proposal
+* https://icfp21.sigplan.org/details/TyDe-2021/1/Gradual-Correctness-a-Dynamically-Bidirectional-Full-Spectrum-Dependent-Type-Theory-
+  * https://github.com/marklemay/dDynamic
+  * https://github.com/qcfu-bu/dtest-coq
