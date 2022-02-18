@@ -1,0 +1,246 @@
+\section{\Bidir{} Surface Language}
+
+% Annotate all the vars 
+There are many possible ways to localize the type checking process.
+We could ask that all variables be annotated at binders.
+This is enticing from a theoretical perspective, since it matches how type contexts are built up.
+
+However note that, our proof of $\lnot1_{c}\doteq_{\mathbb{N}_{c}}0_{c}$ will look like
+
+$\lambda pr\underline{:1_{c}\doteq_{\mathbb{N}_{c}}0_{c}}\Rightarrow pr$
+$\left(\lambda n:\underline{\left(C:\left(\mathbb{N}_{c}\rightarrow\star\right)\right)\rightarrow C\,1_{c}\rightarrow C\,0_{c}}\Rightarrow n\,\star\,(\lambda-:\underline{\star\Rightarrow Unit_{c}})\,\perp_{c}\right)\,tt_{c}:\underline{\lnot1_{c}\doteq_{\mathbb{N}_{c}}0_{c}}$
+
+More than half of the term is type annotations!
+Annotating every binding site requires a lot of redundant information.
+% Further the theory would need to deal with all the binders evaluating
+Luckily there's a better way.
+
+\subsection{\Bidir{} Type Checking}
+
+\textbf{\Bidir{} type checking} is a popular form of lightweight type inference, which strikes a good compromise between the required type annotations and the simplicity of the procedure, allowing for localized errors\footnote{\cite{christiansen2013\bidir{}} is a good tutorial, \cite{10.1145/3450952} is a survey of the technique}.
+In the usual \bidir{} typing schemes, annotations are only required at the top-level, or around a function that is directly applied to an argument\footnote{more generally when an elimination reduction is possible.}.
+For example $(\lambda x\Rightarrow x+x)7$ would need to be written $\left((\lambda x\Rightarrow x+x)::\mathbb{N}\rightarrow\mathbb{N}\right)7$.
+Since programers rarely write functions that are immediately evaluated, this style of type checking usually only needs top level functions to be annotated\footnote{Even in Haskell, with full Hindley-Milner type inference, top level type annotations are encouraged.}\todo{ref style guide.
+the point was similarly made in Agda thesis.}.
+In fact, almost every example in \Fref{surface-examples} has enough annotations to type check \bidir{}{}ly without further information.
+
+\todo{note popularity}
+
+This is accomplished by breaking the typing judgments into two mutual judgments:
+\begin{itemize}
+\item \textbf{Type Inference} where type information propagates out of a term, $\overrightarrow{\,:\,}$ in our notation. 
+\item \textbf{Type Checking} judgments where a term is checked against a type, $\overleftarrow{\,:\,}$ in our notation. 
+\end{itemize}
+This allows typing information to flow from the "outside in" for type checking judgments and "inside out" for the type inference judgments.
+A check can be induced manually with a type annotation.
+When an inference meets a check, a conversion verifies that the types are definitionally equal.
+This has the advantage of precisely limiting where the $\operatorname{ty-conv}$ rule is needed, since conversion checking is usually an inefficient part of dependent type checking.
+
+This enforced flow of information results in a system that localizes type errors.
+If a type was inferred, it was unique from the term, so it can be used freely.
+Checking judgments force terms that could have multiple typings in the \ac{TAS} to have at most one type.
+
+\begin{figure}
+\[
+\frac{x:M\in\Gamma}{\Gamma\vdash x\overrightarrow{\,:\,}M}\operatorname{\overrightarrow{ty}-var}
+\]
+\[
+\frac{\,}{\Gamma\vdash\star\overrightarrow{\,:\,}\star}\operatorname{\overrightarrow{ty}-\star}
+\]
+\[
+\frac{\Gamma\vdash m\overleftarrow{\,:\,}M}{\Gamma\vdash m::M\overrightarrow{\,:\,}M}\operatorname{\overrightarrow{ty}-::}
+\]
+\[
+\frac{\Gamma\vdash M\overleftarrow{\,:\,}\star\quad\Gamma,x:M\vdash N\overleftarrow{\,:\,}\star}{\Gamma\vdash\left(x:M\right)\rightarrow N\overrightarrow{\,:\,}\star}\operatorname{\overrightarrow{ty}-\mathsf{fun}-ty}
+\]
+\[
+\frac{\Gamma\vdash m\overrightarrow{\,:\,}\left(x:N\right)\rightarrow M\quad\Gamma\vdash n\overleftarrow{\,:\,}N}{\Gamma\vdash m\,n\overrightarrow{\,:\,}M\left[x\coloneqq n\right]}\operatorname{\overrightarrow{ty}-\mathsf{fun}-app}
+\]
+\[
+\frac{\Gamma,f:\left(x:N\right)\rightarrow M,x:N\vdash m\overleftarrow{\,:\,}M}{\Gamma\vdash\mathsf{fun}\,f\,x\Rightarrow m\overleftarrow{\,:\,}\left(x:N\right)\rightarrow M}\operatorname{\overleftarrow{ty}-\mathsf{fun}}
+\]
+\[
+\frac{\Gamma\vdash m\overrightarrow{\,:\,}M\quad M\equiv M'}{\Gamma\vdash m\overleftarrow{\,:\,}M'}\operatorname{\overleftarrow{ty}-conv}
+\]
+
+\caption{Surface Language \Bidir{} Typing Rules}
+\label{fig:surface-bityping-rules}
+\end{figure}
+
+% review the typing rule 
+The surface language supports \bidir{} type-checking over the pre-syntax with the rules in \Fref{surface-bityping-rules}.
+The rules are almost the same as before except that typing direction is now explicit in the judgment.
+
+As mentioned, \bidir{} type checking handles higher order functions very well.
+For instance, the expression $\vdash(\lambda x\Rightarrow x\,(\lambda y\Rightarrow y)\,2)\overleftarrow{\,:\,}\left(\left(\mathbb{N}\rightarrow\mathbb{N}\right)\rightarrow\mathbb{N}\rightarrow\mathbb{N}\right)\rightarrow\mathbb{N}$ checks because $\vdash(\lambda y\Rightarrow y)\overleftarrow{\,:\,}\left(\mathbb{N}\rightarrow\mathbb{N}\right)$ and $\vdash2\overleftarrow{\,:\,}\mathbb{N}$.
+
+Unlike the undirected judgments of the Type Assignment System, the inference rule of the \bidir{} system does not convert
+The inference, it is unique up to syntax!
+For example $x:Vec\,3\vdash x\overrightarrow{\,:\,}Vec\,3$, but $x:Vec\,3\cancel{\vdash}x\overrightarrow{\,:\,}Vec\,\left(1+2\right)$.
+This could cause unexpected behavior around function applications.
+For instance, if $\Gamma\vdash m\overrightarrow{\,:\,}\mathbb{N}\rightarrow\mathbb{N}$ then $\Gamma\vdash m\:7\overrightarrow{\,:\,}\mathbb{N}$ will infer, but only because the $\rightarrow$ is in the head position of the type $\mathbb{N}\underline{\rightarrow}\mathbb{N}$.
+If $\Gamma\vdash m\overrightarrow{\,:\,}\left(\mathbb{N}\rightarrow\mathbb{N}::\star\right)$ then $::$ is in the head position of $\mathbb{N}\rightarrow\mathbb{N}\underline{::}\star$ and $\Gamma\cancel{\vdash}m\ 7\overrightarrow{\,:\,}\mathbb{N}$ will will not infer.
+
+The similar issue is possible around check rules around function definitions.
+For instance, $\vdash\left((\lambda x\Rightarrow x)::\mathbb{N}\rightarrow\mathbb{N}\right)\ \overrightarrow{\,:\,}\mathbb{N}\rightarrow\mathbb{N}$ will infer, but if computation blocks the $\rightarrow$ from being in the head position, inference will be impossible.
+As in the expression, $\left((\lambda x\Rightarrow x)::\left(\mathbb{N}\rightarrow\mathbb{N}\underline{::}\star\right)\right)$ which will not infer.
+
+For these reasons, realistic implementations will often evaluate the types needed for $\overleftarrow{ty}-\mathsf{fun}$, and $\operatorname{\overrightarrow{ty}-\mathsf{fun}-app}$ into weak head normal form\footnote{as in \cite{COQUAND1996167}}.
+More advanced \bidir{} implementations such as Agda\cite{norell2007towards} even perform unification as part of their \bidir{} type checking.
+
+\todo[inline]{alternative listed in appendix}
+\todo[inline]{what else does the algorithm infer not listed here}
+\todo[inline]{More about extending the system so constraint solving can happen under a check judgment }
+\todo[inline]{Clearly explain why this is needed for the cast system, annotating every var is cumbersome, constraint solving is iffy when things may be undecidable}
+
+This document opts for the simplest possible presentation of \bidir{} type checking.
+There will always be ways to make type inference more powerful, at the cost of complexity.
+
+\subsection{The \Bidir{} System is Type Sound}
+
+It is possible to prove \bidir{} type systems are type sound directly\cite{nanevski2005dependent}.
+But it would be difficult for the system described here since type annotations evaluate away, complicating preservation.
+Alternatively we can show that a \bidir{} typing judgment implies a type assignment system typing judgment.
+
+\begin{thm}
+\Bidir{} implies \ac{TAS}
+
+if $\Gamma\vdash m\overrightarrow{\,:\,}M$ then $\Gamma\vdash m\,:\,M$
+
+if $\Gamma\vdash m\overleftarrow{\,:\,}M$ then $\Gamma\vdash m\,:\,M$
+\end{thm}
+
+\begin{proof}
+by mutual induction on the \bidir{} typing derivations.
+\end{proof}
+Therefore the \bidir{} system is also type sound.
+
+\subsection{The \ac{TAS} System is weakly annotatable by the \Bidir{} System}
+
+In \Bidir{} systems, \textbf{annotatability}\footnote{also called \textbf{completeness}} is the property that any expression that types in a \ac{TAS} will type in the \bidir{} system with only additional annotations.
+This property doesn't exactly hold for the \bidir{} system presented here.
+For instance, $\vdash\left((\lambda x\Rightarrow x)::\left(\mathbb{N}\rightarrow\mathbb{N}::\star\right)\right)$ type checks in the \ac{TAS} system, but no amount of annotations will make it check in the \bidir{} system.
+Instead we can show that the \bidir{} system does not preclude any computation available in the \ac{TAS}, though annotations may need to be added (or removed).% no need to remove if properly \bidir{}).
+We will call this property \textbf{weak annotatability}.
+\begin{thm}
+weak annotatability.
+
+if $\Gamma\vdash m\,:\,M$ then $\Gamma\vdash m'\overleftarrow{\,:\,}M'$, $m\equiv m'$ and $M\equiv M'$ 
+
+if $\Gamma\vdash m\,:\,M$ then $\Gamma\vdash m'\overrightarrow{\,:\,}M'$ , $m\equiv m'$ and $M\equiv M'$
+\end{thm}
+
+\begin{proof}
+by induction on the typing derivation, adding and removing annotations at each step that are convertible with the original $m$
+\end{proof}
+\todo[inline]{slight changes have been made, double check this}
+
+\subsection{Absent Logical Properties}
+
+When type systems are used as logics, it is desirable that
+\begin{itemize}
+\item There exists a type that is uninhabited in the empty context, so the system is \textbf{logically consistent}\footnote{also called \textbf{logically sound}}.
+\item Type checking is decidable.
+\end{itemize}
+Neither the \ac{TAS} system or the \Bidir{} systems has these properties\footnote{These properties are usually shown by showing that the computation that generates definitional equality is normalizing.
+A proof for a more logical system can be found in Chapter 4\cite{luo1994computation}.
+Another excellent tutorial can be found in Chapter 2 in \cite{casinghino2014combiningthesis}}.
+% aparently that note from Chris Casinghino is dead http://prosecco.gforge.inria.fr/personal/hritcu/temp/snforcc.pdf
+
+\subsubsection{Logical Inconsistency}
+
+The surface language is logically inconsistent, since every type is inhabited.
+
+\begin{example}
+Every Type is Inhabited (by recursion)
+
+$\mathsf{fun}\,f\,x\Rightarrow f\,x\qquad:\perp_{c}$
+\end{example}
+
+It is possible to encode Girard's paradox, producing another source of logical unsoundness.
+\begin{example}
+Every Type is Inhabited (by \tit{})
+
+\todo{full example}
+
+\todo{cite stuff (see https://stackoverflow.com/questions/18178999/do-agda-programs-necessarily-terminate), of course this hapens in Girard's french thesis}
+\end{example}
+
+A subtle form of recursive behavior can be built out of Gerard's paradox\cite{Reinhold89typecheckingis}, but this behavior is no worse than the unrestricted recursion already allowed.
+
+% I am unaware of anyone accidentally deriving a falsehood from \tit{}.
+
+Operationally, logical inconsistency will be recognized by programmers as non-termination.
+Non-termination seems not to matter for programming languages in practice.
+For instance, in ML the type $\mathtt{f:Int->Int}$ does not imply the termination of $\mathtt{f\,2}$.
+While unproductive non-termination is always a bug, it seems an easy bug to detect and fix when it occurs.
+In mainstream languages, types help to communicate the intent of termination, even though termination is not guaranteed by the type system.
+Importantly, no desirable computation is prevented in order to preserve logical consistency.
+There will never be a way to allow all the terminating computations and exclude all the nonterminating computations.
+A tradeoff must be made, and programmers likely care more about having all possible computations than preventing non-termination.
+Therefore, logical unsoundness seems suitable for a dependently typed programming language.
+
+\todo{argue from the Blum proof?  Allowing non-termination makes writing termination programs easier.}
+
+\todo{add ref to inequalities}
+
+While the surface language supports proofs, not every term typed in the surface language is a proof.
+Terms can still be called proofs as long as the safety of recursion and \tit{} are checked externally.
+In this sense, the listed example inequalities are proofs, as they make no use of general recursion (so all recursions are well founded) and universes are used in a safe way (universe hierarchies could be assigned).
+In an advanced implementation, an automated process could supply warnings when constructs are used in potentially unsafe ways.
+Traditional software testing can be used to discover if there are actual proof bugs.
+Even though the type system is not logically consistent, type checking still eliminates a large class of possible mistakes.
+While it is possible to make a subtle error, it is easier to make an error in a paper and pencil proofs, or in typeset \LaTeX.
+
+Finally by separating non-termination concerns from the core of the theory, this architecture is resilient to change.
+If the termination checker is updated in Coq, there is some chance older proof scripts will no longer type check.
+With the architecture proposed here, code will always have the same static and dynamic behavior, though some warnings might appear or disappear.
+
+\subsubsection{Type Checking is Undecidable}
+\begin{thm}
+Type Checking is Undecidable
+\end{thm}
+
+\begin{proof}
+Given a thunk $f:Unit$ defined in PCF, it can be encoded into the surface system as a thunk $f':Unit_{c}$, such that if $f$ reduces to the canonical $Unit$ then $f'\Rrightarrow_{\ast}\lambda A.\lambda a.a$ 
+
+$\vdash\star:f'\,\star\,\star$ type-checks by conversion exactly when $f$ halts.
+
+If there is a procedure to decide type checking we can decide exactly when any PCF function halts.
+Since checking if a PCF function halts is undecidable, type checking here is undecidable.
+
+\end{proof}
+Decidability of type checking is often used as a proxy for efficient typechecking.
+
+Again this the root of the problem is the non-termination that results by allowing as many computations as possible, which seem necessary in a realistic programming language.
+
+Luckily undecidability of type checking is not as bad as it sounds for several reasons.
+First, the pathological terms that cause non-terminating conversion are rarely created on purpose.
+In the \bidir{} system, conversion checks will only happen at limited positions, and it is possible to use a counter to warn or give errors at code positions that do not convert because normalization takes too long.
+Heuristic methods of conversion checking seem to work well enough in practice even without a counter.
+It is also possible to embed proofs of conversion directly into the syntax\cite{sjoberg2012irrelevance}.
+
+Many dependent type systems, such as Agda, Coq, and Lean, aspire to decidable type checking.
+However these systems allow extremely fast growing functions to be encoded (such as Ackerman's function).
+A fast growing function can generate a very large index that can be used to check some concrete but unpredictable property, (how many Turing machines whose code is smaller then $n$ halt in $n$ steps?).
+When this kind of computation is lifted to the type level, type checking is computationally infeasible, to say the least.
+
+\todo{make sure I'm not missing any langs, C\#...?}
+
+Many mainstream programming languages have undecidable type checking.
+If a language admits a sufficiently powerful macro or preprocessor system that can modify typing, this would make type checking undecidable (this makes the type system of C, C++\footnote{apparently even the grammar of C++ is undecidable}, Scala, and Rust undecidable).
+Unless type features are considered very carefully, they can often create undecidable type checking (Java generics, C++ templates, Scala implicit parameters\footnote{without a maximum search depth} and OCaml modules, make type checking undecidable in those languages).
+Haskell may be the most popular statically typed language with decidable type checking (and even then popular GHC compiler flags make type checking undecidable).
+Even the Hindley-Milner type checking algorithm that underlies Haskell and ML, has a worst case complexity that is double exponential, which under normal circumstances would be considered intractable.
+
+In practice these theoretical concerns are irrelevant since programmers are not giving the compiler ``worst case'' code.
+Even if they did, the worst that can happen is the type checking will hang in the compilation process.
+When this happens in a mainstream language, programmers can fix their code, modify or remove macros, or add typing annotations.
+Programmers in conventional languages are already entrusted with almost unlimited power over their programming environments.
+Programs regularly delete files, read and modify sensitive information, and send emails (some of these are even possible from within the language's macro systems).
+Relatively speaking, undecidable type checking is not a programmer's biggest concern.
+\todo{a little awk}
+
+Most importantly for the system described in this thesis, users are expected to use the elaboration procedure defined in the next chapter that will bypass the type checking described here.
+\todo{than why review?}
+% That elaboration procedure is also undecidable, but only for extremely pathological terms.

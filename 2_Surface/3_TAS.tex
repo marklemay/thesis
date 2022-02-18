@@ -747,112 +747,110 @@ This follows by iterating the progress and preservation lemmas.
 % \todo{other lemmas not needed for this proof, par max is par, inversions?}
 
 
-\subsection{Regularity}
-The rules in \Fref{surface-TAS} allow for invalid constructions in the context.
-For instance, $x:1_{c}\tasys...$ is allowed by the context grammar.
-Additionally, it is not required that both ends of a conversion are well typed.
-For instance, $\tasys\ \star\ :\ (\lambda - \Rightarrow \star)\,(\star\,\star)$ is typeable by conversion.
+% \subsection{Regularity}
+% The rules in \Fref{surface-TAS} allow for invalid constructions in the context.
+% For instance, $x:1_{c}\tasys...$ is allowed by the context grammar.
+% Additionally, it is not required that both ends of a conversion are well typed.
+% For instance, $\tasys\ \star\ :\ (\lambda - \Rightarrow \star)\,(\star\,\star)$ is typeable by conversion.
+
+% \begin{figure}
+% \[
+% \frac{\Gamma\,\mathbf{ok}\quad x:M\in\Gamma}{\Gamma\tasysr{}x\,:\,M}\,\rulename{ty-var}
+% \]
+
+% \[
+% \frac{\Gamma\tasysr{}m\,:\,M}{\Gamma\tasysr{}m::M\,:\,M}\,\rulename{ty-::}
+% \]
+
+% \[
+% \frac{\Gamma\,\mathbf{ok}}{\Gamma\tasysr{}\star\,:\,\star}\,\rulename{ty-\star}
+% \]
+
+% \[
+% \frac{\Gamma\tasysr{}M\,:\,\star\quad\Gamma,x:M\tasysr{}N\,:\,\star}{\Gamma\tasysr{}\left(x:M\right)\rightarrow N\,:\,\star}\,\rulename{ty-\mathsf{fun}-ty}
+% \]
+
+% \[
+% \frac{\Gamma\tasysr{}m\,:\,\left(x:N\right)\rightarrow M\quad\Gamma\tasysr{}n\,:\,N}{\Gamma\tasysr{}m\,n\,:\,M\left[x\coloneqq n\right]}\,\rulename{ty-\mathsf{fun}-app}
+% \]
+
+% \[
+% \frac{\Gamma,f:\left(x:N\right)\rightarrow M,x:N\tasysr{}m\,:\,M}{\Gamma\tasysr{}\mathsf{fun}\,f\,x\Rightarrow m\,:\,\left(x:N\right)\rightarrow M}\,\rulename{ty-\mathsf{fun}}
+% \]
+
+% \[
+% \frac{\Gamma\tasysr{}m\,:\,M\quad\Gamma\tasysr{}M\equiv M'\,:\,\star}{\Gamma\tasysr{}m\,:\,M'}\,\rulename{ty-conv}
+% \]
+
+% \[
+% \frac{\Gamma\tasysr{}m\,:\,M\quad\Gamma\tasysr{}m'\,:\,M\quad m\Rrightarrow m''\quad m'\Rrightarrow m''}{\Gamma\tasysr{}m\equiv m'\,:\,M}\,\rulename{def}
+% \]
+
+% \[
+% \frac{\ }{\lozenge\,\mathbf{ok}}\,\rulename{emp-ok}
+% \]
+
+% \[
+% \frac{\Gamma\tasysr{}M:\star\quad\Gamma\,\mathbf{ok}}{\Gamma,x:M\,\mathbf{ok}}\,\rulename{emp-ok}
+% \]
+% \caption{Type assignment system (regular)}
+% \label{fig:surface-tas-reg}
+% \end{figure}
+
+% To make use of this more restricted system we need a lemma that will lift \ac{TAS} derivations into the regular system.
+% % ctx ok then type is convertable to a well typed type
+
+% \todo{first restrict the annotation rule to well typed terms}
+
+% \begin{conjecture}
+%   If $\Gamma\tasys{}m:M$, $\Gamma\,\mathbf{ok}$, $M\equiv M'$ and $\Gamma\tasysr{}M':\star$ then $\Gamma\tasysr{}m:M'$
+% \end{conjecture}
+% % \begin{proof}
+
+% % \end{proof}
 
 
-\begin{figure}
-\[
-\frac{\Gamma\,\mathbf{ok}\quad x:M\in\Gamma}{\Gamma\tasysr{}x\,:\,M}\,\rulename{ty-var}
-\]
 
-\[
-\frac{\Gamma\tasysr{}m\,:\,M}{\Gamma\tasysr{}m::M\,:\,M}\,\rulename{ty-::}
-\]
+% Though these restrictions are not required for type soundness, it will be convenient to exclude these possibilities by adding additional restrictions to the \ac{TAS}.
+% The updated system is presented in \Fref{surface-tas-reg}.
+% The $\mathbf{ok}$ forces contexts to only contain well typed types.
+% The new conversion rule, restricts conversion to well typed types.
 
-\[
-\frac{\Gamma\,\mathbf{ok}}{\Gamma\tasysr{}\star\,:\,\star}\,\rulename{ty-\star}
-\]
 
-\[
-\frac{\Gamma\tasysr{}M\,:\,\star\quad\Gamma,x:M\tasysr{}N\,:\,\star}{\Gamma\tasysr{}\left(x:M\right)\rightarrow N\,:\,\star}\,\rulename{ty-\mathsf{fun}-ty}
-\]
 
-\[
-\frac{\Gamma\tasysr{}m\,:\,\left(x:N\right)\rightarrow M\quad\Gamma\tasysr{}n\,:\,N}{\Gamma\tasysr{}m\,n\,:\,M\left[x\coloneqq n\right]}\,\rulename{ty-\mathsf{fun}-app}
-\]
-
-\[
-\frac{\Gamma,f:\left(x:N\right)\rightarrow M,x:N\tasysr{}m\,:\,M}{\Gamma\tasysr{}\mathsf{fun}\,f\,x\Rightarrow m\,:\,\left(x:N\right)\rightarrow M}\,\rulename{ty-\mathsf{fun}}
-\]
-
-\[
-\frac{\Gamma\tasysr{}m\,:\,M\quad\Gamma\tasysr{}M\equiv M'\,:\,\star}{\Gamma\tasysr{}m\,:\,M'}\,\rulename{ty-conv}
-\]
-
-\[
-\frac{\Gamma\tasysr{}m\,:\,M\quad\Gamma\tasysr{}m'\,:\,M\quad m\Rrightarrow m''\quad m'\Rrightarrow m''}{\Gamma\tasysr{}m\equiv m'\,:\,M}\,\rulename{def}
-\]
-
-\[
-\frac{\ }{\lozenge\,\mathbf{ok}}\,\rulename{emp-ok}
-\]
-
-\[
-\frac{\Gamma\tasysr{}M:\star\quad\Gamma\,\mathbf{ok}}{\Gamma,x:M\,\mathbf{ok}}\,\rulename{emp-ok}
-\]
-\caption{Type assignment system (regular)}
-\label{fig:surface-tas-reg}
-\end{figure}
-
-To make use of this more restricted system we need a lemma that will lift \ac{TAS} derivations into the regular system.
-% ctx ok then type is convertable to a well typed type
-
-\todo{first restrict the annotation rule to well typed terms}
-
-\begin{conjecture}
-  If $\Gamma\tasys{}m:M$, $\Gamma\,\mathbf{ok}$, $M\equiv M'$ and $\Gamma\tasysr{}M':\star$ then $\Gamma\tasysr{}m:M'$
-\end{conjecture}
+% \begin{thm}
+%   Regularity
+  
+%   If $\Gamma\tasysr{}m:M$ then $\Gamma\tasysr{}M:\star$ and $\Gamma\,\mathbf{ok}$
+% \end{thm}
 % \begin{proof}
-
+%   by induction on typing derivations. The only intrestiing case is \rulename{ty-\mathsf{fun}-app}.  
 % \end{proof}
 
 
-
-Though these restrictions are not required for type soundness, it will be convenient to exclude these possibilities by adding additional restrictions to the \ac{TAS}.
-The updated system is presented in \Fref{surface-tas-reg}.
-The $\mathbf{ok}$ forces contexts to only contain well typed types.
-The new conversion rule, restricts conversion to well typed types.
-
-
-
-\begin{thm}
-  Regularity
+% Given these restrictions we can conclude some convineint regularity properties.
+% \begin{thm}
+%   Regularity
   
-  If $\Gamma\tasysr{}m:M$ then $\Gamma\tasysr{}M:\star$ and $\Gamma\,\mathbf{ok}$
-\end{thm}
-\begin{proof}
-  by induction on typing derivations. The only intrestiing case is \rulename{ty-\mathsf{fun}-app}.  
-\end{proof}
+%   If $\Gamma\tasysr{}m:M$ then $\Gamma\tasysr{}M:\star$ and $\Gamma\,\mathbf{ok}$
+% \end{thm}
+% \begin{proof}
+%   by induction on typing derivations
+% \end{proof}
 
+% \begin{conjecture}
+% The regular system has progress and preservation it is type sound
+% \end{conjecture}
 
-Given these restrictions we can conclude some convineint regularity properties.
-\begin{thm}
-  Regularity
-  
-  If $\Gamma\tasysr{}m:M$ then $\Gamma\tasysr{}M:\star$ and $\Gamma\,\mathbf{ok}$
-\end{thm}
-\begin{proof}
-  by induction on typing derivations
-\end{proof}
+% Additionally, 
 
-\begin{conjecture}
-The regular system has progress and preservation it is type sound
-\end{conjecture}
+% It is possible to prove type soundness directly but it involves a more subtle mutual induction.
 
-Additionally, 
+% Given this we will use the regular system from now on without subscript.
 
-It is possible to prove type soundness directly but it involves a more subtle mutual induction.
-
-Given this we will use the regular system from now on without subscript.
-
-
-% There is some question about how much typing information should be coupled to the judgment, forcing contexts to be well formed eliminates nonsense situations like $x:1_{c}\vdash...$ by construction, but requires more fork when forming judgments that can be distracting.
-% The proofs in this section can be done without forcing the context to be well formed, the additional constraints are omitted.
-% \todo[inline]{regularity!}
+% % There is some question about how much typing information should be coupled to the judgment, forcing contexts to be well formed eliminates nonsense situations like $x:1_{c}\vdash...$ by construction, but requires more fork when forming judgments that can be distracting.
+% % The proofs in this section can be done without forcing the context to be well formed, the additional constraints are omitted.
+% % \todo[inline]{regularity!}
 
 \subsection{Type checking is impractical}
 
@@ -872,18 +870,3 @@ But there are infinitely other possibilities.
 Worse, if there is an error, it may be impossible to localize to a specific region of code.
 To make a practical type checker we need to insist that the user include some type annotations.
 
-\section{\Bidir{} Surface Language}
-
-% Annotate all the vars 
-There are many possible ways to localize the type checking process.
-We could ask that all variables be annotated at binders.
-This is enticing from a theoretical perspective, since it matches how type contexts are built up.
-
-However note that, our proof of $\lnot1_{c}\doteq_{\mathbb{N}_{c}}0_{c}$ will look like
-
-$\lambda pr\underline{:1_{c}\doteq_{\mathbb{N}_{c}}0_{c}}\Rightarrow pr\,\left(\lambda n:\underline{\left(C:\left(\mathbb{N}_{c}\rightarrow\star\right)\right)\rightarrow C\,1_{c}\rightarrow C\,0_{c}}\Rightarrow n\,\star\,(\lambda-:\underline{\star\Rightarrow Unit_{c}})\,\perp_{c}\right)\,tt_{c}:\underline{\lnot1_{c}\doteq_{\mathbb{N}_{c}}0_{c}}$
-
-More than half of the term is type annotations!
-Annotating every binding site requires a lot of redundant information.
-% Further the theory would need to deal with all the binders evaluating
-Luckily there's a better way.

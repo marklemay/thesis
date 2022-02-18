@@ -3,7 +3,7 @@ all work related to my thesis document, will eventually become public
 [![Build LaTeX document](https://github.com/marklemay/thesis/actions/workflows/build-thesis.yml/badge.svg)](https://github.com/marklemay/thesis/actions/workflows/build-thesis.yml)
  
 latest draft available [here](https://github.com/marklemay/thesis/releases)
- 
+
 ## What to Review
 * Where are you first confused?
 * Where do you first get board?
@@ -39,7 +39,7 @@ git submodule foreach git pull origin master
 latexmk thesis.tex -pdf
 ```
  
-build draft pdf, with notes and double sided margins
+build draft pdf, with margin notes and single spaced lines
 ```
 git submodule foreach git pull origin master
 latexmk draft.tex -pdf
