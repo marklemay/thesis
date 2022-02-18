@@ -1,56 +1,56 @@
 \chapter{A Dependent Type System}
 \label{chapter:Surface}
 \thispagestyle{myheadings}
-
+ 
 % \section{Introduction}
-
+ 
 Despite the usability issues this thesis hopes to correct, dependent type systems are still one of the most promising technologies for correct programming.
 Since proofs are programs, there is no additional syntax for programmers to learn.
-The proof system is predictable from the perspective of a functional programmer. 
+The proof system is predictable from the perspective of a functional programmer.
 \todo{awk sentence}
-
+ 
 The \textbf{surface type system}\todo{is there a better name then surface lang?} presented in this chapter provides a minimal dependent type system.
 The rules of the type system are intended to be as simple as possible and compatible with other well studied intentional dependent type theories.
 It has several (but not all) of the standard properties of dependent type theory.
 As much as possible, the syntax uses standard modern notation\footnote{
-  Several alternative syntaxes exist in the literature.
-  In this document the typed polymorphic identity function is written, $\lambda-\,x\Rightarrow x\ :\,\left(X:\star\right)\rightarrow X\rightarrow X$.
-  In \cite{10.1016/0890-5401(88)90005-3} it might be written $\left(\lambda X:\star\right)\left(\lambda x:X\right)x\ :\,\left[X:\star\right]\left[x:X\right]X$.
-  In \cite{HoTTbook} it might be written $\lambda X.\lambda x.x\ :\,\underset{\left(X:\mathcal{U}\right)}{\prod}X\rightarrow X$.}\todo{Martin Loff/Hoff (TODO pr notation)}.
-
+ Several alternative syntaxes exist in the literature.
+ In this document the typed polymorphic identity function is written, $\lambda-\,x\Rightarrow x\ :\,\left(X:\star\right)\rightarrow X\rightarrow X$.
+ In \cite{10.1016/0890-5401(88)90005-3} it might be written $\left(\lambda X:\star\right)\left(\lambda x:X\right)x\ :\,\left[X:\star\right]\left[x:X\right]X$.
+ In \cite{HoTTbook} it might be written $\lambda X.\lambda x.x\ :\,\underset{\left(X:\mathcal{U}\right)}{\prod}X\rightarrow X$.}\todo{Martin Loff/Hoff (TODO pr notation)}.
+ 
 The surface type system will serve both as foundation for later chapters and a self contained technical introduction to dependent types.
-Even when useing the full system described in later chapters, programmers will only need to think about the surface system.
+Even when using the full system described in later chapters, programmers will only need to think about the surface system.
 By design, the machinery that deals with equality addressed in later chapters will be invisible to programers.
 Everything presented in later chapters is designed to reinforce an understanding of the surface type system, and make it easier to use.
-
+ 
 % overview, What
 The surface language deviates from a standard dependent type theory to include features for programming at the expense of logical correctness.
 Specifically the language allows general recursion, since general recursion is useful for programmers.
 \Tit{} is also supported since it simplifies the system, and makes the meta-theory slightly easier.
 Despite this, type soundness is achievable, and a practical type checking system is given.
-
+ 
 Though similar systems have been studied over the last few decades this chapter aims to give a self contained presentation, along with examples.
 The surface language has been a good platform to conduct research into full spectrum dependent type theory, and hopefully this exposition will be a helpful introduction for other researchers.
-
+ 
 \section{Surface Language Syntax}
-
+ 
 % What syntax
 The syntax for the surface language is in \Fref{surface-pre-syntax}.
 The syntax supports: variables, type annotations, a single type universe, dependent function types, recursive dependent functions, and function applications.
 Type annotations are written with two colons to differentiate it from the formal typing judgments that will appear more frequently in this text.
 In the implemented language a user of the programming language would use a single colon.
-
+ 
 There is no distinction between types and terms in the syntax\footnote{
-  terms and types are usually separated, except in the syntax of full-spectrum dependent type systems where separating them would require many redundant rules.
-  }, both are referred to as expressions.
-However, capital metavariables are used in positions that are intended as types, and lowercase metavariables are used when an expression is intended to be a term.
+ terms and types are usually separated, except in the syntax of full-spectrum dependent type systems where separating them would require many redundant rules.
+ }, both are referred to as expressions.
+However, capital meta variables are used in positions that are intended as types, and lowercase meta variables are used when an expression is intended to be a term.
 For instance, in annotation syntax where $m::M$ means $m$ can be a term and $M$ should be a type.
-% Metavariables that intend to quantify equivalent terms will be noted with primes or subscripts, 
-% Metavariables that type other metavairbles will often use the same letter
-
+% Meta variables that intend to quantify equivalent terms will be noted with primes or subscripts,
+% Meta variables that type other metavairbles will often use the same letter
+ 
 \todo{more about f being recursive?}
 \todo{extrinsic}
-
+ 
 \begin{figure}
 % \begin{grammar}{x,y,z,f}{variable identifier}
 % \end{grammar}
@@ -58,24 +58,24 @@ For instance, in annotation syntax where $m::M$ means $m$ can be a term and $M$ 
 %   \mathbf{\lozenge}                        & empty context \\
 %   \mathbf{Gamma,x:M}                       & extend context with x of type M \\
 % \end{grammar}
-
+ 
 \begin{tabular}{lcll}
 \multicolumn{4}{l}{variable identifiers,}\tabularnewline
 \multicolumn{4}{l}{$x,y,z,f$}\tabularnewline
 \multicolumn{4}{l}{expressions,}\tabularnewline
 $m,n,M,N$ & $\Coloneqq$ & $x$ & variable\tabularnewline
-  & $|$ & $m::M$ & annotation\tabularnewline
-  & $|$ & $\star$ & type universe\tabularnewline
-  & $|$ & $\left(x:M\right)\rightarrow N$ & function type\tabularnewline
-  & $|$ & $\mathsf{fun}\,f\,x\Rightarrow m$ & function\tabularnewline
-  & $|$ & $m\,n$ & application\tabularnewline
+ & $|$ & $m::M$ & annotation\tabularnewline
+ & $|$ & $\star$ & type universe\tabularnewline
+ & $|$ & $\left(x:M\right)\rightarrow N$ & function type\tabularnewline
+ & $|$ & $\mathsf{fun}\,f\,x\Rightarrow m$ & function\tabularnewline
+ & $|$ & $m\,n$ & application\tabularnewline
 \multicolumn{4}{l}{type contexts,}\tabularnewline
 $\Gamma$ & $\Coloneqq$ & $\lozenge$ $|$ $\Gamma,x:M$ & \tabularnewline
 \end{tabular}\caption{Surface Language Syntax}
 \label{fig:surface-pre-syntax}
 \end{figure}
-  
-Several standard abbreviations are listed in \Fref{surface-pre-syntax-abrev}.
+
+ Several standard abbreviations are listed in \Fref{surface-pre-syntax-abrev}.
 \begin{figure}
 \begin{tabular}{lclll}
 $\left(x:M\right)\rightarrow N$ & written & $M\rightarrow N$ & when  & $x\notin fv\left(N\right)$\tabularnewline
@@ -83,12 +83,12 @@ $\mathsf{fun}\,f\,x\Rightarrow m$ & written & $\lambda x\Rightarrow m$ & when  &
 $...\,x\Rightarrow\lambda y\Rightarrow m$ & written & $...\,x\,y\Rightarrow m$ &  & \tabularnewline
 $x$ & written & $-$ & when  & $x\notin fv\left(m\right)$ when $x$ binds $m$\tabularnewline
 \end{tabular}
-  
-where $fv$ is a function that returns the set of free variables in an expression
+
+ where $fv$ is a function that returns the set of free variables in an expression
 \caption{Surface Language Abbreviations}
 \label{fig:surface-pre-syntax-abrev}
 \end{figure}
-
+ 
 \input{2_Surface/2_Examples}
 \input{2_Surface/3_TAS}
 \input{2_Surface/4_Bidir}

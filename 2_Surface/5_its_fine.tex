@@ -1,40 +1,40 @@
 \section{Absent Logical Properties}
-
+ 
 When type systems are used as logics, it is desirable that
 \begin{itemize}
 \item There exists a type that is uninhabited in the empty context, so the system is \textbf{logically consistent}\footnote{also called \textbf{logically sound}}.
 \item Type checking is decidable.
 \end{itemize}
 Neither the \ac{TAS} system or the \Bidir{} systems have these properties\footnote{
-  These properties are usually shown by showing that the computation that generates definitional equality is normalizing.
-  A proof for a logically consistent system can be found in Chapter 4\cite{luo1994computation}.
-  Another excellent tutorial can be found in Chapter 2 in \cite{casinghino2014combiningthesis}}.
+ These properties are usually shown by showing that the computation that generates definitional equality is normalizing.
+ A proof for a logically consistent system can be found in Chapter 4\cite{luo1994computation}.
+ Another excellent tutorial can be found in Chapter 2 in \cite{casinghino2014combiningthesis}}.
 % aparently that note from Chris Casinghino is dead http://prosecco.gforge.inria.fr/personal/hritcu/temp/snforcc.pdf
-
+ 
 \subsection{Logical Inconsistency}
-
+ 
 The surface language is logically inconsistent, since every type is inhabited.
-
+ 
 \begin{example}
 Every Type is Inhabited (by recursion)
-
+ 
 $\mathsf{fun}\,f\,x\Rightarrow f\,x\,:\,\perp_{c}$
 \todo{make proofs?, quantify over all the types?}
 \end{example}
-
+ 
 It is possible to encode Girard's paradox, producing another source of logical unsoundness.
 \begin{example}
 Every Type is Inhabited (by \tit{})
-
+ 
 \todo{full example}
-
-\todo{cite stuff (see https://stackoverflow.com/questions/18178999/do-agda-programs-necessarily-terminate), of course this hapens in Girard's french thesis}
+ 
+\todo{cite stuff (see https://stackoverflow.com/questions/18178999/do-agda-programs-necessarily-terminate), of course this happens in Girard's french thesis}
 \end{example}
-
+ 
 A subtle form of recursive behavior can be built out of Gerard's paradox\cite{Reinhold89typecheckingis}, but this behavior is no worse than the unrestricted recursion already allowed.
-
+ 
 % I am unaware of anyone accidentally deriving a falsehood from \tit{}.
-
+ 
 Operationally, logical inconsistency will be recognized by programmers as non-termination.
 Non-termination seems not to matter for programming languages in practice.
 For instance, in ML the type $\mathtt{f:Int->Int}$ does not imply the termination of $\mathtt{f\,2}$.
@@ -44,70 +44,70 @@ Importantly, no computation is prevented in the surface language in order to pre
 Due to the halting problem, there is no way to allow all the terminating computations and exclude all the nonterminating computations.
 A tradeoff must be made, and programmers likely care more about having all possible computations than preventing non-termination.
 Therefore, logical unsoundness seems suitable for a dependently typed programming language.
-
+ 
 \todo{argue from the Blum proof?  Allowing non-termination makes writing termination programs easier.}
-
+ 
 \todo{add ref to inequalities}
-
+ 
 While the surface language supports proofs, not every term typed in the surface language is a proof.
 Terms can still be called proofs as long as the safety of recursion and \tit{} are checked externally.
 In this sense, the listed example inequalities are proofs, as they make no use of general recursion (so all recursions are well founded) and universes are used in a safe way (for instance predicative universe levels could be assigned).
 In an advanced implementation, an automated process could supply warnings when constructs are used in potentially unsafe ways.
 Traditional software testing can be used to discover if there are actual proof bugs.
 Even though the type system is not logically consistent, type checking still eliminates a large class of possible mistakes.
-While it is possible to make an error, this is true of much more popular proof mediums like blackbourds, or typeset \LaTeX.
-
+While it is possible to make an error, this is true of much more popular proof mediums like blackboards, or typeset \LaTeX.
+ 
 Finally by separating non-termination concerns from the core of the theory, this architecture is resilient to change.
 If the termination checker is updated in Coq, there is some chance older proof scripts will no longer type check.
 With the architecture proposed here, code will always have the same static and dynamic behavior, though our curtanty of termination might change.
-
+ 
 \subsubsection{Type Checking is Undecidable}
 \begin{thm}
 Type Checking is Undecidable
 \end{thm}
-
+ 
 \begin{proof}
-Given a thunk $f:Unit$ defined in PCF, it can be encoded into the surface system as a thunk $f':Unit_{c}$, such that if $f$ reduces to the canonical $Unit$ then $f'\Rrightarrow_{\ast}\lambda A.\lambda a.a$ 
-
+Given a thunk $f:Unit$ defined in PCF, it can be encoded into the surface system as a thunk $f':Unit_{c}$, such that if $f$ reduces to the canonical $Unit$ then $f'\Rrightarrow_{\ast}\lambda A.\lambda a.a$
+ 
 $\vdash\star:f'\,\star\,\star$ type-checks by conversion exactly when $f$ halts.
-
+ 
 If there is a procedure to decide type checking we can decide exactly when any PCF function halts.
 Since checking if a PCF function halts is undecidable, type checking is undecidable.
-
+ 
 \end{proof}
-
+ 
 Again this the root of the problem is the non-termination that results by allowing as many computations as possible, which seem necessary in a realistic programming language.
-
+ 
 Luckily undecidability of type checking is not as bad as it sounds for several reasons.
-First, the pathological terms that cause non-terminating conversion are rarely created on purpose or by accidnet.
+First, the pathological terms that cause non-terminating conversion are rarely created on purpose or by accident.
 In the \bidir{} system, conversion checks will only happen at limited positions, and it is possible to use a counter to warn or give errors at code positions that do not convert because normalization takes too long.
 Heuristic methods of conversion checking seem to work well enough in practice even without a counter.
 % It is also possible to embed proofs of conversion directly into the syntax\cite{sjoberg2012irrelevance}.
-
+ 
 Many dependent type systems, such as Agda, Coq, and Lean, aspire to decidable type checking.
 However these systems allow extremely fast growing functions to be encoded (such as Ackerman's function).
 A fast growing function can generate a very large index that can be used to check some concrete but unpredictable property, (how many Turing machines whose code is smaller then $n$ halt in $n$ steps?).
 When this kind of computation is lifted to the type level, type checking is computationally infeasible, to say the least.
-
-Decidability of type checking is often used as a proxy for efficiency of typechecking.
-However it may be a poor measure of efficency of for the kinds of programs and proofs that are likely to occur.
-
+ 
+Decidability of type checking is often used as a proxy for efficiency of type checking.
+However it may be a poor measure of efficiency of for the kinds of programs and proofs that are likely to occur.
+ 
 \todo{make sure I'm not missing any langs, C\#...?}
-
+ 
 Many mainstream programming languages have undecidable type checking.
 If a language admits a sufficiently powerful macro or preprocessor system that can modify typing, this would make type checking undecidable (this makes the type system of C, C++\footnote{apparently even the grammar of C++ is undecidable}, Scala, and Rust undecidable).
 Unless type features are considered very carefully, they can often create undecidable type checking (Java generics, C++ templates, Scala implicit parameters\footnote{without a maximum search depth} and OCaml modules, make type checking undecidable in those languages).
 Haskell may be the most popular statically typed language with decidable type checking (and even then, popular GHC compiler flags make type checking undecidable).
 Even the Hindley-Milner type checking algorithm that underlies Haskell and ML, has a worst case complexity that is double exponential, which under normal circumstances would be considered intractable.
-
+ 
 In practice these theoretical concerns are irrelevant since programmers are not giving the compiler ``worst case'' code.
-Even if they did, the worst that can happen is the type checking will hang in the typechecking process.
+Even if they did, the worst that can happen is the type checking will hang in the type checking process.
 When this happens in a mainstream language, programmers can fix their code, modify or remove macros, or add typing annotations.
 Programmers in conventional languages are already entrusted with almost unlimited power over their programming environments.
 Programs regularly delete files, read and modify sensitive information, and send emails (some of these are even possible from within the language's macro systems).
 Relatively speaking, undecidable type checking is not a programmer's biggest concern.
 \todo{a little awk}
-
+ 
 Most importantly for the system described in this thesis, users are expected to use the elaboration procedure defined in the next chapter that will bypass the bidirectional procedure described here.
-\todo{than why review?}
+\todo{then why review?}
 % That elaboration procedure is also undecidable, but only for extremely pathological terms.
