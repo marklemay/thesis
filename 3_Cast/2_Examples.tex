@@ -1,30 +1,26 @@
 
 \section{Examples}
-
+\todo{lead in}
 % We can reexamine some of the examples terms from Chapter 2, but this time with equality assumptions
 
-\subsubsection{Higher Order Functions}
+\subsection{Higher Order Functions}
 
 %% walkthrough
-Higher order functions are dealt with by distributing function casts
-around applications. If an application happens to a cast of function
-type, the argument and body cast is separated and the argument cast
-is swapped. For instance in 
+Higher order functions are dealt with by distributing function casts around applications.
+If an application happens to a cast of function type, the argument and body cast is separated and the argument cast is swapped.
+For instance, in 
 \begin{align*}
 \, & \left(\left(\lambda x\Rightarrow x\&\&x\right)::_{\mathbb{B}\rightarrow\mathbb{B},\ell,.}\mathbb{N}\rightarrow\mathbb{N}\right)7\\
 \rightsquigarrow & \left(\left(\lambda x\Rightarrow x\&\&x\right)\left(7::_{\mathbb{N},\ell,.arg}\mathbb{B}\right)\right)::_{\mathbb{B},\ell,.bod[7]}\mathbb{N}\\
-\rightsquigarrow & \left(\left(7::_{\mathbb{N},\ell,.arg}\mathbb{B}\right)\&\&\left(7::_{\mathbb{N},\ell,.arg}\mathbb{B}\right)\right)\\
-\, & \ ::_{\mathbb{B},\ell,.bod[7]}\mathbb{N}
+\rightsquigarrow & \left(\left(7::_{\mathbb{N},\ell,.arg}\mathbb{B}\right)\&\&\left(7::_{\mathbb{N},\ell,.arg}\mathbb{B}\right)\right) ::_{\mathbb{B},\ell,.bod[7]}\mathbb{N}
 \end{align*}
-if evaluation gets stuck on $\&\&$ and we can blame the argument
-of the cast for equating $\mathbb{N}$ and $\mathbb{B}$. The body
-observation records the argument the function is called with. For
-instance in the $.bod[7]$ observation. In a dependently typed function
-the exact argument may be important to give a good error. Because
-casts can be embedded inside of casts, types themselves need to normalize
-and casts need to simplify. Since our system has one universe of types,
-type casts only need to simplify themselves when a term of type $\star$
-is cast to $\star$. For instance, 
+if evaluation gets stuck on $\&\&$ we can blame the argument of the cast for equating $\mathbb{N}$ and $\mathbb{B}$.
+The body observation records the argument the function is called with.
+For instance, in the $.bod[7]$ observation.
+In a dependently typed function the exact argument may be important to give a good error.
+Because casts can be embedded inside of casts, types themselves need to normalize and casts need to simplify.
+Since our system has one universe of types, type casts only need to simplify themselves when a term of type $\star$ is cast to $\star$.
+For instance, 
 \begin{align*}
 \, & \left(\left(\lambda x\Rightarrow x\right)::_{\left(\mathbb{B}\rightarrow\mathbb{B}\right)::_{\star,\ell,.arg}\star,\ell,.}\mathbb{N}\rightarrow\mathbb{N}\right)7\\
 \rightsquigarrow & \left(\left(\lambda x\Rightarrow x\right)::_{\mathbb{B}\rightarrow\mathbb{B}}\mathbb{N}\rightarrow\mathbb{N}\right)7\\
@@ -32,22 +28,16 @@ is cast to $\star$. For instance,
 \rightsquigarrow & \left(\left(7::_{\mathbb{N},\ell,.arg}\mathbb{B}\right)\right)::_{\mathbb{B},\ell,.bod[7]}\mathbb{N}
 \end{align*}
 
+\subsection{Pretending $true=false$}
 
-\subsubsection{Pretending $true=false$}
+Recall that we proved $\lnot true_{c}\doteq_{\mathbb{B}_{c}}false_{c}$ in Chapter 2.
+What happens if it is assumed anyway?
+Every type equality assumption needs an underlying term, here we can choose $refl_{true_{c}:\mathbb{B}_{c}}:true_{c}\doteq_{\mathbb{B}_{c}}true_{c}$, and cast that term to $true_{c}\doteq_{\mathbb{B}_{c}}false_{c}$ resulting in $refl_{true_{c}:\mathbb{B}_{c}}::_{true_{c}\doteq_{\mathbb{B}_{c}}true_{c}}true_{c}\doteq_{\mathbb{B}_{c}}false_{c}$.
+Recall that $\lnot true_{c}\doteq_{\mathbb{B}_{c}}false_{c}$ is a short hand for $true_{c}\doteq_{\mathbb{B}_{c}}false_{c}\rightarrow\perp$.
+What if we try to use our term of type $true_{c}\doteq_{\mathbb{B}_{c}}false_{c}$ to get a term of type $\perp$?
 
-Recall that we proved $\lnot true_{c}\doteq_{\mathbb{B}_{c}}false_{c}$
-in Chapter 2. What happens if it is assumed anyway? Every type equality
-assumption needs an underlying term, here we can choose $refl_{true_{c}:\mathbb{B}_{c}}:true_{c}\doteq_{\mathbb{B}_{c}}true_{c}$,
-and cast that term to $true_{c}\doteq_{\mathbb{B}_{c}}false_{c}$
-resulting in $refl_{true_{c}:\mathbb{B}_{c}}::_{true_{c}\doteq_{\mathbb{B}_{c}}true_{c}}true_{c}\doteq_{\mathbb{B}_{c}}false_{c}$.
-Recall that $\lnot true_{c}\doteq_{\mathbb{B}_{c}}false_{c}$ is a
-short hand for $true_{c}\doteq_{\mathbb{B}_{c}}false_{c}\rightarrow\perp$.
-What if we try to use our term of type $true_{c}\doteq_{\mathbb{B}_{c}}false_{c}$
-to get a term of type $\perp$?
-
-\todo[inline]{break out figure}
-
-\begin{tabular}{cc}
+\begin{sidewaysfigure}
+\begin{tabular}{lr}
  & $\left(\lambda pr\Rightarrow pr\,toLogic\,tt_{c}\right)\left(refl_{true_{c}:\mathbb{B}_{c}}::_{true_{c}\doteq_{\mathbb{B}_{c}}true_{c}}true_{c}\doteq_{\mathbb{B}_{c}}false_{c}\right)$\tabularnewline
 $\rightsquigarrow$ & $\left(refl_{true_{c}:\mathbb{B}_{c}}::_{true_{c}\doteq_{\mathbb{B}_{c}}true_{c}}true_{c}\doteq_{\mathbb{B}_{c}}false_{c}\right)\,toLogic\,tt_{c}$\tabularnewline
 $true_{c}\doteq_{\mathbb{B}_{c}}false_{c}\coloneqq\left(C:\left(\mathbb{B}_{c}\rightarrow\star\right)\right)\rightarrow C\,true_{c}\rightarrow C\,false_{c}$ & $\left(refl_{true_{c}:\mathbb{B}_{c}}::_{true_{c}\doteq_{\mathbb{B}_{c}}true_{c}}\left(C:\left(\mathbb{B}_{c}\rightarrow\star\right)\right)\rightarrow C\,true_{c}\rightarrow C\,false_{c}\right)\,toLogic\,tt_{c}$\tabularnewline
@@ -68,10 +58,14 @@ $\rightsquigarrow$ & $\left(tt_{c}::Unit_{c}\right)::\left(false_{c}\,\star\,Uni
 $false_{c}\coloneqq\lambda-\,-\,y\Rightarrow y$ & $\left(tt_{c}::Unit_{c}\right)::\left(\left(\lambda-\,-\,y\Rightarrow y\right)\,\star\,Unit_{c}\,\perp_{c}\right)$\tabularnewline
 $\rightsquigarrow_{*}$ & $\left(tt_{c}::Unit_{c}\right)::\perp_{c}$\tabularnewline
 \end{tabular}
+\todo[inline]{need to clean this up}
+\caption{true=false}
+\label{fig:cast-ex-tf}
+\end{sidewaysfigure}
 
-As in the above the example, the term $\left(tt_{c}::Unit_{c}\right)::\perp_{c}$
-has not yet ``gotten stuck''. Applying any type will uncover the
-error.
+The example is worked in \Fref{cast-ex-tf}.
+As in the prevous examples, the term $\left(tt_{c}::Unit_{c}\right)::\perp_{c}$ has not yet ``gotten stuck''.
+Applying any type will uncover the error.
 
 \begin{tabular}{cc}
  & $\left(\left(tt_{c}::Unit_{c}\right)::\perp_{c}\right)\star$\tabularnewline
@@ -85,8 +79,7 @@ Blame! & $\left(\lambda x\Rightarrow x\right)::\left(\star\underline{\rightarrow
  & \tabularnewline
 \end{tabular}
 
-The location and observation information that was left out of the
-computation could generate an error message like
+The location and observation information that was left out of the computation could generate an error message like
 
 $\left(C:\left(\mathbb{B}_{c}\rightarrow\star\right)\right).C\,true_{c}\rightarrow\underline{C\,true_{c}}\neq\left(C:\left(\mathbb{B}_{c}\rightarrow\star\right)\right).C\,true_{c}\rightarrow\underline{C\,false_{c}}$
 
