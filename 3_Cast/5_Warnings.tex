@@ -1,18 +1,11 @@
-
 \section{Suitable Warnings}
 
 As presented here, not every cast corresponds to a reasonable warning.
-For instance, $\left(\lambda x\Rightarrow x\right)::_{\star\rightarrow\star}\star\rightarrow\star$
-is a possible output from elaboration. By the rules given the cast
-will not reduce without input, it is however inert, and will not cause
-blame. In fact since the user only interacts with the surface language,
-any cast $a::_{A}B$ where $|A|\equiv|B|$ will not produce an understandable
-warning, and further should not be a direct source of runtime errors.
-A reasonable first attempt would be to simply remove the casts of
-the form $a::_{A}A$, but this ignores the possibility that casts
-themselves may contain casts\todo{example}. Currently the implementation
-leaves most casts intact and filters our equivalent casts from the
-warnings shown to the user
+For instance, $\left(\lambda x\Rightarrow x\right)::_{\star\rightarrow\star}\star\rightarrow\star$ is a possible output from elaboration.
+By the rules given the cast will not reduce without input, it is however inert, and will not cause blame.
+In fact since the user only interacts with the surface language, any cast $a::_{A}B$ where $|A|\equiv|B|$ will not produce an understandable warning, and further should not be a direct source of runtime errors.
+A reasonable first attempt would be to simply remove the casts of the form $a::_{A}A$, but this ignores the possibility that casts themselves may contain casts\todo{example}.
+Currently the implementation leaves most casts intact and filters our equivalent casts from the warnings shown to the user
 
 \todo{as fig}
 
@@ -26,8 +19,6 @@ $Warns($ & $\mathsf{fun}\,f\,x\Rightarrow b$ & $)=$ & $Warns(b)$ &  & \tabularne
 $Warns($ & $b\,a$ & $)=$ & $Warns(a)\cup Warns(b)$ &  & \tabularnewline
 \end{tabular}
 
-Since the $\equiv$ relation is undecidable an approximation can be
-used in practice. Removing impossible casts should be considered like
-a compiler optimization. In Chapter 6 casts will need to be extended,
-and it will be more clear when a cast can through its own error or
-merely exists to hold other casts.
+Since the $\equiv$ relation is undecidable an approximation can be used in practice.
+Removing impossible casts should be considered like a compiler optimization.
+In Chapter 6 casts will need to be overhualed to support data, and it will be more clear when a cast can through its own error or merely exists to hold other casts.
