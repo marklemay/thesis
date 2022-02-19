@@ -1,0 +1,127 @@
+
+\section{Related Work}
+
+\subsection{Dependent types and equality}
+
+\todo{revise as bulleted list starting with ETT}
+
+Difficulties in dependently typed equality have motivated many research
+projects \cite{HoTTbook,sjoberg2015programming,cockx2021taming}.
+However, these impressive efforts currently require a high level of
+expertise from programmers. Further, since program equivalence is
+undecidable in general, no system will be able to statically verify
+every ``obvious'' equality for arbitrary user defined data types
+and functions. In the meantime systems should trust the programmer
+when they use an unverified equality, and use that advanced research
+to suppress warnings. 
+
+\subsection{Contract Systems}
+
+Several of the tricks and notations in this chapter find their basis
+in the large amount of work on higher order contracts and gradual
+types. Higher order contracts were introduced in \cite{10.1145/581478.581484}
+as a way to dynamically enforce invariants of software interfaces,
+specifically higher order functions% cotracts go back to the 70s aparently, but this seems a reasonable place to start the story, though Bigloo Scheme [28] is cited there.
+The notion of blame dates at least that far back. Swapping the type
+cast of the input argument can be traced directly to that paper's
+use of blame contravarience, though it is presented in a much different
+way. % However the contract language of that paper was somewhat limited.
+
+Contract semantics were revisited in \cite{10.1145/1925844.1926410,10.1007/978-3-642-28869-2_11}
+where a more specific correctness criteria based in blame is presented.
+
+Contract systems still generally rely on users annotating their invariants
+explicitly. Similar to how programmers might include $\mathtt{assert}$s
+in an imperative language. In this thesis annotations are added automatically
+though elaboration.
+
+While there are similarities between contract systems and the cast
+system outlined here, the cast system is designed to address only
+issues with definitional equality in a dependent type theory. Since
+contract systems are generally used in untyped languages with contracts
+written in the host language, definitional equality simply isn't relevant
+in the vast majority of contract systems.
+
+\subsubsection{Gradual Types}
+
+Types can be viewed as a very specific form of contracts, gradual
+type systems allow for a mixing of the static view of data and dynamic
+checking. Often type information can be inferred using standard techniques,
+allowing programmers to write fewer contract annotations. % TODO first paper, DLS2008
+
+Gradual type systems usually achieve this by adding in a $?$ meta
+character to denote imprecise typing information. The first popular
+account of gradual typed semantic's appeared in \cite{siek_et_al:LIPIcs:2015:5031}
+with the alliterative ``gradual guarantee'' which has inspired some
+of the properties in this chapter.
+
+% , which informally asserts that "runtime checks will not change the expected behavour", "runtime checks will not change the expected behavour" and "well typed code won't be blamed"
+
+% and then like an endless back and forth over criteria
+
+Additionally some of the formalism from this chapter was inspired
+by the ``Abstracting gradual typing'' methodology \cite{10.1145/2837614.2837670},
+where static evidence annotations become runtime checks. % Unlike some impressive attempts to gradualize the polymorphic lambda calculus \cite{10.1145/3110283}, our system does not attempt to enforce any parametric properties of the base language. %example?
+% It is unclear if such a restriction would be desirable for a dependently typed language in practice.
+
+This thesis borrows some notational conventions from gradual typing
+such as the $a::A$ construct for type assertions.
+
+A system for gradual dependent types has been preposed in \cite{10.1145/3341692}.
+That paper is largely concerned with establishing decidable type checking
+via an approximate term normalization. However, that system retains
+the intentional style of definitional equality, so that it is possible,
+in principle, to get $vec\,(1+x)\neq vec\,(x+1)$ as a runtime error.
+Additionally it is unclear if adding the $?$ meta-symbol into an
+already very complicated type theory, is easier or harder from the
+programmers perspective.
+
+The common motivation for gradual type systems to gradually convert
+a code base from untyped to (usually simply) typed code. This chapter
+has a much tighter scope then the other work cited here, dealing only
+with equational assumptions. Anyone using a dependent type system
+has already bought into the usefulness of types in general and will
+probably not want fragments of completely untyped code. Converting
+untyped code to dependent typed is far less plausible than gradually
+converting an untyped code base to use simple types\footnote{Especially considering that most real-life codebases will use effects,
+while dependent types and effects are a complicated area of ongoing
+research}.
+
+While the gradual typing goals of mixing static certainty with runtime
+checks are similar to our work here, the approach and details are
+different. Instead of trying to strengthen untyped languages by adding
+types, we take a dependent type system and weaken it with a cast operator.
+This leads to different trade-offs in the design space. For instance,
+we cannot support completely unannotated code, but we do not need
+to complicate the type language with wildcards for uncertainty. However
+it might be reasonable to characterize this work in this chapter as
+gradualizing the definitional equality relation.
+
+\subsubsection{Blame}
+
+Blame is one of the key ideas explored in the contract type and gradual
+types literature\cite{10.1007/978-3-642-00590-9_1,wadler:LIPIcs:2015:5033,10.1145/3110283}.
+Often the reasonableness of a system can be judged by the way blame
+is handled\cite{wadler:LIPIcs:2015:5033}. Blame is treated in \cite{wadler:LIPIcs:2015:5033}
+very similarly to the presentation in this chapter. Though in addition
+to merely blaming a source locations we ensure that a witnessing observation
+can also be made.
+
+\subsection{Refinement Style Approaches}
+
+In this thesis I describe a full-spectrum dependently typed language.
+This means computation can appear uniformly in both term and type
+position. An alternative approach to dependent types is found in refinement
+type systems. Refinement type systems restrict type dependency, possibly
+to specific base types such as $\mathtt{int}$ or $\mathtt{bool}$.
+Under this restriction, it is straightforward to check these decidable
+equalities and some additional properties hold at runtime. One specific
+approach is called \textbf{Hybrid Type Checking} \cite{10.1145/1111037.1111059}\todo{more}.
+Another notable example is \cite{10.1007/1-4020-8141-3_34} which
+describes a refinement system that limits predicates to base types.
+Another example is \cite{10.1145/3093333.3009856}, a refinement system
+treated in a specifically gradual way. A refinement type system with
+higher order features is gradualized in \cite{c4be73a0daf74c9aa4d13483a2c4dd0e}.
+\todo{why is full spectrum better?}
+
+% consider also citing https://www.youtube.com/watch?v=gIYMERs7AZQ https://www.youtube.com/watch?v=EGKeWg2ES0A

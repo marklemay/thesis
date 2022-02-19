@@ -1,0 +1,307 @@
+\section{Elaboration}
+
+% overview
+Even though the cast language allows us to optimistically assert equalities,
+manually noting every cast would be unrealistically cumbersome. This
+bureaucracy is solved with an elaboration procedure that translates
+(untyped) terms from the surface language into the cast language.
+If the term is well typed in the surface language elaboration will
+produce a term without blamable errors. Terms with unproven equality
+in types are mapped to a cast with enough information to point out
+the original source when an inequality is witnessed. Elaboration serves
+a similar role as the bidirectional type system did in Chapter 2,
+and uses a similar methodology
+
+First we enrich the surface language with location information, $\ell$,
+at every position that could result in a type mismatch in Figure \ref{fig:surface-pre-syntax-loc}.
+Note that the location tags match almost exactly\todo{or will after rewritten}
+with the check annotations of the bidirectional system. For technical
+reasons the set of locations is nonempty, and a specific null location
+$.$ \todo{- instead of . ?}is designated. That null location can
+be used when we need to generate fresh terms, but have no sensible
+location information available. All the meta theory from Chapter 2
+goes through assuming that all locations are equivalent and by generating
+null locations when needed\footnote{For instance, the parallel reduction relation will associate all locations,
+$\frac{M\Rrightarrow M'\quad N\Rrightarrow N'}{\left(x:M_{l}\right)\rightarrow N_{l'}\Rrightarrow\left(x:M'_{l''}\right)\rightarrow N'_{l'''}}\,\textrm{\ensuremath{\Rrightarrow}-fun-ty}$,
+so that the relation does not discriminate over syntaxes that come
+from different locations. While the $max$ function will map terms
+into the null location, $max\left(\left(x:M_{\ensuremath{\ell}}\right)\rightarrow N_{\ensuremath{\ell'}}\right)=max\left(\left(x:max\left(M\right)_{.}\right)\rightarrow max\left(N\right)_{.}\right)$
+so that the output is unique.}\todo{fn a little awk}. We will avoid writing these annotations when
+they are unneeded (explicitly in Figure \ref{fig:surface-pre-syntax-loc-abrev}).
+
+\begin{figure}
+\begin{tabular}{lcll}
+\multicolumn{4}{l}{source labels,}\tabularnewline
+$\ensuremath{\ell}$ & $\Coloneqq$ & ... & \tabularnewline
+ & | & $.$ & no source label\tabularnewline
+\multicolumn{4}{l}{expressions,}\tabularnewline
+$m,n,M,N$ & $\Coloneqq$ & $x$ & variable\tabularnewline
+ & | & $m::_{\ensuremath{\ell}}M^{\ensuremath{\ell}'}$ & annotation\tabularnewline
+ & | & $\star$ & type universe\tabularnewline
+ & | & $\left(x:M_{\ensuremath{\ell}}\right)\rightarrow N_{\ensuremath{\ell'}}$ & function type\tabularnewline
+ & | & $\mathsf{fun}\,f\,x\Rightarrow m$ & function\tabularnewline
+ & | & $m_{\ensuremath{\ell}}\,n$ & application\tabularnewline
+\end{tabular}\caption{Surface Language Syntax, With Locations}
+\label{fig:surface-pre-syntax-loc}
+\end{figure}
+
+\begin{figure}
+\begin{tabular}{lclll}
+$m::_{\ensuremath{\ell}}M^{\ensuremath{\ell}'}$ & written & $m::_{\ensuremath{\ell}}M$ & when & $\ensuremath{\ell}$' is irrelevant\tabularnewline
+$m::_{\ensuremath{\ell}}M$ & written & $m::M$ & when & $\ensuremath{\ell}$ is irrelevant\tabularnewline
+$\left(x:M_{\ensuremath{\ell}}\right)\rightarrow N_{\ensuremath{\ell'}}$ & written & $\left(x:M\right)\rightarrow N$ & when & $\ensuremath{\ell}$, $\ensuremath{\ell}'$ are irrelevant\tabularnewline
+$m_{\ensuremath{\ell}}\,n$ & written & $m_{\ensuremath{}}\,n$ & when & $\ensuremath{\ell}$ is irrelevant\tabularnewline
+\end{tabular}
+
+\caption{Surface Language Abbreviations}
+\label{fig:surface-pre-syntax-loc-abrev}
+\end{figure}
+
+
+\subsection{Examples}
+
+As with bidirectional type checking variable types will be inferred
+by casting the outer type. For example, 
+\begin{example}
+$\vdash(\lambda x\Rightarrow7)::_{\ell}\mathbb{B}\rightarrow\mathbb{B}$
+elaborates to $\vdash(\lambda x\Rightarrow7::_{\mathbb{N}.\ell,.bod[x]}\mathbb{B})$
+\end{example}
+
+Arguments will receive expected types when they are applied. For example, 
+\begin{example}
+$f:\mathbb{B}\rightarrow\mathbb{B}\vdash f_{\ell}7\ :\mathbb{B}$
+elaborates to $f:\mathbb{B}\rightarrow\mathbb{B}\vdash f\left(7::_{\mathbb{N}.\ell,.arg}\mathbb{B}\right)\ :\mathbb{B}$
+\end{example}
+
+Vacuous cast can be created,
+\begin{example}
+$f:\mathbb{N}\rightarrow\mathbb{B}\rightarrow\mathbb{B}\vdash f_{\ell}7_{\ell'}3\ :\mathbb{B}$
+elaborates to $f:\mathbb{N}\rightarrow\mathbb{B}\rightarrow\mathbb{B}\vdash f\left(7::_{\mathbb{N}.\ell,.arg}\mathbb{N}\right)\left(3::_{\mathbb{N}.\ell',.arg}\mathbb{B}\right)\ :\mathbb{B}$
+\end{example}
+
+\todo{dependent type example where cast muddles type}
+
+Unlike in gradual typing, we cannot elaborate arbitrary untyped syntax.
+The underlying type of a cast needs to be known so that a function
+type can swap its argument type at application. For instance, $\lambda x\Rightarrow x$
+will not elaborate since the intended type is not known. Fortunately,
+our experimental testing suggests that a majority of randomly generated
+terms can be elaborated, while only a small minority of terms would
+type-check in the surface language. The programmer can make any term
+elaborate if they annotate the intended type. For instance, $\left(\lambda x\Rightarrow x\right)::*\rightarrow*$
+will elaborate.
+
+\subsection{Elaboration Procedure}
+
+\begin{figure}
+\[
+\frac{x:A\in H}{H\vdash x\,\textbf{Elab}\,x\overrightarrow{\,:\,}A}\rulename{\overrightarrow{\textbf{Elab}}-var}
+\]
+
+\[
+\frac{\,}{H\vdash\star\,\textbf{Elab}\,\star\overrightarrow{\,:\,}\star}\rulename{\overrightarrow{\textbf{Elab}}-\star}
+\]
+
+\[
+\frac{H\vdash M\overleftarrow{\,:_{\ell,.}\,}\star\textbf{Elab}\ A\quad H,x:A\vdash N\overleftarrow{\,:_{\ell',.}\,}\star\textbf{Elab}\ B}{H\vdash\left(\left(x:M_{\ensuremath{\ell}}\right)\rightarrow N_{\ensuremath{\ell'}}\right)\textbf{Elab}\left(\left(x:A\right)\rightarrow B\right)\overrightarrow{\,:\,}\star}\rulename{\overrightarrow{\textbf{Elab}}-fun-ty}
+\]
+
+\[
+\frac{H\vdash m\,\textbf{Elab}\ b\overrightarrow{\,:\,}\left(x:A\right)\rightarrow B\quad H\vdash n\overleftarrow{\,:_{\ell,.arg}\,}A\,\textbf{Elab}\,a}{H\vdash\left(m_{\ell}\,n\right)\textbf{Elab}\left(b\,a\right)\overrightarrow{\,:\,}B\left[x\coloneqq a\right]}\rulename{\overrightarrow{\textbf{Elab}}-fun-app}
+\]
+
+\[
+\frac{H\vdash n\,\textbf{Elab}\ a\overrightarrow{\,:\,}\left(x:A\right)\rightarrow B\quad H\vdash n\overleftarrow{\,:_{\ell,.arg}\,}A\,\textbf{Elab}\ a}{H\vdash\left(m_{\ell}\,n\right)\textbf{Elab}\left(b\,a\right)\overrightarrow{\,:\,}B\left[x\coloneqq a\right]}\rulename{\overrightarrow{\textbf{Elab}}-fun-app}
+\]
+
+\[
+\frac{H\vdash M\overleftarrow{\,:_{\ell',.}\,}\star\,\textbf{Elab}\ A\quad H\vdash m\overleftarrow{\,:_{\ell,.}\,}A\,\textbf{Elab}\ a}{H\vdash\left(m::_{\ell}M^{\ell'}\right)\textbf{Elab}\,a\overrightarrow{\,:\,}A}\rulename{\overrightarrow{\textbf{Elab}}-::}
+\]
+
+\[
+\frac{H,f:\left(x:A\right)\rightarrow B,x:A\vdash m\overleftarrow{\,:_{\ell,o.bod[x]}\,}B\,\textbf{Elab}\ b}{H\vdash\left(\mathsf{fun}\,f\,x\Rightarrow m\right)\overleftarrow{\,:_{\ell,o}\,}\left(x:A\right)\rightarrow B\,\textbf{Elab}\left(\mathsf{fun}\,f\,x\Rightarrow b\right)}\rulename{\overleftarrow{\textbf{Elab}}-fun}
+\]
+
+\[
+\frac{H\vdash m\,\textbf{Elab}\ a\overrightarrow{\,:\,}A}{H\vdash m\overleftarrow{\,:_{\ell,o}\,}B\ \textbf{Elab}\left(a::_{A,\ensuremath{\ell},o}B\right)}\rulename{\overleftarrow{\textbf{Elab}}-cast}
+\]
+
+\[
+\frac{H\vdash m\,\textbf{Elab}\ a\overrightarrow{\,:\,}\star}{H\vdash m\overleftarrow{\,:_{\ell,o}\,}\star\ \textbf{Elab}\,a}\rulename{\overleftarrow{\textbf{Elab}}-conv-\star}
+\]
+
+\todo[inline]{which syntax looks the best? on the left when input, or alway on the
+right like the typing judgment}
+
+\caption{Elaboration}
+\label{fig:elaboration}
+\end{figure}
+
+% rules
+Like the bidirectional rules, the rules for elaboration are broken
+into two judgments, 
+\begin{itemize}
+\item $H\vdash m\overleftarrow{\,:_{\ell,o}\,}A\,\textbf{Elab}\ a$, that
+generates a cast term $a$ from a surface term $m$ given its expected
+type $A$ along with a location $\ell$ and observation $o$ that
+made that assertion
+\item $H\vdash m\,\textbf{Elab}\ a\overrightarrow{\,:\,}A$, that generates
+a cast term $a$ and its type $A$ from a surface term $m$
+\end{itemize}
+The rules for elaboration are presented in Figure \ref{fig:elaboration}.
+Elaboration rules are written in a style of bidirectional type checking.
+However, unlike bidirectional type checking, when checking an inference
+elaboration adds a cast assertion that the two types are equal. Thus
+any conversion checking can be suspended until runtime. Additionally
+we will allow the mode to change at the type universe with the $\rulename{\overleftarrow{\textbf{Elab}}-conv-\star}$
+rule, this is required to avoid stuck casts at $\star$. As formulated
+here, the elaboration procedure is total. 
+
+There are several desirable properties of elaboration, 
+
+\begin{figure}
+\begin{tabular}{ccc}
+$|x|$ & = & $x$\tabularnewline
+$|\star|$ & = & $\star$\tabularnewline
+$|m::_{\ell}M|$ & = & $|m|$\tabularnewline
+$|\left(x:M_{\ensuremath{\ell}}\right)\rightarrow N_{\ensuremath{\ell'}}|$ & = & $\left(x:|M|\right)\rightarrow|N|$\tabularnewline
+$|m_{\ensuremath{\ell}}\,n|$ & = & $|m|\,|n|$\tabularnewline
+$|\mathsf{fun}\,f\,x\Rightarrow m|$ & = & $\mathsf{fun}\,f\,x\Rightarrow|m|$\tabularnewline
+$|\lozenge|$ & = & $\lozenge$\tabularnewline
+$|\Gamma,x:A|$ & = & $|\Gamma|,x:|A|$\tabularnewline
+$|a::_{A,\ensuremath{\ell},o}B|$ & = & $|a|$\tabularnewline
+$|\left(x:A\right)\rightarrow B|$ & = & $\left(x:|A|\right)\rightarrow|B|$\tabularnewline
+$|\mathsf{fun}\,f\,x\Rightarrow b|$ & = & $\mathsf{fun}\,f\,x\Rightarrow|b|$\tabularnewline
+$|b\,a|$ & = & $|b|\,|a|$\tabularnewline
+$|H,x:M|$ & = & $|H|,x:|M|$\tabularnewline
+\end{tabular}\caption{Erasure}
+\label{fig:erasure}
+\end{figure}
+
+\begin{thm}
+elaborated terms preserve the erasure (defined in \ref{fig:erasure})
+
+if $H\vdash m\,\textbf{Elab}\ a\overrightarrow{\,:\,}A$ then $|m|=|a|$ 
+
+if $H\vdash m\,a\overleftarrow{\,:_{\ensuremath{\ell},o}\,}A\,\textbf{Elab}\,a$
+then $|m|=|a|$ 
+\end{thm}
+
+\begin{proof}
+by mutual induction on the $\textbf{Elab}$ derivations
+
+\begin{tabular}{lll}
+$\rulename{\overrightarrow{\textbf{Elab}}-var}$ & $|x|=x=|x|$  & \tabularnewline
+$\rulename{\overrightarrow{\textbf{Elab}}-\star}$ & $|\star|=\star=|\star|$  & \tabularnewline
+$\rulename{\overrightarrow{\textbf{Elab}}-fun-ty}$ & \multicolumn{2}{l}{$H\vdash M\overleftarrow{\,:_{\ell,.}\,}\star\textbf{Elab}\ A\quad H,x:A\vdash N\overleftarrow{\,:_{\ell',.}\,}\star\textbf{Elab}\ B$}\tabularnewline
+ & $|M|=|A|$ & by induction\tabularnewline
+ & $|N|=|B|$ & by induction\tabularnewline
+ & $|\left(x:M_{\ensuremath{\ell}}\right)\rightarrow N_{\ensuremath{\ell'}}|=\left(x:|M|\right)\rightarrow|N|=\left(x:|A|\right)\rightarrow|B|=|\left(x:A\right)\rightarrow B|$ & \tabularnewline
+$\rulename{\overrightarrow{\textbf{Elab}}-fun-app}$ & \multicolumn{2}{l}{$H\vdash m\,\textbf{Elab}\ b\overrightarrow{\,:\,}C\quad C\Rrightarrow_{\ast}\left(x:A\right)\rightarrow B\quad H\vdash n\overleftarrow{\,:_{\ell,.arg}\,}A\,\textbf{Elab}\,a$}\tabularnewline
+ & $|m|=|b|$ & by induction\tabularnewline
+ & $|n|=|a|$ & by induction\tabularnewline
+ & $|m_{\ensuremath{\ell}}\,n|=|m|\,|n|=|b|\,|a|=|b\,a|$ & \tabularnewline
+$\rulename{\overleftarrow{\textbf{Elab}}-fun}$ & \multicolumn{2}{l}{$H,f:\left(x:A\right)\rightarrow B,x:A\vdash m\overleftarrow{\,:_{\ell,o.bod[x]}\,}B\,\textbf{Elab}\ b$}\tabularnewline
+ & $|m|=|b|$ & by induction\tabularnewline
+ & $|\mathsf{fun}\,f\,x\Rightarrow m|=\mathsf{fun}\,f\,x\Rightarrow|m|=\mathsf{fun}\,f\,x\Rightarrow|b|=|\mathsf{fun}\,f\,x\Rightarrow b|$ & \tabularnewline
+$\rulename{\overrightarrow{\textbf{Elab}}-::}$ & \multicolumn{2}{l}{$H\vdash M\overleftarrow{\,:_{\ell.}\,}\star\,\textbf{Elab}\ A\quad H\vdash m\overleftarrow{\,:_{\ell,.}\,}A\,\textbf{Elab}\ a$}\tabularnewline
+ & $|m|=|a|$ & by induction\tabularnewline
+ & $|m::_{\ell}M|=|m|=|a|$ & \tabularnewline
+$\rulename{\overleftarrow{\textbf{Elab}}-conv}$ & $H\vdash m\,\textbf{Elab}\ a\overrightarrow{\,:\,}A$, ... & \tabularnewline
+ & $|m|=|a|$ & by induction\tabularnewline
+ & $|m|=|a|=|a::_{A,\ensuremath{\ell},o}A'|$ & \tabularnewline
+\end{tabular}
+\end{proof}
+It follows that whenever an elaborated cast term evaluates, the corresponding
+surface term evaluates consistently 
+\begin{thm}
+Surface language and cast language have consistent evaluation
+
+if $H\vdash m\,\textbf{Elab}\ a\overrightarrow{\,:\,}A$, and $a\rightsquigarrow_{*}\star$
+then $m\rightsquigarrow_{*}\star$ 
+
+if $H\vdash\textbf{Elab}\ m\,a\overrightarrow{\,:\,}A$, and $a\rightsquigarrow_{*}(x:A)\rightarrow B$
+then there exists $N$ and $M$ such that $m\rightsquigarrow_{*}(x:N)\rightarrow M$ 
+\end{thm}
+
+\begin{proof}
+Since $a\rightsquigarrow_{*}a'$ implies $|a|\rightsquigarrow_{*}|a'|$
+and $m\rightsquigarrow_{*}m'$ implies $|m|\rightsquigarrow_{*}|m'|$.
+\end{proof}
+elaborated terms are well-cast in a well formed context \todo{need to define and state H ok}
+\begin{thm}
+elaborated terms are well-cast
+
+for any $H\vdash a\,\textbf{Elab}\,m\overrightarrow{\,:\,}A$ then
+$H\vdash a:A$, $H\vdash A:\star$
+
+for any $H\vdash$, $H\vdash A:\star$ , $H\vdash a\overleftarrow{\,:_{\ell,o}\,}A\,\textbf{Elab}\,m$
+then $H\vdash a:A$ 
+\end{thm}
+
+\begin{proof}
+by mutual induction on $\textbf{Elab}$ derivations
+
+\todo{revise below, causing latex some issues}
+
+\begin{tabular}{lll}
+$\rulename{\overrightarrow{\textbf{Elab}}-var}$ & $x:A\in H$ & \tabularnewline
+ & $H\vdash A:\star$ & by $H\vdash$\tabularnewline
+ & $H\vdash x:A$ & $\rulename{cast-var}$\tabularnewline
+$\rulename{\overrightarrow{\textbf{Elab}}-fun-ty}$ & \multicolumn{2}{l}{$H\vdash M\overleftarrow{\,:_{\ell,.}\,}\star\textbf{Elab}\ A\quad H,x:A\vdash N\overleftarrow{\,:_{\ell',.}\,}\star\textbf{Elab}\ B$}\tabularnewline
+ & $H\vdash A:\star$ & by induction\tabularnewline
+ & $H,x:A\vdash B:\star$ & by induction\tabularnewline
+$\rulename{\overrightarrow{\textbf{Elab}}-fun-app}$ & \multicolumn{2}{l}{$H\vdash m\,\textbf{Elab}\ b\overrightarrow{\,:\,}C\quad C\Rrightarrow_{\ast}\left(x:A\right)\rightarrow B\quad H\vdash n\overleftarrow{\,:_{\ell,.arg}\,}A\,\textbf{Elab}\,a$}\tabularnewline
+ & $H\vdash b:C$, $H\vdash C:\star$ & by induction\tabularnewline
+ & $H\vdash\left(x:A\right)\rightarrow B:\star$ & by $\Rrightarrow_{\ast}$ preservation\tabularnewline
+ & $H\vdash A:\star$, $H,x:A\vdash B:\star$ & by fun-ty inversion\tabularnewline
+ & $H\vdash b:\left(x:A\right)\rightarrow B$ & $\rulename{cast-conv}$\tabularnewline
+ & $H\vdash a:A$ & by induction\tabularnewline
+ & $H\vdash B\left[x\coloneqq a\right]:\star$ & by subst preservation\tabularnewline
+ & $H\vdash b\,a\,:\,B\left[x\coloneqq a\right]$ & $\rulename{cast-fun-app}$\tabularnewline
+$\rulename{\overleftarrow{\textbf{Elab}}-fun}$ & \multicolumn{2}{l}{$H,f:\left(x:A\right)\rightarrow B,x:A\vdash$, $H,f:\left(x:A\right)\rightarrow B,x:A\vdash B:\star$}\tabularnewline
+ & $H,f:\left(x:A\right)\rightarrow B,x:A\vdash m\overleftarrow{\,:_{\ell,o.bod[x]}\,}B\,\textbf{Elab}\ b$ & \tabularnewline
+ &  & TODO revise!\tabularnewline
+ & $H,f:\left(x:A\right)\rightarrow B,x:A\vdash A:\star$ & by reg\tabularnewline
+ & $H\vdash A:\star$ & by removing free vars\tabularnewline
+ & $H,x:A\vdash B:\star$ & similarly with fun-ty inversion\tabularnewline
+ & $H,f:\left(x:A\right)\rightarrow B,x:A\vdash b:B$ & by induction\tabularnewline
+ & $H\vdash\mathsf{fun}\,f\,x\Rightarrow b\,:\,\left(x:A\right)\rightarrow B$ & $\rulename{cast-fun}$\tabularnewline
+$\rulename{\overrightarrow{\textbf{Elab}}-::}$ & \multicolumn{2}{l}{$H\vdash M\overleftarrow{\,:_{\ell.}\,}\star\,\textbf{Elab}\ A\quad H\vdash m\overleftarrow{\,:_{\ell,.}\,}A\,\textbf{Elab}\ a$}\tabularnewline
+ & $H\vdash A:\star$ & by induction\tabularnewline
+ & $H\vdash a:A$ & by induction\tabularnewline
+$\rulename{\overleftarrow{\textbf{Elab}}-conv}$ & $H\vdash$, $H\vdash A':\star$ , $H\vdash m\,\textbf{Elab}\ a\overrightarrow{\,:\,}A$,
+with some $\ell,o$ & \tabularnewline
+ & $H\vdash a:A$, $H\vdash A:\star$ & by induction\tabularnewline
+ & $H\vdash a::_{A,\ensuremath{\ell},o}B\::\:B$ & $\rulename{cast-::}$\tabularnewline
+\end{tabular}
+
+Some additional properties are strongly conjectured
+\end{proof}
+\begin{conjecture}
+Every term well typed in the bidirectional surface language elaborates 
+
+if $\Gamma\vdash$, then there exists $H$ such that $\Gamma\,\textbf{Elab}\,H$ 
+
+$\Gamma\vdash m\overrightarrow{\,:\,}M$ then there exists $H$, $a$
+and $A$ such that $\Gamma\,\textbf{Elab}\,H$, $H\vdash m\,\textbf{Elab}\ a\overrightarrow{\,:\,}A$ 
+
+$\Gamma\vdash m\overleftarrow{\,:\,}M$ and given $\ell$, $o$then
+there exists $H$, $a$and $A$ such that $\Gamma\,\textbf{Elab}\,H$,
+$H\vdash\textbf{Elab}\,a\,m\overleftarrow{\,:_{\ell o}\,}A$ 
+\end{conjecture}
+
+Which if true would lead to the corollary
+\begin{conjecture}
+blame never points to something that checked in the bidirectional
+system 
+
+if $\vdash m\overrightarrow{\,:\,}M$, and $\vdash\textbf{Elab}\ m\,a\overrightarrow{\,:\,}A$
+, then for no $a\rightsquigarrow_{*}a'$ will $\textbf{Blame}\:\ensuremath{\ell}\,o\:a'$
+occur 
+
+\todo{revise precisely with lables}
+\end{conjecture}
+
+The last three guarantees are similar to the gradual guarantee \cite{siek_et_al:LIPIcs:2015:5031}
+for gradual typing. 
