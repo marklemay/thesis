@@ -225,8 +225,7 @@ The following rule is admissible
 by induction over typing derivations
 
 \begin{tabular}{lll}
-$\rulename{cast-::}$ & \multicolumn{2}{l}{$H,x:C,H'\vdash a:A$, $H,x:C,H'\vdash A:\star$, $H,x:C,H'\vdash B:\star$,
-wellformed $\ensuremath{\ell},o$}\tabularnewline
+$\rulename{cast-::}$ & \multicolumn{2}{l}{$H,x:C,H'\vdash a:A$, $H,x:C,H'\vdash A:\star$, $H,x:C,H'\vdash B:\star$, well formed $\ensuremath{\ell},o$}\tabularnewline
  & $H,H'\left[x\coloneqq c\right]\vdash a\left[x\coloneqq c\right]:A\left[x\coloneqq c\right]$ & by induction\tabularnewline
  & $H,H'\left[x\coloneqq c\right]\vdash A\left[x\coloneqq c\right]:\star$ & by induction\tabularnewline
  & $H,H'\left[x\coloneqq c\right]\vdash B\left[x\coloneqq c\right]:\star$ & by induction\tabularnewline
@@ -263,8 +262,7 @@ the following rule is admissible
 by induction over typing derivations
 
 \begin{tabular}{lll}
-$\rulename{cast-::}$ & \multicolumn{2}{l}{$H\vdash a:A$, $H\vdash A:\star$, $H\vdash B:\star$, wellformed
-$\ensuremath{\ell},o$}\tabularnewline
+$\rulename{cast-::}$ & \multicolumn{2}{l}{$H\vdash a:A$, $H\vdash A:\star$, $H\vdash B:\star$, well formed $\ensuremath{\ell},o$}\tabularnewline
  & $H'\vdash a:A$ & by induction\tabularnewline
  & $H'\vdash A:\star$ & by induction\tabularnewline
  & $H'\vdash B:\star$ & by induction\tabularnewline
@@ -356,7 +354,7 @@ $\rulename{cast-conv}$ & \multicolumn{2}{l}{$H\vdash a::_{A,\ensuremath{\ell},o}
 other rules & impossible & the term position has the form $a::_{A,\ensuremath{\ell},o}B$\tabularnewline
 \end{tabular}
 \end{proof}
-Note that each of the output judgments are smaller then the input judgments, this allows other proofs to use induction on the output of this lemma.
+Note that each of the output judgments are smaller than the input judgments, this allows other proofs to use induction on the output of this lemma.
 \begin{thm}
 $\Rrightarrow$-Preservation 
 
@@ -470,7 +468,7 @@ a\cancel{=}\left(x:C\right)\rightarrow C'
 \label{fig:cast-val}
 \end{figure}
 
-Unlike the surface language, it is not longer practical to characterize values syntactically.
+Unlike the surface language, it is no longer practical to characterize values syntactically.
 Values are specified by judgments in \Fref{cast-val}. 
 They are standard except for the $\rulename{Val-::}$, which states that a type ($\star$ or function type) under a cast is not a value.
 
@@ -545,7 +543,7 @@ With only dependent functions and universes, only inequalities of the form $*\,\
 The first 2 rules of the blame judgment witness these concrete type inequalities.
 The rest of the blame rules will recursively extract concrete witnesses from larger terms.
 The limited amount of observation is the main reason why the theory in this chapter is tractable.
-%% "self evidently correct" sinc it is clear to only extract inequalities. like step and val? one of several possible contrediction extraction relations
+% "self evidently correct" since it is clear to only extract inequalities. like step and val? one of several possible contradiction extraction relations
 \begin{fact}
 $\rightsquigarrow$ preserves types 
 
