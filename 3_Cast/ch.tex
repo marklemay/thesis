@@ -1,13 +1,13 @@
 \chapter{The Dependent Cast System}
 \label{chapter:Cast}
 \thispagestyle{myheadings}
-
+ 
 We can now tackle the most fundamental problem with dependent type systems: Definitional equalities are pervasive and unintuitive.
-
+ 
 %% example of dependent types
-The motivating example form the introduction can be stated more precicely in terms of the surface language.
-Recall, dependent types can prevent an out-of-bounds error when indexing into a length indexed list. 
-
+The motivating example from the introduction can be stated more precisely in terms of the surface language.
+Recall, dependent types can prevent an out-of-bounds error when indexing into a length indexed list.
+ 
 \begin{align*}
 \mathtt{Vec} & :*\rightarrow\mathbb{N}_{c}\rightarrow*,\\
 \mathtt{rep} & :\left(X:*\right)\rightarrow X\rightarrow\left(y:\mathbb{N}_{c}\right)\rightarrow\mathtt{Vec\,}X\,y,\\
@@ -16,20 +16,20 @@ Recall, dependent types can prevent an out-of-bounds error when indexing into a 
 \[
 \vdash\lambda x\Rightarrow\mathtt{head}\,\mathbb{B}_{c}\,x\,\left(\mathtt{rep}\,\mathbb{B}_{c}\,true_{c}\,\left(1_{c}+_{c}x\right)\right)\,:\,\mathbb{N}_{c}\rightarrow\mathbb{B}_{c}
 \]
-
+ 
 $\mathtt{head}$ is a function that expects a list of length $1_{c}+_{c}y$, making it impossible for $\mathtt{head}$ to inspect an empty list.
-
+ 
 %% example of problem
 Unfortunately, the following will not type check in the surface language,
-
+ 
 \[
 \cancel{\vdash}\lambda x\Rightarrow\mathtt{head}\,\mathbb{B}_{c}\,x\,\left(\mathtt{rep}\,\mathbb{B}_{c}\,true_{c}\,\left(x+_{c}1_{c}\right)\right)\,:\,\mathbb{N}_{c}\rightarrow\mathbb{B}_{c}
 \]
-
+ 
 %% explanation of example
-\sloppy While ``obviously'' $1+x=x+1$, in the surface language, definitional equality does not associate these two terms, $1_{c}+_{c}x\cancel{\equiv}x+_{c}1_{c}$. 
-
-In this chapter we will show how to side step definitional equality and deal incorrect equalities at runtime in a principled way.
+\sloppy While ``obviously'' $1+x=x+1$, in the surface language, definitional equality does not associate these two terms, $1_{c}+_{c}x\cancel{\equiv}x+_{c}1_{c}$.
+ 
+In this chapter we will show how to side step definitional equality and deal with incorrect equalities at runtime in a principled way.
 This will be done with the \textbf{cast system} described in this chapter.
 The cast system is comprised of
 \begin{itemize}
@@ -37,20 +37,18 @@ The cast system is comprised of
 \item The \textbf{elaboration procedure} that transforms appropriate untyped surface syntax into checked cast language terms.
 \todo{as a picture}
 \end{itemize}
-
+ 
 The presentation in this chapter mirrors the system in chapter 2.
-The cast language plays the role of the type assignment system, while the elaboration procedure coresponds with the \bidir system.
-
+The cast language plays the role of the type assignment system, while the elaboration procedure corresponds with the \bidir system.
+ 
 We show that a novel form of type soundness holds, that we call \textbf{cast soundness}.
-Instead of ``well typed terms don't get stuck'', we prove ``well cast terms don't get stuck without blame''. 
-
+Instead of ``well typed terms don't get stuck'', we prove ``well cast terms don't get stuck without blame''.
+ 
 Additionally, by construction, blame (in the sense of contracts and monitors) is reasonably handled.
 Several desirable properties hold for the system overall. \todo{which?}
-
+ 
 \section{Cast Language}
-
-\subsection{Syntax}
-
+ 
 \begin{figure}
 \begin{tabular}{lcll}
 \multicolumn{4}{l}{source locations,}\tabularnewline
@@ -59,47 +57,47 @@ $\ensuremath{\ell}$ &  &  & \tabularnewline
 $H$ & $\Coloneqq$ & $\lozenge$ $|$ $H,x:A$ & \tabularnewline
 \multicolumn{4}{l}{expressions,}\tabularnewline
 $a,b$,$A,B$ & $\Coloneqq$ & $x$ & \tabularnewline
- & $|$ & $a::_{A,\ensuremath{\ell},o}B$ & cast\tabularnewline
- & $|$ & $\star$ & \tabularnewline
- & $|$ & $\left(x:A\right)\rightarrow B$ & \tabularnewline
- & $|$ & $\mathsf{fun}\,f\,x\Rightarrow b$ & \tabularnewline
- & $|$ & $b\,a$ & \tabularnewline
+& $|$ & $a::_{A,\ensuremath{\ell},o}B$ & cast\tabularnewline
+& $|$ & $\star$ & \tabularnewline
+& $|$ & $\left(x:A\right)\rightarrow B$ & \tabularnewline
+& $|$ & $\mathsf{fun}\,f\,x\Rightarrow b$ & \tabularnewline
+& $|$ & $b\,a$ & \tabularnewline
 \multicolumn{4}{l}{observations,}\tabularnewline
 o & $\Coloneqq$ & . & current location\tabularnewline
- & $|$ & $o.arg$ & function type-arg\tabularnewline
- & $|$ & $o.bod[a]$ & function type-body\tabularnewline
+& $|$ & $o.arg$ & function type-arg\tabularnewline
+& $|$ & $o.bod[a]$ & function type-body\tabularnewline
 \end{tabular}
-
+ 
 \todo[inline]{would $a_{A}:?:_{\ensuremath{\ell},o}B$ be clearer syntax then $a::_{A,\ensuremath{\ell},o}B$?}
-
+ 
 \todo[inline]{would it be clearer to add the $\ell$ to the observation?}
-
+ 
 \caption{Cast Language Syntax}
 \label{fig:cast-pre-syntax}
 \end{figure}
-
+ 
 %% pre-syntax
 The syntax for the cast language can be found in \Fref{cast-pre-syntax}.
 By design the cast language is almost identical to the surface language except that the cast construct has been added and annotations have been removed.
-
+ 
 The cast language can assume arbitrary equalities over types, $A=B$, with a cast, $a::_{A,\ensuremath{\ell},o}B$ given
 \begin{itemize}
 \item an underlying term $a$,
-\item a source location $\ell$ where it was asserted, 
-\item a concrete observation $o$ that would witness inequality, 
-\item the type of the underlying $a$ term $A$, 
-\item and the expected type of the term $B$. 
+\item a source location $\ell$ where it was asserted,
+\item a concrete observation $o$ that would witness inequality,
+\item the type of the underlying $a$ term $A$,
+\item and the expected type of the term $B$.
 \end{itemize}
 Every time there is a definitional mismatch between the type inferred from a term and the type expected from the usage, the elaboration procedure will produce a cast.
-
+ 
 Observations allow indexing into terms to pinpoint errors.
 For instance, if we want to highlight the $C$ sub expression in $\left(x:A\right)\rightarrow\left(y:\left(x:B\right)\rightarrow\underline{C}\right)\rightarrow D$ we can use the observation $..Bod[x].arg.Bod[y]$.
 In general, the $C$ may specifically depend on $x$ and $y$ so they are tracked as part of the observation.
 For instance, given the type $\left(X:\star\right)\rightarrow X$ we might want to point out $A$ when $X=A\rightarrow B$ resulting in the type $\left(X:\star\right)\rightarrow\left(\underline{A}\rightarrow B\right)$.
 The observation would then read $..Bod[A\rightarrow B].arg$ recording the specific type argument that allows an argument to be inspected.
-
+ 
 Locations and observations will be used to form blame and produce the runtime error message users might see.
-
+ 
 In addition to the abbreviations from Chapter 2, some new abbreviations for the cast language are listed in Figure \ref{fig:cast-pre-syntax-abrev}.
 \begin{figure}
 \begin{tabular}{lclll}
@@ -107,28 +105,27 @@ $a::_{A,\ensuremath{\ell},o}B$ & written & $a::_{A,\ensuremath{\ell}}B$ & when &
 $a::_{A,\ensuremath{\ell}}B$ & written & $a::_{A}B$ & when & the location is not relevant\tabularnewline
 $a::_{A}B$ & written & $a::B$ & when & the the type of $a$is clear\tabularnewline
 \end{tabular}
-
+ 
 \caption{Surface Language Abbreviations}
 \label{fig:cast-pre-syntax-abrev}
 \end{figure}
-
-
+ 
 \subsection{How Should Casts Reduce?}
-
+ 
 How does the cast construct interact with the existing constructs?
 There are three interactions that could cause a term to be stuck in evaluation or block type checking:
-
+ 
 \begin{tabular}{ll}
 $\star::B$ & universe under cast\tabularnewline
 $\left(\left(x:A\right)\rightarrow B\right)::C$ & function type under cast\tabularnewline
 $\left(b::C\right)a$ & application blocked by cast\tabularnewline
 \end{tabular}
-
-We can account for these by realizing obvious casts should evaporate, freeing up the underling term.
+ 
+We can account for these by realizing obvious casts should evaporate, freeing up the underlying term.
 The most interesting case is when a cast confirms that the applied term is a function, but with potentially different input and output types.\todo{awk}
 Then we use the function type syntax to determine a reasonable cast over the argument, and maintain the appropriate cast over the resulting computation.
 This operation is similar to the way higher order contracts invert the polarity of blame for the arguments of higher order functions \cite{10.1145/581478.581484} and also found in gradual type systems, such as \cite{10.1007/978-3-642-00590-9_1}.
-
+ 
 \begin{sidewaysfigure}
 \begin{tabular}{ccccc}
 $\star::\star$ & $\rightsquigarrow$ & $\star$ &  & \tabularnewline
@@ -141,38 +138,38 @@ $\left(b::_{\left(x:A'\right)\rightarrow B'}\left(x:A\right)\rightarrow B\right)
 $\left(b::C\right)a$ & $\rightsquigarrow$ & $\left(b::C'\right)a$ & when  & $C\rightsquigarrow C'$\tabularnewline
 $\left(b::_{\ell,o}C\right)a$ & blame & $\ell,o$ & when  & $C$ cannot be $\left(x:A\right)\rightarrow B$ \tabularnewline
 \end{tabular}
-
-\caption{Aproxomate Cast Language Reductions}
+ 
+\caption{Approximate Cast Language Reductions}
 \label{fig:cast-aprox-red}
 \end{sidewaysfigure}
-
-\Fref{cast-aprox-red} shows apoxomately how these reductions should be carried out.
+ 
+\Fref{cast-aprox-red} shows approximately how these reductions should be carried out.
 The fully formal reduction rules are listed later, but their complete detail can be distracting.
 Type universes live in the type universe, so any cast that contradicts this should be blamed.
 Similarly for function types.
 Terms that take input must be functions, so any cast that contradicts this should blame the source location.
 \todo{awk}
-
+ 
 Note that the rules outlined here are not deterministic since there are cases when we might blame or continue reducing the argument.
 One of the subtle innovations of the system described in this chapter is to completely separate blame from reduction.
 This sidesteps many of the complexities of having a reduction relevant $\mathtt{abort}$ term in a dependent type theory \cite{sjoberg2012irrelevance,pedrot2018failure}.
 As far as reduction is concerned, bad terms simply ``get stuck'' as it might on a variable from a nonempty typing context.
 Otherwise the reduction behavior is well behaved.
-Terms my be blamable by the rules outlined in this chapter, but it is easy to imagine more sophisticated ways to extract blame from terms. 
-
+Terms may be blamable by the rules outlined in this chapter, but it is easy to imagine more sophisticated ways to extract blame from terms.
+ 
 This outlines the minimum requirements for cast reductions, there are plausibly many additional reductions that could be considered.
 Some tempting reductions are
-
+ 
 \begin{tabular}{ccccc}
 $a::_{C}C$ & $\rightsquigarrow_{=}$ & $a$ &  & \tabularnewline
 $a::_{C'}C$ & $\rightsquigarrow_{\equiv}$ & $a$ & when & $C'\equiv C$\tabularnewline
 \end{tabular}
-
+ 
 However these rules preclude extracting blame that may be embedded within the casts themselves.
-These rules also seem to complicate the type theory.
+These rules also seem to complicate the meta theory.
 Despite this we will use these reductions in examples to keep the book keeping to a minimum.
-
-
+ 
+ 
 \input{3_Cast/2_Examples}
 \input{3_Cast/3_Cast_Sys}
 \input{3_Cast/4_Elab}
