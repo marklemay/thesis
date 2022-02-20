@@ -375,107 +375,91 @@ The following rule is admissible
   by induction on the cast derivation $H\gamma m:M$, specializing on $m\Rrightarrow m'$,
 
 \begin{casenv}
-  \item \rulename{\Rrightarrow-::-red}
-  \item All other cases follow directly or by induction
+  \item if typed with \rulename{cast-::}
+  \begin{casenv}
+    \item if the a trivial type universe cast reduces with \rulename{\Rrightarrow-::-red} then preservation follows by induction
+    \item if reduced with \rulename{\Rrightarrow-::} then follows by induction and conversion
+  \end{casenv}
+  \item \rulename{cast-fun-app}
+  \begin{casenv}
+    \item if the term reduces with \rulename{\Rrightarrow-fun-::-red} then we have
+    $H\vdash\left(b::_{\left(x:A_{1}\right)\rightarrow B_{1},\ell ,o}\left(x:A_{2}\right)\rightarrow B_{2}\right):\left(x:A_{2}\right)\rightarrow B_{2}$,
+    $H\vdash a:A_{2}$,
+    $b\Rrightarrow b'$, $a\Rrightarrow a'$, $A_{1}\Rrightarrow A_{1}'$,
+    $A_{2}\Rrightarrow A_{2}'$, $B_{1}\Rrightarrow B_{1}'$,  $B_{2}\Rrightarrow B_{2}'$,
+    and $o\Rrightarrow o'$.
+    We must show $H\vdash\left(b'\ ac\right)::_{B_{1}'\left[x\coloneqq ac\right],\ell ,o'.bod[a']}B_{2}'\left[x\coloneqq a'\right]$, where $ac=a'::_{A_{2}',\ell,o'.arg}A_{1}'$.
+    
+    With cast-inversion we can show $H\vdash b:\left(x:A_{1}\right)\rightarrow B_{1}$, $H\vdash\left(x:A_{1}\right)\rightarrow B_{1}:\star$,
+    $H\vdash\left(x:A_{2}\right)\rightarrow B_{2}:\star$.
+    Since these derivations are structurally smaller, we can use induction on them.
+
+    \begin{tabular}{llll}
+      $H\vdash a':A_{2}'$ & $\rulename{cast-conv}$\tabularnewline
+      $\left(x:A_{2}\right)\rightarrow B_{2}\Rrightarrow\left(x:A_{2}'\right)\rightarrow B_{2}'$ & by $\rulename{\Rrightarrow -fun-ty}$\tabularnewline
+      $H\vdash\left(x:A_{2}'\right)\rightarrow B_{2}':\star$ & \makecell[l]{by induction with \\ $H\vdash\left(x:A_{2}\right)\rightarrow B_{2}:\star$} \tabularnewline
+      $H\vdash A_{2}':\star$, $H,x:A_{2}'\vdash B_{2}':\star$ & fun-ty-inversion \tabularnewline
+      $\left(x:A_{1}\right)\rightarrow B_{1}\Rrightarrow\left(x:A_{1}'\right)\rightarrow B_{1}'$ & $\rulename{\Rrightarrow -fun-ty}$ \tabularnewline
+      $H\vdash\left(x:A_{1}'\right)\rightarrow B_{1}':\star$ & \makecell[l]{by induction with \\ $H\vdash\left(x:A_{1}\right)\rightarrow B_{1}:\star$} \tabularnewline
+      $H\vdash A_{1}':\star$, $H,x:A_{1}'\vdash B_{1}':\star$ & fun-ty-inversion\tabularnewline
+      % let $ac=a'::_{A_{2}',\ell,o'.arg}A_{1}'$ & \tabularnewline
+      $H\vdash ac:A_{1}'$ & by $\rulename{cast-::}$\tabularnewline
+      $H\vdash b':\left(x:A_{1}\right)\rightarrow B_{1}$ & \makecell[l]{by induction with \\ $H\vdash b:\left(x:A_{1}\right)\rightarrow B_{1}$} \tabularnewline
+      $H\vdash b':\left(x:A_{1}'\right)\rightarrow B_{1}'$ & by $\rulename{cast-conv}$\tabularnewline
+      $H\vdash b'\ ac:B_{1}'\left[x\coloneqq ac\right]$ & by $\rulename{cast-fun-app}$\tabularnewline
+      $H\vdash B_{1}'\left[x\coloneqq ac\right]:\star$ & by substitution preservation\tabularnewline
+      $H\vdash B_{2}'\left[x\coloneqq a'\right]:\star$ & by substitution preservation\tabularnewline
+      % \makecell[l]{$H\vdash$ \\ $\left(b'\ ac\right)::_{B_{1}'\left[x\coloneqq ac\right],\ell ,o'.bod[a']}B_{2}'\left[x\coloneqq a'\right]$} & by \rulename{cast-::} \tabularnewline
+      \end{tabular}
+      Which allows us to conclude $H\vdash\left(b'\ ac\right)::_{B_{1}'\left[x\coloneqq ac\right],\ell ,o'.bod[a']}B_{2}'\left[x\coloneqq a'\right]$ by \rulename{cast-::}.
+
+    \item other reductions allong the lines of \ch{2}
+  \end{casenv}
+  \item All other cases follow allong the lines of \ch{2}
 \end{casenv}
 
-\begin{tabular}{llll}
-$\rulename{cast-::}$ &  & well formed $\ell,o$ & \tabularnewline
- & $\rulename{\Rrightarrow -::-red}$ & $H\vdash a:\star$, $a\Rrightarrow a'$ & \tabularnewline
- &  & $H\vdash a'\,:\,\star$ & directly by induction\tabularnewline
- & $\rulename{\Rrightarrow -::}$ & \multicolumn{2}{l}{$H\vdash a:A_{1}$, $H\vdash A_{2}:\star$, $a\Rrightarrow a'$, $A_{1}\Rrightarrow A_{1}'$,
-$A_{2}\Rrightarrow A_{2}'$, $o\Rrightarrow o'$}\tabularnewline
- &  & $H\vdash a'\,:\,A_{1}$ & by induction\tabularnewline
- &  & $H\vdash a'\,:\,A_{1}'$ & $\rulename{cast-conv}$\tabularnewline
- &  & $H\vdash A_{2}':\star$ & by induction\tabularnewline
- &  & $H\vdash a'::_{A_{1}',\ell,o'}A_{2}'\,:\,A_{2}'$ & $\rulename{cast-::}$\tabularnewline
- &  & $H\vdash a'::_{A_{1}',\ell,o'}A_{2}'\,:\,A_{2}$ & $\rulename{cast-conv}$\tabularnewline
-$\rulename{cast-fun-ty}$ &  & $H\vdash A\,:\,\star$, $H,x:A\vdash B\,:\,\star$ & \tabularnewline
- & $\rulename{\Rrightarrow -fun-ty}$ & $A\Rrightarrow A'$, $B\Rrightarrow B'$ & \tabularnewline
- &  & $H\vdash A'\,:\,\star$ & by induction\tabularnewline
- &  & $H,x:A\vdash B':\star$ & by induction\tabularnewline
- &  & $H,x:A\equiv H,x:A'$ & by reflexivity of $\equiv$, extended with $A\equiv A'$\tabularnewline
- &  & $H,x:A'\vdash B'\,:\,\star$ & by preservation of contexts\tabularnewline
- &  & $H\vdash\left(x:A'\right)\rightarrow B'\,:\,\star$ & $\rulename{cast-fun-ty}$\tabularnewline
-$\rulename{cast-fun}$ &  & $H,f:\left(x:A\right)\rightarrow B,x:A\vdash a\,:\,A$ & \tabularnewline
- & $\rulename{\Rrightarrow -fun}$ & $a\Rrightarrow a'$ & \tabularnewline
- &  & $H,f:\left(x:A\right)\rightarrow B,x:A\vdash a':A$ & by induction\tabularnewline
- &  & $H\vdash\mathsf{fun}\,f\,x\Rightarrow a'\,:\,\left(x:A\right)\rightarrow B$ & $\rulename{cast-fun}$\tabularnewline
-$\rulename{cast-fun-app}$ &  &  & \tabularnewline
- & $\rulename{\Rrightarrow -fun-app-red}$ & \multicolumn{2}{l}{$H\vdash\mathsf{fun}\,f\,x\Rightarrow b\,:\,\left(x:A\right)\rightarrow B$,
-$H\vdash a:A$, $a\Rrightarrow a'$, $b\Rrightarrow b'$}\tabularnewline
- &  & $\mathsf{fun}\,f\,x\Rightarrow b\Rrightarrow\mathsf{fun}\,f\,x\Rightarrow b'$ & $\rulename{\Rrightarrow -fun}$\tabularnewline
- &  & $H\vdash\mathsf{fun}\,f\,x\Rightarrow b'\,:\,\left(x:A\right)\rightarrow B$ & by induction\tabularnewline
- &  & $H,f:\left(x:A\right)\rightarrow B,x:A\vdash a'$ & by fun-inversion\tabularnewline
- &  & $H\vdash a'\,:\,A$ & by induction\tabularnewline
- &  & $H\vdash b'\left[f\coloneqq\mathsf{fun}\,f\,x\Rightarrow b',x\coloneqq a'\right]:B\left[x\coloneqq a'\right]$ & by typed substitutions\tabularnewline
- &  & $B\left[x\coloneqq a'\right]\equiv M\left[x\coloneqq a\right]$ & by substitution by steps, $\equiv$ symmetry\tabularnewline
- &  & $H\vdash b'\left[f\coloneqq\mathsf{fun}\,f\,x\Rightarrow b',x\coloneqq a'\right]:B\left[x\coloneqq A\right]$ & $\rulename{cast-conv}$\tabularnewline
- & $\rulename{\Rrightarrow -fun-app}$ & $H\vdash a\,:\,\left(x:A\right)\rightarrow B$, $H\vdash a:A$, $a\Rrightarrow a'$,
-$b\Rrightarrow b'$ & \tabularnewline
- &  & $H\vdash b'\,:\,\left(x:B\right)\rightarrow A$ & by induction\tabularnewline
- &  & $H\vdash A':A$ & by induction\tabularnewline
- &  & $H\vdash b'\,a':\,B\left[x\coloneqq a'\right]$ & $\rulename{cast-fun-app}$\tabularnewline
- &  & $B\left[x\coloneqq a'\right]\equiv B\left[x\coloneqq a\right]$ & by substitution by steps, $\equiv$ symmetry\tabularnewline
- &  & $H\vdash b'\left[f\coloneqq\mathsf{fun}\,f\,x\Rightarrow b',x\coloneqq a'\right]:B\left[x\coloneqq a\right]$ & $\rulename{cast-conv}$\tabularnewline
- & $\rulename{\Rrightarrow -fun-::-red}$ & \multicolumn{2}{l}{$H\vdash\left(b::_{\left(x:A_{1}\right)\rightarrow B_{1},\ell ,o}\left(x:A_{2}\right)\rightarrow B_{2}\right):\left(x:A_{2}\right)\rightarrow B_{2}$,
-$H\vdash a:A_{2}$, }\tabularnewline
- &  & \multicolumn{2}{l}{$b\Rrightarrow b'$, $a\Rrightarrow a'$, $A_{1}\Rrightarrow A_{1}'$,
-$A_{2}\Rrightarrow A_{2}'$, $B_{1}\Rrightarrow B_{1}'$, $B_{2}\Rrightarrow B_{2}'$,
-$o\Rrightarrow o'$, }\tabularnewline
- &  & $H\vdash a':A_{2}$ & by induction\tabularnewline
- &  & $H\vdash a':A_{2}'$ & $\rulename{cast-conv}$\tabularnewline
- &  & $H\vdash b:\left(x:A_{1}\right)\rightarrow B_{1}$, $H\vdash\left(x:A_{1}\right)\rightarrow B_{1}:\star$,
-$H\vdash\left(x:A_{2}\right)\rightarrow B_{2}:\star$ & cast-inversion \tabularnewline
- &  & $\left(x:A_{2}\right)\rightarrow B_{2}\Rrightarrow\left(x:A_{2}'\right)\rightarrow B_{2}'$ & $\rulename{\Rrightarrow -fun-ty}$\tabularnewline
- &  & $H\vdash\left(x:A_{2}'\right)\rightarrow B_{2}':\star$ & by induction with $H\vdash\left(x:A_{2}\right)\rightarrow B_{2}:\star$,
-\footnote{well founded since cast-inversion produces smaller judgments}\tabularnewline
- &  & $H\vdash A_{2}':\star$, $H,x:A_{2}'\vdash B_{2}':\star$ & fun-ty-inversion\tabularnewline
- &  & $\left(x:A_{1}\right)\rightarrow B_{1}\Rrightarrow\left(x:A_{1}'\right)\rightarrow B_{1}'$ & $\rulename{\Rrightarrow -fun-ty}$\tabularnewline
- &  & $H\vdash\left(x:A_{1}'\right)\rightarrow B_{1}':\star$ & by induction with $H\vdash\left(x:A_{1}\right)\rightarrow B_{1}:\star$,
-\footnote{well founded since cast-inversion produces smaller judgments}\tabularnewline
- &  & $H\vdash A_{1}':\star$, $H,x:A_{1}'\vdash B_{1}':\star$ & fun-ty-inversion\tabularnewline
- &  & let $ac=a'::_{A_{2}',\ell,o'.arg}A_{1}'$ & \tabularnewline
- &  & $H\vdash ac:A_{1}'$ & $\rulename{cast-::}$\tabularnewline
- &  & $H\vdash b':\left(x:A_{1}\right)\rightarrow B_{1}$ & by induction with $H\vdash b:\left(x:A_{1}\right)\rightarrow B_{1}$,
-\footnote{well founded since cast-inversion produces smaller judgments}\tabularnewline
- &  & $H\vdash b':\left(x:A_{1}'\right)\rightarrow B_{1}'$ & $\rulename{cast-conv}$\tabularnewline
- &  & $H\vdash b'\ ac:B_{1}'\left[x\coloneqq ac\right]$ & $\rulename{cast-fun-app}$\tabularnewline
- &  & $H\vdash B_{1}'\left[x\coloneqq ac\right]:\star$ & by substitution preservation\tabularnewline
- &  & $H\vdash B_{2}'\left[x\coloneqq a'\right]:\star$ & by substitution preservation\tabularnewline
- &  & $H\vdash\left(b'\ ac\right)::_{B_{1}'\left[x\coloneqq ac\right],\ell ,o'.bod[a']}B_{2}'\left[x\coloneqq a'\right]$ & $\rulename{cast-::}$\tabularnewline
-\end{tabular}
+
 \end{proof}
-\todo{both vertically and horz too big}
 
 \todo{highlight the -fun-::-red case}
 
 \subsubsection{Progress}
 
+Preservation alone isn't sufficient for a cast sound language.
+Wa alson need to show that there is an evaluation that behaves aproporatlye in an empty typeing context.
+Again this will broadly follow the outline of the surface language proof in \ch{2}, with a few substantial changes.
+
+Unlike the surface language, it is no longer practical to characterize values syntactically.
+Values are specified by judgments in \Fref{cast-val}. 
+They are standard except for the \rulename{Val-::}, which states that a type ($\star$ or function type) under a cast is not a value.
+
 \begin{figure}
 \[
-\frac{\,}{\star\,\textbf{Val}}\rulename{Val-\star}
+\frac{\,}{\star\,\textbf{Val}}
+\rulename{Val-\star}
 \]
 \[
-\frac{\,}{\left(x:A\right)\rightarrow B\,\textbf{Val}}\rulename{Val-fun-ty}
+\frac{\,}{\left(x:A\right)\rightarrow B\,\textbf{Val}}
+\rulename{Val-fun-ty}
 \]
 \[
-\frac{\,}{\mathsf{fun}\,f\,x\Rightarrow b\:\textbf{Val}}\rulename{Val-fun}
+\frac{\,}{\mathsf{fun}\,f\,x\Rightarrow b\:\textbf{Val}}
+\rulename{Val-fun}
 \]
 \[
 \frac{\begin{array}{c}
 a\:\textbf{Val}\quad A\:\textbf{Val}\quad B\:\textbf{Val}\\
 a\cancel{=}\star\\
 a\cancel{=}\left(x:C\right)\rightarrow C'
-\end{array}}{a::_{A,\ell o}B\:\textbf{Val}}\rulename{Val-::}
+\end{array}}{a::_{A,\ell o}B\:\textbf{Val}}
+\rulename{Val-::}
 \]
 \caption{Cast Language Values}
 \label{fig:cast-val}
 \end{figure}
 
-Unlike the surface language, it is no longer practical to characterize values syntactically.
-Values are specified by judgments in \Fref{cast-val}. 
-They are standard except for the $\rulename{Val-::}$, which states that a type ($\star$ or function type) under a cast is not a value.
+Small steps are listed in \Fref{cast-step}.
+They are standard for call-by-value except that casts can distribute over application, and casts can reduce when both types are $\star$.
 
 \begin{figure}
 \[
@@ -511,44 +495,65 @@ They are standard except for the $\rulename{Val-::}$, which states that a type (
 \label{fig:cast-step}
 \end{figure}
 
-Small steps are listed in \Fref{cast-step}.
-They are standard for call-by-value except that casts can distribute over application, and casts can reduce when both types are $\star$.
-
-\begin{figure}
-\[
-\frac{\,}{\textbf{Blame}\:\ell \,o\,\left(a::_{\left(x:A\right)\rightarrow B,\ell ,o}\star\right)}
-\]
-\[
-\frac{\,}{\textbf{Blame}\:\ell \,o\,\left(a::_{\star,\ell ,o}\left(x:A\right)\rightarrow B\right)}
-\]
-\[
-\frac{\textbf{Blame}\:\ell \,o\,a}{\textbf{Blame}\:\ell \,o\,\left(a::_{A,\ensuremath{\ell'},o'}B\right)}
-\]
-\[
-\frac{\textbf{Blame}\:\ell \,o\,A}{\textbf{Blame}\:\ell \,o\,\left(a::_{A,\ensuremath{\ell'},o'}B\right)}
-\]
-\[
-\frac{\textbf{Blame}\:\ell \,o\,B}{\textbf{Blame}\:\ell \,o\,\left(a::_{A,\ensuremath{\ell'},o'}B\right)}
-\]
-\[
-\frac{\textbf{Blame}\:\ell \,o\,b}{\textbf{Blame}\:\ell \,o\,\left(b\,a\right)}
-\]
-\[
-\frac{\textbf{Blame}\:\ell \,o\,a}{\textbf{Blame}\:\ell \,o\,\left(b\,a\right)}
-\]
-\todo[inline]{name rules}\caption{Cast Language Blame}
-\label{fig:cast-blame}
-\end{figure}
-
 %% walk through blame
 In addition to small step and values we also specify blame judgments in \Fref{cast-blame}.
 Blame tracks the information needed to create a good error message and is inspired by the many systems that use blame tracking \cite{10.1145/581478.581484,10.1007/978-3-642-00590-9_1,wadler:LIPIcs:2015:5033}.
-Specifically the judgment $\textbf{Blame}\:\ell \,o\,a$ means that $a$ witnesses an a contradiction in the source code at location $\ell $ under the observations $o$.
+Specifically the judgment \blame{a}{\ell}{o} means that $a$ witnesses an a contradiction in the source code at location $\ell$ under the observations $o$.
 With only dependent functions and universes, only inequalities of the form $*\,\cancel{=}\,A\rightarrow B$ can be witnessed.
 The first 2 rules of the blame judgment witness these concrete type inequalities.
 The rest of the blame rules will recursively extract concrete witnesses from larger terms.
-The limited amount of observation is the main reason why the theory in this chapter is tractable.
+The limited amount of observation makes the system in this chapter substantually simpler then the system in \ch{5} where more observations are possible.
 % "self evidently correct" since it is clear to only extract inequalities. like step and val? one of several possible contradiction extraction relations
+
+\begin{figure}
+\[
+\frac{\,}{\blame{\left(a::_{\left(x:A\right)\rightarrow B,\ell ,o}\star\right)}{\ell}{o}}
+\]
+\[
+\frac{\,}{\blame{\left(a::_{\star,\ell ,o}\left(x:A\right)\rightarrow B\right)}{\ell}{o}}
+\]
+\[
+\frac{ 
+  \blame{a}{\ell}{o} 
+}{
+  \blame{\left(a::_{A,\ell',o'}B\right)}{\ell}{o} 
+}
+\]
+\[
+\frac{
+  \blame{a}{\ell}{o} 
+}{
+  \blame{\left(a::_{A,\ell',o'}B\right)}{\ell}{o} 
+}
+\]
+\[
+\frac{
+  \blame{B}{\ell}{o} 
+}{
+  \blame{\left(a::_{A,\ell',o'}B\right)}{\ell}{o} 
+}
+\]
+\[
+\frac{
+  \blame{b}{\ell}{o}
+}{
+  \blame{\left(b\,a\right)}{\ell}{o}
+}
+\]
+\[
+\frac{
+  \blame{a}{\ell}{o}
+}{
+  \blame{\left(b\,a\right)}{\ell}{o}
+}
+\]
+\todo[inline]{name rules}
+\caption{Cast Language Blame}
+\label{fig:cast-blame}
+\end{figure}
+
+As before we have that $\rightsquigarrow$ preserves types.
+
 \begin{fact}
 $\rightsquigarrow$ preserves types 
 
@@ -559,7 +564,7 @@ since the following rule is admissible
 \frac{m\rightsquigarrow m'}{m\Rrightarrow m'}
 \]
 
-As in Chapter 2 we will need technical lemmas that determine the form of a value of a type in the empty context.
+As in \ch{2} we will need technical lemmas that determine the form of a value of a type in the empty context.
 However, canonical function values look different because they must account for the possibility of blame arising from a stuck term.
 \begin{lem}
 $\star$-Canonical forms (generalized)
@@ -576,22 +581,15 @@ either
 \begin{proof}
 by induction on the cast derivation
 
-\begin{tabular}{lll}
-$\rulename{cast-\star}$ & $\vdash\star:\star$ & follows since $a=\star$\tabularnewline
-$\rulename{cast-fun-ty}$ & $\vdash\left(x:A\right)\rightarrow B\,:\,\star$ & follows since $a=\left(x:A\right)\rightarrow B$\tabularnewline
-$\rulename{ty-conv}$ & $\vdash a:A$, $a\,\textbf{Val}$, $A\equiv A'$, $A'\equiv\star$ & which concluded $\vdash a\,:\,A'$\tabularnewline
- & $A'\equiv\star$ & by transitivity, symmetry\tabularnewline
- & $a=\star$ or there exists $C$, $B$, such that $a=\left(x:C\right)\rightarrow B$  & by induction\tabularnewline
-$\rulename{cast-::}$ & $\vdash a:A_{1}$, $a::_{A_{1},\ell ,o}A_{2}\:\textbf{Val}$,$\vdash A_{1}:\star$,
-$\vdash A_{2}:\star$, $A_{2}\equiv\star$ & \tabularnewline
- & $a\cancel{=}\star,a\cancel{=}\left(x:C\right)\rightarrow B$, $a\:\textbf{Val}$ & since it must have been a value by $\rulename{Val-::}$ \tabularnewline
- & but $a=\star$ or there exists $C$, $B$, such that $a=\left(x:C\right)\rightarrow B$  & by induction \tabularnewline
- & ! & so $\rulename{cast-::}$ case was impossible\tabularnewline
-$\rulename{cast-fun}$ & $f:\left(x:A\right)\rightarrow B,x:A\vdash b:B$, $\left(x:A\right)\rightarrow B\equiv\star$ & \tabularnewline
- & $\left(x:A\right)\rightarrow B\cancel{\equiv}\star$ & by the stability of $\equiv$\tabularnewline
- & ! & so $\rulename{cast-fun}$ case was impossible\tabularnewline
-other rules & impossible & since they do not type values in an empty ctx\tabularnewline
-\end{tabular}
+\begin{casenv}
+  \item \rulename{cast-\star} and \rulename{cast-fun-ty} follow directly
+  \item \rulename{ty-conv} follows by induction and that $\equiv$ is an equivelence 
+  \item \rulename{cast-fun} is impossible since $\left(x:A\right)\rightarrow B\cancel{\equiv}\star$
+  \item \rulename{cast-::} is impossible.
+    Inductively the underling term must be $\star$, or $\left(x:C\right)\rightarrow B$.
+    Wchich contridicts the sidecondition of \rulename{cast-::}.
+  \item other rules are impossible, since they do not type values in an empty context
+\end{casenv}
 \end{proof}
 Leading to the corollary,
 \begin{cor}
@@ -604,9 +602,6 @@ If $\vdash A:\star$, and $A\,\textbf{Val}$ then either
 \textup{or there exists $C$, $B$, such that $A=\left(x:C\right)\rightarrow B$}
 \end{cor}
 
-\begin{proof}
-by reflexivity of $\equiv$
-\end{proof}
 Likewise
 \begin{lem}
 $\rightarrow$-Canonical forms (generalized)
@@ -616,31 +611,22 @@ then either
 
 $a=\mathsf{fun}\,f\,x\Rightarrow b$ 
 
-or $a=d::_{D,\ell ,o}\left(x:C'\right)\rightarrow B'$,
-$d\,\textbf{Val}$, $D\,\textbf{Val}$, $C'\equiv C$, $B'\equiv B$ 
+or $a=d::_{D,\ell ,o}\left(x:C'\right)\rightarrow B'$, $d\,\textbf{Val}$, $D\,\textbf{Val}$, $C'\equiv C$, $B'\equiv B$ 
 \end{lem}
 
 \todo{alternatively produce the blame judgment}
+
 \begin{proof}
 by induction on the cast derivation
 
-\begin{tabular}{lll}
-$\rulename{cast-\star}$ & $\star\equiv\left(x:C\right)\rightarrow B$ & \tabularnewline
- & $\star\cancel{\equiv}\left(x:C\right)\rightarrow B$ ! & by the stability of $\equiv$\tabularnewline
-$\rulename{cast-fun-ty}$ & $\star\equiv\left(x:C\right)\rightarrow B$ & \tabularnewline
- & $\star\cancel{\equiv}\left(x:C\right)\rightarrow B$ ! & by the stability of $\equiv$\tabularnewline
-$\rulename{cast-fun}$ & \multicolumn{2}{l}{$f:\left(x:C'\right)\rightarrow B',x:C'\vdash b:B'$, $\left(x:C'\right)\rightarrow B'\equiv\left(x:C\right)\rightarrow B$}\tabularnewline
- &  & follows directly\tabularnewline
-$\rulename{cast-::}$ & $\vdash a:A_{1}$, $\vdash A_{1}:\star$, $\vdash A_{2}:\star$, $A_{2}\equiv\left(x:C\right)\rightarrow B$ & \tabularnewline
- & $a\cancel{=}\star,a\cancel{=}\left(x:C\right)\rightarrow B$, $a\:\textbf{Val}$,
-$A_{1}\:\textbf{Val}$, $A_{2}\:\textbf{Val}$ & since it must have been a value by $\rulename{Val-::}$\tabularnewline
- & $A_{2}=\left(x:C'\right)\rightarrow B'$ & by the stability of $\equiv$, $A_{2}\:\textbf{Val}$\footnote{TODO: make an explicit lemma?}\tabularnewline
- & $C'\equiv C$, $B'\equiv B$ & by the stability of $\equiv$\tabularnewline
-$\rulename{ty-conv}$ & $\vdash a:A$, $A\equiv A'$, $A'\equiv\left(x:C\right)\rightarrow B$ & \tabularnewline
- & $A\equiv\left(x:C\right)\rightarrow B$ & by transitivity\tabularnewline
- & ... & by induction\tabularnewline
-other rules & impossible & since they do not type values of $\star$\tabularnewline
-\end{tabular}
+\begin{casenv}
+  \item \rulename{cast-fun} follows directly
+  \item \rulename{cast-::} then it must be a value from \rulename{Val-::} setisfieng the 2nd conclusion
+  \item \rulename{ty-conv} follows by induction and teh transitivity of $\equiv$
+
+  \item \rulename{cast-\star} and \rulename{cast-fun-ty} are impossible by the by the stability of $\equiv$
+  \item other rules are impossible, since they do not type values in an empty context
+\end{casenv}
 \end{proof}
 As a corollary
 \begin{cor}
@@ -650,19 +636,12 @@ If $\vdash a:\left(x:C\right)\rightarrow B$ , and $a\,\textbf{Val}$
 
 $a=\mathsf{fun}\,f\,x\Rightarrow b$ 
 
-or $a=d::_{D,\ell ,o}\left(x:C'\right)\rightarrow B'$,
-$d\,\textbf{Val}$, $D\,\textbf{Val}$, $C'\equiv C$, $B'\equiv B$ 
+or $a=d::_{D,\ell ,o}\left(x:C'\right)\rightarrow B'$, $d\,\textbf{Val}$, $D\,\textbf{Val}$, $C'\equiv C$, $B'\equiv B$ 
 \end{cor}
 
-\begin{proof}
-by reflexivity of $\equiv$
-\end{proof}
-\begin{cor}
-$\rightarrow$-Canonical terms
+This further maens if $\vdash a:\left(x:C\right)\rightarrow B$, and $a\,\textbf{Val}$ then $a$ is not a type, $a\cancel{=}\star,a\cancel{=}\left(x:C\right)\rightarrow C'$
 
-If $\vdash a:\left(x:C\right)\rightarrow B$ , and $a\,\textbf{Val}$
-then $a$is not a type, $a\cancel{=}\star,a\cancel{=}\left(x:C\right)\rightarrow C'$
-\end{cor}
+We can now prove the preogress lemma.
 
 \begin{thm}
 Progress
@@ -673,68 +652,45 @@ $a\,\textbf{Val}$
 
 there exists $a'$ such that $a\rightsquigarrow a'$
 
-or there exists $\ell$, $o$ such that $\textbf{Blame}\:\ell \,o\,a$
+or there exists $\ell$, $o$ such that $\blame{a}{\ell}{o}$
 \end{thm}
 
 \begin{proof}
 As usual this follows form induction on the typing derivation
 
-\begin{tabular}{lllll}
-$\rulename{cast-var}$ & $\vdash\star\,:\,\star$ &  &  & \tabularnewline
- & $\star\,\textbf{Val}$ &  &  & $\rulename{Val-\star}$\tabularnewline
-$\rulename{cast-var}$ & $\vdash x:A$ &  &  & impossible in an empty context\tabularnewline
-$\rulename{cast-conv}$ & $\vdash a:A'$, $A'\equiv A$ &  &  & \tabularnewline
- & \multicolumn{3}{l}{$a\,\textbf{Val}$, there exists $a'$ such that $a\rightsquigarrow a'$,
-or there exists $\ell$, $o$ such that $\textbf{Blame}\:\ell \,o\,a$} & by induction on $\vdash a:A'$\tabularnewline
-$\rulename{cast-::}$ & $\vdash a:\,A$, $\vdash A:\star$, $\vdash B:\star$ &  &  & \tabularnewline
- & \multicolumn{3}{l}{$a\,\textbf{Val}$, there exists $a'$ such that $a\rightsquigarrow a'$,
-or there exists $\ell_{a}$, $o_{a}$ such that $\textbf{Blame}\:\ell _{a}\,o_{a}\,a$} & by induction\tabularnewline
- & \multicolumn{3}{l}{$A\,\textbf{Val}$, there exists $A'$ such that $A\rightsquigarrow A'$,
-or there exists $\ell_{A}$, $o_{A}$ such that $\textbf{Blame}\:\ell _{A}\,o_{A}\,A$} & by induction\tabularnewline
- & \multicolumn{3}{l}{$B\,\textbf{Val}$, there exists $B'$ such that $B\rightsquigarrow B'$,
-or there exists $\ell_{B}$, $o_{B}$ such that $\textbf{Blame}\:\ell _{B}\,o_{B}\,B$} & by induction\tabularnewline
- & if $a\rightsquigarrow a'$,  & $a::_{A,\ell ,o}B\rightsquigarrow a'::_{A,\ell ,o}B$ &  & \tabularnewline
- & if $a\,\textbf{Val}$, $A\rightsquigarrow A'$, & $a::_{A,\ell ,o}B\rightsquigarrow a::_{A',\ell ,o}B$ &  & \tabularnewline
- & if $a\,\textbf{Val}$, $A\,\textbf{Val}$, $B\rightsquigarrow B'$ & $a::_{A,\ell ,o}B\rightsquigarrow a::_{A,\ell ,o}B'$ &  & \tabularnewline
- & if $a\,\textbf{Val}$, $A\,\textbf{Val}$, $B\,\textbf{Val}$, &  &  & \tabularnewline
- &  & $A=\star$ or $A=\left(x:C_{A}\right)\rightarrow D_{A}$ &  & by canonical forms of $\star$\tabularnewline
- &  & $B=\star$ or $B=\left(x:C_{B}\right)\rightarrow D_{B}$ &  & by canonical forms of $\star$\tabularnewline
- &  & if $A=\star$, $B=\star$  & $a::_{\star,\ell ,o}\star\rightsquigarrow a$ & \tabularnewline
- &  & if $A=\left(x:C_{A}\right)\rightarrow D_{A}$, $B=\left(x:C_{B}\right)\rightarrow D_{B}$ &  & \tabularnewline
- &  &  & $a\cancel{=}\star,a\cancel{=}\left(x:C\right)\rightarrow C'$ & by canonical forms of fun \tabularnewline
- &  &  & $a::_{A,\ell o}B\:\textbf{Val}$ & \tabularnewline
- &  & if $A=\star$, $B=\left(x:C_{B}\right)\rightarrow D_{B}$  & $\textbf{Blame}\:\ell \,o\,\left(a::_{\star,\ell ,o}\left(x:C_{B}\right)\rightarrow D_{B}\right)$ & \tabularnewline
- &  & if $A=\left(x:C_{A}\right)\rightarrow D_{A}$, $B=\star$ & $\textbf{Blame}\:\ell \,o\,\left(a::_{\left(x:C_{A}\right)\rightarrow B_{A},\ell ,o}\star\right)$ & \tabularnewline
- & \multicolumn{2}{l}{if there exists $\ell_{a}$, $o_{a}$ such that $\textbf{Blame}\:\ell _{a}\,o_{a}\,a$} & $\textbf{Blame}\:\ell _{a}\,o_{a}\,\left(a::_{A,\ell ,o}B\right)$ & \tabularnewline
- & \multicolumn{2}{l}{if there exists $\ell_{A}$, $o_{A}$ such that $\textbf{Blame}\:\ell _{A}\,o_{A}\,A$} & $\textbf{Blame}\:\ell _{A}\,o_{A}\,\left(a::_{A,\ell ,o}B\right)$ & \tabularnewline
- & \multicolumn{2}{l}{if there exists $\ell_{B}$, $o_{B}$ such that $\textbf{Blame}\:\ell _{B}\,o_{B}\,B$} & $\textbf{Blame}\:\ell _{B}\,o_{B}\,\left(a::_{A,\ell ,o}B\right)$ & \tabularnewline
-$\rulename{cast-fun-ty}$ & $\vdash\left(x:A\right)\rightarrow B\,:\,\star$ &  &  & \tabularnewline
- & $\left(x:A\right)\rightarrow B\,\textbf{Val}$ &  &  & $\rulename{Val-fun-ty}$\tabularnewline
-$\rulename{cast-fun-app}$ & $\vdash\mathsf{fun}\,f\,x\Rightarrow b\,:\,\left(x:A\right)\rightarrow B$ &  &  & \tabularnewline
- & $\mathsf{fun}\,f\,x\Rightarrow b\:\textbf{Val}$ &  &  & $\rulename{Val-fun}$\tabularnewline
-$\rulename{cast-fun-app}$ & \multicolumn{2}{l}{$\vdash b\,:\,\left(x:A\right)\rightarrow B$, $\Gamma\vdash a\,:\,A$} & \tabularnewline
- & \multicolumn{3}{l}{$a\,\textbf{Val}$, there exists $a'$ such that $a\rightsquigarrow a'$,
-or there exists $\ell_{a}$, $o_{a}$ such that $\textbf{Blame}\:\ell _{a}\,o_{a}\,a$} & by induction\tabularnewline
- & \multicolumn{3}{l}{$b\,\textbf{Val}$, there exists $b'$ such that $b\rightsquigarrow b'$,
-or there exists $\ell_{b}$, $o_{b}$ such that $\textbf{Blame}\:\ell _{b}\,o_{b}\,b$} & by induction\tabularnewline
- & if $b\rightsquigarrow b'$, & $b\,a\rightsquigarrow b'\,a$ &  & \tabularnewline
- & if $b\,\textbf{Val}$, $a\rightsquigarrow a'$, & $b\,a\rightsquigarrow b\,a'$ &  & \tabularnewline
- & if $b\,\textbf{Val}$, $a\,\textbf{Val}$, & \multicolumn{2}{l}{$b=\mathsf{fun}\,f\,x\Rightarrow c$ or $b=d_{b}::_{D_{b},\ell _{b}\,o_{b}}\left(x:A'\right)\rightarrow B'$,
-$d_{b}\,\textbf{Val}$, $D_{b}\,\textbf{Val}$, $A'\equiv A$, $B'\equiv B$\footnote{todo clean up extra conclusions}} & by canonical forms of functions\tabularnewline
- &  & if $b=\mathsf{fun}\,f\,x\Rightarrow c$ & $\left(\mathsf{fun}\,f\,x\Rightarrow c\right)a\rightsquigarrow c\left[f\coloneqq\mathsf{fun}\,f\,x\Rightarrow c,x\coloneqq a\right]$ & \tabularnewline
- &  & \multicolumn{2}{l}{$b=d_{b}::_{D_{b},\ell _{b},o_{b}}\left(x:A'\right)\rightarrow B'$,
-$d_{b}\,\textbf{Val}$, $D_{b}\,\textbf{Val}$, $A'\equiv A$, $B'\equiv B$} & \tabularnewline
- &  &  & $\vdash D_{b}:\star$ & \tabularnewline
- &  &  & $D_{b}=\star$ or $D_{b}=\left(x:A_{D_{b}}\right)\rightarrow B_{D_{b}}$ & by canonical forms of $\star$\tabularnewline
- &  &  & if $D_{b}=\star$,  & \tabularnewline
- &  &  & $\textbf{Blame}\:\ell _{b}\,o_{b}\,\left(b::_{\star,\ell _{b},o_{b}}\left(x:A'\right)\rightarrow B'\right)$ & \tabularnewline
- &  &  & if $D_{b}=D_{b}=\left(x:A_{D_{b}}\right)\rightarrow B_{D_{b}}$, & \tabularnewline
- &  &  & let $a_{c}=a::_{A',\ell _{b},o_{b}.arg}A_{D_{b}}$ & \tabularnewline
- &  &  & $\left(d_{b}::_{\left(x:A_{D_{b}}\right)\rightarrow B_{D_{b}},\ell _{b},o_{b}}\left(x:A'\right)\rightarrow B'\right)a\rightsquigarrow$ & \tabularnewline
- &  &  & $\left(d_{b}\,a_{c}\right)::_{B_{D_{b}}\left[x\coloneqq a_{c}\right],\ell ,o.bod[a]}B'\left[x\coloneqq a\right]$ & \tabularnewline
- & \multicolumn{2}{l}{if there exists $\ell_{b}$, $o_{b}$ such that $\textbf{Blame}\:\ell _{b}\,o_{b}\,b$} & $\textbf{Blame}\:\ell _{b}\,o_{b}\,\left(b\ a\right)$ & \tabularnewline
- & \multicolumn{2}{l}{if there exists $\ell_{a}$, $o_{a}$ such that $\textbf{Blame}\:\ell _{a}\,o_{a}\,a$} & $\textbf{Blame}\:\ell _{a}\,o_{a}\,\left(b\ a\right)$ & \tabularnewline
-\end{tabular}
+\begin{casenv}
+  \item \rulename{cast-\star}, \rulename{cast-fun-ty}, and \rulename{cast-fun} follow directly
+  \item \rulename{cast-var}, impossible in an empty context
+  \item \rulename{cast-conv}, by induction
+  \item \rulename{cast-::}, then the term is $a::_{A,\ell ,o}B\::\:B$
+  Each of $a$, $A$, and $B$ can be blamed, can step, or is a value (By induction).
+  \begin{casenv}
+    \item If any of $a$, $A$, or $B$, step then the entire term can step
+    \item If any of $a$, $A$, or $B$, can be blamed then the entire term can be blamed
+    \item If all of $a$, $A$, and $B$, are values then $A$ and $B$ are types of connonical form
+    \begin{casenv}
+      \item If both $A$, and $B$, is $\star$ then step
+      \item If one of $A$, and $B$, is $\star$ and the other is $\left(x:C_{A}\right)\rightarrow D_{A}$ then blame
+      
+      \item otherwise the term is a vaule by the cononical forms
+    \end{casenv}
+  \end{casenv}
+  \item \rulename{cast-fun-app}, then the term is $b\,a$.
+   Each of $a$, and $b$ can be blamed, can step, or is a value (By induction).
+   \begin{casenv}
+     \item If any of $b$, or $a$, step then the entire term can step
+     \item If any of $b$, or $a$, can be blamed then the entire term can be blamed
+     \item if $b\,\textbf{Val}$, $a\,\textbf{Val}$ by connonical forms
+     \begin{casenv}
+       \item $b=\mathsf{fun}\,f\,x\Rightarrow c$ the term steps
+       \item $b=d_{b}::_{D_{b},\ell _{b}\,o_{b}}\left(x:A'\right)\rightarrow B'$ we have by connonical forms and indcution that 
+       \begin{casenv}
+         \item $D_{b}=\star$ and blame can be gernerated
+         \item otherwise $D_{b}=\left(x:A_{D_{b}}\right)\rightarrow B_{D_{b}}$ and a step is possible
+       \end{casenv}
+     \end{casenv}
+   \end{casenv}
+\end{casenv}
 \end{proof}
 
 \subsection{Cast Soundness}
@@ -742,10 +698,10 @@ $d_{b}\,\textbf{Val}$, $D_{b}\,\textbf{Val}$, $A'\equiv A$, $B'\equiv B$} & \tab
 \todo{revise}
 
 %% cast soundness
-We can now prove cast soundness.
+We cast soundness follows from progress and preservation as expected.
 
-For any $\lozenge\vdash c:C$, $c'$, $c\rightsquigarrow^{*}c'$, if $\textbf{Stuck}\,c'$ then $\textbf{Blame}\:\ell \,o\:c'$, where $\textbf{Stuck}\,c'$ means $c'$ is not a value and $c'$ does not step.
-This follows by iteration the progress and preservation lemmas.
+% For any $\lozenge\vdash c:C$, $c'$, $c\rightsquigarrow^{*}c'$, if $\textbf{Stuck}\,c'$ then $\textbf{Blame}\:\ell \,o\:c'$, where $\textbf{Stuck}\,c'$ means $c'$ is not a value and $c'$ does not step.
+% This follows by iteration the progress and preservation lemmas.
 
 \subsection{Discussion}
 
@@ -760,19 +716,20 @@ All previous arguments from Chapter 2 apply to why this may be acceptable, but t
 
 As in the surface languages, the cast language is logically unsound, by design.
 
-Just as there are many different flavors of definitional equality that could have been used in Chapter 2, there are also many possible degrees that runtime equality can be enforced.
+Just as there are many different flavors of definitional equality that could have been used in \ch{2}, there are also many possible degrees that runtime equality can be enforced.
 The \textbf{Blame} relation in \Fref{cast-blame} outlines the minimal possible checking to support cast soundness.
-For instance\footnote{assuming the data types of chapter 5}, $\mathtt{head}\,\mathbb{B}\,1\,\left(\mathtt{rep}\,\mathbb{B}\,true\,0\right)$ will result in blame since $1$ and $0$ have different head constructors.
+For instance\footnote{assuming the data types of \ch{5}}, $\mathtt{head}\,\mathbb{B}\,1\,\left(\mathtt{rep}\,\mathbb{B}\,true\,0\right)$ will result in blame since $1$ and $0$ have different head constructors.
 But $\mathtt{head}\,\mathbb{B}\,1\,\left(\mathtt{rep}\,\mathbb{B}\,true\,9\right)$ will not result in blame since $1$ and $9$ have the same head constructor and the computation can reduce to $true$. 
 
 It is likely that more aggressive checking is preferable in practice, especially in the presence of data types.
-That is why in our implementation we check equalities up to call-by-value. 
+That is why in our implementation we check equalities up to binders.
+This matches that \cbv{} behavour of the implemented interperter. 
 
-This behavior is consistent with the conjectured partial correctness of logically unsound Call-by-Value execution for dependent types in \cite{jia2010dependent}. 
+This behavior is consistent with the conjectured partial correctness of logically unsound \cbv{} execution for dependent types in \cite{jia2010dependent}. 
 
 \todo{move?}
 
 Unlike static type-checking, these runtime checks have runtime costs.
-Since the language allows nontermination, checks can take forever to resolve.
+Since the language allows nontermination, checks can take forever to resolve at runtime.
 We don't expect this to be an issue in practice, since we could limit the number of steps allowed.
 Additionally, the implementation avoids casts when it knows that blame is impossible.

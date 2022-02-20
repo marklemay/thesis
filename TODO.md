@@ -47,6 +47,7 @@ the design of CastCIC."
 
 
 Formatting
+* when polishing each chapter do a search to find and replace cruft with macros
 * nice looking multi tabbed proof format?
 * validity/regularity
 * note on equality
