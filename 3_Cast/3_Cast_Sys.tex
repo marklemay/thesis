@@ -27,12 +27,12 @@ We can extend that proof to support cast soundness with only a few modifications
 
 \[
 \frac{H\vdash A:\star\quad H,x:A\vdash B:\star}{H\vdash\left(x:A\right)\rightarrow B\,:\,\star}
-\rulename{cast-fun-ty}
+\rulename{cast-\mathsf{fun}-ty}
 \]
 
 \[
 \frac{H,f:\left(x:A\right)\rightarrow B,x:A\vdash b:B}{H\vdash\mathsf{fun}\,f\,x\Rightarrow b\,:\,\left(x:A\right)\rightarrow B}
-\rulename{cast-fun}
+\rulename{cast-\mathsf{fun}}
 \]
 
 \[
@@ -58,14 +58,14 @@ The only rule that types differently than the surface language is the \rulename{
 
 As before we need a suitable reduction relation to generate our equivalence relation.
 \Fref{cast-reduction} shows that system of reductions.
-The full rule for function reduction is given in \rulename{\Rrightarrow-fun-::-red} which makes the behavour from the examples explicit: agrument types are swapped as a term is applied under a cast.
+The full rule for function reduction is given in \rulename{\Rrightarrow-\mathsf{fun}-::-red} which makes the behavour from the examples explicit: agrument types are swapped as a term is applied under a cast.
 Casts from a type universe to a type universe are allowed by the \rulename{\Rrightarrow-::-red} rule.
 Since observations embed expressions, they must also be given parallel reductions.
 
 \begin{figure}
 \[
 \frac{b\Rrightarrow b'\quad a\Rrightarrow a'}{\left(\mathsf{fun}\,f\,x\Rightarrow b\right)a\Rrightarrow b'\left[f\coloneqq\mathsf{fun}\,f\,x\Rightarrow b',x\coloneqq a'\right]}
-\rulename{\Rrightarrow-fun-app-red}
+\rulename{\Rrightarrow-\mathsf{fun}-app-red}
 \]
 
 \[
@@ -97,17 +97,17 @@ Since observations embed expressions, they must also be given parallel reduction
 
 \[
 \frac{A\Rrightarrow A'\quad B\Rrightarrow B'}{\left(x:A\right)\rightarrow B\Rrightarrow\left(x:A'\right)\rightarrow B'}
-\rulename{\Rrightarrow-fun-ty}
+\rulename{\Rrightarrow-\mathsf{fun}-ty}
 \]
 
 \[
 \frac{b\Rrightarrow b'}{\mathsf{fun}\,f\,x\Rightarrow b\,\Rrightarrow\,\mathsf{fun}\,f\,x\Rightarrow b'}
-\rulename{\Rrightarrow-fun}
+\rulename{\Rrightarrow-\mathsf{fun}}
 \]
 
 \[
 \frac{b\Rrightarrow b'\quad a\Rrightarrow a'}{b\,a\Rrightarrow b'\,a'}
-\rulename{\Rrightarrow-fun-app}
+\rulename{\Rrightarrow-\mathsf{fun}-app}
 \]
 
 \[
@@ -263,17 +263,8 @@ The following rule is admissible
 
 \begin{proof}
 by induction over cast derivations
-
-\begin{tabular}{lll}
-$\rulename{cast-::}$ & \multicolumn{2}{l}{$H,x:C,H'\vdash a:A$, $H,x:C,H'\vdash A:\star$, $H,x:C,H'\vdash B:\star$, well formed $\ell ,o$}\tabularnewline
- & $H,H'\left[x\coloneqq c\right]\vdash a\left[x\coloneqq c\right]:A\left[x\coloneqq c\right]$ & by induction\tabularnewline
- & $H,H'\left[x\coloneqq c\right]\vdash A\left[x\coloneqq c\right]:\star$ & by induction\tabularnewline
- & $H,H'\left[x\coloneqq c\right]\vdash B\left[x\coloneqq c\right]:\star$ & by induction\tabularnewline
- & $H,H'\left[x\coloneqq c\right]\vdash a\left[x\coloneqq c\right]::_{A\left[x\coloneqq c\right],\ell ,o\left[x\coloneqq c\right]}B\left[x\coloneqq c\right]\::\:B\left[x\coloneqq c\right]$ & $\rulename{cast-::}$\tabularnewline
-other rules & ... & correspond to the inductive cases in Chapter 2\tabularnewline
-\end{tabular}
 \end{proof}
-As before the notion of definitional equality can be extended to cast contexts in \Fref{surface-Context-Equiv}.
+As before the notion of definitional equality can be extended to cast contexts in \Fref{cast-Context-Equiv}.
 
 \begin{figure}
 \[
@@ -283,9 +274,8 @@ As before the notion of definitional equality can be extended to cast contexts i
 \[
 \frac{H\equiv H'\quad A\equiv A'}{H,x:A\equiv H',x:A'}\,\rulename{\ensuremath{\equiv}-ctx-ext}
 \]
-
 \caption{Contextual Equivalence}
-\label{fig:surface-Context-Equiv}
+\label{fig:cast-Context-Equiv}
 \end{figure}
 
 \begin{lem}
@@ -299,16 +289,7 @@ the following rule is admissible
 \end{lem}
 
 \begin{proof}
-by induction over typing derivations
-
-\begin{tabular}{lll}
-$\rulename{cast-::}$ & \multicolumn{2}{l}{$H\vdash a:A$, $H\vdash A:\star$, $H\vdash B:\star$, well formed $\ell ,o$}\tabularnewline
- & $H'\vdash a:A$ & by induction\tabularnewline
- & $H'\vdash A:\star$ & by induction\tabularnewline
- & $H'\vdash B:\star$ & by induction\tabularnewline
- & $H'\vdash a::_{A,\ell ,o}B\::\:B$ & $\rulename{cast-::}$\tabularnewline
-other rules & ... & correspond to the inductive cases in Chapter 2\tabularnewline
-\end{tabular}
+by induction over cast derivations
 \end{proof}
 As before we show inversions on the term syntaxes, generalizing the induction hypothesis up to equality, when needed.
 \begin{lem}
@@ -320,20 +301,9 @@ $\mathsf{fun}$-Inversion (generalized)
 \end{lem}
 
 \begin{proof}
-by induction on the cast derivation
-
-\begin{tabular}{lll}
-$\rulename{cast-fun}$ & \multicolumn{2}{l}{$H,f:\left(x:A'\right)\rightarrow B',x:A'\vdash b\,:\,B'$, $\left(x:A'\right)\rightarrow B'\equiv\left(x:A\right)\rightarrow B$}\tabularnewline
- & $A'\equiv A,\quad B'\equiv B$ & by stability of fun-ty\tabularnewline
- & $H,f:\left(x:A'\right)\rightarrow B',x:A'\equiv H,f:\left(x:A\right)\rightarrow B,x:A$ & by reflexivity of $\equiv$ , extended with previous equalities\tabularnewline
- & $H,f:\left(x:A\right)\rightarrow B,x:A\vdash b\,:\,B'$ & by context preservation\tabularnewline
- & $H,f:\left(x:A\right)\rightarrow B,x:A\vdash b\,:\,B$ & $\rulename{ty-conv}$\tabularnewline
-$\rulename{cast-conv}$ & \multicolumn{2}{l}{$H\vdash\mathsf{fun}\,f\,x\Rightarrow b\,:\,C'$, $C'\equiv C$, $C\equiv\left(x:A\right)\rightarrow B$}\tabularnewline
- & $C'\equiv\left(x:A\right)\rightarrow B$ & by transitivity\tabularnewline
- & ... & by induction\tabularnewline
-other rules & impossible & the term position has the form $\mathsf{fun}\,f\,x\Rightarrow m$\tabularnewline
-\end{tabular}
+by induction on the cast derivations
 \end{proof}
+
 This allows us to conclude the corollary 
 \begin{cor}
 $\mathsf{fun}$-Inversion 
@@ -354,15 +324,6 @@ The following rule is admissible
 
 \begin{proof}
 By induction on the typing derivations
-
-\begin{tabular}{lll}
-$\rulename{cast-fun-ty}$ & \multicolumn{2}{l}{$H\vdash\left(x:A\right)\rightarrow B\,:\,C$}\tabularnewline
- &  & follows directly\tabularnewline
-$\rulename{cast-conv}$ & \multicolumn{2}{l}{$H\vdash\left(x:A\right)\rightarrow B\::\:C'$, $C'\equiv C$}\tabularnewline
- & $C'\equiv\star$ & by transitivity\tabularnewline
- & ... & by induction\tabularnewline
-other rules & impossible & since the term position has the form $\left(x:A\right)\rightarrow B$\tabularnewline
-\end{tabular}
 \end{proof}
 leading to the corollary
 \begin{cor}
@@ -372,6 +333,10 @@ $\rightarrow$-Inversion
 \]
 \end{cor}
 
+We also need a lemma that that will invert the typing information out of the cast operator.
+This can be proven directly without generalizingover definitional equality.
+
+\todo{fun font after}
 \begin{lem}
 $::$-Inversion
 
@@ -386,15 +351,16 @@ The following rule is admissible
 \begin{proof}
 By induction on the typing derivations
 
-\begin{tabular}{lll}
-$\rulename{cast-::}$ & \multicolumn{2}{l}{$H\vdash a:A\quad H\vdash A:\star\quad H\vdash B:\star$}\tabularnewline
- &  & follows directly\tabularnewline
-$\rulename{cast-conv}$ & \multicolumn{2}{l}{$H\vdash a::_{A,\ell ,o}B\::\:C'$, $C'\equiv C$}\tabularnewline
- & ... & by induction\tabularnewline
-other rules & impossible & the term position has the form $a::_{A,\ell ,o}B$\tabularnewline
-\end{tabular}
+\begin{casenv}
+  \item \rulename{cast-::} follows directly
+  \item \rulename{cast-conv} by induction
+  \item All other cases impossible
+ \end{casenv}
 \end{proof}
-Note that each of the output judgments are smaller than the input judgments, this allows other proofs to use induction on the output of this lemma.
+
+Note that the derivations of the conclusion of this theorem can alway be made smaller then then the derivation from the premise.
+This allows other proofs to use induction on the output of this lemma while still being well founded.
+
 \begin{thm}
 $\Rrightarrow$-Preservation 
 
@@ -406,19 +372,18 @@ The following rule is admissible
 \end{thm}
 
 \begin{proof}
-by induction
+  by induction on the cast derivation $H\gamma m:M$, specializing on $m\Rrightarrow m'$,
+
+\begin{casenv}
+  \item \rulename{\Rrightarrow-::-red}
+  \item All other cases follow directly or by induction
+\end{casenv}
 
 \begin{tabular}{llll}
-$\rulename{cast-\star}$ & $\rulename{\ensuremath{\Rrightarrow}-}\star$ & $H\vdash\star\,:\,\star$, $\star\Rrightarrow\star$ & follows directly\tabularnewline
-$\rulename{cast-var}$ & $\rulename{\ensuremath{\Rrightarrow}-var}$ & $H\vdash x\,:\,A$, $x\Rrightarrow x$ & follows directly\tabularnewline
-$\rulename{ty-conv}$ &  & $H\vdash a\,:\,A$, $A\equiv A'$ & \tabularnewline
- & all $\Rrightarrow$ & $a\Rrightarrow a'$ & \tabularnewline
- &  & $H\vdash a'\,:\,A$ & by induction\tabularnewline
- &  & $H\vdash a'\,:\,A'$ & $\rulename{cast-conv}$\tabularnewline
 $\rulename{cast-::}$ &  & well formed $\ell,o$ & \tabularnewline
- & $\rulename{\ensuremath{\Rrightarrow}-::-red}$ & $H\vdash a:\star$, $a\Rrightarrow a'$ & \tabularnewline
+ & $\rulename{\Rrightarrow -::-red}$ & $H\vdash a:\star$, $a\Rrightarrow a'$ & \tabularnewline
  &  & $H\vdash a'\,:\,\star$ & directly by induction\tabularnewline
- & $\rulename{\ensuremath{\Rrightarrow}-::}$ & \multicolumn{2}{l}{$H\vdash a:A_{1}$, $H\vdash A_{2}:\star$, $a\Rrightarrow a'$, $A_{1}\Rrightarrow A_{1}'$,
+ & $\rulename{\Rrightarrow -::}$ & \multicolumn{2}{l}{$H\vdash a:A_{1}$, $H\vdash A_{2}:\star$, $a\Rrightarrow a'$, $A_{1}\Rrightarrow A_{1}'$,
 $A_{2}\Rrightarrow A_{2}'$, $o\Rrightarrow o'$}\tabularnewline
  &  & $H\vdash a'\,:\,A_{1}$ & by induction\tabularnewline
  &  & $H\vdash a'\,:\,A_{1}'$ & $\rulename{cast-conv}$\tabularnewline
@@ -426,34 +391,34 @@ $A_{2}\Rrightarrow A_{2}'$, $o\Rrightarrow o'$}\tabularnewline
  &  & $H\vdash a'::_{A_{1}',\ell,o'}A_{2}'\,:\,A_{2}'$ & $\rulename{cast-::}$\tabularnewline
  &  & $H\vdash a'::_{A_{1}',\ell,o'}A_{2}'\,:\,A_{2}$ & $\rulename{cast-conv}$\tabularnewline
 $\rulename{cast-fun-ty}$ &  & $H\vdash A\,:\,\star$, $H,x:A\vdash B\,:\,\star$ & \tabularnewline
- & $\rulename{\ensuremath{\Rrightarrow}-fun-ty}$ & $A\Rrightarrow A'$, $B\Rrightarrow B'$ & \tabularnewline
+ & $\rulename{\Rrightarrow -fun-ty}$ & $A\Rrightarrow A'$, $B\Rrightarrow B'$ & \tabularnewline
  &  & $H\vdash A'\,:\,\star$ & by induction\tabularnewline
  &  & $H,x:A\vdash B':\star$ & by induction\tabularnewline
  &  & $H,x:A\equiv H,x:A'$ & by reflexivity of $\equiv$, extended with $A\equiv A'$\tabularnewline
  &  & $H,x:A'\vdash B'\,:\,\star$ & by preservation of contexts\tabularnewline
  &  & $H\vdash\left(x:A'\right)\rightarrow B'\,:\,\star$ & $\rulename{cast-fun-ty}$\tabularnewline
 $\rulename{cast-fun}$ &  & $H,f:\left(x:A\right)\rightarrow B,x:A\vdash a\,:\,A$ & \tabularnewline
- & $\rulename{\ensuremath{\Rrightarrow}-fun}$ & $a\Rrightarrow a'$ & \tabularnewline
+ & $\rulename{\Rrightarrow -fun}$ & $a\Rrightarrow a'$ & \tabularnewline
  &  & $H,f:\left(x:A\right)\rightarrow B,x:A\vdash a':A$ & by induction\tabularnewline
  &  & $H\vdash\mathsf{fun}\,f\,x\Rightarrow a'\,:\,\left(x:A\right)\rightarrow B$ & $\rulename{cast-fun}$\tabularnewline
 $\rulename{cast-fun-app}$ &  &  & \tabularnewline
- & $\rulename{\ensuremath{\Rrightarrow}-fun-app-red}$ & \multicolumn{2}{l}{$H\vdash\mathsf{fun}\,f\,x\Rightarrow b\,:\,\left(x:A\right)\rightarrow B$,
+ & $\rulename{\Rrightarrow -fun-app-red}$ & \multicolumn{2}{l}{$H\vdash\mathsf{fun}\,f\,x\Rightarrow b\,:\,\left(x:A\right)\rightarrow B$,
 $H\vdash a:A$, $a\Rrightarrow a'$, $b\Rrightarrow b'$}\tabularnewline
- &  & $\mathsf{fun}\,f\,x\Rightarrow b\Rrightarrow\mathsf{fun}\,f\,x\Rightarrow b'$ & $\rulename{\ensuremath{\Rrightarrow}-fun}$\tabularnewline
+ &  & $\mathsf{fun}\,f\,x\Rightarrow b\Rrightarrow\mathsf{fun}\,f\,x\Rightarrow b'$ & $\rulename{\Rrightarrow -fun}$\tabularnewline
  &  & $H\vdash\mathsf{fun}\,f\,x\Rightarrow b'\,:\,\left(x:A\right)\rightarrow B$ & by induction\tabularnewline
  &  & $H,f:\left(x:A\right)\rightarrow B,x:A\vdash a'$ & by fun-inversion\tabularnewline
  &  & $H\vdash a'\,:\,A$ & by induction\tabularnewline
  &  & $H\vdash b'\left[f\coloneqq\mathsf{fun}\,f\,x\Rightarrow b',x\coloneqq a'\right]:B\left[x\coloneqq a'\right]$ & by typed substitutions\tabularnewline
  &  & $B\left[x\coloneqq a'\right]\equiv M\left[x\coloneqq a\right]$ & by substitution by steps, $\equiv$ symmetry\tabularnewline
  &  & $H\vdash b'\left[f\coloneqq\mathsf{fun}\,f\,x\Rightarrow b',x\coloneqq a'\right]:B\left[x\coloneqq A\right]$ & $\rulename{cast-conv}$\tabularnewline
- & $\rulename{\ensuremath{\Rrightarrow}-fun-app}$ & $H\vdash a\,:\,\left(x:A\right)\rightarrow B$, $H\vdash a:A$, $a\Rrightarrow a'$,
+ & $\rulename{\Rrightarrow -fun-app}$ & $H\vdash a\,:\,\left(x:A\right)\rightarrow B$, $H\vdash a:A$, $a\Rrightarrow a'$,
 $b\Rrightarrow b'$ & \tabularnewline
  &  & $H\vdash b'\,:\,\left(x:B\right)\rightarrow A$ & by induction\tabularnewline
  &  & $H\vdash A':A$ & by induction\tabularnewline
  &  & $H\vdash b'\,a':\,B\left[x\coloneqq a'\right]$ & $\rulename{cast-fun-app}$\tabularnewline
  &  & $B\left[x\coloneqq a'\right]\equiv B\left[x\coloneqq a\right]$ & by substitution by steps, $\equiv$ symmetry\tabularnewline
  &  & $H\vdash b'\left[f\coloneqq\mathsf{fun}\,f\,x\Rightarrow b',x\coloneqq a'\right]:B\left[x\coloneqq a\right]$ & $\rulename{cast-conv}$\tabularnewline
- & $\rulename{\ensuremath{\Rrightarrow}-fun-::-red}$ & \multicolumn{2}{l}{$H\vdash\left(b::_{\left(x:A_{1}\right)\rightarrow B_{1},\ell ,o}\left(x:A_{2}\right)\rightarrow B_{2}\right):\left(x:A_{2}\right)\rightarrow B_{2}$,
+ & $\rulename{\Rrightarrow -fun-::-red}$ & \multicolumn{2}{l}{$H\vdash\left(b::_{\left(x:A_{1}\right)\rightarrow B_{1},\ell ,o}\left(x:A_{2}\right)\rightarrow B_{2}\right):\left(x:A_{2}\right)\rightarrow B_{2}$,
 $H\vdash a:A_{2}$, }\tabularnewline
  &  & \multicolumn{2}{l}{$b\Rrightarrow b'$, $a\Rrightarrow a'$, $A_{1}\Rrightarrow A_{1}'$,
 $A_{2}\Rrightarrow A_{2}'$, $B_{1}\Rrightarrow B_{1}'$, $B_{2}\Rrightarrow B_{2}'$,
@@ -462,11 +427,11 @@ $o\Rrightarrow o'$, }\tabularnewline
  &  & $H\vdash a':A_{2}'$ & $\rulename{cast-conv}$\tabularnewline
  &  & $H\vdash b:\left(x:A_{1}\right)\rightarrow B_{1}$, $H\vdash\left(x:A_{1}\right)\rightarrow B_{1}:\star$,
 $H\vdash\left(x:A_{2}\right)\rightarrow B_{2}:\star$ & cast-inversion \tabularnewline
- &  & $\left(x:A_{2}\right)\rightarrow B_{2}\Rrightarrow\left(x:A_{2}'\right)\rightarrow B_{2}'$ & $\rulename{\ensuremath{\Rrightarrow}-fun-ty}$\tabularnewline
+ &  & $\left(x:A_{2}\right)\rightarrow B_{2}\Rrightarrow\left(x:A_{2}'\right)\rightarrow B_{2}'$ & $\rulename{\Rrightarrow -fun-ty}$\tabularnewline
  &  & $H\vdash\left(x:A_{2}'\right)\rightarrow B_{2}':\star$ & by induction with $H\vdash\left(x:A_{2}\right)\rightarrow B_{2}:\star$,
 \footnote{well founded since cast-inversion produces smaller judgments}\tabularnewline
  &  & $H\vdash A_{2}':\star$, $H,x:A_{2}'\vdash B_{2}':\star$ & fun-ty-inversion\tabularnewline
- &  & $\left(x:A_{1}\right)\rightarrow B_{1}\Rrightarrow\left(x:A_{1}'\right)\rightarrow B_{1}'$ & $\rulename{\ensuremath{\Rrightarrow}-fun-ty}$\tabularnewline
+ &  & $\left(x:A_{1}\right)\rightarrow B_{1}\Rrightarrow\left(x:A_{1}'\right)\rightarrow B_{1}'$ & $\rulename{\Rrightarrow -fun-ty}$\tabularnewline
  &  & $H\vdash\left(x:A_{1}'\right)\rightarrow B_{1}':\star$ & by induction with $H\vdash\left(x:A_{1}\right)\rightarrow B_{1}:\star$,
 \footnote{well founded since cast-inversion produces smaller judgments}\tabularnewline
  &  & $H\vdash A_{1}':\star$, $H,x:A_{1}'\vdash B_{1}':\star$ & fun-ty-inversion\tabularnewline
