@@ -29,63 +29,77 @@ For instance,
  
 \subsection{Pretending $true=false$}
  
-Recall that we proved $\lnot true_{c}\doteq_{\mathbb{B}_{c}}false_{c}$ in Chapter 2.
+Recall that we proved $\lnot true_{c}\doteq_{\mathbb{B}_{c}}false_{c}$ in \ch{2}.
 What happens if it is assumed anyway?
 Every type equality assumption needs an underlying term, here we can choose $refl_{true_{c}:\mathbb{B}_{c}}:true_{c}\doteq_{\mathbb{B}_{c}}true_{c}$, and cast that term to $true_{c}\doteq_{\mathbb{B}_{c}}false_{c}$ resulting in $refl_{true_{c}:\mathbb{B}_{c}}::_{true_{c}\doteq_{\mathbb{B}_{c}}true_{c}}true_{c}\doteq_{\mathbb{B}_{c}}false_{c}$.
-Recall that $\lnot true_{c}\doteq_{\mathbb{B}_{c}}false_{c}$ is a shorthand for $true_{c}\doteq_{\mathbb{B}_{c}}false_{c}\rightarrow\perp$.
-What if we try to use our term of type $true_{c}\doteq_{\mathbb{B}_{c}}false_{c}$ to get a term of type $\perp$?
+Recall that $\lnot true_{c}\doteq_{\mathbb{B}_{c}}false_{c}$ is a shorthand for $true_{c}\doteq_{\mathbb{B}_{c}}false_{c}\rightarrow\perp_{c}$.
+What if we try to use our term of type $true_{c}\doteq_{\mathbb{B}_{c}}false_{c}$ to get a term of type $\perp_{c}$?
  
 \begin{sidewaysfigure}
-\begin{tabular}{lr}
-& $\left(\lambda pr\Rightarrow pr\,toLogic\,tt_{c}\right)\left(refl_{true_{c}:\mathbb{B}_{c}}::_{true_{c}\doteq_{\mathbb{B}_{c}}true_{c}}true_{c}\doteq_{\mathbb{B}_{c}}false_{c}\right)$\tabularnewline
-$\rightsquigarrow$ & $\left(refl_{true_{c}:\mathbb{B}_{c}}::_{true_{c}\doteq_{\mathbb{B}_{c}}true_{c}}true_{c}\doteq_{\mathbb{B}_{c}}false_{c}\right)\,toLogic\,tt_{c}$\tabularnewline
-$true_{c}\doteq_{\mathbb{B}_{c}}false_{c}\coloneqq\left(C:\left(\mathbb{B}_{c}\rightarrow\star\right)\right)\rightarrow C\,true_{c}\rightarrow C\,false_{c}$ & $\left(refl_{true_{c}:\mathbb{B}_{c}}::_{true_{c}\doteq_{\mathbb{B}_{c}}true_{c}}\left(C:\left(\mathbb{B}_{c}\rightarrow\star\right)\right)\rightarrow C\,true_{c}\rightarrow C\,false_{c}\right)\,toLogic\,tt_{c}$\tabularnewline
-$true_{c}\doteq_{\mathbb{B}_{c}}true_{c}\coloneqq\left(C:\left(\mathbb{B}_{c}\rightarrow\star\right)\right)\rightarrow C\,true_{c}\rightarrow C\,true_{c}$ & $\left(refl_{true_{c}:\mathbb{B}_{c}}::_{\left(C:\left(\mathbb{B}_{c}\rightarrow\star\right)\right)\rightarrow C\,true_{c}\rightarrow C\,true_{c}}\left(C:\left(\mathbb{B}_{c}\rightarrow\star\right)\right)\rightarrow C\,true_{c}\rightarrow C\,false_{c}\right)\,toLogic\,tt_{c}$\tabularnewline
-$\rightsquigarrow_{=}$ & $\left(refl_{true_{c}:\mathbb{B}_{c}}\,toLogic::toLogic\,true_{c}\rightarrow toLogic\,true_{c}\right)::\left(toLogic\,true_{c}\rightarrow toLogic\,false_{c}\,tt_{c}\right)$\tabularnewline
-$refl_{true_{c}:\mathbb{B}_{c}}\coloneqq\lambda-\,cx\Rightarrow cx$ & $\left(\left(\lambda-\,cx\Rightarrow cx\right)\,toLogic::toLogic\,true_{c}\rightarrow toLogic\,true_{c}\right)::\left(toLogic\,true_{c}\rightarrow toLogic\,false_{c}\,tt_{c}\right)$\tabularnewline
-$\rightsquigarrow$ & $\left(\left(\lambda cx\Rightarrow cx\right)::toLogic\,true_{c}\rightarrow toLogic\,true_{c}\right)::\left(toLogic\,true_{c}\rightarrow toLogic\,false_{c}\,tt_{c}\right)$\tabularnewline
-$\rightsquigarrow_{=}$ & $\left(\left(\lambda cx\Rightarrow cx\right)tt_{c}::toLogic\,true_{c}\right)::toLogic\,false_{c}$\tabularnewline
-$\rightsquigarrow$ & $\left(tt_{c}::toLogic\,true_{c}\right)::toLogic\,false_{c}$\tabularnewline
-$toLogic\coloneqq\lambda b\Rightarrow b\,\star\,Unit_{c}\,\perp_{c}$ & $\left(tt_{c}::\left(\lambda b\Rightarrow b\,\star\,Unit_{c}\,\perp_{c}\right)\,true_{c}\right)::toLogic\,false_{c}$\tabularnewline
-$\rightsquigarrow$ & $\left(tt_{c}::\left(true_{c}\,\star\,Unit_{c}\,\perp_{c}\right)\right)::toLogic\,false_{c}$\tabularnewline
-$true_{c}\coloneqq\lambda-\,x\,-\Rightarrow x$ & $\left(tt_{c}::\left(\left(\lambda-\,x\,-\Rightarrow x\right)\,\star\,Unit_{c}\,\perp_{c}\right)\right)::toLogic\,false_{c}$\tabularnewline
-$\rightsquigarrow$ & $\left(tt_{c}::\left(\left(\lambda x\,-\Rightarrow x\right)\,Unit_{c}\,\perp_{c}\right)\right)::toLogic\,false_{c}$\tabularnewline
-$\rightsquigarrow$ & $\left(tt_{c}::\left(\left(\lambda-\Rightarrow Unit_{c}\right)\,\perp_{c}\right)\right)::toLogic\,false_{c}$\tabularnewline
-$\rightsquigarrow$ & $\left(tt_{c}::Unit_{c}\right)::toLogic\,false_{c}$\tabularnewline
-$toLogic\coloneqq\lambda b\Rightarrow b\,\star\,Unit_{c}\,\perp_{c}$ & $\left(tt_{c}::Unit_{c}\right)::\left(\lambda b\Rightarrow b\,\star\,Unit_{c}\,\perp_{c}\right)\,false_{c}$\tabularnewline
-$\rightsquigarrow$ & $\left(tt_{c}::Unit_{c}\right)::\left(false_{c}\,\star\,Unit_{c}\,\perp_{c}\right)$\tabularnewline
-$false_{c}\coloneqq\lambda-\,-\,y\Rightarrow y$ & $\left(tt_{c}::Unit_{c}\right)::\left(\left(\lambda-\,-\,y\Rightarrow y\right)\,\star\,Unit_{c}\,\perp_{c}\right)$\tabularnewline
-$\rightsquigarrow_{*}$ & $\left(tt_{c}::Unit_{c}\right)::\perp_{c}$\tabularnewline
+\begin{tabular}{ll}
+  % \makecell[l]{Void, ``empty'' type,\\ logical false}
+& $\left(\lambda pr\Rightarrow pr\,toLogic\ tt_{c}\right)\left(refl_{true_{c}:\mathbb{B}_{c}}::_{true_{c}\doteq_{\mathbb{B}_{c}}true_{c}}true_{c}\doteq_{\mathbb{B}_{c}}false_{c}\right)$\tabularnewline
+$\rightsquigarrow$ & $\left(refl_{true_{c}:\mathbb{B}_{c}}::_{true_{c}\doteq_{\mathbb{B}_{c}}true_{c}}true_{c}\doteq_{\mathbb{B}_{c}}false_{c}\right)\,toLogic\ tt_{c}$\tabularnewline
+\makecell[l]{$true_{c}\doteq_{\mathbb{B}_{c}}false_{c}\coloneqq$\\
+  $\ \ \left(C:\left(\mathbb{B}_{c}\rightarrow\star\right)\right)\rightarrow C\,true_{c}\rightarrow C\,false_{c}$} & $\left(refl_{true_{c}:\mathbb{B}_{c}}::_{true_{c}\doteq_{\mathbb{B}_{c}}true_{c}}\left(C:\left(\mathbb{B}_{c}\rightarrow\star\right)\right)\rightarrow C\,true_{c}\rightarrow C\,false_{c}\right)\,toLogic\ tt_{c}$\tabularnewline
+\makecell[l]{$true_{c}\doteq_{\mathbb{B}_{c}}true_{c}\coloneqq$\\
+  $\ \ \left(C:\left(\mathbb{B}_{c}\rightarrow\star\right)\right)\rightarrow C\,true_{c}\rightarrow C\,true_{c}$} & 
+  \makecell[l]{$\left(refl_{true_{c}:\mathbb{B}_{c}}::_{\left(C:\left(\mathbb{B}_{c}\rightarrow\star\right)\right)\rightarrow C\,true_{c}\rightarrow C\,true_{c}}\left(C:\left(\mathbb{B}_{c}\rightarrow\star\right)\right)\rightarrow C\,true_{c}\rightarrow C\,false_{c}\right)$\\
+  $\ \ toLogic\ tt_{c}$}\tabularnewline
+
+$\rightsquigarrow\rightsquigarrow_{=}$ & \makecell[l]{$\left(\left(refl_{true_{c}:\mathbb{B}_{c}} toLogic\right)::_{toLogic\ true_{c}\rightarrow toLogic\ true_{c}}toLogic\ true_{c}\rightarrow toLogic\ false_{c}\right)$\\
+$\ \ tt_{c}$}\tabularnewline
+
+$\rightsquigarrow\rightsquigarrow_{=}$ & $\left(refl_{true_{c}:\mathbb{B}_{c}}\ toLogic\ tt_{c}\right)::_{toLogic\ true_{c}}toLogic\ false_{c}$
+\tabularnewline
+
+$refl_{true_{c}:\mathbb{B}_{c}}\coloneqq\lambda-\,cx\Rightarrow cx$ & 
+  $\left( \left(\lambda-\,cx\Rightarrow cx \right) \ toLogic\ tt_{c}\right)::_{toLogic\ true_{c}}toLogic\ false_{c}$\tabularnewline
+$\rightsquigarrow\rightsquigarrow$ & $tt_{c}::_{toLogic\ true_{c}}toLogic\ false_{c}$\tabularnewline
+
+$toLogic\coloneqq\lambda b\Rightarrow b\,\star\,Unit_{c}\,\perp_{c}$ & 
+  $tt_{c}::_{\left(\lambda b\Rightarrow b\,\star\,Unit_{c}\,\perp_{c}\right)\ true_{c}}\left(\lambda b\Rightarrow b\,\star\,Unit_{c}\,\perp_{c}\right)\ false_{c}$
+\tabularnewline
+$\rightsquigarrow\rightsquigarrow$ & $tt_{c}::_{true_{c}\,\star\,Unit_{c}\,\perp_{c}}false_{c}\,\star\,Unit_{c}\,\perp_{c}$\tabularnewline
+
+$true_{c}\coloneqq\lambda-\,x\,-\Rightarrow x$ & $tt_{c}::_{\left(\lambda-\,x\,-\Rightarrow x\right)\,\star\,Unit_{c}\,\perp_{c}}false_{c}\,\star\,Unit_{c}\,\perp_{c}$\tabularnewline
+
+$\rightsquigarrow\rightsquigarrow\rightsquigarrow$ & $tt_{c}::_{Unit_{c}}false_{c}\,\star\,Unit_{c}\,\perp_{c}$\tabularnewline
+
+$\rightsquigarrow\rightsquigarrow\rightsquigarrow$ & $tt_{c}::_{Unit_{c}}false_{c}\,\star\,Unit_{c}\,\perp_{c}$\tabularnewline
+
+$false_{c}\coloneqq\lambda-\,-\,y\Rightarrow y$ & $tt_{c}::_{Unit_{c}}\left(\lambda-\,-\,y\right)\,\star\,Unit_{c}\,\perp_{c}$\tabularnewline
+
+$\rightsquigarrow\rightsquigarrow\rightsquigarrow$ & $tt_{c}::_{Unit_{c}}\perp_{c}$\tabularnewline
+
+\multicolumn{2}{l}{using this term will discover the error}\tabularnewline
+
+& $\left(tt_{c}::_{Unit_{c}}\perp_{c}\right)\star$\tabularnewline
+$\perp_{c}\coloneqq\left(X:\star\right)\rightarrow X$ & $\left( tt_{c}::_{Unit_{c}}\left(X:\star\right)\rightarrow X\right)  \star$\tabularnewline
+
+$Unit_{c}\coloneqq\left(X:\star\right)\rightarrow X\rightarrow X$ & $\left( tt_{c}::_{\left(X:\star\right)\rightarrow X\rightarrow X}\left(\left(X:\star\right)\rightarrow X\right)\right)  \star$\tabularnewline
+
+$\rightsquigarrow_{=}$ & $\left(tt_{c}\star\right)::_{\star\rightarrow\star}\star$\tabularnewline
+Blame! & $\left(tt_{c}\star\right)::_{\star\underline{\rightarrow}\star}\underline{\star}$\tabularnewline
+
 \end{tabular}
-\todo[inline]{need to clean this up}
 \caption{true=false}
 \label{fig:cast-ex-tf}
 \end{sidewaysfigure}
  
 The example is worked in \Fref{cast-ex-tf}.
-As in the previous examples, the term $\left(tt_{c}::Unit_{c}\right)::\perp_{c}$ has not yet ``gotten stuck''.
+As in the previous examples, the term $tt_{c}::_{Unit_{c}}\perp_{c}$ has not yet ``gotten stuck''.
 Applying any type will uncover the error.
+
+If \Fref{cast-ex-tf} explicitly tracked the location and observation information ane error message could be generated:
  
-\begin{tabular}{cc}
-& $\left(\left(tt_{c}::Unit_{c}\right)::\perp_{c}\right)\star$\tabularnewline
-$\perp_{c}\coloneqq\left(X:\star\right)\rightarrow X$ & $\left(\left(tt_{c}::Unit_{c}\right)::\left(X:\star\right)\rightarrow X\right)\star$\tabularnewline
-$\rightsquigarrow_{=}$ & $\left(\left(tt_{c}::Unit_{c}\right)\star\right)::\star$\tabularnewline
-$Unit_{c}\coloneqq\left(X:\star\right)\rightarrow X\rightarrow X$ & $\left(\left(tt_{c}::\left(\left(X:\star\right)\rightarrow X\rightarrow X\right)\right)\star\right)::\star$\tabularnewline
-$\rightsquigarrow_{=}$ & $\left(tt_{c}\star\right)::\left(\star\rightarrow\star\right)::\star$\tabularnewline
-$tt_{c}\coloneqq\lambda-\,x\Rightarrow x$ & $\left(\left(\lambda-\,x\Rightarrow x\right)\star\right)::\left(\star\rightarrow\star\right)::\star$\tabularnewline
-$\rightsquigarrow$ & $\left(\lambda x\Rightarrow x\right)::\left(\star\rightarrow\star\right)::\star$\tabularnewline
-Blame! & $\left(\lambda x\Rightarrow x\right)::\left(\star\underline{\rightarrow}\star\right)::\underline{\star}$\tabularnewline
-& \tabularnewline
-\end{tabular}
- 
-The location and observation information that was left out of the computation could generate an error message like
- 
-$\left(C:\left(\mathbb{B}_{c}\rightarrow\star\right)\right).C\,true_{c}\rightarrow\underline{C\,true_{c}}\neq\left(C:\left(\mathbb{B}_{c}\rightarrow\star\right)\right).C\,true_{c}\rightarrow\underline{C\,false_{c}}$
+$\left(C:\left(\mathbb{B}_{c}\rightarrow\star\right)\right)\rightarrow C\,true_{c}\rightarrow\underline{C\,true_{c}}\neq\left(C:\left(\mathbb{B}_{c}\rightarrow\star\right)\right) \rightarrow C\,true_{c}\rightarrow\underline{C\,false_{c}}$
  
 when
  
 $C\coloneqq\lambda b:\mathbb{B}_{c}.b\,\star\,\star\,\perp$
  
 $C\,true_{c}=\perp\neq\star=C\,false_{c}$
- 
+
+\todo{statically enough infor for a wrning}
 Reminding the programmer that they should not confuse true with false.
