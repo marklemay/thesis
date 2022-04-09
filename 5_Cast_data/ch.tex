@@ -2,43 +2,53 @@
 \label{chapter:CastData}
 \thispagestyle{myheadings}
 
-% Cast pattern matching is easy!
+\todo{revise?}
+
 %Surprisingly, the cast system can be extended with a pattern matching construct without unification.
-In Chapter 3 we used the TAS system and the bidirectional system to guid delaying equality to runtime.
-The TAS corresponds to the cast system, and the bidirectional system corresponds to elaboration.
-Specificly, the bidriectional approach localizes the equality checks.
-In this chapter we will extend these systems for data and patternmatching.
-This will turm out to be much more complicated then the system in chapter 3, since the only equality checks happened at types of the type universe.
-In this chapter we will need to equate terms directly, and those terms will not necissarily have the same type.
+\Ch{3} showed how to use the \ac{TAS} and the \bidir{} system as a guide to build a dependnetly typed language with runtime equality.
+The \ac{TAS} inspired the cast system, while the \bidir{} system corresponds to elaboration.
+% Specificly, the \bidir{} approach localizes the equality checks.
+In this Chapter we will extend these systems for dependently indedexed data and pattern matching.
+This will turm out to be more complicated then the system in \ch{3}, since in \ch{3} equality was only testable at types which allowed for some syntactic and semantic shortcuts.
+In the presence of data, equality needs to be testalbe at terms, which will not necissarily have the same type. 
+Additionally, the subtlies of pattern matching will need to be dealt with.
+While the intuition bulit up in \ch{3} still holds, the cast language will need the appropriate revisions.
 
-\todo{Revise, pattern matching is a bidirectional thing}
-\todo{formate case consistently}
-If we hope to target the properties of Chapter 3 we need the cast language to be \textbf{cast sound}. 
-Elaboration should satisfy the additional correctness\todo{``gradual correctness''?} properties relative to a type assignment system and bidirectional system.
-In this case we will target the conjectured TAS from Chapter 4, with a first order unification style pattern matching. 
+As before, we will take the (conjectured) surface language of \ch{4} and construct a cast language with corresponding features.
+Though it is dificult to formalize a \ac{TAS} and coresponding \bidir{} system that has pattern matching, informally the unification of pattern matching belongs in the \bidir{} system.
+Accordingly we will extend elaboration with a form of unification.
+Becuase we will not need to deal with unificaiton in the cast language can provide evidence that the cast system is \textbf{cast sound}. \todo{"show" if we ever get a proof}
+While the lack of a formal \ac{TAS} and \bidir{} system in \ch{4} will make the other properties of \ch{3} dificult to show, we will degisn the system with an eye to preserving them.
 
-Despite this, there is an intresting interpertation of data and pattern matching when extended to the cast system.
+% \todo{formulate case consistently}
+% Elaboration should satisfy the additional correctness\todo{``gradual correctness''?} properties relative to a type assignment system and bidirectional system.
+% In this case we will target the conjectured TAS from Chapter 4, with a first order unification style pattern matching. 
 
-Consider the normal forms of data terms.
-While in standard type theory a normal form of data, in an empty context, must have the data constructor in head position (justifying the pattern syntax).
-In the cast language, the normal form of data, in an empty context, will have a stack of zero or more casts applied to an expression with a data constructor in head position.
-Casts are wrapped around constructors during the elaboration procedure, and will accumulate during evaluation.
-If the cast language is extended with a path variable that can represent the stack of equalities, then that stack can be matched and used in the body of the branch.
-Since the type constructor is known, it is possible to check the coverage of the patterns against it's constructors.
-If every constructor is accounted for, only blameable data remains.
-Quantifying over casts allows blame to be redirected, so if the program gets stuck in a pattern branch it can blame the original faulty assumption.
+Despite these caveats, there is an intresting interpertation of data and pattern matching when extended to the cast system.
 
-To account for unreachable patterns, we can record the proof of inequality that makes the unification unsatisfiable with explicit syntax, that will expose blame.
-It is perfectly possible for a case expression to reduce into such an ``unreachable'' branch if a scrutinee with obsevably incorrect observations is inspected.
-If this happens blame will be reflected back onto a specific problematic cast of the input.\todo{define path}
+Consider the normal forms of data terms, in a conventionally typed langauge.
+In an empty context, data values must have the a valid data constructor in head position (justifying the syntax of pattern matching).
+In the cast language, the normal form of data in an empty context can have casts applied to an expression with a syntactic constructor in head the position.
+If the casts where blameless then the constructor in the head position will match the data type.
+% Casts are wrapped around terms during the elaboration procedure, and will accumulate during evaluation.
+If the pattern syntax is extended with a path variable that can represent evidence of equality, then that evidence can be extracted and used in the body of the branch.
 
-When we internalize the notion of path we need to support path operations that correspond to each of operations used by the unification of the bidirectional type system.
-Specifically we need to index into the arguments of data constructors, and data type constructors.
-We will also need to be able to reverse paths and concatenate paths since the unification algorithm implicitly uses these properties of equality.
-Finally we need to be a able to remove and append casts from and to the endpoints of paths.
+As in standard pattern matching, since the type constructor is known, it possible to check the coverage of the patterns against its possible constructors.
+If every constructor is accounted for, only blameable scrutinees are possible.
+Quantifying over evidence of equality allows blame to be redirected, so if the program gets stuck in a pattern branch it can blame the original faulty assumption.
 
-During elaboration, after a pattern is unified, we will inject the proofs of equality into the branch terms so that they cast check.
-This will require that our notion of paths support congruence.
+To account for unreachable patterns, we can record the proof of inequality that makes the unification unsatisfiable with explicit syntax that will expose blame.
+In the cast language it is possible for a case expression to reduce into such an ``unreachable'' branch.
+If this happens blame will be reflected back onto a specific problematic assumption of the input.
+This will require extending the cast langauge with terms to manipulate equality evidince directly.
+
+% When we internalize the notion of path we need to support path operations that correspond to each of operations used by the unification of the bidirectional type system.
+% Specifically we need to index into the arguments of data constructors, and data type constructors.
+% We will also need to be able to reverse paths and concatenate paths since the unification algorithm implicitly uses these properties of equality.
+% Finally we need to be a able to remove and append casts from and to the endpoints of paths.
+
+During elaboration, after a pattern is unified, we will inject the proofs of equality where needed so that they cast check.
+% This will require that our notion of paths support congruence.
 
 \input{5_Cast_data/2_Examples}
 \input{5_Cast_data/old}
