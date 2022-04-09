@@ -114,7 +114,7 @@ If this branch is reached in an empty context, we can observe a problem in eithe
  
 \subsection{Variables Not In Branch}
 There are more complicated possibilities that need to be addressed.
-For instance, sometimes congruence is needed even when variables are not used in the body of a branch.
+For instance, unification can be needed even when variables are not used in the body of a branch.
 Consider this partial pattern match where $\mathtt{rept: (x: Nat) -> Vec Bool x}$,
  
 \begin{lstlisting}[basicstyle={\ttfamily\small}]
