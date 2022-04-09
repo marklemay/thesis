@@ -1,0 +1,213 @@
+
+\subsection{Examples}
+
+\subsubsection{Head}
+
+For instance if the user case matches the head of $x$ where $x$ has type $\mathtt{Vec}\,A\,(\mathtt{S}n)$ in the surface language,
+
+\begin{lstlisting}[basicstyle={\ttfamily\small}]
+case x <_:Vec Bool (S n) => Bool> {
+| Cons _ a _ _ => a
+}
+\end{lstlisting}
+
+What can go wrong in the presence of casts?
+\begin{itemize}
+\item
+A faulty cast assumption may have made $x$ appear to be a Vector even when it is not.
+For instance, $\mathtt{True}::\mathtt{Vec}\,\mathtt{Bool}\,3$.
+\item 
+The vector may be empty but cast to look like it is inhabited.
+For instance, $\mathtt{Nil}\,\mathtt{Bool}\,::\mathtt{Vec}\,\mathtt{Bool}\,5$.
+\item 
+The vector may have a type that is not $\mathtt{Bool}$.
+For instance, $\mathtt{Cons}\,\mathtt{Nat}\,3\,...\,...::\mathtt{Vec}\,\mathtt{Bool}\,5$.
+\end{itemize}
+
+To handle these issues elaboration will generate the following cast term with unification
+
+\begin{lstlisting}[basicstyle={\ttfamily\small}]
+case x <_:Vec Bool (S n) => Bool> {
+| (Cons A a y _) :: p => a::InTCon0(p)
+| (Nil A) :: p => !InTc1(p)
+}
+\end{lstlisting}
+
+The elaborated case expression covers all possible constructors for the data type constructor $\mathtt{Vec}$. 
+In the fist branch $A:\star$, $a:A$, $y:\mathtt{Nat}$, while $p$ is a path variable that contains evidence that the type of $\mathtt{Cons\,A\,a\,y\,-}$ is $\mathtt{Vec Bool (S n)}$.
+Explicitly, $p:\mathtt{Vec}\ A\ (\mathtt{S}\,y)\approx\mathtt{Vec}\,\mathtt{Bool}\,(\mathtt{S}\,n)$.
+$InT_{0}p$ extracts the 0th argument from the type constructor $p:\mathtt{Vec}\ \underline{A}\ (\mathtt{S}\,y)\approx\mathtt{Vec}\,\underline{\mathtt{Bool}}\,(\mathtt{S}\,n)$ resulting in the type $InT_{0}p:A\approx\mathtt{Bool}$.
+The body of the branch casts $a$ along $InT_{0}\,p$ to $\mathtt{Bool}$.
+Casts are generalized from Chapter 3 to support arbitrary paths.
+
+In the the second branch, the pattern mactch gives $A:\star$, $p:\mathtt{Vec}\ A\ \mathtt{Z}\approx\mathtt{Vec}\,\mathtt{Bool}\,(\mathtt{S}\,y)$.
+The body of the branch encodes the contradiction observed by noting $\mathtt{Z}\neq\mathtt{S}\,y$.
+
+Since there is no assertion, no warnings will be generated for this elaborated term.
+Any failure that arises will be redirected to the scrutinee, which must have made a bad assumption.
+
+Again consider the ways $x$ could go wrong,
+\begin{itemize}
+\item 
+If the case tries to eliminate $\mathtt{True}::\mathtt{Vec}\,\mathtt{Bool}\,3$, the type constructor is not matched so the faulty assumption can be blamed automatically.
+\item 
+If the scrutinee is an empty vector, we will fall into the $\mathtt{Nil}$ branch, which will reflect the underling faulty assumption, via the explicit blame syntax.
+\item
+If the vector is inhabited by an incorrect type, it will return $3::\mathtt{Bool}$ with the a cast that rests on the faulty assumption of $\mathtt{Vec}\,\mathtt{Nat}\,5=\mathtt{Vec}\,\mathtt{Bool}\,\,5$.
+If checking is done aggressively, as in the implementation, this will produce blame immediately.
+If minimal checking is done, the blame will be embedded in the resulting term and discovered whenever the output is eliminated.
+\end{itemize}
+
+\subsubsection{Sum}
+
+Consider the more involved example that sums the 2 numbers in a vector
+
+\begin{lstlisting}[basicstyle={\ttfamily\small}]
+case x <_:Vec Nat 2 => Nat> {
+| Cons _ i _ (Cons _ j _ _) => i+j
+}
+\end{lstlisting}
+
+The elaboration procedure will produce
+
+\begin{lstlisting}[basicstyle={\ttfamily\small}]
+case x <_:Vec Nat 2 => Nat> {
+| (Cons Nat' i n' (Cons Nat'' j n'' rest):: p1):: p2 => 
+  i::InTc0(p2) + j::(InTc0(p1).InTc0(p2))
+| (Nil Nat') :: p => 
+  !InTc1(p)
+| (Cons Nat' i n' (Nil Nat''):: p1):: p2 =>
+  !InTc1(p1).InTc1(p2) 
+}
+\end{lstlisting}
+
+\begin{itemize}
+\item
+In the first branch we have the variables in scope, $p1:\mathtt{Vec}\ Nat''\ (\mathtt{S}\ n'')\approx\mathtt{Vec}\ Nat'\ n'$, $p2:\mathtt{Vec}\ Nat''\ (\mathtt{S}\ n')\approx\mathtt{Vec}\ \mathtt{Nat}\ 2$, $i:Nat'$, $j:Nat''$.
+\begin{itemize}
+\item 
+This means we can deduce $InTc_{0}(p2):Nat'\approx\mathtt{Nat}$, and $InTc_{0}(p1)InTc_{0}(p2):Nat''\approx\mathtt{Nat}$.
+\todo[inline]{how should paths be concatenated? ;}
+\item 
+We know from unification what the type and value of every term is supposed to be, so casts can be injected using evidence from the pattern.
+\end{itemize}
+\item 
+In the 2nd branch we have , $p:\mathtt{Vec}\ Nat''\ 0\approx\mathtt{Vec}\ Nat'\ 2$.
+\begin{itemize}
+\item 
+Which is contredictory, by $InTc_{1}(p):0\approx2$.
+\end{itemize}
+\item 
+\todo{explanation is a little wrong, need to congruence this under a the S contructor}
+In the 3rd branch, $p1:\mathtt{Vec}\ Nat''\ 0\approx\mathtt{Vec}\ Nat'\ n'$, $p2:\mathtt{Vec}\ Nat'\ (\mathtt{S}\ n')\approx\mathtt{Vec}\ \mathtt{Nat}\ 2$. 
+\begin{itemize}
+\item
+Which is unsatisfiable by $InTc_{1}(p1)InTc_{1}(p2):0\approx2$.
+We don't need to know which sub path is problematic beforehand, only that the combination causes trouble.
+If this branch is reached in an empty context, we can observe a problem in either branch or both.
+\end{itemize}
+\end{itemize}
+
+\todo[inline]{Example of a var out of scope that gets set, would require cong in all situations}
+
+\subsubsection{Assignment at the type level}
+
+There are more complicated possibilities that need to be addressed.
+For instace, this surface expression that takes in a propositional proof that $2=2$ and uses the named witness to generate a vector of length 2.
+This will typecheck in the surface Langugae.
+
+\begin{lstlisting}[basicstyle={\ttfamily\small}]
+case x <_:Id Nat 2 2 => Vec Bool 2> {
+| refl _ a => rep a Bool True
+}
+\end{lstlisting}
+
+This will elaborate to
+
+\begin{lstlisting}[basicstyle={\ttfamily\small}]
+case x <_:Id Nat 2 2 => Vec Bool 2> {
+| (refl Nat' a)::p => 
+  (rep (a::InTc0(p))):: Cong (x=> (A : *) -> A -> Vec Nat x)
+                             (CastL (InTC0(p)) (InTC1 p))
+}
+\end{lstlisting}
+
+Where $Nat':\star$, $a:Nat'$, and $p:\mathtt{Id}\ Nat'\ a\ a\approx\mathtt{Id}\ \mathtt{Nat}\ 2\ 2$.
+Since we have $p:\mathtt{Id}\ Nat'\ a\ a\approx\mathtt{Id}\ \mathtt{Nat}\ 2\ 2$, we can derive $InTC_{0}(p):\ Nat'\ \approx\ \mathtt{Nat}$.
+Which can be used in $a::InTC_{0}(p)$ to cast $a$ from $Nat'$ to $\mathtt{Nat}$.
+But then we need evidence that $(A:\star)\rightarrow A\rightarrow\mathtt{Vec}\,\mathtt{Nat}\,(a::InTC_{0}(p))\approx(A:\star)\rightarrow A\rightarrow\mathtt{Vec}\,\mathtt{Nat}\,2$ to avoid a sperous cast.
+\todo[inline]{avoiding these sperous casts is important for the conjectured gradual correctenss, well typed surface language terms should not generate warnings}
+Fist we need congruence to select the subterm that is of intrest, $(A:\star)\rightarrow A\rightarrow\mathtt{Vec}\,\mathtt{Nat}\,\underline{(a::InTC_{0}(p))}\approx(A:\star)\rightarrow A\rightarrow\mathtt{Vec}\,\mathtt{Nat}\,\underline{2}$.
+The $Cong$ syntax eplixitly embedds a  path into a larger expression, here $Cong_{x=> (A : *) -> A -> \mathtt{Vec} \mathtt{Nat} x} ...$ selects the relevent part of the type.
+
+Ideally we would have a path from $a::InTC_{0}(p)\ \approx\ 2$, but we only have a path $InTC_{1}(p)\ :\ a\ \approx\ 2$.
+We will use the $CastL$ to produce the path $CastL_{InTC_{0}(p)}\left(InTC_{1}p\right):(a::InTC_{0}p))\approx2$.
+$CastL$ will be derivable within the extended cast system.
+
+\todo[inline]{Make 2 examples?}
+
+sometimes congruence is needed even when variables are not used
+
+\begin{lstlisting}[basicstyle={\ttfamily\small}]
+  case x <x: Nat => Vec Bool x> {
+  | 7 => rep 7
+  }
+  \end{lstlisting}
+
+\todo[inline]{Note that an arbitrary choice was was made $InTC_{1}(p)$ $InTC_{2}(p)$}
+
+\subsubsection{Need to remove a cast}
+\todo{better name}
+
+Consider this surface language expression that extracts the last element from a non-empty list.
+Assume the function $last:(n:Nat)\rightarrow Vec\,A\,(S\,N)\rightarrow A$ is in scope.
+\todo{or just define the recursive function}
+
+\begin{lstlisting}[basicstyle={\ttfamily\small}]
+case v <_: Vec A (S x) => A > {
+| Cons _ a (Z) _ => a
+| Cons _ _ (S n) rest => last n rest
+}
+\end{lstlisting}
+
+This will elaborate into 
+
+\begin{lstlisting}[basicstyle={\ttfamily\small}]
+case v <_: Vec A (S x) => A > {
+| (Cons A' a' (Z)::q rest) :: p => a' :: (inTC1(p))-1
+| (Cons A' a' (S n)::q rest)::p => last n (rest :: p')
+| (Nil A')::p => !TCon1(p)
+}
+\end{lstlisting}
+
+\todo[inline]{prettier expressions, rev to -1, in general it might be clearer if cast langauge is always in math mode}
+
+In the 2nd branch we have
+  $A':\star$, $a':A'$, $n:\mathtt{Nat}$,
+  $q:\mathtt{Nat}\approx \mathtt{Nat}$,
+  $rest:\mathtt{Vec}\,A'\,\left(\left(\mathtt{S}\,n\right)::q\right)$,
+  and $p:\mathtt{Vec}\,A'\,\left(\mathtt{S}\left(\left(\mathtt{S}\,n\right)::q\right)\right)\approx \mathtt{Vec}\,A\,\left(\mathtt{S}\,x\right)$.
+Elaboration cannot unify a solution unless we can remove casts, otherwise it becomes impossible to construct a path from $n \approx x$
+  from $\mathtt{Vec}\,A'\,\left(\left(\mathtt{S}\,n\right)\underline{::q}\right)\approx \mathtt{Vec}\,A\,\left(\mathtt{S}\,x\right)$, since the cast blocks
+  $\mathtt{S}\,n = \mathtt{S}\,x$ that would be derivable by unification in the surface language.
+We will need an operator that can remove casts from the endpoints of paths that arise from unification.
+We will call these operators $uncastL$ and $uncastR$ and they will be derivable in the cast language.
+With these operations we can match the process of surface level unification so that
+
+$p'\ =\ Cong_{x\Rightarrow \mathtt{Vec}\,A'\,x}\left(UncastR\left(refl\right)\right)\circ Cong_{x\Rightarrow \mathtt{Vec}\,x\,\left(\mathtt{S}\,n\right)}\left(TCon_{0}p\right):\ \mathtt{Vec}\,A'\,\left(\left(\mathtt{S}\,n\right)::q\right)\ \approx\ \mathtt{Vec}\,A\,\left(\mathtt{S}\,n\right)$
+
+Where 
+$UncastR\left(refl\right): \left(\mathtt{S}\,n\right)::q  \approx \mathtt{S}\,n $
+
+In the first branch we have, 
+  $A':\star$, $a':A'$,
+  $q:\mathtt{Nat}\approx \mathtt{Nat}$,
+  $rest:\mathtt{Vec}\,A'\,\left(\mathtt{Z}::q\right)$, 
+  and $p:\mathtt{Vec}\,A'\,\left(\mathtt{S}\left(\mathtt{Z}::q\right)\right)\approx \mathtt{Vec}\,A\,\left(\mathtt{S}\,x\right)$.
+Unification can proceed to derive $TCon_{1}\left(Con_{0}\left(p\right)\right)^{-1}:\ x\approx \mathtt{Z}::q$
+and $TCon_{1}\left(p\right)^{-1}:\ A\approx A'$.
+
+In the final branch we have $p:\mathtt{Vec}\,A'\,\mathtt{Z}\approx \mathtt{Vec}\,A'\,\left(\mathtt{S}\,x\right)$,
+which is contradicted by $TCon_{1}p:\mathtt{Z}\approx \mathtt{S}\,x$
+
+\todo[inline]{Example: transitivity, translate out to motive}

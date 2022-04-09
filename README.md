@@ -35,7 +35,7 @@ latest draft available [here](https://github.com/marklemay/thesis/releases)
   * photo ready?
  
 ## compile pdf
-get bibliography and fully build bu style pdf with
+get bibliography and fully build BU style pdf with
 ```
 git submodule foreach git pull origin master
 latexmk thesis.tex -pdf
