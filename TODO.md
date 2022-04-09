@@ -1,7 +1,3 @@
-admin
-* follow up with GRS spring semester extention
-* ask Alley to chair
-
 
 library request
 * ~~https://link.springer.com/book/10.1007/978-1-4471-0963-1~~
@@ -74,4 +70,4 @@ defence
 * 1 page cheatsheet
   * protocal (1 hour talk, questions, private meetings with candidate, private with comitte, ...)
   * syntax, formulas
-* mic check remote comitee members
+* mic check remote people

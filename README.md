@@ -12,12 +12,13 @@ latest draft available [here](https://github.com/marklemay/thesis/releases)
   * better name for the `surface language` and `cast language`?
   * `gradual correctness`?
 
-
+* Abstract
+  * photo ready?
 * Chapter 1
   * is a plausible argument made
   * spelling, grammar
 * Chapter 2
-  * proofs correct
+  * proofs are correct
   * formalisms are well motivated
   * formalisms are "standard"
   * prior work is complete and well represented
@@ -31,7 +32,7 @@ latest draft available [here](https://github.com/marklemay/thesis/releases)
 * Chapter 5
   * examples
 * Conclusion
-  * photo ready
+  * photo ready?
  
 ## compile pdf
 get bibliography and fully build bu style pdf with
@@ -68,17 +69,21 @@ latexmk draft.tex -pdf
   - [x] draft conclusion
 - [x] Jan
   - [x] discovered mistake in handling of data
-## Plan
-- [ ] Feb
+- [x] Feb
   - [x] redo data
   - [x] revise introduction
-  - [ ] revise Surface Language chapter, Cast Language chapter
-  - [ ] send draft to committee
-  - [ ] reimplement
-  - [ ] ICFP submission
-- [ ] March
+  - [x] revise Surface Language chapter, Cast Language chapter
+  - [x] send draft to committee
+- [x] March
+  - [x] ICFP submission
+  - [x] reimplement
+## Plan
+- [x] April
+  - [x] bug fixing/ testing
   - [ ] rewrite Data chapter
   - [ ] revise final 3 chapters
+  - [ ] re-apply for an extention
+  - [ ] schedual defense
   - [ ] Practice defense
   - [ ] Defend
 ## Remove from the body of the thesis

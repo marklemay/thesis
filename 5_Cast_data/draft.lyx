@@ -152,6 +152,18 @@ questions,
 \end_layout
 
 \begin_layout Itemize
+add 
+\begin_inset Formula $\cup$
+\end_inset
+
+ to syntax?
+\end_layout
+
+\begin_layout Itemize
+unify cast and lump?
+\end_layout
+
+\begin_layout Itemize
 seems like the formalization could be reduced
 \end_layout
 
@@ -3169,7 +3181,7 @@ and
 \begin_layout Standard
 \begin_inset Formula 
 \[
-\frac{\ }{\left(\left(\mathsf{fun}\,f\,x\Rightarrow b\right)::L\right)a\ \rightsquigarrow\ b\left[\mathsf{fun}\,f\,x\Rightarrow b,a::Arg\,L\right]::Bod\left[a\right]\,L}
+\frac{\ }{\left(\left(\mathsf{fun}\,f\,x\Rightarrow b\right)::L\right)a\ \rightsquigarrow\ b\left[f\Coloneqq\mathsf{fun}\,f\,x\Rightarrow b,x\Coloneqq a::Arg\,L\right]::Bod\left[x\Coloneqq a\right]\,L}
 \]
 
 \end_inset

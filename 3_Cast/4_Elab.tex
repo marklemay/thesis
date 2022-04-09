@@ -1,7 +1,7 @@
 \section{Elaboration}
 
 % overview
-Even though the cast language allows us to optimistically assert equalities, manually noting every cast would be unrealistically cumbersome.
+Even though the cast language allows us to optimistically assert equalities, manually noting every cast would be cumbersome.
 This bureaucracy is solved with an elaboration procedure that translates (untyped) terms from the surface language into the cast language.
 If the term is well typed in the surface language, elaboration will produce a term without blamable errors.
 Terms with unproven equality in types are mapped to a cast with enough information to point out the original source when an inequality is witnessed.
@@ -81,6 +81,7 @@ The programmer can make any term elaborate if they annotate the intended type.
 For instance, $\left(\lambda x\Rightarrow x\right)::*\rightarrow*$ will elaborate.
 
 \subsection{Elaboration Procedure}
+\todo{review location placment in light of the implementation}
 
 \begin{figure}
 \[
@@ -123,7 +124,8 @@ For instance, $\left(\lambda x\Rightarrow x\right)::*\rightarrow*$ will elaborat
 \]
 
 \[
-\frac{H\vdash m\,\textbf{Elab}\ a\overrightarrow{\,:\,}\star}{H\vdash m\overleftarrow{\,:_{\ell,o}\,}\star\ \textbf{Elab}\,a}\rulename{\overleftarrow{\textbf{Elab}}-conv-\star}
+\frac{H\vdash m\,\textbf{Elab}\ a\overrightarrow{\,:\,}\star}{H\vdash m\overleftarrow{\,:_{\ell,o}\,}\star\ \textbf{Elab}\,a}
+\rulename{\overleftarrow{\textbf{Elab}}-conv-\star}
 \]
 
 \todo[inline]{which syntax looks the best? on the left when input, or alway on the right like the typing judgment}
@@ -143,7 +145,7 @@ The rules for elaboration are presented in \Fref{elaboration}.
 Elaboration rules are written in a style of \bidir{} type checking, with arrows pointing in the direction information flows.
 However, unlike \bidir{} type checking, when checking an inference, elaboration adds a cast assertion that the two types are equal.
 Thus any conversion checking can be suspended until runtime.
-Additionally we will allow the mode to change at the type universe with the $\rulename{\overleftarrow{\textbf{Elab}}-conv-\star}$ rule, this is required to avoid stuck casts at $\star$.
+Additionally we will allow the mode to change at the type universe with the \rulename{\overleftarrow{\textbf{Elab}}-conv-\star} rule, this is required to avoid stuck casts at $\star$.
 As formulated here, the elaboration procedure is terminating.
 
 There are several desirable properties of elaboration that can be shown with the help of an erasure function (defined in \ref{fig:erasure}).

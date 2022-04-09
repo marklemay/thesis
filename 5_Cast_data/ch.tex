@@ -86,7 +86,8 @@ Casts are generalized from Chapter 3 to support arbitrary paths.
 In the the second branch, the pattern mactch gives $A:\star$, $p:\mathtt{Vec}\ A\ \mathtt{Z}\approx\mathtt{Vec}\,\mathtt{Bool}\,(\mathtt{S}\,y)$.
 The body of the branch encodes the contradiction observed by noting $\mathtt{Z}\neq\mathtt{S}\,y$.
 
-Since there is no equational assertion, no warnings will be generated for this elaborated term.
+Since there is no assertion, no warnings will be generated for this elaborated term.
+Any failure that arises will be redirected to the scrutinee, which must have made a bad assumption.
 
 Again consider the ways $x$ could go wrong,
 \begin{itemize}
@@ -97,7 +98,7 @@ If the scrutinee is an empty vector, we will fall into the $\mathtt{Nil}$ branch
 \item
 If the vector is inhabited by an incorrect type, it will return $3::\mathtt{Bool}$ with the a cast that rests on the faulty assumption of $\mathtt{Vec}\,\mathtt{Nat}\,5=\mathtt{Vec}\,\mathtt{Bool}\,\,5$.
 If checking is done aggressively, as in the implementation, this will produce blame immediately.
-If minimal checking is done, the blame will embedded in the resulting term and discovered whenever the output is used.
+If minimal checking is done, the blame will be embedded in the resulting term and discovered whenever the output is eliminated.
 \end{itemize}
 
 \subsubsection{Sum}
@@ -140,6 +141,7 @@ In the 2nd branch we have , $p:\mathtt{Vec}\ Nat''\ 0\approx\mathtt{Vec}\ Nat'\ 
 Which is contredictory, by $InTc_{1}(p):0\approx2$.
 \end{itemize}
 \item 
+\todo{explanation is a little wrong, need to congruence this under a the S contructor}
 In the 3rd branch, $p1:\mathtt{Vec}\ Nat''\ 0\approx\mathtt{Vec}\ Nat'\ n'$, $p2:\mathtt{Vec}\ Nat'\ (\mathtt{S}\ n')\approx\mathtt{Vec}\ \mathtt{Nat}\ 2$. 
 \begin{itemize}
 \item

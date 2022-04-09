@@ -76,7 +76,7 @@ data Obs {d : D} : Set where
 
 data PrePath {d : D} : Set where
   PVar : (i : Fin (D.pathV d)) -> PrePath
-  Assert : (a : PreSyntax {bindsep d})
+  Assert : (a a' : PreSyntax {d})
     -> PrePath
     
   Refl : PrePath
@@ -133,52 +133,6 @@ data PreSyntax {d} where
     -> Loc -> Obs {d}
     -> PreSyntax
 
-
-
-
-{-
-
-{(A :: int bool)      ~i       (B :: sting float)}
-
-
-
-{(A :: int bool)      ~i       (B :: sting float)}
-
-
-A~B :: (i=true -> int bool)
-       (i=false->  sting float)
-
-
-f ::  (i=true -> (x : q) -> w)
-      (i=false-> (x : r) -> t)   A
-
-
-
-f ::  (i=true -> .)
-      (i=false-> (x : r) -> t)   (A  :: ...)    ) ::...
-
-
-
-f ::  (i=true -> (x : q) -> w)
-      (i=false-> . )            (A  :: ...)    ) ::...
-
-
-
-
-f  (A :: (i=true -> q)
-         (i=false-> r]) 
- )
-  ::  (i=true -> w [x = A :: q])
-      (i=false-> t [x = A :: r])   
-
-
-
-{(A ~ B)  :: ( int bool ~  sting float)}
-
-
-
-
--}
 
 {-
 data IsTCSpine {d} : PreSyntax {d} -> Fin (D.tCon d) -> {numArgs : _} -> Vec (PreSyntax {d}) numArgs -> Set where

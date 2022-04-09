@@ -3,11 +3,11 @@
 \subsection{Bad logics, ok programming languages?}
  
 Unsound logical systems that work as programming languages go back to at least Church's lambda calculus which was originally intended to be part of a foundation for mathematics\footnote{``There may, indeed, be other applications of the system than its use as a logic.''\cite[p.349]{10.2307/1968337}}.\todo{review citation}
-In the 1970s, Per Martin-L{\"o}f proposed a system with \tit{}\todo{cite it?} that was shown logically unsound by Girard (as described in the introduction in \cite{Martin-Lof-1972}).
+In the 1970s, Per Martin-L{\"o}f proposed a system with \tit{}\todo{cite it?} that was shown logically unsound by Girard (as described in the introduction of \cite{Martin-Lof-1972}).
 In the 1980s, Cardelli explored the domain semantics of a system with general recursive dependent functions and \tit{}\cite{cardelli1986polymorphic}.
 Independently, Viggo and Stoltenberg-Hansen\cite{PALMGREN1990135} explored the domain semantics of Martin-L{\"o}f's type theory with a fixed point operator.
 \todo{Per Martin-L{\"o}f anticipated this work in unpublished lectures and an Abstract.}
- 
+
 The first progress and preservation style proof of type soundness for a language with general recursive dependent functions and \tit{} seem to come from the Trellys Project\cite{sjoberg2012irrelevance}.
 At the time their language had several additional features not included in the surface language presented here.
 Additionally, the surface language uses a simpler notion of definitional equality resulting in a simpler proof of type soundness.
@@ -39,7 +39,6 @@ The system does not allow \tit{}, instead type\footnote{called \textbf{prop}, fo
 Even though the Calculus of Constructions does not allow \tit{} it is still \textbf{impredicative} in the sense that function types can quantify over $\star$ while still being in $\star$.
 For instance, the polymorphic identity $id:(X:\star)\rightarrow X\rightarrow X$ has type $\star$ so the polymorphic identity can be applied to itself, $id\,\left((X:\star)\rightarrow X\rightarrow X\right)\,id$.
 From the perspective of the surface language this impredictivity is modest, but still causes issues in the presence of classical logical assumptions. \todo{Cite}
-Many of the examples from this Chapter are adapted from examples that were first worked out for the Calculus of Constructions.
  
 Several other systems were developed that directly extended or modified the Calculus of Constructions.
 The Extended Calculus of Constructions (\ac{ECC})\cite{luo1990extended,luo1994computation}, extends the Calculus of Constructions with a predicative hierarchy of universes and dependent pair types.
@@ -70,6 +69,9 @@ The system has two flavors characterized by its handling of definitional equalit
 If types are only identified by computation (as the system described in this Chapter) it is called Intentional Type Theory (\ac{ITT}).
 If the system allows proofs of equality to associate types, it is called Extensional Type Theory (\ac{ETT}).
 Since \ac{MTLL} is open ended, the Calculus of Constructions can be added to it as a subsystem\cite{aspinall2004dependent,hofmann1997extensional}.
+Many of the examples from this Chapter are adapted from examples that were first worked out in early versoins of \ac{MTLL}.
+\todo{cite that manuscript? I don't think ML wants it cited. most eamples were collected by martin lof  and some go back to russle} 
+% https://github.com/michaelt/martin-lof/blob/master/pdfs/martin-loef1971%20-%20A%20Theory%20of%20Types.pdf
  
 \todo{go back to Russle?}
 \todo{solving universe constraints?}
