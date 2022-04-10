@@ -1,0 +1,209 @@
+\section{Endpoint Rules}
+
+Care must be taken so that typing is still sensible when an expression could have multiple interpretations.
+To do this we construct a new \csys{} to include term level endpoint information.
+
+\subsection{Function Fragment}
+The rules for non-data terms are listed in \Fref{cast-endpoint-rules}.
+
+\begin{figure}
+
+\begin{align*}
+ \frac{x:A\in\varGamma}{\varGamma\vdash x\sqsupseteq x:A}\rulename{\sqsupseteq-var}
+  \quad & \quad 
+  \frac{\ }{\varGamma\vdash\star\sqsupseteq\star:\star}\rulename{\sqsupseteq-\star}
+  \\
+\end{align*}
+
+\[
+\frac{
+\varGamma\vdash A\sqsupseteq A':\star \quad
+\varGamma,A'\vdash B\sqsupseteq B':\star
+}{
+  \varGamma\vdash\left(x:A\right)\rightarrow B\sqsupseteq\left(x:A'\right)\rightarrow B':\star
+}\rulename{\sqsupseteq-\mathsf{fun}-ty}
+\]
+
+\[
+\frac{
+\varGamma\vdash A:\star\quad\varGamma,A\vdash B:\star \quad
+\varGamma,A\vdash b\sqsupseteq b':B
+}{
+  \varGamma\ \vdash\ \mathsf{fun}\,f\,x\Rightarrow b\ \sqsupseteq\ \mathsf{fun}\,f\,x\Rightarrow b\ :\ \left(x:A\right)\rightarrow B
+}\rulename{\sqsupseteq-\mathsf{fun}}
+\]
+\[
+\frac{
+\varGamma\vdash b\sqsupseteq b':\left(x:A'\right)\rightarrow B' \quad
+\varGamma\vdash a\sqsupseteq a':A'
+}{
+  \varGamma\vdash b\,a\sqsupseteq b'\,a':B'\left[x\coloneqq a'\right]
+}\rulename{\sqsupseteq-\mathsf{fun}-app}
+\]
+
+\[
+\frac{\begin{array}{c}
+  \varGamma\vdash L\sqsupseteq A:\star\\
+  \varGamma\vdash L\sqsupseteq B:\star\\
+  \varGamma\vdash a\sqsupseteq a':A
+  \end{array}}{\varGamma\ \vdash\ a::L\ \sqsupseteq\ a'::L\ :\ B}\rulename{\sqsupseteq-::}
+\]
+
+\begin{align*}
+  \frac{\begin{array}{c}
+  \varGamma\vdash a\sqsupseteq a':A'\\
+  \varGamma\vdash L\sqsupseteq A':\star\\
+  \varGamma\vdash L\sqsupseteq C:\star
+  \end{array}}{\varGamma\vdash a\sim_{\ell,o}^{L}b\sqsupseteq a'::L\ :\ C}\rulename{\sqsupseteq-\sim L}
+  \quad & \quad 
+  \frac{\begin{array}{c}
+  \varGamma\vdash b\sqsupseteq b':B'\\
+  \varGamma\vdash L\sqsupseteq B':\star\\
+  \varGamma\vdash L\sqsupseteq C:\star
+  \end{array}}{\varGamma\vdash a\sim_{\ell,o}^{L}b\sqsupseteq b'::L\ :\ C}\rulename{\sqsupseteq-\sim R}
+\\
+\end{align*}
+
+\begin{align*}
+  \frac{\begin{array}{c}
+  \varGamma\vdash a\sqsupseteq a'::L:C\\
+  \varGamma\vdash a\sqsupseteq c'::L:C\\
+  \varGamma\vdash b\sqsupseteq c'::L:C
+  \end{array}}{\varGamma\vdash a\cup^{L}b\sqsupseteq a'::L\ :\ C}\rulename{\sqsupseteq-\cup L}
+  \quad & \quad 
+  \frac{\begin{array}{c}
+  \varGamma\vdash b\sqsupseteq b'::L:C\\
+  \varGamma\vdash a\sqsupseteq c'::L:C\\
+  \varGamma\vdash b\sqsupseteq c'::L:C
+  \end{array}}{\varGamma\vdash a\cup^{L}b\sqsupseteq b'::L\ :\ C}\rulename{\sqsupseteq-\cup R}
+\\
+\end{align*}
+
+\begin{align*}
+  \frac{\begin{array}{c}
+  \varGamma\vdash a\sqsupseteq a':A'\\
+  A'\equiv B
+  \end{array}}{\varGamma\vdash a\sqsupseteq a':B}\rulename{\sqsupseteq-conv-ty}
+  \quad & \quad 
+  \frac{\begin{array}{c}
+  \varGamma\vdash a\sqsupseteq a':A'\\
+  a'\equiv b\\
+  \varGamma\vdash b:A'
+  \end{array}}{\varGamma\vdash a\sqsupseteq b:A'}\rulename{\sqsupseteq-conv-trm}
+\\
+\end{align*}
+
+\[
+\frac{\varGamma\vdash a\sqsupseteq a:A}{\varGamma\vdash a:A}\rulename{ty-def}
+\]
+\caption{Endpoints (non-data)}
+\label{fig:cast-endpoint-rules}
+\end{figure}
+ 
+The first rules extend the usual type assignment judgments to endpoints.
+The \rulename{\sqsupseteq-\mathsf{fun}-app} rule makes sure different endpoints are used in a type consistent way.
+For example, $\left\{ \lambda x.x+1\sim not\right\} \left\{ 1\sim \False{} \right\} \sqsupseteq \True{} ,2$ and $\left\{ 1\sim2\right\} +\left\{ 10\sim3\right\} \sqsupseteq4,5,11,12$.
+The $\rulename{\sqsupseteq-::}$ rule allows using a term at a different type if the cast has compatible endpoints.
+The next rules allow endpoints to be extracted out of the left or right of $\sim$, and $\cup$ if they maintain enough information to track why those endpoints have the same type.
+
+In addition to the usual type conversion rule we also have a term conversion rule.
+Term conversion is important so that $\cup$ can associate terms under reduction.
+For instance, $\left(x\sim2\right)\cup\left(1+1\sim y\right)\sqsupseteq x, y$.
+
+We can recover a typing judgment when a term is its own endpoint (formalized in the \rulename{ty-def} rule).
+ 
+As usual, the system needs a suitable definition of $\equiv$.
+We use a transitive reflexive equivalence relation that respects reductions and ignores casts.
+Ignoring casts keeps terms from being made distinct by different casts, and prevents reductions from getting stuck for the purpose of equality.
+Note that unlike \ch{3} this means equivelence will not preserve Blame and we will need to rely on a more specific reduction relation that preseves both equivalence and blame.
+\todo{constructing such an equivelence rigorously...}
+
+
+\subsection{Data Endpoints}
+
+The Rules for data endpoints are listed in \Fref{cast-Data-Endpoint-Rules}.
+
+\begin{figure}
+\[
+\frac{
+  p\ :\ a:A\approx b:B\ \in\ \varGamma
+}{
+  \varGamma\vdash x\sqsupseteq a:A
+  }
+\]
+\[
+\frac{
+  p\ :\ a:A\approx b:B\ \in\ \varGamma
+}{\varGamma\vdash x\sqsupseteq b:B}
+\]
+\[
+\frac{\mathsf{data}\ D\ :\ \Delta\rightarrow\star\ \in\ \varGamma}{\varGamma\vdash D_{\Delta}\sqsupseteq D_{\Delta}:\Delta\rightarrow\star}
+\]
+\[
+\frac{d\ :\ \Delta\rightarrow D\overline{a}\ \in\ \varGamma}{\varGamma\vdash d_{\Delta\rightarrow D\overline{a}}\sqsupseteq d_{\Delta\rightarrow D\overline{a}}:\Delta\rightarrow D\overline{a}}
+\]
+\[
+\frac{\begin{array}{c}
+\varGamma\vdash\overline{a}\sqsupseteq\overline{a'}:\Delta\\
+\varGamma\vdash\Delta\ \mathbf{ok}\\
+\varGamma,\Delta\vdash B':\star\\
+\forall\overline{p}\in\overline{|\,\overline{patc}},\:\varGamma\vdash\overline{p}:\Delta\\
+\forall\overline{p}\in\overline{|\,\overline{patc}},\:\varGamma,\left(\overline{p}:\Delta\right)\vdash b\sqsupseteq b':B'\\
+\forall\overline{p}\in\overline{?\,\overline{patc'}},\:\varGamma\vdash\overline{p}:\Delta\\
+\varGamma\vdash\overline{|\,\overline{patc}}\overline{?\,\overline{patc'}}:\Delta\ \mathbf{Complete}
+\end{array}}{
+  \varGamma\vdash\mathsf{case}\,\overline{a,}\,\left\{ \overline{|\,\overline{patc\Rightarrow}b} \overline{?\,\overline{patc'}} \right\} \sqsupseteq\mathsf{case}\,\overline{a',}\,\left\{ \overline{|\,\overline{patc\Rightarrow}b'} \overline{?\,\overline{patc'}} \right\} :B'\left[\Delta\coloneqq\overline{a'}\right]}
+\]
+\[
+\frac{\begin{array}{c}
+\varGamma\vdash L'\sqsupseteq A:\star\\
+\varGamma\vdash L'\sqsupseteq B:\star\\
+\varGamma\vdash L\sqsupseteq a:A\\
+\varGamma\vdash L\sqsupseteq b:B\\
+\mathbf{head}\,a\neq\mathbf{head}\,b\\
+\varGamma\vdash B:\star
+\end{array}}{\varGamma\vdash!_{L}^{L'}\sqsupseteq!_{L}^{L'}\ :\ B}
+\]
+\[
+\frac{\begin{array}{c}
+\varGamma\vdash b\sqsupseteq D_{\Delta}\overline{a}:\star\end{array}\quad\mathbf{length}\,\Delta=\mathbf{length}\,\overline{a}}{\varGamma\vdash TCon_{i}\ b\sqsupseteq\Delta@_{i}\overline{a}}
+\]
+\[
+\frac{\begin{array}{c}
+\varGamma\vdash b\sqsupseteq d_{\Delta\rightarrow D\overline{b}}\overline{a}\end{array}:D\overline{c}\quad\mathbf{length}\,\Delta=\mathbf{length}\,\overline{a}}{\varGamma\vdash DCon_{i}\ b\sqsupseteq\Delta@_{i}\overline{a}}
+\]
+
+\caption{Cast Data Endpoint Rules}
+\label{fig:cast-Data-Endpoint-Rules}
+\end{figure}
+
+Assertion variables have endpoints at each side of the equality given from the typing judgment.
+Data type constructors and data term constructors have the function type implied by their definitions (and annotations that match).
+
+To find the endpoints of a $\mathsf{case}$ expression first, find the endpoints of the scrutinees and a pattern that it types under (the endpoint and typing judgment can be extended to lists and telescopes).
+A motive $B'$ must exist under the context extended with the telescope.
+Every pattern must type check against the telescope.
+The body of every pattern must have an endpoint consistent with the motive and pattern.
+Finally the constructors of the patterns must form a complete covering.
+  
+Direct blame allows evidence with contradictory endpoints to inhabit any type.
+
+Data types and data terms can be inspected, however the prior indices are needed to compute the type using the index meta-function $@_{i}$ (see \Fref{Pointwise-Applications}).
+
+\begin{figure}
+\begin{tabular}{lll}
+$\left(\left(x:A\right)\rightarrow\Delta\right)@_{0}\left(a,\overline{b}\right)$ & = & $a:A$\tabularnewline
+$\left(\left(x:A\right)\rightarrow\Delta\right)@_{i}\left(a,\overline{b}\right)$ & = & $\left(\Delta\left[x\coloneqq a\right]\right)@_{\left(i-1\right)}\overline{b}$\tabularnewline
+\end{tabular}
+
+\begin{tabular}{llll}
+$\Delta@_{0}^{k\sim\ell,o}\left(\overline{a},\overline{b}\right)$ & = & $\Delta@^{k\sim\ell,o}\left(\overline{a},\overline{b}\right)$ \tabularnewline % & shorthand that begins the recursion\tabularnewline
+$\left(\left(x:A\right)\rightarrow\Delta\right)@_{i}^{k\sim\ell,o}\left(\left(a,\overline{a}\right),\left(b,\overline{b}\right)\right)$ & = & $\left(a\sim_{\ell,o.TCon_{i}}^{A}b\right),\left(\Delta\left[x\coloneqq\left(a\sim_{\ell,o.kCon_{i}}^{A}b\right)\right]\right)@_{i+1}^{\sim\ell,o}\left(\overline{a},\overline{b}\right)$  \tabularnewline % & non-empty list\tabularnewline
+$\left(.\right)@_{i}^{k\sim\ell,o}\left(.,.\right)$ & = & $.$  \tabularnewline % & empty list\tabularnewline
+$\Delta@_{0}^{k\cup}\left(\overline{a},\overline{b}\right)$ & = & $\Delta@^{k\cup}\left(\overline{a},\overline{b}\right)$  \tabularnewline % & shorthand that begins the recursion\tabularnewline
+$\left(\left(x:A\right)\rightarrow\Delta\right)@_{i}^{k\cup}\left(\left(a,\overline{a}\right),\left(b,\overline{b}\right)\right)$ & = & $\left(a\cup^{A}b\right),\left(\Delta\left[x\coloneqq\left(a\cup^{A}b\right)\right]\right)@_{i+1}^{k\cup}\left(\overline{a},\overline{b}\right)$ \tabularnewline %  & non-empty list\tabularnewline
+$\left(.\right)@_{i}^{k\cup}\left(.,.\right)$ & = & $.$ \tabularnewline %  & empty list\tabularnewline
+\end{tabular}
+\caption{Pointwise Applications}
+\label{fig:Pointwise-Applications}
+\end{figure}

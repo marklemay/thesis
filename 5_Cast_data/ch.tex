@@ -15,8 +15,8 @@ While the intuition built up in \ch{3} still holds, the cast language will need 
 As before, we will take the (conjectured) surface language of \ch{4} and construct a cast language with corresponding features.
 Though it is difficult to formalize a \ac{TAS} and corresponding \bidir{} system that has pattern matching, informally the unification of pattern matching belongs in the \bidir{} system.
 Accordingly we will extend elaboration with a form of unification.
-Because we will not need to deal with unification in the cast language can provide evidence that the cast system is \textbf{cast sound}. \todo{"show" if we ever get a proof}
-While the lack of a formal \ac{TAS} and \bidir{} system in \ch{4} will make the other properties of \ch{3} difficult to show, we will design the system with an eye to preserving them.
+Because we will not need to deal with unification in the cast language, the cast language can provide evidence that the cast system is \textbf{cast sound}. \todo{"show" if we ever get a proof}
+While the lack of a formal \ac{TAS} and \bidir{} system in \ch{4} will make the other properties of \ch{3} difficult to show, we will design the system with an eye twords preserving them.
  
 % \todo{formulate case consistently}
 % Elaboration should satisfy the additional correctness\todo{``gradual correctness''?} properties relative to a type assignment system and bidirectional system.
@@ -44,6 +44,23 @@ During elaboration, after a pattern is unified, we will inject the proofs of equ
 % This will require that our notion of paths support congruence.
 
 \input{5_Cast_data/2_Examples}
+\input{5_Cast_data/3_Syntax}
+\input{5_Cast_data/4_Endpoint}
+
+% cast lang
+%   operational behavour
+% cast sys
+%   Defn EQ!!
+%   presumed cast soundness
+% elaboration
+%   unification
+%   presumed props
+% future work?
+% prior work?
+
+
+
+
 % \input{5_Cast_data/old}
 % \input{3_Cast/4_Elab}
 % \input{3_Cast/5_Warnings}

@@ -58,7 +58,7 @@ If the scrutinee is an empty vector, we will fall into the $\mathtt{Nil}$ branch
 \item
 If the vector is inhabited by an incorrect type, such as $\mathtt{Cons}\,\mathtt{Nat}\,3\,...\,...::\mathtt{Vec}\,\mathtt{Bool}\,5$, the case will return $3::\mathtt{Bool}$ with a cast that rests on the faulty assumption of $\mathtt{Vec}\,\mathtt{Nat}\,5=\mathtt{Vec}\,\mathtt{Bool}\,\,5$.
 When exactly this blame will surface depends on the evaluation and checking strategies.
-In the implemented language \cbv() and check-by-value are used at runtime and the blame will surface immediately.
+In the implemented language \cbv{} and check-by-value are used at runtime and the blame will surface immediately.
 Using a \whnf{} strategy, the blame will be embedded in the resulting term and discovered whenever that term is eliminated.
 \end{itemize}
  
@@ -133,7 +133,8 @@ case x  {
 }
 \end{lstlisting}
  
-Where unification can confirm that the explicit branch has exactly the type of the motive and does not need a cast (since we will disregard any blame arising from the scrutinee).
+Where unification can confirm that the explicit branch has exactly the type of the motive and does not need a cast\footnote{
+  While it is possible that blame was emmbedded in the term, our definitional equality allows it to be ignored}.
 Additionally the elaborator will form a covering of implicit patterns that handle any possible constructor.
 Since the unifier cannot find a contradiction for any of these cases, the user will be warned of possible runtime errors.
  
@@ -226,4 +227,69 @@ $CastL$ will be derivable within the extended cast system.
 % In the final branch we have $p:\mathtt{Vec}\,A'\,\mathtt{Z}\approx \mathtt{Vec}\,A'\,\left(\mathtt{S}\,x\right)$,
 % which is contradicted by $TCon_{1}p:\mathtt{Z}\approx \mathtt{S}\,x$
  
-\todo[inline]{Example: transitivity, translate out to motive}
+\todo[inline]{Example: translate out to motive}
+
+\subsection{Transitivity}
+
+\begin{figure}
+  \begin{lstlisting}[basicstyle=\ttfamily\small]
+  -- surface language term
+  trans : (A : *) -> (x : A) -> (y : A) -> (z : A)
+        -> (xy : Id A x y) -> (yz : Id A y z) -> Id A x z
+  trans A x y z xy yz =
+  case xy, yz < _ => _ => Id A x z > {
+    | (refl A' a') => (refl A'' a'') => (refl A' a')
+  } ;
+  
+  -- elaborated cast language term
+  trans : (A : *) -> (x : A) -> (y : A) -> (z : A)
+        -> (xy : Id A x y) -> (yz : Id A y z) -> Id A x z
+  case xy, yz {
+    | (refl A' a')::v => (refl A'' a'')::w => 
+      (refl A' a'):: (Id Aeq aeq aeq)
+  } ;
+\end{lstlisting}
+
+\caption{Transitivity Example}
+\label{fig:cast-trans}
+\end{figure}
+
+\todo[inline]{may need to expand scruts if we are using flex vars}
+
+For another example consider the surface language function that validates the transitivity of the \Id{} type, and its cast language elaboration in \Fref{cast-trans}.
+For the surface language term the constraints ($\text{Id A' a' a'}=\text{Id A x y},\text{Id A'' a'' a''}=\text{Id A y z}$) will be solved and the branch type checks under the substitutions implied by those equalities ($A=A'=A''$, $a'=x=y=a''=z$).
+In the elaborated cast term the variables are not directly equated, instead assertion variables are added to scope to build evidence for these equalities ($v:\text{Id A' a' a'}\approx\text{Id A x y}$, $w:\text{Id A' a' a'}\approx\text{Id A x y}$).
+Elaboration based unification will generate terms that correspond to the equalities discovered by normal unification 
+  ($Aeq=\left(TCon_{0}\ v\right)\cup^{\star}\left(TCon_{0}\ w\right)\sqsupseteq A,A',A''$;
+  and $aeq=\left(TCon_{1}\ v\right)\cup^{\star}\left(TCon_{2}\ v\right)\cup^{\star}\left(TCon_{1}\ w\right)\cup^{\star}\left(TCon_{2}\ w\right)\sqsupseteq a',x,y,a'',z$).
+These assertions are embedded into the constructor allowing $\text{Id A' a' a'}=\text{Id A x z}$.
+Again, the $\mathtt{trans}$ function itself is blameless, any blame surfaces from the use of the term must come from a blamable input.
+
+
+\subsection{Peeking}
+
+% Finally case expressions will be blamed if an incompatible constructor appears.
+% For instance, if head is called with $\True{} ::(\Bool{} \ \sim_{\ell}^{\star} \Vect{} \ \Nat{}\ 1)$ then $\ell$ will be blamed immediately, since $\True{} $ does not match the correct type of the constructor $Cons$.
+% Since the type constructor is known, it is possible to check the coverage of the patterns.
+% If every constructor is accounted for, only blameable data remains.
+% Quantifying over casts allows blame to be redirected, so if the program gets stuck in a pattern branch it can blame the malformed input.
+% This extension seems to preserve cast soundness.
+
+\begin{figure}
+\begin{lstlisting}[basicstyle=\ttfamily\small]
+peek : Id Nat 0 1 -> Nat
+peek x =
+case x <_: Id Nat 0 1 => Nat> {
+  | (refl _ x :: w) => x :: (TCon0 w)
+}
+
+-- under weak head evaluation
+peek (refl 4 :: Id Nat 0 1) = 4
+\end{lstlisting}
+\caption{Cast Pattern Matching}
+\label{fig:cast-peek}
+\end{figure}
+
+The cast language will enforce a minimal amount of checking, that could potentially lead to unexpected behavior.
+For instance, the peek function defined in \Fref{cast-peek}, will ignore several discrepancies in the index of the \Id{} type, if run in \whnf{}.
+As  in \ch{3}, our formalism uses a minimal amount of checking to maintain cast soundness, though more eager checking is implemented in the prototype.
