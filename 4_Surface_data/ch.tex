@@ -1,4 +1,4 @@
-\chapter{Data in the Surface Langugae}
+\chapter{Data in the Surface Language}
 \label{chapter:SurfaceData}
 \thispagestyle{myheadings}
 
@@ -6,10 +6,10 @@
 \todo{flex vars, could probly make a s.r. system if unification is limited}
 
 User defined data is an important part of a realistic programming language.
-Programmers need to be able to define concrete types that are meaningful for the the problems they are trying to solve.
+Programmers need to be able to define concrete types that are meaningful for the problems they are trying to solve.
 
 Dependent data types allow these user defined types, while also unifying many types that are handled as special cases in most mainstream languages.
-For instance, ``primitive'' data types like \Nat{} and \Bool{} are a degenerate forms of dependent data.
+For instance, ``primitive'' data types like \Nat{} and \Bool{} are degenerate forms of dependent data.
 Dependent data can represent mathematical predicates like equality or the evenness of a number.
 Dependent data can also be used to preserve invariants, like the length of a list in \Vect{}, or the ``color'' of a node in a red-black-tree.
 
@@ -18,16 +18,16 @@ However, such an encoding is inconvenient in practice.
 Since ``ease of use'' is the overriding concern for the system developed in this thesis, those encoding are an unrealistic way to use data.
 % However, the combination of user defined data and dependent types can be subtle.
 
-In this chapter we will show two different, ways to add data to the \slang{} and \bidir{} system.
+In this chapter we will show two different ways to add data to the \slang{} and \bidir{} system.
 The first, a direct eliminator scheme, is meta-theoretically well behaved but cumbersome for programmers.
-The second is based on pattern matching, and is extremely convineint, though its meta-theory is much more difficult.
+The second is based on pattern matching, and is extremely convenient, though its meta-theory is much more difficult.
 
 The specific form of pattern matching in this chapter is designed to allow syntactic sugar of function definition by cases. 
 
-% \input{4_Surface_data/2_Def}
-% \input{4_Surface_data/3_Direct}
-% \input{4_Surface_data/4_Pattern}
-% \input{4_Surface_data/5_Discusion}
+\input{4_Surface_data/2_Def}
+\input{4_Surface_data/3_Direct}
+\input{4_Surface_data/4_Pattern}
+\input{4_Surface_data/5_Discusion}
 
 \section{Related work}
 
@@ -39,7 +39,7 @@ For example, Martin L{\"o}f's original paper treated data this way\todo{confirm,
 
 % Martin Lof generalized the notion of data to W types of well founded trees  and this still serves as a theoretical justification for data.
 
-\todo{Abreviations!!}
+\todo[inline]{Abbreviations!!}
 Unified Type Theory (UTT)\cite{luo1990extended,luo1994computation} is an extension to ECC that specifies a scheme to define strictly positive data types by way of a logical framework defined in \ac{MLTT}.
 This scheme generates primitive recursors for schematized data, and does not inherently support pattern matching.
 
@@ -64,7 +64,7 @@ and Conor McBride (2012) http://adam.gundry.co.uk/pub/pattern-unify/
 (this links give you the choice to read a more detailed chapter of
 Adam Gundry's thesis instead)}
 
-The subtleties of dependently pattern matching are explored in \cite{cockx_devriese_2018}, which has many informative examples, some of which were motivated by longstanding bugs in Agda.
+The subtleties of dependently pattern matching are explored in \cite{cockx_devriese_2018}, which has many informative examples, some of which were motivated by long standing bugs in Agda.
 
 \todo[inline]{https://research.chalmers.se/en/publication/519011 ?}
 
