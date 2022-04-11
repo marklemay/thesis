@@ -9,8 +9,8 @@ The usual solution is to extend case elimination with \textbf{Pattern matching.}
 Pattern matching is much more ergonomic than a direct eliminator $\mathsf{case}$.
 In Figure \ref{fig:data-eliminators}, the $\mathtt{head}$ defined though pattern matching is simpler and clearer.
 Nested constructor matching is now possible.
-When pattern matching is extended to dependent types variables will be assigned their definitions as needed, and unreachable branches can be omitted from code.
-For this reason, pattern matching has been considered an ``essential'' feature for dependently typed languages since \cite{coquand1992pattern} and is implemented implemented in most popular systems, such as Agda and the user facing language of Coq.
+When pattern matching is extended to dependent types, variables will be assigned their definitions as needed, and unreachable branches can be omitted from code.
+For this reason, pattern matching has been considered an ``essential'' feature for dependently typed languages since \cite{coquand1992pattern} and is implemented in most popular systems, such as Agda and the user facing language of Coq.
 
 % This style of case elimination is pervasive in ML style languages and has become popular in more mainstream languages such as Python and Java (double check and perhaps not restrictions)
 
@@ -54,7 +54,7 @@ For this reason, pattern matching has been considered an ``essential'' feature f
 
 % Surface data syntax
 Figure \ref{fig:surface-data} shows the extensions to the surface language for data and pattern matching.
-Our case expression match a list of scrutinees, allowing us to be very precise about the typing of branches.
+Our case expression matches a list of \scruts{}, allowing us to be very precise about the typing of branches.
 Additionally this style allows for syntactic sugar for easy definitions of functions by cases.
 The syntax of the direct eliminator style $\mathsf{case}$s of the last section was designed to be a special case of pattern matching.
 \todo{Example of why it was needed}
@@ -62,11 +62,11 @@ The syntax of the direct eliminator style $\mathsf{case}$s of the last section w
 \begin{figure}
 \begin{tabular}{lcll}
 $m...$ & $\Coloneqq$ & ... & \tabularnewline
- & | & $\mathsf{case}\,\overline{n,}\,\left\{ \overline{|\,\overline{pat\Rightarrow}m}\right\} $ & data elim. without motive\tabularnewline
- & | & $\mathsf{case}\,\overline{n,}\,\left\langle \overline{x\Rightarrow}M\right\rangle \left\{ \overline{|\,\overline{pat\Rightarrow}m}\right\} $ & data elim. with motive\tabularnewline
+ & $|$ & $\mathsf{case}\,\overline{n,}\,\left\{ \overline{|\,\overline{pat\Rightarrow}m}\right\} $ & data elim. without motive\tabularnewline
+ & $|$ & $\mathsf{case}\,\overline{n,}\,\left\langle \overline{x\Rightarrow}M\right\rangle \left\{ \overline{|\,\overline{pat\Rightarrow}m}\right\} $ & data elim. with motive\tabularnewline
 \multicolumn{4}{l}{patterns,}\tabularnewline
 $pat$ & $\Coloneqq$ & $x$ & match a variable\tabularnewline
- & | & $(d\,\overline{pat})$ & match a constructor\tabularnewline
+ & $|$ & $(d\,\overline{pat})$ & match a constructor\tabularnewline
 \end{tabular}
 
 \caption{Surface Language Data}
@@ -113,9 +113,9 @@ The explicit rules for pattern matching are listed in Figure \ref{fig:surface-da
 \label{fig:surface-data-match}
 \end{figure}
 
-It is now easier for case branches to overlap, which could allow nondeterministic reduction.
+It is now easier for case branches to overlap, which could allow non-deterministic reduction.
 There are several plausible ways to handle this, such as requiring each branch to have independent patterns, or requiring patterns have the same behavior when they overlap \cite{10.1007/978-3-642-54833-8_6}.
-For the purposes of this thesis, we will use the programatic convention that the first matching pattern takes precedence.
+For the purposes of this thesis, we will use the programmatic convention that the first matching pattern takes precedence.
 For example, we will be able to type check
 
 \[
@@ -143,8 +143,8 @@ Usually this procedure takes the form of a first order unification.
 
 \subsection{First Order Unification}
 
-When type checking the branches of the a case expression, the patterns are interpreted as expressions under bindings for each variable used in the pattern.
-If these equations can be unified, then the brach will type-check under the variable assignments, with the additional typing information.
+When type checking the branches of a case expression, the patterns are interpreted as expressions under bindings for each variable used in the pattern.
+If these equations can be unified, then the branch will type-check under the variable assignments, with the additional typing information.
 For instance,
 \begin{example}
 Type checking by unification
@@ -197,17 +197,17 @@ The unification procedure does not exclude the possibly cyclic assignments that 
 \label{fig:surface-data-unification}
 \end{figure}
 
-After the branches have type checked we should makes sure that they are exhaustive, such that every possible branch will be covered.
-Usually the is done by generating a set of patterns that would cover all combinations of constructors and proving that the unlisted branches are unreachable.
-In general it is undecidable wether any given pattern is impossible or not, so a practical approximation must be chosen.
+After the branches have type checked we should make sure that they are exhaustive, such that every possible branch will be covered.
+Usually this is done by generating a set of patterns that would cover all combinations of constructors and proving that the unlisted branches are unreachable.
+In general it is undecidable whether any given pattern is impossible or not, so a practical approximation must be chosen.
 Usually a branch is characterized as unreachable if a contradiction is found in the unification procedure.
 At least programmers have the ability to manually include non-obviously unreachable branches and prove their unreachability, (or direct those branches to dummy outputs).
 Though there is a real risk that the unification procedure gets stuck in ways that are not clear to the programmer, and a clean error message may be very difficult.
 
 But that set of patterns must still be generated, given the explicit branches the programmer introduced.
-There is no clear best way to do this since a more fine devision of patterns may allow enough additional definitional information to show unsatisfiability, while a more coarse devision of patterns will be more efficient.
-Agda uses a tree branching\todo{cite} approach, that is efficient, but generates course patterns.
-The implementation of the language in this thesis generates patterns by a system of complements, this system seams slightly easier to implement, more uniform, and generates a finer set of patterns then the case trees used in Agda.
+There is no clear best way to do this since a more fine division of patterns may allow enough additional definitional information to show unsatisfiability, while a more coarse division of patterns will be more efficient.
+Agda uses a tree branching\todo{cite} approach that is efficient, but generates course patterns.
+The implementation of the language in this thesis generates patterns by a system of complements, this system seems slightly easier to implement, more uniform, and generates a finer set of patterns then the case trees used in Agda.
 However this approach is exponentially less performant then Agda in the worse case.\todo{thsi is less true now} 
 
 The bidirectional system can be extended with pattern matching with rules that look like 
@@ -237,7 +237,7 @@ The bidirectional system can be extended with pattern matching with rules that l
 Where $\Gamma\vdash\overline{pat}:_{E}?\Delta$ is shorthand for a set of equations that allow a list of patterns to type check under $\Delta$, 
   and $\Gamma\vdash\overline{\overline{pat}}:\Delta\ \mathbf{complete}$ is shorthand for the exhaustiveness check. 
 \begin{conjecture}
-There exists a suitable\footnote{supporting at least subject reduction, type soundness, and regularity} extension to the surface language \ac{TAS} that supports patten matching style elimination
+There exists a suitable\footnote{supporting at least subject reduction, type soundness, and regularity} extension to the surface language \ac{TAS} that supports pattern matching style elimination
 \end{conjecture}
 
 This conjecture is not obvious since pattern matching is not consistent under reduction, or even well typed substitution.
@@ -246,6 +246,6 @@ Probably the best way to work in that direction is to use explicit contextual eq
 The bidirectional extension listed here is weakly annotatable with that extension to the surface language.
 \end{conjecture}
 
-Additionally, it makes sense to allow some additional type annotations in the motive and for these annotations to switch the the type inference of the scrutinee into a type-check.
+Additionally, it makes sense to allow some additional type annotations in the motive and for these annotations to switch the type inference of the scrutinee into a type-check.
 The implementation includes this along with a simple syntax for modules, and even mutually defined data types.
 For simplicity these have been excluded from the presentation here.
