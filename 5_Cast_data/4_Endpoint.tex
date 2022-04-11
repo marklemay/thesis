@@ -115,8 +115,8 @@ We can recover a typing judgment when a term is its own endpoint (formalized in 
 As usual, the system needs a suitable definition of $\equiv$.
 We use a transitive reflexive equivalence relation that respects reductions and ignores casts.
 Ignoring casts keeps terms from being made distinct by different casts, and prevents reductions from getting stuck for the purpose of equality.
-Note that unlike \ch{3} this means equivelence will not preserve Blame and we will need to rely on a more specific reduction relation that preseves both equivalence and blame.
-\todo{constructing such an equivelence rigorously...}
+Note that unlike \ch{3} this means equivalence will not preserve Blame and we will need to rely on a more specific reduction relation that preserves both equivalence and blame.
+\todo{constructing such an equivalence rigorously...}
 
 
 \subsection{Data Endpoints}
@@ -186,7 +186,7 @@ The Rules for data endpoints are listed in \Fref{cast-Data-Endpoint-Rules}.
 Assertion variables have endpoints at each side of the equality given from the typing judgment.
 Data type constructors and data term constructors have the function type implied by their definitions (and annotations that match).
 
-To find the endpoints of a $\mathsf{case}$ expression first, find the endpoints of the scrutinees and a pattern that it types under (the endpoint and typing judgment can be extended to lists and telescopes).
+To find the endpoints of a $\mathsf{case}$ expression first, find the endpoints of the \scruts{} and a pattern that it types under (the endpoint and typing judgment can be extended to lists and telescopes).
 A motive $B'$ must exist under the context extended with the telescope.
 Every pattern must type check against the telescope.
 The body of every pattern must have an endpoint consistent with the motive and pattern.

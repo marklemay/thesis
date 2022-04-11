@@ -35,17 +35,17 @@ case x {
 }
 \end{lstlisting}
  
-The elaborated case expression covers all possible constructors for the data type constructor $\mathtt{Vec}$, imcuding patterns that did appear in the surface term.
+The elaborated case expression covers all possible constructors for the data type constructor $\mathtt{Vec}$, including patterns that did appear in the surface term.
  
 In the first branch $A:\star$, $a:A$, $y:\mathtt{Nat}$, while $p$ is a path variable that contains evidence that the type of $\mathtt{Cons\,A\,a\,y\,-}$ is $\mathtt{Vec\,Bool\,(S\,n)}$.
 We might say, $p:\mathtt{Vec}\ A\ (\mathtt{S}\,y)\approx\mathtt{Vec}\,\mathtt{Bool}\,(\mathtt{S}\,n)$.
 $TCon_{0}\,p$ extracts the 0th argument from the type constructor $p:\mathtt{Vec}\ \underline{A}\ (\mathtt{S}\,y)\approx\mathtt{Vec}\,\underline{\mathtt{Bool}}\,(\mathtt{S}\,n)$ resulting in the type $TCon_{0}p\ :\ A\approx\mathtt{Bool}$\todo{
-  ecpand on this notation}.
+  expand on this notation}.
 The body of the branch casts $a$ along $TCon_{0}\,p$ to $\mathtt{Bool}$.
 Casts will need to be generalized from \ch{3} to support this behavior.
  
 In the the second branch, the pattern match gives $A:\star$, $p:\mathtt{Vec}\ A\ \mathtt{Z}\approx\mathtt{Vec}\,\mathtt{Bool}\,(\mathtt{S}\,y)$.
-The body of the branch encodes the contradiction observed by noting $\mathtt{Z}\neq\mathtt{S}\,y$.\todo{becuase...}
+The body of the branch encodes the contradiction observed by noting $\mathtt{Z}\neq\mathtt{S}\,y$.\todo{because...}
  
 Since there is no assertion made in either branch, no warnings will be generated for this elaborated case term.
 Any failure that arises will be redirected to the scrutinee, which must have made a blameable assumption.
@@ -113,7 +113,7 @@ If this branch is reached, we can observe a problem in either branch or both.
 \end{itemize}
  
 \subsection{Variables Not In Branch}
-\todo{this example is a little bad, better with something that nees path evidence like ID}
+\todo{this example is a little bad, better with something that needs path evidence like ID}
 There are more complicated possibilities that need to be addressed.
 For instance, variables may not be used in the body of a branch.
 Consider this partial pattern match where $\mathtt{rept: (x: Nat) -> Vec Bool x}$,
@@ -135,7 +135,7 @@ case x  {
 \end{lstlisting}
  
 Substitution can confirm that the explicit branch has exactly the type of the motive and does not need a cast\footnote{
-  While it is possible that blame was emmbedded in the term, our definitional equality allows it to be ignored}.
+  While it is possible that blame was embedded in the term, our definitional equality allows it to be ignored}.
 Additionally the elaborator will form a covering of implicit patterns that handle any possible constructor.
 Since the unifier cannot find a contradiction for any of these cases, the user will be warned of possible runtime errors.
  
@@ -168,8 +168,8 @@ But then we need evidence that $(A:\star)\rightarrow A\rightarrow\mathtt{Vec}\,\
   give an example of an assertion to remind people it is possible
 }.
 \todo[inline]{avoiding these sperous casts is important for the conjectured gradual correctness, well typed surface language terms should not generate warnings}
-First we need to embed our into tje subterm of interest, $(A:\star)\rightarrow A\rightarrow\mathtt{Vec}\,\mathtt{Nat}\,\underline{(a :: (TCon_0(p)))}\approx(A:\star)\rightarrow A\rightarrow\mathtt{Vec}\,\mathtt{Nat}\,\underline{2}$.
-We will construct our equality eveidence specifically so that it can be embedded into terms.
+First we need to embed our into the subterm of interest, $(A:\star)\rightarrow A\rightarrow\mathtt{Vec}\,\mathtt{Nat}\,\underline{(a :: (TCon_0(p)))}\approx(A:\star)\rightarrow A\rightarrow\mathtt{Vec}\,\mathtt{Nat}\,\underline{2}$.
+We will construct our equality evidence specifically so that it can be embedded into terms.
 % The $Cong$ syntax explicitly embeds a path into a larger expression, here $Cong_{x=> (A : *) -> A -> \mathtt{Vec} \mathtt{Nat} x} ...$ selects the relevant part of the type.
  
 We will only insist that terms are equated up to a definitional equality that disregards casts so instead of needing to show $a :: (TCon_0(p))\ \approx\ 2$, we only have to show $a\ \approx\ 2$.

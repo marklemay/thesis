@@ -16,7 +16,7 @@ As before, we will take the (conjectured) surface language of \ch{4} and constru
 Though it is difficult to formalize a \ac{TAS} and corresponding \bidir{} system that has pattern matching, informally the unification of pattern matching belongs in the \bidir{} system.
 Accordingly we will extend elaboration with a form of unification.
 Because we will not need to deal with unification in the cast language, the cast language can provide evidence that the cast system is \textbf{cast sound}. \todo{"show" if we ever get a proof}
-While the lack of a formal \ac{TAS} and \bidir{} system in \ch{4} will make the other properties of \ch{3} difficult to show, we will design the system with an eye twords preserving them.
+While the lack of a formal \ac{TAS} and \bidir{} system in \ch{4} will make the other properties of \ch{3} difficult to show, we will design the system with an eye towards preserving them.
  
 % \todo{formulate case consistently}
 % Elaboration should satisfy the additional correctness\todo{``gradual correctness''?} properties relative to a type assignment system and bidirectional system.
@@ -53,18 +53,6 @@ During elaboration, after a pattern is unified, we will inject the proofs of equ
 
 % \input{5_Cast_data/old}
 
-% cast lang
-%   operational behavour
-% cast sys
-%   Defn EQ!!
-%   presumed cast soundness
-% elaboration
-%   unification
-%   presumed props
-% future work?
-% prior work?
-
-
 % avoids issues like
 % \begin{itemize}
 %   \item How do same assertions interact with casts? For instance $\left\{ 1::Bool\sim_{k,o,\ell}2::Bool\right\} $. 
@@ -75,8 +63,8 @@ During elaboration, after a pattern is unified, we will inject the proofs of equ
 % \end{itemize}
 
 % $\thickapprox$
-\todo{consider dropping type info from explicit blame, since it will be redundant (if it is doable from the impl)}
-\todo{sitll some worthwile stuff to extract from the defunct version of this chapter}
+\todo{consider dropping type info from explicit blame, since it will be redundant (if it is doable from the impl)} 
+\todo{still some worthwhile stuff to extract from the defunct version of this chapter}
 \todo[inline]{technically speaking, telescopes should generalize to the different syntactic classes}
 
 
