@@ -14,7 +14,7 @@ In general, motive annotations will be treated like the typing annotations in \c
 
 This version of data can be given by extending the surface language syntax in \ch{2}, as in \Fref{data-defs}.
 Data Type constructors and Data Term constructors are treated like functions.
-This direct eliminator scheme, is roughly similar to how Coq handles data in it's core language.
+This direct eliminator scheme is roughly similar to how Coq handles data in its core language.
 
 \begin{figure}
 \begin{tabular}{lcll}
@@ -72,11 +72,11 @@ For instance, this case expression checks if a vector $x$ is empty,
 x:Vec\,\mathbb{B}\,1\vdash\mathsf{case}\,\mathbb{B},1,x\,\left\langle y\Rightarrow z\Rightarrow s:Vec\,y\,z\Rightarrow\mathbb{B}\right\rangle \left\{ |y\Rightarrow z\Rightarrow Nil\,-\Rightarrow True\,|\,y\Rightarrow z\Rightarrow Cons\,----\Rightarrow False\right\} 
 \]
 
-We include a little more syntax then is strictly necessary, since the $\mathbb{B},1,$ list could be inferred and the $y\Rightarrow z\Rightarrow$ binders are not needed in the branch.
+We include a little more syntax than is strictly necessary, since the $\mathbb{B},1,$ list could be inferred and the $y\Rightarrow z\Rightarrow$ binders are not needed in the branch.
 This slightly verbose case eliminator syntax is designed to be forward compatible with the pattern matching system defined in the rest of this Chapter. 
 
 Additionally we define telescopes, which generalize zero or more typed bindings\todo{Cite De Bruijn for telescopes}.
-This allows a much cleaner definition of data then is otherwise possible.
+This allows a much cleaner definition of data than is otherwise possible.
 Also we define syntactic lists that allow zero or more pieces of syntax.
 Expressions in a list can be used to generalize dependent pairs, and can be type checked against a telescope.
 For instance, the list $\mathtt{Nat},2,2,refl\,\mathtt{Nat}\,2$ type checks against $\left(X:\star\right)\rightarrow\left(y:X\right)\rightarrow\left(z:X\right)\rightarrow\left(-:Id\ X\,y\,z\right)$.
@@ -84,7 +84,7 @@ This becomes helpful in several situations, but especially when we need work wit
 We will allow several syntactic puns, such as treating telescopes as prefixes for function types. For instance, 
   if $\Delta=\left(y:\mathtt{Nat}\right)\rightarrow\left(z:\mathtt{Nat}\right)\rightarrow\left(-:Id\ \mathtt{Nat}\,y\,z\right)$
   then writing $f:\Delta\rightarrow\mathtt{Nat}$
-  will be short hand for $f:\left(y:\mathtt{Nat}\right)\rightarrow\left(z:\mathtt{Nat}\right)\rightarrow Id\ \mathtt{Nat}\,y\,z\rightarrow\mathtt{Nat}$.
+  will be shorthand for $f:\left(y:\mathtt{Nat}\right)\rightarrow\left(z:\mathtt{Nat}\right)\rightarrow Id\ \mathtt{Nat}\,y\,z\rightarrow\mathtt{Nat}$.
 \todo{move this down to the typing section?}
 
 In the presence of general recursion case elimination is powerful.
@@ -111,7 +111,7 @@ This is in contrast to most programming languages, which do allow incomplete pat
 This thesis already has a system for handling warnings and runtime errors through the cast language.
 When we get to the cast language data in \ch{5}, we will allow non-exhaustive data to be reported as a warning and that will allow ``unmatched'' errors to be observed at runtime.
 
-For similar reasons, in the direct eliminator scheme, we will insist that each constructor is matched at most once, so there is no ambiguity for how an case eliminated when using direct eliminations.
+For similar reasons, in the direct eliminator scheme, we will insist that each constructor is matched at most once, so there is no ambiguity for how a case is eliminated.
 
 \subsubsection{(non-)Strict Positivity}
 
@@ -255,7 +255,7 @@ They follow the scheme of parallel reductions laid out in \ch{2}.
 The $\textrm{\ensuremath{\Rrightarrow}-\ensuremath{\mathsf{case}}-red}$ rule\footnote{Also called $\iota$, or Iota reduction}\todo{mention beta in footnote in CH2} reduces a case expression by choosing the appropriate branch.
 The $\textrm{\ensuremath{\Rrightarrow}-\ensuremath{\mathsf{case}}<>-red}$ rule removes the motive annotation, much like the annotation rule in \ch{2}.
 The rules $\textrm{\ensuremath{\Rrightarrow}-\ensuremath{\mathsf{case}}<>}$, $\textrm{\ensuremath{\Rrightarrow}-}D$, and $\textrm{\ensuremath{\Rrightarrow}-}d$ keep the $\Rrightarrow$ relation reflexive.
-The reduction relation is be generalized to lists in the expected way.
+The reduction relation is generalized to lists in the expected way.
 
 \begin{figure}
 \[
@@ -296,7 +296,7 @@ M\Rrightarrow M'\\
 \end{figure}
 
 We are now in a position to select a sub relation of $\Rrightarrow$ reductions that will be used to characterize call-by-value evaluation.
-This relation could be used used to prove type safety, and is close to the reduction used in the implementation.
+This relation could be used to prove type safety, and is close to the reduction used in the implementation.
 The rules are listed in \Fref{surface-data-cbv}.\todo[inline]{extend cbv over lists}
 
 \begin{figure}
@@ -361,7 +361,7 @@ The surface language extended with data and elimination is type sound.
 A bidirectional type checking procedure exists for the type assignment rules listed above.
 An outline of these rules is in \Fref{surface-data-empty}.
 As noted in \cite{10.1145/3450952}, the bidirectional rules around data are open to some interpretation.
-The dependent case simplifies these questions since only a few rules are sensable.
+The dependent case simplifies these questions since only a few rules are sensible.
 
 The type of data constructors and type constructors can always be inferred.
 If the motive does not depend on the scrutinee or type arguments, it can be used to check against the type of the branches.
