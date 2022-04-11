@@ -5,8 +5,8 @@
 \todo[inline]{Introduce this section}
 
 
-% \input{8_Notes/1_Sym}
-% \input{8_Notes/2_Proof_Search}
+\input{8_Notes/1_Sym}
+\input{8_Notes/2_Proof_Search}
 
 \section{Future work}
 
@@ -16,9 +16,9 @@
 
 The last and biggest hurdle to bring dependent types into a mainstream programming language is by providing a reasonable way to handle effects.
 Though dependent types and effects have been studied I am not aware of any full spectrum system that has implemented those systems.
-It is not even completely clear how to best to add an effect system into Haskell, the closest ``mainstream'' language to the one studied here.\todo{cites!!}
+It is not even completely clear how best to add an effect system into Haskell, the closest ``mainstream'' language to the one studied here.\todo{cites!!}
 
-While trying to carefully to avoid effects in this thesis, we still have encountered 2 important effects, non-termination and blame based error.
+While trying carefully to avoid effects in this thesis, we still have encountered 2 important effects: blame based error and non-termination.
 
 \subsubsection{Errors}
 
@@ -31,10 +31,10 @@ Allow users to provide proofs of equality to remove warnings by having them defi
 This would allow the language to act more like an Extensional Type Theory.
 Programmers could justify these proofs as a way to remove runtime checks and make code (and testing) faster.
 Just as with \ac{ETT} many desirable properties such as function extensionality would still not be provable.
-We have pushed this to future work since their are already many explored strategies for dealing with equality proofs in an Intentional Type Theory that are completely compatible with the current implementation.
+We have pushed this to future work since there are already many explored strategies for dealing with equality proofs in an Intentional Type Theory that are completely compatible with the current implementation.
 
 Currently blame based errors aren't handled\footnote{or catch}.
-Programmers may want to use the information from a bad cast to build the final output, it might even be possible to capture a well typed term that witness the inequality.
+Programmers may want to use the information from a bad cast to build the final output, it might even be possible to capture a well typed term that witnesses the inequality.
 For instance,
 
 \begin{lstlisting}
@@ -47,11 +47,11 @@ h x =
   } pr : x != y => "whoops" ;
 \end{lstlisting}
 
-Though additional research would be need for exactly the form the contradictions should take if they are made available to the handler.
+Though additional research would be needed for exactly the form the contradictions should take if they are made available to the handler.
 
 Handling effects in a dependent type system is subtle\footnote{everything about dependent types is subtle} since the handling construct can observe differences that should not otherwise be apparent.
-This is most clearly seen in the generalization of Herbelin's paradox\todo{independent cite} presented in\cite{pedrot2020fire}.
-The probelem is that the value of a \Bool{} term may dependen on effects, that cuase logical unsoundness (or worse).
+This is most clearly seen in the generalization of Herbelin's paradox\todo{independent cite} presented in \cite{pedrot2020fire}.
+The problem is that the value of a \Bool{} term may depend on effects that cause logical unsoundness (or worse).
 The paradox can be instantiated to the system presented in this thesis with an additional handling construct,
 
 \begin{lstlisting}
@@ -80,7 +80,7 @@ If evaluated in \whnf{} he term will produce blame witnessing the static warning
 
 \subsubsection{Non-termination}
 
-Non-termination is allowed, but it would be better to have it work in the same framework as equational warnings, namely warn when non-termination is possible, and try to find slow running code via symbolic execution (runtime errors for non termination are famouly not posible).
+Non-termination is allowed, but it would be better to have it work in the same framework as equational warnings, namely warn when non-termination is possible, and try to find slow running code via symbolic execution (runtime errors for non termination are famously not possible).
 Then we could say without caveat ``programs without warnings are proofs''.
 It might be possible for users to supply their own external proofs of termination\cite{casinghino2014combining}, or termination metrics\todo{Ats, ``Termination casts: A flexible approach to termination with general recursion''}.
 
@@ -88,7 +88,7 @@ It might be possible for users to supply their own external proofs of terminatio
 
 One of the difficulties of an effect system for dependent types is expressing the definitional equalities of the effect modality.
 Is $\mathtt{print"hello";print"world"}$ $\equiv$ $\mathtt{print"helloworld"}$ at type $\mathtt{IO\ Unit}$?
-By delaying equality checks to runtime these issues can be avoided until the research space is better explored.
+By delaying equality checks until runtime these issues can be avoided until the research space is better explored.
 Effects risk making computation mathematically inelegant.
 In this thesis we avoided this inelegance for an error effect with a blame system.
 Something analogous could perhaps be applied to more interesting effect systems.
@@ -103,10 +103,10 @@ This should be demonstrated empirically with user studies.
 
 \subsection{Semantics}
 
-The semantics explored in this thesis have been operational, this has lead to serviceable, but cumbersome, proofs.
+The semantics explored in this thesis have been operational, this has led to serviceable, but cumbersome, proofs.
 Ideally the denotational semantics of a typed language in this style should be explored.
-The entire system is designed with an unformalized notion of observational equivalence in mind.
+The entire system is designed with an unformalized notion of observational equivalence\todo{foot also called...} in mind.
 While there has been some exploration into untyped contextual equivalence for dependent types \cite{sjoberg2015dependently,jia2010dependent}, untyped contextual equivalence is a weak relation\todo{Ian A. Mason and Carolyn L. Talcott. Equivalence in functional languages
 with effects. Journal of Functional Programming, 1(3):287--327, 1991}.
-There is a dificult circularity when typed observational equivalence is extendned to dependent types.
+There is a difficult circularity when typed observational equivalence is extended to dependent types.
 A notion of dependently typed observational equivalence would be an interesting and helpful direction for further study.
