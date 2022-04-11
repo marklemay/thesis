@@ -53,9 +53,17 @@ For instance, if we wanted to assume $\Nat{} $ and $\Bool{} $ are the same we co
 The cast operation will allow $1$ to be used as a $\Bool{} $ by casting the assumption, $1::\left(\Nat{} \sim_{\ell}^{\star}\Bool{} \right)$.
 
 The presence of assertions allows an expression to have different interpretations.
+Assertions that two terms are the same is written as $\left\{ a\sim_{\ell,o}^{C}b\right\}$ and will evaluate $a$ and $b$ in parallel until a head constructor is reached on each branch. 
 For instance, $\left(1 \sim_{\ell}^{\Nat{}} 2 \right)$, can be interperted as $1$, $2$ or evidence that $1=2$.
 We call the concrete interpretations \textbf{endpoint}s, and they will be formalized in the next section.
-\todo{why}
+If the constructor is the same it will commute out of the term.
+If the head constructor is different the term will get stuck with the information for the final blame message.
+For instance, $\left(1 \sim_{\ell}^{\Nat{}} 2 \right)\rightsquigarrow_{*} S\left(0 \sim_{\ell.DCon_{0}}^{\Nat{}} 1\right) $.
+
+% Since this equational construct is already needed for functions, we
+% will use it to handle all equality assertions. For instance, $\left\{ \left(\lambda x\Rightarrow S\,x\right)Z\sim_{k,o,\ell}2+2\right\} \rightsquigarrow_{*}\left\{ S\,Z\sim_{k,o,\ell}S\,\left(1+2\right)\right\} \rightsquigarrow_{*}S\,\left\{ Z\sim_{k,o.DCon_{0},\ell}1+2\right\} \rightsquigarrow_{*}S\,\left\{ Z\sim_{k,o.DCon_{0},\ell}S\,2\right\} $.
+% We compute past the first $S$ constructor and blame the predecessor
+% for not being equal.
 
 Assertions can be chained together with $\cup$ when two expressions that share an endpoint, and evidence that the types are the same.
 For instance if we assumed $\Nat{} \sim_{\ell}^{\star}\Bool{} $ and $\Bool{} \sim_{\ell'}^{\star}String$, then we can associate $\Nat{} $ and $String$, with $\left(\Nat{} \sim_{\ell}^{\star}\Bool{} \right)\cup^{\star}\left(\Bool{} \sim_{\ell'}^{\star}String\right)$.
@@ -79,7 +87,11 @@ These variables are bound from the extended notion of patterns, and contain evid
 % This is justified by the normal forms of data terms in the cast language.
 % While in the surface language a normal form of data must have the data constructor in head position (justifying the surface language pattern syntax), in the cast language the normal form of data may accumulate a cast.
 
+Pattern matching across dependent data types will allow for observations that were impossible before.
+For instance it is now possible to observe specific arguments in type constructors and term constructors.
+Since function terms can appear directly in data type constructors it is now possible to observe functions directly.
 Observations have been extented to allow the term level checking that is now possible.
+
 \todo{App example}
 
 

@@ -43,12 +43,15 @@ This will require extending the cast language with terms to manipulate equality 
 During elaboration, after a pattern is unified, we will inject the proofs of equality where needed so that they cast check. 
 % This will require that our notion of paths support congruence.
 
+
 \input{5_Cast_data/2_Examples}
 \input{5_Cast_data/3_Syntax}
 \input{5_Cast_data/4_Endpoint}
 \input{5_Cast_data/5_Reductions}
 \input{5_Cast_data/6_CastSoundness}
 \input{5_Cast_data/7_Elab}
+
+% \input{5_Cast_data/old}
 
 % cast lang
 %   operational behavour
@@ -62,4 +65,26 @@ During elaboration, after a pattern is unified, we will inject the proofs of equ
 % prior work?
 
 
-% \input{5_Cast_data/old}
+% avoids issues like
+% \begin{itemize}
+%   \item How do same assertions interact with casts? For instance $\left\{ 1::Bool\sim_{k,o,\ell}2::Bool\right\} $. 
+%   \item How do sameness assertions cast check? This is difficult, because
+%   there is no requirement that a user asserted equality is of the same
+%   type. For instance what type should the term $\left\{ 1\sim_{k,o,\ell}True\right\} $
+%   have?
+% \end{itemize}
+
+% $\thickapprox$
+\todo{consider dropping type info from explicit blame, since it will be redundant (if it is doable from the impl)}
+\todo{sitll some worthwile stuff to extract from the defunct version of this chapter}
+\todo[inline]{technically speaking, telescopes should generalize to the different syntactic classes}
+
+
+\subsection{Future work}
+
+\todo[inline]{Make equalities visible in the surface syntax}
+
+The system here has some simple inspiration that could be extended into pattern matching syntax more generally. 
+It seems useful to be able to read equational information out of patterns, especially in settings with rich treatment of equality.
+Matching equalities directly could be a semi-useful feature in Agda, or in univalent type theories such as CTT.
+\todo[inline]{CTT data is related?}

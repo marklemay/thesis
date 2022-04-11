@@ -11,6 +11,15 @@ When the type position is resolved to function type, arguments can be applied un
 Finally, there are reductions to clean up cast bookkeeping.
 In addition to the listed reductions, a reduction can happen recursively in any single sub-position (dependening on reduction strategy).
 
+\todo{these reductions are listed?}
+In this thesis we have taken an extremely extensional perspective, terms are only different if an observation recognizes a difference.
+For instance this approach justifies equating the functions $\lambda x\Rightarrow x+1=\lambda x\Rightarrow1+x$ without proof, even though they are usually definitionally distinct.
+Therefore we will only blame inequality across functions if two functions that were asserted to be equal return different observations for ``the same'' input.
+Tracking that two functions should be equal becomes complicated, the system must be sensible under context, functions can take other higher order inputs, and function terms can be copied freely.
+
+
+
+
 \begin{figure}
 
   \begin{align*}
@@ -169,10 +178,22 @@ In addition to the listed reductions, a reduction can happen recursively in any 
 \subsection{Data Reductions}
 
 Some select reductions are listed in \Fref{Data-Reductions}.
-Elimination of data types is delegated to the $\mathbf{Match}$ judgment (that is unlisted).
+Elimination of data types is delegated to the $\mathbf{Match}$ judgment (that is unlisted). \todo{can reconstitute its type if their is no cast}
 $TCon_{i}$, and $DCon_{i}$ observations reduce to the expected index.
 Data types and data terms consolidate over $\sim$ and $\cup$ when a head constructor is shared and the type annotation has resolved, this needs to be computed by applying the indices point-wise against the typing telescope (see \Fref{Pointwise-Applications}).
 This is why the telescope annotation is explicit in the formalism (so reductions can happen independent of the typing context). 
+
+The important properties of reduction are 
+\begin{itemize}
+% \item Paths reduce into a stack of zero or more $Assert_{k\Rightarrow A}$s
+\item Assertions emit observably consistent constructors, and record the needed observations
+\item Sameness assertions will get stuck on inconsistent constructors
+% \item Casts can commute out of sameness assertions with proper index tracking
+% \item function application can commute around $kcasts$ , similar to Chapter 3, but will keep $k$ assumptions properly indexed
+\end{itemize}
+% Matching is defined in \ref{fig:cast-data-match}.
+% Note that uncast terms are equivalent to refl cast terms.
+
 
 \begin{figure}
 \[
