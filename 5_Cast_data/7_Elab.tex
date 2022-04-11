@@ -1,0 +1,78 @@
+\section{Elaboration}
+Without data, elaboration can be be extended from \ch{3} by asserting a cast where an infer meets a check.
+
+\[
+\frac{\varGamma\vdash m\,\textbf{Elab}\ a\overrightarrow{\,:\,}A}{\varGamma\vdash m\overleftarrow{\,:_{\ell,o}\,}B\ \textbf{Elab}\left(a::\left(A\sim_{\ell,o}^{\star}B\right)\right)}
+\rulename{\overleftarrow{\textbf{Elab}}-cast}
+\]
+
+\todo{this is actually a simplification, since there mey be ambient equalities that need to be supported}
+
+To handle elaboration over pattern matching, we will need to extend unification from \ch{4} to acomodate casts (\Fref{cast-data-unification}).
+We will now track not just equational constraints, but also why the constraints hold, and why the types are the same.
+For instance, in the constraint notation $1 \approx_{C}^{L} \True{}$, means we have the constraint $1 = \True{}$ becuase of $C$ and $\Nat{} = \Bool{}$ becuase of $L$. 
+The $a \approx_{C}^{L} b$ constraint can be thought of as stating the term $C$ has endpoints $a$, $b$.
+Solutions record the reasoning behind an assignment.
+For instance, $x\coloneqq_{C} 3$ means $x$ will be assigned $3$ becuase of $C$.
+
+\begin{figure}
+\[
+\frac{\,}{U\left(\emptyset,\emptyset\right)}
+\]
+
+\[
+\frac{
+  U\left(E,S\right)\quad a\equiv a'
+}{
+  U\left(\left\{ a \approx_{C}^{L} a' \right\} \cup E,S\right)
+}
+\]
+
+\[
+\frac{
+  U\left(E\left[x\coloneqq_{C} a :: L\right],S\left[x\coloneqq_{C} a :: L\right]\right)
+}{
+  U\left(\left\{ x \approx_{C}^{L} a\right\} \cup E,\left\{x\coloneqq_{C} a :: L\right\} \cup S \right) 
+}
+\]
+
+\[
+\frac{
+  U\left(\Delta @^{\approx TCon_{-}C}( \overline{b},\overline{b'} ) \cup E,a\right)\quad
+  a\equiv d_{\Delta}\overline{b}
+  \quad   a' \equiv d_{\Delta}\overline{b'}
+}{U\left(\left\{ a \approx_{C}^{L} a'\right\} \cup E,a\right)}
+\]
+
+\[
+\frac{
+  U\left(\Delta @^{\approx DCon_{-}C}( \overline{b},\overline{b'} ) \cup E,a\right)\quad
+  a\equiv d_{\Delta\rightarrow D\overline{d}}\overline{b}
+  \quad   a' \equiv d_{\Delta\rightarrow D\overline{d}}\overline{b'}
+}{U\left(\left\{ a \approx_{C}^{L} a'\right\} \cup E,a\right)}
+\]
+
+\[
+\frac{
+  U\left( \left\{ a \approx_{C}^{L\cup^{\star}D} b \right\}\cup E, S \right)
+}{
+  U\left(\left\{ a \approx_{C}^{L} b::D \right\} \cup E, S \right) 
+}
+\]
+
+\caption{Cast Language Unification Rules (select)}
+\label{fig:cast-data-unification}
+\end{figure}
+
+\todo{backport notation}
+
+When terms are substituted over equations, $E$, the terms are substituted into terms and cuases are substituted into cuases.
+For instance, 
+  $\left(x \approx_{TCon_{1}x}^{\Nat{}}x+x\right) \left[x\coloneqq_{p} 3\right]$ $=$ $3 \sim_{TCon_{1}p}^{\Nat{}}3+3$,
+  which is senseble when constriants are considered as a notation for endpoints.
+
+Additionally term constructor and type constructor injectivity is handled through an indexing operator similar to evaluation.
+Finally we add rules to peal off casts so that unfication remembers why terms have the appropraite type, and so unification will not get stuck.
+
+With the information extreacted from unification elaboration can be ellaboratied with blameless casts that mimic the behavour of pattern matching in \ch{4}.
+The information can also be used to rederect blame from ``impossible'' branches.

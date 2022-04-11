@@ -173,6 +173,12 @@ The Rules for data endpoints are listed in \Fref{cast-Data-Endpoint-Rules}.
 \varGamma\vdash b\sqsupseteq d_{\Delta\rightarrow D\overline{b}}\overline{a}\end{array}:D\overline{c}\quad\mathbf{length}\,\Delta=\mathbf{length}\,\overline{a}}{\varGamma\vdash DCon_{i}\ b\sqsupseteq\Delta@_{i}\overline{a}}
 \]
 
+
+\begin{tabular}{lll}
+  $\left(\left(x:A\right)\rightarrow\Delta\right)@_{0}\left(a,\overline{b}\right)$ & = & $a:A$\tabularnewline
+  $\left(\left(x:A\right)\rightarrow\Delta\right)@_{i}\left(a,\overline{b}\right)$ & = & $\left(\Delta\left[x\coloneqq a\right]\right)@_{\left(i-1\right)}\overline{b}$\tabularnewline
+\end{tabular}
+  
 \caption{Cast Data Endpoint Rules}
 \label{fig:cast-Data-Endpoint-Rules}
 \end{figure}
@@ -188,22 +194,5 @@ Finally the constructors of the patterns must form a complete covering.
   
 Direct blame allows evidence with contradictory endpoints to inhabit any type.
 
-Data types and data terms can be inspected, however the prior indices are needed to compute the type using the index meta-function $@_{i}$ (see \Fref{Pointwise-Applications}).
+Data types and data terms can be inspected, however the prior indices are needed to compute the types, so an index meta-function $@_{i}$ is defined.
 
-\begin{figure}
-\begin{tabular}{lll}
-$\left(\left(x:A\right)\rightarrow\Delta\right)@_{0}\left(a,\overline{b}\right)$ & = & $a:A$\tabularnewline
-$\left(\left(x:A\right)\rightarrow\Delta\right)@_{i}\left(a,\overline{b}\right)$ & = & $\left(\Delta\left[x\coloneqq a\right]\right)@_{\left(i-1\right)}\overline{b}$\tabularnewline
-\end{tabular}
-
-\begin{tabular}{llll}
-$\Delta@_{0}^{k\sim\ell,o}\left(\overline{a},\overline{b}\right)$ & = & $\Delta@^{k\sim\ell,o}\left(\overline{a},\overline{b}\right)$ \tabularnewline % & shorthand that begins the recursion\tabularnewline
-$\left(\left(x:A\right)\rightarrow\Delta\right)@_{i}^{k\sim\ell,o}\left(\left(a,\overline{a}\right),\left(b,\overline{b}\right)\right)$ & = & $\left(a\sim_{\ell,o.TCon_{i}}^{A}b\right),\left(\Delta\left[x\coloneqq\left(a\sim_{\ell,o.kCon_{i}}^{A}b\right)\right]\right)@_{i+1}^{\sim\ell,o}\left(\overline{a},\overline{b}\right)$  \tabularnewline % & non-empty list\tabularnewline
-$\left(.\right)@_{i}^{k\sim\ell,o}\left(.,.\right)$ & = & $.$  \tabularnewline % & empty list\tabularnewline
-$\Delta@_{0}^{k\cup}\left(\overline{a},\overline{b}\right)$ & = & $\Delta@^{k\cup}\left(\overline{a},\overline{b}\right)$  \tabularnewline % & shorthand that begins the recursion\tabularnewline
-$\left(\left(x:A\right)\rightarrow\Delta\right)@_{i}^{k\cup}\left(\left(a,\overline{a}\right),\left(b,\overline{b}\right)\right)$ & = & $\left(a\cup^{A}b\right),\left(\Delta\left[x\coloneqq\left(a\cup^{A}b\right)\right]\right)@_{i+1}^{k\cup}\left(\overline{a},\overline{b}\right)$ \tabularnewline %  & non-empty list\tabularnewline
-$\left(.\right)@_{i}^{k\cup}\left(.,.\right)$ & = & $.$ \tabularnewline %  & empty list\tabularnewline
-\end{tabular}
-\caption{Pointwise Applications}
-\label{fig:Pointwise-Applications}
-\end{figure}

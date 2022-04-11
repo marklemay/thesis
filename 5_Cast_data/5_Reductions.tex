@@ -1,12 +1,15 @@
 \section{Reductions}
  
+\subsection{Function Fragment}
 
-
-
-\section{Reductions}
-
-
-
+A selection of reduction operations is listed in \Fref{cast-step}.
+Function reduction happens as usual.
+Reduction over a cast collects the argument and body evidence and uses an argument cast to insure that the argument will be of the correct type.
+Universes reduce away in the following rules.
+Functions commute out their arrows after their type annotations are trivialized.
+When the type position is resolved to function type, arguments can be applied under $::$ and into $\sim$ and $\cup$.
+Finally, there are reductions to clean up cast bookkeeping.
+In addition to the listed reductions, a reduction can happen recursively in any single sub-position (dependening on reduction strategy).
 
 \begin{figure}
 
@@ -103,17 +106,6 @@
 \end{figure}
 
 
-
-
-A selection of reduction operations is listed in \Fref{cast-step}.
-Function reduction happens as usual.
-Reduction over a cast collects the argument and body evidence and uses an argument cast to insure that the argument will be of the correct type.
-Universes reduce away in the following rules.
-Functions commute out their arrows after their type annotations are trivialized.
-When the type position is resolved to function type, arguments can be applied under $::$ and into $\sim$ and $\cup$.
-Finally, there are reductions to clean up cast bookkeeping.
-In addition to the listed reductions, a reduction can happen recursively in any single sub-position.
-
 \begin{figure}
 \[
 \frac{\ }{\left(\mathsf{fun}\,f\,x\Rightarrow b\right)a\rightsquigarrow b\left[f\coloneqq\left(\mathsf{fun}\,f\,x\Rightarrow b\right),x\coloneqq a\right]}
@@ -174,115 +166,88 @@ In addition to the listed reductions, a reduction can happen recursively in any 
 \label{fig:cast-step}
 \end{figure}
 
+\subsection{Data Reductions}
+
+Some select reductions are listed in \Fref{Data-Reductions}.
+Elimination of data types is delegated to the $\mathbf{Match}$ judgment (that is unlisted).
+$TCon_{i}$, and $DCon_{i}$ observations reduce to the expected index.
+Data types and data terms consolidate over $\sim$ and $\cup$ when a head constructor is shared and the type annotation has resolved, this needs to be computed by applying the indices point-wise against the typing telescope (see \Fref{Pointwise-Applications}).
+This is why the telescope annotation is explicit in the formalism (so reductions can happen independent of the typing context). 
+
+\begin{figure}
+\[
+\frac{
+  \overline{a}\ \left(\overline{|\,\overline{patc\Rightarrow}b}\right)\ \mathbf{Match}\ b'
+}{
+  \mathsf{case}\,\overline{a,}\,\left\{ \overline{|\,\overline{patc\Rightarrow}b}\, \overline{?\,\overline{patc}} \right\} \rightsquigarrow b'
+}
+\]
+
+\[
+\frac{\ }{TCon_{i}\ \left(D_{\Delta}\overline{a}\right)\rightsquigarrow a_{i}}
+\]
+
+\[
+\frac{\ }{DCon_{i}\ \left(d_{\Delta\rightarrow D\overline{e}}\overline{a}\right)\rightsquigarrow a_{i}}
+\]
+
+\[
+\frac{
+  \mathbf{length}\,\Delta=\mathbf{length}\,\overline{a}=\mathbf{length}\,\overline{b}
+}{
+  \left(\left(D_{\Delta}\overline{a}\right)\sim_{\ell,o}^{\star}\left(D_{\Delta}\overline{b}\right)\right)\rightsquigarrow D_{\Delta}\left(\Delta@^{T\sim\ell,o}\left(\overline{a},\overline{b}\right)\right)}
+\]
+
+\[
+\frac{
+  \mathbf{length}\,\Delta=\mathbf{length}\,\overline{a}=\mathbf{length}\,\overline{b}
+}{
+  \left(\left(d_{\Delta\rightarrow D\overline{e}}\overline{a}\right)\sim_{\ell,o}^{C}\left(d_{\Delta\rightarrow D\overline{e}}\overline{b}\right)\right)\rightsquigarrow d_{\Delta\rightarrow D\overline{e}}\left(\Delta@^{\mathbf{D}\sim\ell,o}\left(\overline{a},\overline{b}\right)\right)::C}
+\]
+
+\[
+\frac{
+  \mathbf{length}\,\Delta=\mathbf{length}\,\overline{a}=\mathbf{length}\,\overline{b}
+  }{\left(\left(D_{\Delta}\overline{a}\right)\cup^{\star}\left(D_{\Delta}\overline{b}\right)\right)\rightsquigarrow D_{\Delta}\left(\Delta@^{T\cup}\left(\overline{a},\overline{b}\right)\right)}
+\]
+
+\[
+\frac{
+  \mathbf{length}\,\Delta=\mathbf{length}\,\overline{a}=\mathbf{length}\,\overline{b}
+}{
+  \left(\left(d_{\Delta\rightarrow D\overline{e}}\overline{a}\right)\sim_{\ell,o}^{C}\left(d_{\Delta\rightarrow D\overline{e}}\overline{b}\right)\right)\rightsquigarrow d_{\Delta\rightarrow D\overline{e}}\left(\Delta@^{\mathbf{D}\cup}\left(\overline{a},\overline{b}\right)\right)::C}
+\]
+\caption{Data Reductions}
+\label{fig:Data-Reductions}
+\end{figure}
+
+
+\begin{figure}
+\begin{tabular}{llll}
+$\Delta@_{0}^{k\sim\ell,o}\left(\overline{a},\overline{b}\right)$ & = & $\Delta@^{k\sim\ell,o}\left(\overline{a},\overline{b}\right)$ \tabularnewline % & shorthand that begins the recursion\tabularnewline
+$\left(\left(x:A\right)\rightarrow\Delta\right)@_{i}^{k\sim\ell,o}\left(\left(a,\overline{a}\right),\left(b,\overline{b}\right)\right)$ & = & $\left(a\sim_{\ell,o.TCon_{i}}^{A}b\right),\left(\Delta\left[x\coloneqq\left(a\sim_{\ell,o.kCon_{i}}^{A}b\right)\right]\right)@_{i+1}^{\sim\ell,o}\left(\overline{a},\overline{b}\right)$  \tabularnewline % & non-empty list\tabularnewline
+$\left(.\right)@_{i}^{k\sim\ell,o}\left(.,.\right)$ & = & $.$  \tabularnewline % & empty list\tabularnewline
+$\Delta@_{0}^{k\cup}\left(\overline{a},\overline{b}\right)$ & = & $\Delta@^{k\cup}\left(\overline{a},\overline{b}\right)$  \tabularnewline % & shorthand that begins the recursion\tabularnewline
+$\left(\left(x:A\right)\rightarrow\Delta\right)@_{i}^{k\cup}\left(\left(a,\overline{a}\right),\left(b,\overline{b}\right)\right)$ & = & $\left(a\cup^{A}b\right),\left(\Delta\left[x\coloneqq\left(a\cup^{A}b\right)\right]\right)@_{i+1}^{k\cup}\left(\overline{a},\overline{b}\right)$ \tabularnewline %  & non-empty list\tabularnewline
+$\left(.\right)@_{i}^{k\cup}\left(.,.\right)$ & = & $.$ \tabularnewline %  & empty list\tabularnewline
+\end{tabular}
+\caption{Pointwise Applications}
+\label{fig:Pointwise-Applications}
+\end{figure}
+
+
+
+
+
+\subsection{Endpoint Preservation}
+
+
 The system preserves typed endpoints over reductions.
  
 \[
 \frac{a\rightsquigarrow b\quad\varGamma\vdash a\sqsupseteq a':A'}{\varGamma\vdash b\sqsupseteq a':A'}
 \]
  
-For the fragment without data, this can be shown with some modifications to the usual argument for dependently typed \ac{TAS}.
+For the fragment without data, this can be shown with some modifications to argument in \ch{3}.
 And we conjecture that the proof could be extended to support data.
 
-Additionally, For the fragment without data, we can show cast soundness.
-And we conjecture that the proof could be extended to support data.
- 
-If $\varGamma\vdash a\sqsupseteq a':A'$, $\varGamma\ \mathbf{Empty}$ then either $a\ \mathbf{Consistent}$, $a\ \mathbf{Blame}_{\ell,o}$, or $a\rightsquigarrow b$.
-Again preservation can be shown by extending the usual \ac{TAS} preservation argument over the new constructs.
-
-
-%%%%%%%%%%%%%%%%%%%
-
-The $\mathbf{Consistent}$ judgment (\Fref{cast-val}) generalizes being a value, to elements over $\cup$ and $\sim$ that have the same head and consistent typing information.
-
-\begin{figure}
-\[
-\frac{\ }{\star\ \mathbf{Consistent_{\star}}}
-\]
-
-\[
-\frac{\ }{\left(x:A\right)\rightarrow B\ \mathbf{Consistent_{\rightarrow}}}
-\]
-
-\[
-\frac{\ }{\left(\mathsf{fun}\,f\,x\Rightarrow b\right)\ \mathbf{Consistent_{\mathsf{fun}}}}
-\]
-
-\[
-\frac{a\ \mathbf{Consistent_{\mathsf{fun}}}\quad b\ \mathbf{Consistent_{\mathsf{fun}}}\quad c\ \mathbf{Consistent_{\rightarrow}}}{a\sim_{\ell,o}^{c}b\ \mathbf{Consistent_{\mathsf{fun}}}}
-\]
-
-\[
-\frac{a\ \mathbf{Consistent_{\mathsf{fun}}}\quad b\ \mathbf{Consistent_{\mathsf{fun}}}\quad c\ \mathbf{Consistent_{\rightarrow}}}{a\cup^{c}b\ \mathbf{Consistent_{\mathsf{fun}}}}
-\]
-\caption{Cast Language Values}
-\label{fig:cast-val}
-\end{figure}
-
-
-The $a\ \mathbf{Blame}_{\ell,o}$ judgment means a witness of error can be extracted from the term $a$ pointing to the original source location $\ell$ with observation $o$.
-The only important rule is,
-
-\[
-\frac{\mathbf{head}\ a\neq\mathbf{head}\ b\quad}{a\sim_{\ell,o}^{L}b\ \mathbf{Blame}_{\ell,o}}
-\]
-
-Blame can be recursively extracted out of every sub expression.
-For instance, $\left(1\sim_{\ell,app_{1}}^{\Nat{} }0\right)+2\ \mathbf{Blame}_{\ell,app_{1}}$.
-Blame tracks the information needed to create a good error message and is inspired by the many systems that track blame \cite{10.1145/581478.581484,10.1007/978-3-642-00590-9_1,wadler:LIPIcs:2015:5033}.
-
-
-% The cast language supports its own type assignment system (\Fref{cast-tas-rules}).
-% This system ensures that computations will not get stuck without enough information for good runtime error messages.
-% Specifically computations will not get stuck without a source location and a witness of inequality.
-
-% \mlnote{are any of the old examples salvagable?}
-%% walkthrough
-% We deal with higher order functions by distributing function casts around applications.
-% If an application happens to a cast of function type, the argument and body cast is separated and the argument cast is swapped.
-% For instance in
-% \begin{align*}
-% \, & \left(\left(\lambda x\Rightarrow x\&\&x\right)::_{Bool\rightarrow Bool,\ell,.}Nat\rightarrow Nat\right)7\\
-% \rightsquigarrow & \left(\left(\lambda x\Rightarrow x\&\&x\right)\left(7::_{Nat,\ell,.arg}Bool\right)\right)::_{Bool,\ell,.bod[7]}Nat\\
-% \rightsquigarrow & \left(\left(7::_{Nat,\ell,.arg}Bool\right)\&\&\left(7::_{Nat,\ell,.arg}Bool\right)\right)\\
-% & ::_{Bool,\ell,.bod[7]}Nat
-% \end{align*}
-% if evaluation gets stuck on \&\& and we can blame the argument of the cast for equating $Nat$ and $Bool$.
-% This is similar to how blame parity is swapped in higher order contract systems \cite{10.1145/581478.581484} and gradual type systems \cite{10.1007/978-3-642-00590-9_1}.
-% \mlnote{change  \&\&  to and, or change the example to +}
-% The body observation records the argument the function is called with.
-% For instance in the $.bod[7]$ observation.
-% In a dependently typed function the exact argument of use may be important to give a good error.
-% Because casts can be embedded inside of casts, types themselves need to normalize and casts need to simplify.
-% Since our system has one universe of types, type casts only need to simplify themselves when a term of type $\star$ is cast to $\star$.
-% For instance,
-% \begin{align*}
-% \, & \left(\left(\lambda x\Rightarrow x\right)::_{\left(Bool\rightarrow Bool\right)::_{\star,\ell,.arg}\star,\ell,.}Nat\rightarrow Nat\right)7\\
-% \rightsquigarrow & \left(\left(\lambda x\Rightarrow x\right)::_{Bool\rightarrow Bool}Nat\rightarrow Nat\right)7\\
-% \rightsquigarrow & \left(\left(\lambda x\Rightarrow x\right)\left(7::_{Nat,\ell,.arg}Bool\right)\right)::_{Bool,\ell,.bod[7]}Nat\\
-% \rightsquigarrow & \left(\left(7::_{Nat,\ell,.arg}Bool\right)\right)::_{Bool,\ell,.bod[7]}Nat
-% \end{align*}
-
-%% walk through blame
-%% "self evidently correct" like step and val?
-
-%% cast soundness
-The cast language supports a weaker form of type soundness. % \mlnote{ Theorem macro?}
-For any $\vdash a\sqsupseteq a':A'$ , $c'$, $c\rightsquigarrow^{*}c'$, then either $a\ \mathbf{Consistent}$, $a\ \mathbf{Blame}_{\ell,o}$, or $a\rightsquigarrow b$.
-A well cast term (in an empty context) will never get stuck without a location to blame and an observation that witnesses it.
-We will refer to this property as \textbf{cast soundness}. % , and it can be shown with a ``progress and preservation''-like proof. \mlnote{mattias citation}
-% We have formalized these proofs in our Coq development.
- 
-%% Because of the conversion rule and non-termination, type-checking is undecidable.
-%% Since the user will not type-check against this system directly we consider this acceptable.
-%% And as in the surface languages, the cast language is logically unsound.
- 
-Just as there are many different flavors of statically typed equality, there are also many possible choices to enforce runtime equality.
-What is presented here is a minimal scheme to support cast soundness.
-More aggressive checking is possible.
-% However, we suspect that more aggressive checking may be preferable in practice, especially in the presence of data types.
-% That is why in our implementation we check equalities up to call-by-value.
- 
-Unlike static type-checking, these runtime checks have runtime costs.
-Since the language allows nontermination, checks can take forever to resolve.
-We don't expect this to be an issue in practice, since in a more polished implementation we could use the existing blame information to inform the user of slow code.
-Additionally, our implementation avoids casts when it knows that the types are equal.

@@ -1,0 +1,87 @@
+\section{Cast soundness}
+
+Additionally, For the fragment without data, we can show cast soundness.
+And we conjecture that the proof could be extended to support data.
+ 
+If $\varGamma\vdash a\sqsupseteq a':A'$, $\varGamma\ \mathbf{Empty}$ then either $a\ \mathbf{Consistent}$, $a\ \mathbf{Blame}_{\ell,o}$, or $a\rightsquigarrow b$.
+Again preservation can be shown by extending the usual \ac{TAS} preservation argument over the new constructs.
+
+The $\mathbf{Consistent}$ judgment (\Fref{cast-val}) generalizes being a value, to elements over $\cup$ and $\sim$.
+This only matters for functions, since they are treated extentionally (so that data constructors can be treated as functions).
+This relation can be restrited further to be more like a conventional value judgment, for instance inforcing the arguments of a data type are consistent.
+
+\begin{figure}
+\[
+\frac{\ }{\star\ \mathbf{Consistent}}
+\]
+
+\[
+\frac{\ }{\left(x:A\right)\rightarrow B\ \mathbf{Consistent}}
+\]
+
+\[
+\frac{\ }{\left(\mathsf{fun}\,f\,x\Rightarrow b\right)\ \mathbf{Consistent_{\mathsf{fun}}}}
+\]
+
+\[
+\frac{
+  a\ \mathbf{Consistent_{\mathsf{fun}}}\quad b\ \mathbf{Consistent_{\mathsf{fun}}}
+}{
+  a\sim_{\ell,o}^{\left(x:A\right)\rightarrow B}b\ \mathbf{Consistent_{\mathsf{fun}}}}
+\]
+
+\[
+\frac{
+  a\ \mathbf{Consistent_{\mathsf{fun}}}\quad b\ \mathbf{Consistent_{\mathsf{fun}}}
+}{
+  a\cup^{\left(x:A\right)\rightarrow B}b\ \mathbf{Consistent_{\mathsf{fun}}}
+}
+\]
+
+\[
+\frac{
+  \mathbf{length}\,\Delta < \mathbf{length}\,\overline{a}
+}{
+  D_{\Delta}\overline{a}\ \mathbf{Consistent_{\mathsf{fun}}}
+}
+\]
+
+\[
+\frac{
+  \mathbf{length}\,\Delta < \mathbf{length}\,\overline{a}
+}{
+  d_{\Delta\rightarrow D\overline{a}}\ \mathbf{Consistent_{\mathsf{fun}}}
+}
+\]
+
+\[
+\frac{
+  \mathbf{length}\,\Delta = \mathbf{length}\,\overline{a}
+}{
+  D_{\Delta}\overline{a}\ \mathbf{Consistent}
+}
+\]
+
+\[
+\frac{
+  \mathbf{length}\,\Delta = \mathbf{length}\,\overline{a}
+}{
+  d_{\Delta\rightarrow D\overline{a}}\ \mathbf{Consistent}
+}
+\]
+
+\caption{Consistent}
+\label{fig:cast-data-val}
+\end{figure}
+
+
+The $a\ \mathbf{Blame}_{\ell,o}$ judgment means a witness of error can be extracted from the term $a$ pointing to the original source location $\ell$ with observation $o$.
+The only important rule is,
+
+\[
+\frac{\mathbf{head}\ a\neq\mathbf{head}\ b\quad}{a\sim_{\ell,o}^{L}b\ \mathbf{Blame}_{\ell,o}}
+\]
+
+Blame can be recursively extracted out of every sub expression.
+For instance, $\left(\left(1\sim_{\ell,app_{1}}^{\Nat{} }0\right)+2\right)\ \mathbf{Blame}_{\ell,app_{1}}$.
+% In the implementation type errors are preffered.
