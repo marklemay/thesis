@@ -1,17 +1,12 @@
-
 \section{Symbolic Execution}
 
 One of the advantages of type checking is the immediacy of feedback.
-We have outlined here a system that will give warning messages immediately,
-but requires evaluation to give the detailed error messages that are
-most helpful when correcting a program. This is especially important
-if the user wants to use the system as a proof language, and will
-not generally execute their proofs. A symbolic evaluation system recaptures
-some of that quicker feed back, by having a system that passively
-tries to find errors. This ideal workflow appears in table \ref{fig:notes-workflow}.
+We have outlined here a system that will give warning messages immediately, but requires evaluation to give the detailed error messages that are most helpful when correcting a program.
+This is especially important if the user wants to use the system as a proof language, and will not generally execute their proofs.
+A symbolic evaluation system recaptures some of that quicker feed back, by having a system that passively tries to find errors.
+This ideal workflow appears in \Fref{notes-workflow}.
 
-Since this procedure operates over the cast language, we must decide
-what constitutes a reasonable testing environment
+Since this procedure operates over the cast language, we must decide what constitutes a reasonable testing environment
 
 \begin{figure}
 \begin{lstlisting}
@@ -32,28 +27,22 @@ what constitutes a reasonable testing environment
 \label{fig:notes-workflow}
 \end{figure}
 
-A one hole context\todo{cite? other people don't} can be defined
-for the cast languages presented in this thesis $C[-]$ and we can
-say that an error is observable if $\vdash a:A$ and $\vdash C[a]:B$
-and $C[a]\rightsquigarrow_{*}b$ and $\textbf{Blame}\:\ensuremath{\ell}\,o\,b$
-for some $\ensuremath{\ell}\in lables\left(a\right)$ but $\ensuremath{\ell}\notin lables\left(C[-]\right)$.
+A one hole context\todo{cite? other people don't} can be defined for the cast languages presented in this thesis $C[-]$ and we can say that an error is observable if $\vdash a:A$ and $\vdash C[a]:B$ and $C[a]\rightsquigarrow_{*}b$ and $\textbf{Blame}\:\ell \,o\,b$ for some $\ell \in lables\left(a\right)$ but $\ell \notin lables\left(C[-]\right)$.
 
-This process is semi-decidable in general (by enumerating all well
-typed syntax). But testing every term is infeasibly inefficient for
-functions and types. An approximate approach can build partial contexts
-based on fixing observations. These contexts are correct up to some
-constraint. For instance, 
+This process is semi-decidable in general (by enumerating all well typed syntax).
+But testing every term is infeasibly inefficient for functions and types.
+An approximate approach can build partial contexts based on fixing observations.
+These contexts are correct up to some constraint.\todo{??}
+For instance, 
 \begin{itemize}
-\item If we have the ``empty'' type, $\lambda x\Rightarrow\star::_{\ensuremath{\ell}}x\quad:\left(x:\star\right)\rightarrow x$,
-then we can observe an error by applying $x$ of type $x:\star$ to
-the term and observing $x=-\rightarrow-$, which would correspond
-to the context $[\lambda x\Rightarrow\star::_{\ensuremath{\ell}}x]\left(\star\rightarrow\star\right)\rightsquigarrow_{*}\star::_{\star,\ensuremath{\ell}}\left(\star\rightarrow\star\right)$
-and $\textbf{Blame}\:\ensuremath{\ell}\,.\,\star::_{\star,\ensuremath{\ell}}\left(\star\rightarrow\star\right)$
-\item This reasoning can be extended to higher order functions $\lambda f\Rightarrow\star::_{\ensuremath{\ell}}f\star::\star\quad:\left(\star\rightarrow\star\right)\rightarrow\star$,
-then we can observe an error by applying $f$ of type $f:\star\rightarrow\star$
-to the term and $f\star=-\rightarrow-$, which would correspond to
-the context $[\lambda f\Rightarrow\star::_{\ensuremath{\ell}}f\star::\star]\left(\lambda x\Rightarrow\left(\star\rightarrow\star\right)\right)\rightsquigarrow_{*}\star::_{\star,\ensuremath{\ell}}\left(\star\rightarrow\star\right)$
-and $\textbf{Blame}\:\ensuremath{\ell}\,.\,\star::_{\star,\ensuremath{\ell}}\left(\star\rightarrow\star\right)$
+\item
+  If we have a term that claims to inhabit the ``empty'' type, $\lambda x\Rightarrow\star::_{\ell }x\quad:\left(x:\star\right)\rightarrow x$, 
+    then we can observe an error by applying $x$ of type $x:\star$ to the term and observing $x=-\rightarrow-$.
+  This observation  would correspond to the context $[\lambda x\Rightarrow\star::_{\ell }x]\left(\star\rightarrow\star\right)\rightsquigarrow_{*}\star::_{\star,\ell }\left(\star\rightarrow\star\right)$ and $\textbf{Blame}\:\ell \,.\,\star::_{\star,\ell }\left(\star\rightarrow\star\right)$
+\item
+  This reasoning can be extended to higher order functions $\lambda f\Rightarrow\star::_{\ell }f\star::\star\quad:\left(\star\rightarrow\star\right)\rightarrow\star$, 
+    then we can observe an error by applying $f$ of type $f:\star\rightarrow\star$ to the term and $f\star=-\rightarrow-$.
+  Which would correspond to the context $[\lambda f\Rightarrow\star::_{\ell }f\star::\star]\left(\lambda x\Rightarrow\left(\star\rightarrow\star\right)\right)\rightsquigarrow_{*}\star::_{\star,\ell }\left(\star\rightarrow\star\right)$ and $\textbf{Blame}\:\ell \,.\,\star::_{\star,\ell }\left(\star\rightarrow\star\right)$
 \item Observing a higher order input directly, $\lambda\,f\Rightarrow f\left(!!\right)\quad:\left(\star\rightarrow\star\right)\rightarrow\star$,
 and can observe an error by inspecting its input, which would correspond
 to the context $[\lambda\,f\Rightarrow f\left(!!\right)]\left(\lambda x\Rightarrow x\right)\rightsquigarrow_{*}!!$

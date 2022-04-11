@@ -1,20 +1,15 @@
 
 \section{Runtime Poof Search}
 
-Just as ``obvious'' equalities are missing from the definitional
-relation, ``obvious'' proofs and programs are not always conveniently
-available to the programmer. For instance, in Agda it is possible
-to write a sorting function quickly using simple types. With effort
-is it possible to prove that sorting procedure correct by rewriting
-it with the necessarily dependently typed invariants. However, very
-little is offered in between. The problem is magnified if module boundaries
-hide the implementation details of a function, since those details
-are exactly what is needed to make a proof! This is especially important
-for larger scale software where a library may require proof terms
-that while true are not provable from the exports of other libraries.
+Just as ``obvious'' equalities are missing from the definitional relation, ``obvious'' proofs and programs are not always conveniently available to the programmer.
+For instance, in Agda it is possible to write a sorting function quickly using simple types.
+With effort is it possible to prove that sorting procedure correct by rewriting it with the necessarily dependently typed invariants.
+However, very little is offered in between.
+The problem is magnified if module boundaries hide the implementation details of a function, since those details are exactly what is needed to make a proof!
+This is especially important for larger scale software where a library may require proof terms that while true are not provable from the exports of other libraries.
 
-The solution proposed here is additional syntax that will search for
-a term of the type when resolved at runtime. Given the sorting function 
+The solution proposed here is additional syntax that will search for a term of the type when resolved at runtime.
+Given the sorting function 
 
 \[
 \mathtt{sort}:\mathtt{List}\,\mathbb{N}\rightarrow\mathtt{List}\,\mathbb{N}
@@ -26,19 +21,16 @@ and given the first order predicate that
 \mathtt{IsSorted}:\mathtt{List}\,\mathbb{N}\rightarrow*
 \]
 
-then it is possible to assert that $\mathtt{sort}$ behaves as expected
-with
+then it is possible to assert that $\mathtt{sort}$ behaves as expected with
 
 \[
 \lambda x.?:\left(x:\mathtt{List}\,\mathbb{N}\right)\rightarrow\mathtt{IsSorted}\left(\mathtt{sort}x\right)
 \]
 
-This term will act like any other function at runtime, given a $\mathtt{List}$
-input the function will verify that the $\mathtt{sort}$ correctly
-handled that input, or the term will give an error, or non-terminate.
+This term will act like any other function at runtime, given a $\mathtt{List}$ input the function will verify that the $\mathtt{sort}$ correctly handled that input, or the term will give an error, or non-terminate.
 
-Additionally, this would allow simple prototyping form first order
-specification. For instance,
+Additionally, this would allow prototyping form first order specification.
+For instance,
 
 \begin{align*}
 data\ \mathtt{Mult} & :\mathbb{N}\rightarrow\mathbb{N}\rightarrow\mathbb{N}\rightarrow*\ where\\
@@ -52,24 +44,21 @@ can be used to prototype
 \mathtt{div}=\lambda z.\lambda x.\mathtt{fst}\left(?:\sum y:\mathbb{N}.\mathtt{Mult}x\,y\,z\right)
 \]
 
-The symbolic execution described above can precompute many of these
-solutions in advance. In some cases it is possible to find and report
-a contradiction. 
+% The symbolic execution described above can precompute many of these solutions in advance.
+Symbolic execution could precompute many of these solutions in advance.
+In some cases it is possible to find and report a contradiction. 
 
-Experiments along these lines have been limited to ground data types,
-and a an arbitrary solution is fixed for every type. Ground data types
-do not need to to worry about the path equalities since all the constructors
-will be concrete.
+Experiments along these lines have been limited to ground data types, and fix an arbitrary solution for every type problem.
+Ground data types do not need to to worry about the path equalities since all the constructors will be concrete.
 
-Non ground data can be very hard to work with when functions or function
-types are considered. For instance,
+Non ground data can be very hard to work with when functions or function types are considered. For instance,
 
 \[
 ?:\sum f:\mathbb{N}\rightarrow\mathbb{N}.\mathtt{Id}\left(f,\lambda x.x+1\right)\&\mathtt{Id}\left(f,\lambda x.1+x\right)
 \]
 
-It is tempting to make the $?$ operator sensitive to more then just
-the type. For instance,
+It is tempting to make the $?$ operator sensitive to more then just the type.
+For instance,
 
 \begin{lstlisting}
 n : Nat;
@@ -79,11 +68,10 @@ pr : Id Nat n 1;
 pr = refl Nat 1;
 \end{lstlisting}
 
-will likely give the waning error ``n =?= 1 in Id Nat \uline{n}
-1''. It will then likely give the runtime error ``0=!=1''. Since
-the only information to solve ? is the type $\mathtt{Nat}$ and an
-arbitrary term of type $\mathtt{Nat}$ will be 0. Most users would
-expect $n$ to be solved for $1$.
+Will likely give the waning error ``n =?= 1 in Id Nat \uline{n} 1''.
+It will then likely give the runtime error ``0=!=1''.
+Since the only information to solve ? is the type $\mathtt{Nat}$ and an arbitrary term of type $\mathtt{Nat}$ will be 0.
+Most users would expect $n$ to be solved for $1$.
 
 However constraints assigned in this manner can be extremely non-local.
 For instance,
@@ -103,8 +91,8 @@ pr2 : Id Nat n 2;
 pr2 = refl Nat 2;
 \end{lstlisting}
 
-And thing become even more complicated when solving is interleaved
-with computation. For instance,
+And thing become even more complicated when solving is interleaved with computation.
+For instance,
 
 \begin{lstlisting}
 n : Nat;
@@ -117,19 +105,13 @@ prf x = (\ _ => x) (refl Nat x : Id Nat n x);
 
 \subsection{Prior Work}
 
-Proof search is often used for static term generation in dependently
-typed languages (for instance Coq tactics). A first order theorem
-prover is attached to Agda in \cite{norell2007towards}. However it
-is rare to make those features available at runtime. 
+Proof search is often used for static term generation in dependently typed languages (for instance Coq tactics).
+A first order theorem prover is attached to Agda in \cite{norell2007towards}.
+However it is rare to make those features available at runtime. 
 
-Logic programing languages such as Prolog\footnote{https://www.swi-prolog.org/},
-Datalog\footnote{https://docs.racket-lang.org/datalog/}, and miniKanren\footnote{http://minikanren.org/}
-use ``proof search'' as their primary method of computation. Dependent
-data types can be seen as a kind of logical programming predicate\todo{cite the Curry lang}.
-The Twelf project\footnote{http://twelf.org/wiki/Main\_Page} makes
-use of runtime proof search and has some support for dependent types,
-but the underling theory cannot be considered full-spectrum. The only
-full spectrum systems that purports to handle solving in this way
-are the gradual dependent type work\cite{DBLP:journals/corr/abs-1906-06469},
-though it is unclear how that work handles the non locality of constraints
-given their local $?$ operator.
+Logic programing languages such as Prolog\footnote{https://www.swi-prolog.org/}, Datalog\footnote{https://docs.racket-lang.org/datalog/}, and miniKanren\footnote{http://minikanren.org/} use ``proof search'' as their primary method of computation.
+Dependent data types can be seen as a kind of logical programming predicate\todo{cite the Curry lang, bird lang?}.
+The Twelf project\footnote{http://twelf.org/wiki/Main\_Page} makes use of runtime proof search and has some support for dependent types, but the underling theory cannot be considered full-spectrum.
+The only full spectrum systems that purports to handle solving in this way are the gradual dependent type work\cite{DBLP:journals/corr/abs-1906-06469}.
+\cite{bertrand:hal-02896776} has a good explanation of why extending graduality to dependent indexed types is dificult.
+% though it is unclear how that work handles the non locality of constraints given their local $?$ operator.
