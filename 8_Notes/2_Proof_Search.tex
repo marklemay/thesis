@@ -1,4 +1,3 @@
-
 \section{Runtime Poof Search}
 
 Just as ``obvious'' equalities are missing from the definitional relation, ``obvious'' proofs and programs are not always conveniently available to the programmer.
@@ -49,7 +48,7 @@ Symbolic execution could precompute many of these solutions in advance.
 In some cases it is possible to find and report a contradiction. 
 
 Experiments along these lines have been limited to ground data types, and fix an arbitrary solution for every type problem.
-Ground data types do not need to to worry about the path equalities since all the constructors will be concrete.
+Ground data types do not need to worry about the path equalities since all the constructors will be concrete.
 
 Non ground data can be very hard to work with when functions or function types are considered. For instance,
 
@@ -57,7 +56,7 @@ Non ground data can be very hard to work with when functions or function types a
 ?:\sum f:\mathbb{N}\rightarrow\mathbb{N}.\mathtt{Id}\left(f,\lambda x.x+1\right)\&\mathtt{Id}\left(f,\lambda x.1+x\right)
 \]
 
-It is tempting to make the $?$ operator sensitive to more then just the type.
+It is tempting to make the $?$ operator sensitive to more than just the type.
 For instance,
 
 \begin{lstlisting}
@@ -68,9 +67,9 @@ pr : Id Nat n 1;
 pr = refl Nat 1;
 \end{lstlisting}
 
-Will likely give the waning error ``n =?= 1 in Id Nat \uline{n} 1''.
+Will likely give the warning error ``n =?= 1 in Id Nat \uline{n} 1''.
 It will then likely give the runtime error ``0=!=1''.
-Since the only information to solve ? is the type $\mathtt{Nat}$ and an arbitrary term of type $\mathtt{Nat}$ will be 0.
+Since the only information to solve $\mathtt{?}$ is the type $\mathtt{Nat}$ and an arbitrary term of type $\mathtt{Nat}$ will be 0.
 Most users would expect $n$ to be solved for $1$.
 
 However constraints assigned in this manner can be extremely non-local.
@@ -91,7 +90,7 @@ pr2 : Id Nat n 2;
 pr2 = refl Nat 2;
 \end{lstlisting}
 
-And thing become even more complicated when solving is interleaved with computation.
+And things become even more complicated when solving is interleaved with computation.
 For instance,
 
 \begin{lstlisting}
@@ -111,7 +110,7 @@ However it is rare to make those features available at runtime.
 
 Logic programing languages such as Prolog\footnote{https://www.swi-prolog.org/}, Datalog\footnote{https://docs.racket-lang.org/datalog/}, and miniKanren\footnote{http://minikanren.org/} use ``proof search'' as their primary method of computation.
 Dependent data types can be seen as a kind of logical programming predicate\todo{cite the Curry lang, bird lang?}.
-The Twelf project\footnote{http://twelf.org/wiki/Main\_Page} makes use of runtime proof search and has some support for dependent types, but the underling theory cannot be considered full-spectrum.
+The Twelf project\footnote{http://twelf.org/wiki/Main\_Page} makes use of runtime proof search and has some support for dependent types, but the underlying theory cannot be considered full-spectrum.
 The only full spectrum systems that purports to handle solving in this way are the gradual dependent type work\cite{DBLP:journals/corr/abs-1906-06469}.
-\cite{bertrand:hal-02896776} has a good explanation of why extending graduality to dependent indexed types is dificult.
+\cite{bertrand:hal-02896776} has a good explanation of why extending graduality to dependent indexed types is difficult.
 % though it is unclear how that work handles the non locality of constraints given their local $?$ operator.
