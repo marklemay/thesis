@@ -1,0 +1,195 @@
+
+\section{Symbolic Execution}
+
+One of the advantages of type checking is the immediacy of feedback.
+We have outlined here a system that will give warning messages immediately,
+but requires evaluation to give the detailed error messages that are
+most helpful when correcting a program. This is especially important
+if the user wants to use the system as a proof language, and will
+not generally execute their proofs. A symbolic evaluation system recaptures
+some of that quicker feed back, by having a system that passively
+tries to find errors. This ideal workflow appears in table \ref{fig:notes-workflow}.
+
+Since this procedure operates over the cast language, we must decide
+what constitutes a reasonable testing environment
+
+\begin{figure}
+\begin{lstlisting}
+            edit program
+             |      
+             |      
+             v
+ testing  <- Elaboration                    ^
+    | ^      |              |               | runtime error
+     -       | no warnings  | type warnings |
+             v              v               |
+                run program   ---------------
+\end{lstlisting}
+
+\todo[inline]{better graphics}
+
+\caption{Ideal Workflow}
+\label{fig:notes-workflow}
+\end{figure}
+
+A one hole context\todo{cite? other people don't} can be defined
+for the cast languages presented in this thesis $C[-]$ and we can
+say that an error is observable if $\vdash a:A$ and $\vdash C[a]:B$
+and $C[a]\rightsquigarrow_{*}b$ and $\textbf{Blame}\:\ensuremath{\ell}\,o\,b$
+for some $\ensuremath{\ell}\in lables\left(a\right)$ but $\ensuremath{\ell}\notin lables\left(C[-]\right)$.
+
+This process is semi-decidable in general (by enumerating all well
+typed syntax). But testing every term is infeasibly inefficient for
+functions and types. An approximate approach can build partial contexts
+based on fixing observations. These contexts are correct up to some
+constraint. For instance, 
+\begin{itemize}
+\item If we have the ``empty'' type, $\lambda x\Rightarrow\star::_{\ensuremath{\ell}}x\quad:\left(x:\star\right)\rightarrow x$,
+then we can observe an error by applying $x$ of type $x:\star$ to
+the term and observing $x=-\rightarrow-$, which would correspond
+to the context $[\lambda x\Rightarrow\star::_{\ensuremath{\ell}}x]\left(\star\rightarrow\star\right)\rightsquigarrow_{*}\star::_{\star,\ensuremath{\ell}}\left(\star\rightarrow\star\right)$
+and $\textbf{Blame}\:\ensuremath{\ell}\,.\,\star::_{\star,\ensuremath{\ell}}\left(\star\rightarrow\star\right)$
+\item This reasoning can be extended to higher order functions $\lambda f\Rightarrow\star::_{\ensuremath{\ell}}f\star::\star\quad:\left(\star\rightarrow\star\right)\rightarrow\star$,
+then we can observe an error by applying $f$ of type $f:\star\rightarrow\star$
+to the term and $f\star=-\rightarrow-$, which would correspond to
+the context $[\lambda f\Rightarrow\star::_{\ensuremath{\ell}}f\star::\star]\left(\lambda x\Rightarrow\left(\star\rightarrow\star\right)\right)\rightsquigarrow_{*}\star::_{\star,\ensuremath{\ell}}\left(\star\rightarrow\star\right)$
+and $\textbf{Blame}\:\ensuremath{\ell}\,.\,\star::_{\star,\ensuremath{\ell}}\left(\star\rightarrow\star\right)$
+\item Observing a higher order input directly, $\lambda\,f\Rightarrow f\left(!!\right)\quad:\left(\star\rightarrow\star\right)\rightarrow\star$,
+and can observe an error by inspecting its input, which would correspond
+to the context $[\lambda\,f\Rightarrow f\left(!!\right)]\left(\lambda x\Rightarrow x\right)\rightsquigarrow_{*}!!$
+which is blamable. Where $!!$ will stand inform any blamable term
+(here $!!=\star::\left(\star\rightarrow\star\right)::\star$) 
+\item Similarly with dependent types, $!!\rightarrow\star\quad:\star$,
+can observe an error by inspecting its input, which would correspond
+to the context $\left(\left(\lambda x\Rightarrow x::\star\right)::[!!\rightarrow\star]::\left(\star\rightarrow\star\right)\right)\star\rightsquigarrow_{*}\star::[!!]::\star$
+which is blamable.
+\item Similarly we will allow extraction from the dependent body of a function
+type $\left(b:\mathbb{B}_{c}\right)\rightarrow b\,\star\,!!\,\star\quad:\star$,
+by symbolically applying $b$ where $b:\mathbb{B}_{c},b\,\star=y$
+leaving $y\,!!\,\star$ which can observe blame via $y$'s first argument. 
+\item data can be observed incrementally, and observed paths along data
+will confirm that the data conductors are consistent.
+\end{itemize}
+The procedure insists that the following constraints hold, 
+\begin{itemize}
+\item variables and assignments are type correct
+\item observable different outputs must come from observably different inputs
+(in the case of dependent function types, the argument should be considered
+as an input)
+\item observations do not over-specify behavior. For instance, $f:\mathtt{Nat}\rightarrow\mathtt{Nat},f2=x,f3=x$
+would not be allowed since $f2=f3$ and is over specified.
+\end{itemize}
+This seems to be good because the procedure,
+\begin{itemize}
+\item can guide toward the labels of interest, for instance we can move
+to labels that have not yet observed a concrete error. Terms without
+labels can be skipped entirely.
+\item can choose assignments strategically avoiding or activating blame
+as desired
+\item Since examples are built up partially the partial contexts can avoid
+introducing their own blame by construction
+\item handle higher order functions, recursions, and self reference gracefully.
+For instance, $f:Nat\rightarrow Nat$, $f\left(f\,0\right)=1$ and
+$f\left(3\right)=3$ if there is an assignment that implies $f\,0\neq3$
+\end{itemize}
+However the procedure is unsound, it will flag errors that are not
+possible to realize in a context,
+\begin{itemize}
+\item Since there is no way for a terms within the cast language to ``observe''
+a distinction between the type formers plausible environments cannot
+always be realized back to a term that would witness the bad behavior.
+For instance, the environment $F:\star\rightarrow\star,F\,\star=\star\rightarrow\star,F\,\left(\star\rightarrow\star\right)=\star$
+, which might be needed to explore the term with casts like $\lambda F\Rightarrow...::\star::F\left(\star\rightarrow\star\right)......::\left(\star\rightarrow\star\right)::F\,\star\ :\left(\star\rightarrow\star\right)\rightarrow...$,
+cannot be realized as a closed term. In this way the environment is
+stronger then the cast language. The environment reflects a term language
+that has a type case construct\todo{cite}. 
+\end{itemize}
+\todo[inline]{add non termination as a source of unrealizability}
+\begin{itemize}
+\item Additionally, working symbolically can move past evaluations that
+would block blame in a context. For instance that procedure outlined
+above would allow $!!$ to be reached in $\left(\lambda xf\Rightarrow f(!!)\right)loop\quad:\star\rightarrow\star$
+even though there is no context that would allow this to cause blame.
+\end{itemize}
+\todo[inline]{ins't as crisp an example as I would like}
+\begin{itemize}
+\item Subtly a version of parallel-or can be generated via assignment even
+though such a term is unconstructable in the language, $por:\mathbb{B}\rightarrow\mathbb{B}\rightarrow\mathbb{B},por\ loop\ tt=tt,por\ tt\ loop=tt,por\ ff\ ff=ff$.
+Here all assignments are well typed, and each output can be differentiated
+by a different input. \todo{G. Plotkin, LCF considered as a programming language, Theoretical
+Computer Science 5 (1977) 223\{255. as cited in https://alleystoughton.us/research/por.pdf} 
+\end{itemize}
+
+\subsection{Related and Future Work}
+
+While formalizing a complete and efficient testing procedure along
+these lines is still future work. There are likely insights to be
+gained from the large body of research on symbolic execution, especially
+work that deals with typed higher order functions. A fully formal
+account would deal with a formal semantics of the cast language. 
+
+\subsubsection{Testing}
+
+Many of the testing strategies for typed functional programming trace
+their heritage to \textbf{property based} testing in QuickCheck \cite{quickcheck}.
+Property based testing involves writing functions that encode the
+properties of interest, and then randomly testing those functions.
+\begin{itemize}
+\item QuickChick \footnote{https://github.com/QuickChick/QuickChick} \cite{denes2014quickchick}\cite{lampropoulos2017generating,lampropoulos2017beginner,lampropoulos2018random}
+uses type-level predicates to construct generators with soundness
+and completeness properties, but without support for higher order
+functions. However, testing requires building types classes that establish
+the properties needed by the testing framework such as decidable equality.
+This is presumably out of reach of novice Coq users.
+\begin{itemize}
+\item Current work in this area uses coverage guided techniques in \cite{lampropoulos2019coverage}
+like those in symbolic execution. More recently Benjamin Pierce has
+used Afl on compiled Coq code as a way to generate counter examples\footnote{https://www.youtube.com/watch?v=dfZ94N0hS4I}\todo{review this, maybe there's a paper or draft now?}.
+\end{itemize}
+\item \cite{dybjer2003combining} added QuickCheck style testing to Agda
+1.
+\end{itemize}
+
+\subsubsection{Symbolic Execution}
+
+Symbolic evaluation is a technique to efficiently extract errors from
+programs. Usually this happens in the context of an imperative language
+with the assistance of an SMT solver. Symbolic evaluation can be supplemented
+with other techniques and a rich literature exists on the topic. 
+
+The situation described in this chapter is unusual from the perspective
+of symbolic execution:
+\begin{itemize}
+\item the number of blamable source positions is limited by the location
+tags. Thus the search is error guided, rather then coverage guided.
+\item The language is dependently typed. Often the language under test is
+untyped.
+\item The language needs higher order execution. often the research in this
+area focuses on base types that are efficiently handleable with an
+SMT solver such as integer aritmetic.
+\end{itemize}
+This limits the prior work to relatively few papers
+\begin{itemize}
+\item A Symbolic execution engine for Haskell is presented in \cite{10.1145/3314221.3314618},
+but at the time of publication it did not support higher order functions.
+\item A system for handling higher order functions is presented in \cite{nguyen2017higher},
+however the system is designed for Racket and is untyped. Additionally
+it seems that there might be a state space explosion in the presence
+of higher order functions.
+\item \cite{10.1007/978-3-030-72019-3_23} extended and corrected some issues
+with \cite{nguyen2017higher}, but still works in a untyped environment.
+The authors note that there is still a lot of room to improve performance.
+\item Closest to the goal here, \cite{lin_et_al:LIPIcs:2020:12349} uses
+game semantics to build a symbolic execution engine for a subset of
+ML with some nice theoretical properties.
+\item An version of the above procedure was experimented with in the extended
+abstract \todo{cite}, however conjectures made in that preliminary
+work were false (the procedure was unsound). The underlying languages
+has improved substantially since that work.
+\end{itemize}
+The subtle unsoundness hints that the approach presented here could
+be revised in terms of games semantics (perhaps along lines like \cite{lin_et_al:LIPIcs:2020:12349}).
+Though game semantics for dependent types is a complicated subject
+in and of itself \todo{cite}. Additionally it seems helpful to allow
+programmers to program their own solvers that could greatly increase
+the search speed.

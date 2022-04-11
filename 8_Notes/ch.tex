@@ -4,335 +4,9 @@
 
 \todo[inline]{Introduce this section}
 
-\section{Symbolic Execution}
 
-One of the advantages of type checking is the immediacy of feedback.
-We have outlined here a system that will give warning messages immediately,
-but requires evaluation to give the detailed error messages that are
-most helpful when correcting a program. This is especially important
-if the user wants to use the system as a proof language, and will
-not generally execute their proofs. A symbolic evaluation system recaptures
-some of that quicker feed back, by having a system that passively
-tries to find errors. This ideal workflow appears in table \ref{fig:notes-workflow}.
-
-Since this procedure operates over the cast language, we must decide
-what constitutes a reasonable testing environment
-
-\begin{figure}
-\begin{lstlisting}
-            edit program
-             |      
-             |      
-             v
- testing  <- Elaboration                    ^
-    | ^      |              |               | runtime error
-     -       | no warnings  | type warnings |
-             v              v               |
-                run program   ---------------
-\end{lstlisting}
-
-\todo[inline]{better graphics}
-
-\caption{Ideal Workflow}
-\label{fig:notes-workflow}
-\end{figure}
-
-A one hole context\todo{cite? other people don't} can be defined
-for the cast languages presented in this thesis $C[-]$ and we can
-say that an error is observable if $\vdash a:A$ and $\vdash C[a]:B$
-and $C[a]\rightsquigarrow_{*}b$ and $\textbf{Blame}\:\ensuremath{\ell}\,o\,b$
-for some $\ensuremath{\ell}\in lables\left(a\right)$ but $\ensuremath{\ell}\notin lables\left(C[-]\right)$.
-
-This process is semi-decidable in general (by enumerating all well
-typed syntax). But testing every term is infeasibly inefficient for
-functions and types. An approximate approach can build partial contexts
-based on fixing observations. These contexts are correct up to some
-constraint. For instance, 
-\begin{itemize}
-\item If we have the ``empty'' type, $\lambda x\Rightarrow\star::_{\ensuremath{\ell}}x\quad:\left(x:\star\right)\rightarrow x$,
-then we can observe an error by applying $x$ of type $x:\star$ to
-the term and observing $x=-\rightarrow-$, which would correspond
-to the context $[\lambda x\Rightarrow\star::_{\ensuremath{\ell}}x]\left(\star\rightarrow\star\right)\rightsquigarrow_{*}\star::_{\star,\ensuremath{\ell}}\left(\star\rightarrow\star\right)$
-and $\textbf{Blame}\:\ensuremath{\ell}\,.\,\star::_{\star,\ensuremath{\ell}}\left(\star\rightarrow\star\right)$
-\item This reasoning can be extended to higher order functions $\lambda f\Rightarrow\star::_{\ensuremath{\ell}}f\star::\star\quad:\left(\star\rightarrow\star\right)\rightarrow\star$,
-then we can observe an error by applying $f$ of type $f:\star\rightarrow\star$
-to the term and $f\star=-\rightarrow-$, which would correspond to
-the context $[\lambda f\Rightarrow\star::_{\ensuremath{\ell}}f\star::\star]\left(\lambda x\Rightarrow\left(\star\rightarrow\star\right)\right)\rightsquigarrow_{*}\star::_{\star,\ensuremath{\ell}}\left(\star\rightarrow\star\right)$
-and $\textbf{Blame}\:\ensuremath{\ell}\,.\,\star::_{\star,\ensuremath{\ell}}\left(\star\rightarrow\star\right)$
-\item Observing a higher order input directly, $\lambda\,f\Rightarrow f\left(!!\right)\quad:\left(\star\rightarrow\star\right)\rightarrow\star$,
-and can observe an error by inspecting its input, which would correspond
-to the context $[\lambda\,f\Rightarrow f\left(!!\right)]\left(\lambda x\Rightarrow x\right)\rightsquigarrow_{*}!!$
-which is blamable. Where $!!$ will stand inform any blamable term
-(here $!!=\star::\left(\star\rightarrow\star\right)::\star$) 
-\item Similarly with dependent types, $!!\rightarrow\star\quad:\star$,
-can observe an error by inspecting its input, which would correspond
-to the context $\left(\left(\lambda x\Rightarrow x::\star\right)::[!!\rightarrow\star]::\left(\star\rightarrow\star\right)\right)\star\rightsquigarrow_{*}\star::[!!]::\star$
-which is blamable.
-\item Similarly we will allow extraction from the dependent body of a function
-type $\left(b:\mathbb{B}_{c}\right)\rightarrow b\,\star\,!!\,\star\quad:\star$,
-by symbolically applying $b$ where $b:\mathbb{B}_{c},b\,\star=y$
-leaving $y\,!!\,\star$ which can observe blame via $y$'s first argument. 
-\item data can be observed incrementally, and observed paths along data
-will confirm that the data conductors are consistent.
-\end{itemize}
-The procedure insists that the following constraints hold, 
-\begin{itemize}
-\item variables and assignments are type correct
-\item observable different outputs must come from observably different inputs
-(in the case of dependent function types, the argument should be considered
-as an input)
-\item observations do not over-specify behavior. For instance, $f:\mathtt{Nat}\rightarrow\mathtt{Nat},f2=x,f3=x$
-would not be allowed since $f2=f3$ and is over specified.
-\end{itemize}
-This seems to be good because the procedure,
-\begin{itemize}
-\item can guide toward the labels of interest, for instance we can move
-to labels that have not yet observed a concrete error. Terms without
-labels can be skipped entirely.
-\item can choose assignments strategically avoiding or activating blame
-as desired
-\item Since examples are built up partially the partial contexts can avoid
-introducing their own blame by construction
-\item handle higher order functions, recursions, and self reference gracefully.
-For instance, $f:Nat\rightarrow Nat$, $f\left(f\,0\right)=1$ and
-$f\left(3\right)=3$ if there is an assignment that implies $f\,0\neq3$
-\end{itemize}
-However the procedure is unsound, it will flag errors that are not
-possible to realize in a context,
-\begin{itemize}
-\item Since there is no way for a terms within the cast language to ``observe''
-a distinction between the type formers plausible environments cannot
-always be realized back to a term that would witness the bad behavior.
-For instance, the environment $F:\star\rightarrow\star,F\,\star=\star\rightarrow\star,F\,\left(\star\rightarrow\star\right)=\star$
-, which might be needed to explore the term with casts like $\lambda F\Rightarrow...::\star::F\left(\star\rightarrow\star\right)......::\left(\star\rightarrow\star\right)::F\,\star\ :\left(\star\rightarrow\star\right)\rightarrow...$,
-cannot be realized as a closed term. In this way the environment is
-stronger then the cast language. The environment reflects a term language
-that has a type case construct\todo{cite}. 
-\end{itemize}
-\todo[inline]{add non termination as a source of unrealizability}
-\begin{itemize}
-\item Additionally, working symbolically can move past evaluations that
-would block blame in a context. For instance that procedure outlined
-above would allow $!!$ to be reached in $\left(\lambda xf\Rightarrow f(!!)\right)loop\quad:\star\rightarrow\star$
-even though there is no context that would allow this to cause blame.
-\end{itemize}
-\todo[inline]{ins't as crisp an example as I would like}
-\begin{itemize}
-\item Subtly a version of parallel-or can be generated via assignment even
-though such a term is unconstructable in the language, $por:\mathbb{B}\rightarrow\mathbb{B}\rightarrow\mathbb{B},por\ loop\ tt=tt,por\ tt\ loop=tt,por\ ff\ ff=ff$.
-Here all assignments are well typed, and each output can be differentiated
-by a different input. \todo{G. Plotkin, LCF considered as a programming language, Theoretical
-Computer Science 5 (1977) 223\{255. as cited in https://alleystoughton.us/research/por.pdf} 
-\end{itemize}
-
-\subsection{Related and Future Work}
-
-While formalizing a complete and efficient testing procedure along
-these lines is still future work. There are likely insights to be
-gained from the large body of research on symbolic execution, especially
-work that deals with typed higher order functions. A fully formal
-account would deal with a formal semantics of the cast language. 
-
-\subsubsection{Testing}
-
-Many of the testing strategies for typed functional programming trace
-their heritage to \textbf{property based} testing in QuickCheck \cite{quickcheck}.
-Property based testing involves writing functions that encode the
-properties of interest, and then randomly testing those functions.
-\begin{itemize}
-\item QuickChick \footnote{https://github.com/QuickChick/QuickChick} \cite{denes2014quickchick}\cite{lampropoulos2017generating,lampropoulos2017beginner,lampropoulos2018random}
-uses type-level predicates to construct generators with soundness
-and completeness properties, but without support for higher order
-functions. However, testing requires building types classes that establish
-the properties needed by the testing framework such as decidable equality.
-This is presumably out of reach of novice Coq users.
-\begin{itemize}
-\item Current work in this area uses coverage guided techniques in \cite{lampropoulos2019coverage}
-like those in symbolic execution. More recently Benjamin Pierce has
-used Afl on compiled Coq code as a way to generate counter examples\footnote{https://www.youtube.com/watch?v=dfZ94N0hS4I}\todo{review this, maybe there's a paper or draft now?}.
-\end{itemize}
-\item \cite{dybjer2003combining} added QuickCheck style testing to Agda
-1.
-\end{itemize}
-
-\subsubsection{Symbolic Execution}
-
-Symbolic evaluation is a technique to efficiently extract errors from
-programs. Usually this happens in the context of an imperative language
-with the assistance of an SMT solver. Symbolic evaluation can be supplemented
-with other techniques and a rich literature exists on the topic. 
-
-The situation described in this chapter is unusual from the perspective
-of symbolic execution:
-\begin{itemize}
-\item the number of blamable source positions is limited by the location
-tags. Thus the search is error guided, rather then coverage guided.
-\item The language is dependently typed. Often the language under test is
-untyped.
-\item The language needs higher order execution. often the research in this
-area focuses on base types that are efficiently handleable with an
-SMT solver such as integer aritmetic.
-\end{itemize}
-This limits the prior work to relatively few papers
-\begin{itemize}
-\item A Symbolic execution engine for Haskell is presented in \cite{10.1145/3314221.3314618},
-but at the time of publication it did not support higher order functions.
-\item A system for handling higher order functions is presented in \cite{nguyen2017higher},
-however the system is designed for Racket and is untyped. Additionally
-it seems that there might be a state space explosion in the presence
-of higher order functions.
-\item \cite{10.1007/978-3-030-72019-3_23} extended and corrected some issues
-with \cite{nguyen2017higher}, but still works in a untyped environment.
-The authors note that there is still a lot of room to improve performance.
-\item Closest to the goal here, \cite{lin_et_al:LIPIcs:2020:12349} uses
-game semantics to build a symbolic execution engine for a subset of
-ML with some nice theoretical properties.
-\item An version of the above procedure was experimented with in the extended
-abstract \todo{cite}, however conjectures made in that preliminary
-work were false (the procedure was unsound). The underlying languages
-has improved substantially since that work.
-\end{itemize}
-The subtle unsoundness hints that the approach presented here could
-be revised in terms of games semantics (perhaps along lines like \cite{lin_et_al:LIPIcs:2020:12349}).
-Though game semantics for dependent types is a complicated subject
-in and of itself \todo{cite}. Additionally it seems helpful to allow
-programmers to program their own solvers that could greatly increase
-the search speed.
-
-\section{Runtime Poof Search}
-
-Just as ``obvious'' equalities are missing from the definitional
-relation, ``obvious'' proofs and programs are not always conveniently
-available to the programmer. For instance, in Agda it is possible
-to write a sorting function quickly using simple types. With effort
-is it possible to prove that sorting procedure correct by rewriting
-it with the necessarily dependently typed invariants. However, very
-little is offered in between. The problem is magnified if module boundaries
-hide the implementation details of a function, since those details
-are exactly what is needed to make a proof! This is especially important
-for larger scale software where a library may require proof terms
-that while true are not provable from the exports of other libraries.
-
-The solution proposed here is additional syntax that will search for
-a term of the type when resolved at runtime. Given the sorting function 
-
-\[
-\mathtt{sort}:\mathtt{List}\,\mathbb{N}\rightarrow\mathtt{List}\,\mathbb{N}
-\]
-
-and given the first order predicate that 
-
-\[
-\mathtt{IsSorted}:\mathtt{List}\,\mathbb{N}\rightarrow*
-\]
-
-then it is possible to assert that $\mathtt{sort}$ behaves as expected
-with
-
-\[
-\lambda x.?:\left(x:\mathtt{List}\,\mathbb{N}\right)\rightarrow\mathtt{IsSorted}\left(\mathtt{sort}x\right)
-\]
-
-This term will act like any other function at runtime, given a $\mathtt{List}$
-input the function will verify that the $\mathtt{sort}$ correctly
-handled that input, or the term will give an error, or non-terminate.
-
-Additionally, this would allow simple prototyping form first order
-specification. For instance,
-
-\begin{align*}
-data\ \mathtt{Mult} & :\mathbb{N}\rightarrow\mathbb{N}\rightarrow\mathbb{N}\rightarrow*\ where\\
-\mathtt{base} & :\left(x:\mathbb{N}\right)\rightarrow\mathtt{Mult}\ 0\ x\ 0\\
-\mathtt{suc} & :\left(x\,y\,z:\mathbb{N}\right)\rightarrow\mathtt{Mult}\,x\,y\,z\rightarrow\mathtt{Mult}\,\left(1+x\right)\,y\,(y+z)
-\end{align*}
-
-can be used to prototype
-
-\[
-\mathtt{div}=\lambda z.\lambda x.\mathtt{fst}\left(?:\sum y:\mathbb{N}.\mathtt{Mult}x\,y\,z\right)
-\]
-
-The symbolic execution described above can precompute many of these
-solutions in advance. In some cases it is possible to find and report
-a contradiction. 
-
-Experiments along these lines have been limited to ground data types,
-and a an arbitrary solution is fixed for every type. Ground data types
-do not need to to worry about the path equalities since all the constructors
-will be concrete.
-
-Non ground data can be very hard to work with when functions or function
-types are considered. For instance,
-
-\[
-?:\sum f:\mathbb{N}\rightarrow\mathbb{N}.\mathtt{Id}\left(f,\lambda x.x+1\right)\&\mathtt{Id}\left(f,\lambda x.1+x\right)
-\]
-
-It is tempting to make the $?$ operator sensitive to more then just
-the type. For instance,
-
-\begin{lstlisting}
-n : Nat;
-n = ?;
-
-pr : Id Nat n 1;
-pr = refl Nat 1;
-\end{lstlisting}
-
-will likely give the waning error ``n =?= 1 in Id Nat \uline{n}
-1''. It will then likely give the runtime error ``0=!=1''. Since
-the only information to solve ? is the type $\mathtt{Nat}$ and an
-arbitrary term of type $\mathtt{Nat}$ will be 0. Most users would
-expect $n$ to be solved for $1$.
-
-However constraints assigned in this manner can be extremely non-local.
-For instance,
-
-\begin{lstlisting}
-n : Nat;
-n = ?;
-
-...
-
-pr : Id Nat n 1;
-pr = refl Nat 1;
-
-...
-
-pr2 : Id Nat n 2;
-pr2 = refl Nat 2;
-\end{lstlisting}
-
-And thing become even more complicated when solving is interleaved
-with computation. For instance,
-
-\begin{lstlisting}
-n : Nat;
-n = ?;
-
-prf : Nat -> Nat ;
-prf x = (\ _ => x) (refl Nat x : Id Nat n x);
-\end{lstlisting}
-
-
-\subsection{Prior Work}
-
-Proof search is often used for static term generation in dependently
-typed languages (for instance Coq tactics). A first order theorem
-prover is attached to Agda in \cite{norell2007towards}. However it
-is rare to make those features available at runtime. 
-
-Logic programing languages such as Prolog\footnote{https://www.swi-prolog.org/},
-Datalog\footnote{https://docs.racket-lang.org/datalog/}, and miniKanren\footnote{http://minikanren.org/}
-use ``proof search'' as their primary method of computation. Dependent
-data types can be seen as a kind of logical programming predicate\todo{cite the Curry lang}.
-The Twelf project\footnote{http://twelf.org/wiki/Main\_Page} makes
-use of runtime proof search and has some support for dependent types,
-but the underling theory cannot be considered full-spectrum. The only
-full spectrum systems that purports to handle solving in this way
-are the gradual dependent type work\cite{DBLP:journals/corr/abs-1906-06469},
-though it is unclear how that work handles the non locality of constraints
-given their local $?$ operator.
+% \input{8_Notes/1_Sym}
+% \input{8_Notes/2_Proof_Search}
 
 \section{Future work}
 
@@ -340,39 +14,27 @@ given their local $?$ operator.
 
 \subsection{Effects}
 
-The last and biggest hurdle to bring dependent types into a mainstream
-programming language is by providing a reasonable way to handle effects.
-Though dependent types and effects have been studied I am not aware
-of any full spectrum system that has implemented those systems. It
-is not even completely clear how to best to add an effect system into
-Haskell, the closest ``mainstream'' language to the one studied
-here.\todo{cites!!}
+The last and biggest hurdle to bring dependent types into a mainstream programming language is by providing a reasonable way to handle effects.
+Though dependent types and effects have been studied I am not aware of any full spectrum system that has implemented those systems.
+It is not even completely clear how to best to add an effect system into Haskell, the closest ``mainstream'' language to the one studied here.\todo{cites!!}
 
-While trying to carefully to avoid effects in this thesis, we still
-have encountered 2 important effects, non-termination and blame based
-error.
+While trying to carefully to avoid effects in this thesis, we still have encountered 2 important effects, non-termination and blame based error.
 
 \subsubsection{Errors}
 
-The current system handles blame based runtime errors and static warnings
-in a unique way. There is no control flow for errors built into the
-reduction or CBV relations, and there is no way to handle an error.
-Every potential error is linked to a static warning. There are a few
-features that would be good to experiment with
+The current system handles blame based runtime errors and static warnings in a unique way.
+There is no control flow for errors built into the reduction or CBV relations, and there is no way to handle an error.
+Every potential error is linked to a static warning.
+There are a few features that would be good to experiment with:
 
-Allow users to provide proofs of equality to remove warnings by having
-them define and annotate an appropriate identity type. This would
-allow the language to act more like an extensional type theory. Just
-as with ETT many desirable properties such as function extensionality
-would not be provable. Programmers could justify these proofs as a
-way to make symbolic execution faster. We have pushed this to future
-work since their are already many explored strategies for dealing
-with equality in an Intentional type theory that are completely compatible
-with the current implementation.
+Allow users to provide proofs of equality to remove warnings by having them define and annotate an appropriate identity type.
+This would allow the language to act more like an Extensional Type Theory.
+Programmers could justify these proofs as a way to remove runtime checks and make code (and testing) faster.
+Just as with \ac{ETT} many desirable properties such as function extensionality would still not be provable.
+We have pushed this to future work since their are already many explored strategies for dealing with equality proofs in an Intentional Type Theory that are completely compatible with the current implementation.
 
-Currently blame based errors aren't handled. Programmers may want
-to use the information from a bad cast to build the final output,
-it might even be possible to capture the witness of the bad cast.
+Currently blame based errors aren't handled\footnote{or catch}.
+Programmers may want to use the information from a bad cast to build the final output, it might even be possible to capture a well typed term that witness the inequality.
 For instance,
 
 \begin{lstlisting}
@@ -385,15 +47,12 @@ h x =
   } pr : x != y => "whoops" ;
 \end{lstlisting}
 
-Though additional research would be need for exactly the form the
-contradictions should take if they are made available to the handler.
+Though additional research would be need for exactly the form the contradictions should take if they are made available to the handler.
 
-Handling effects in a dependent type system is subtle\footnote{everything about dependent types is subtle}
-since the handling construct can observe differences that should not
-otherwise be apparent. This is most clearly seen in the generalization
-of Herbelin's paradox\todo{independent cite} presented in\cite{pedrot2020fire}.
-The paradox can be instantiated to the system presented in this thesis
-with an additional handling construct,
+Handling effects in a dependent type system is subtle\footnote{everything about dependent types is subtle} since the handling construct can observe differences that should not otherwise be apparent.
+This is most clearly seen in the generalization of Herbelin's paradox\todo{independent cite} presented in\cite{pedrot2020fire}.
+The probelem is that the value of a \Bool{} term may dependen on effects, that cuase logical unsoundness (or worse).
+The paradox can be instantiated to the system presented in this thesis with an additional handling construct,
 
 \begin{lstlisting}
 h : (u : Unit) -> Bool;
@@ -413,53 +72,41 @@ hIsTrue u =
 hIsTrue !! : Id Bool true false
 \end{lstlisting}
 
-Interestingly this term is not as bad as the paradox makes out, the
-term ``gets stuck'' but with a well blamed runtime error and a static
-warning is given.
+Interestingly this term is not as bad as the paradox makes out.
+A warning is given so we would not expect logical soundness.
+If evaluated in \whnf{} he term will produce blame witnessing the static warning given.
 
 \todo{doe ther errors kind of work like those Error TT papers?} 
 
 \subsubsection{Non-termination}
 
-Non-termination is allowed, but it would be better to have it work
-in the same framework as equational constraints, namely warn when
-non-termination is possible, and try to find slow running code via
-symbolic execution. Then we could say without caveat ``programs without
-warnings are proofs''. It might be possible for users to supply their
-own external proofs of termination\cite{casinghino2014combining},
-or termination metrics\todo{Ats, ``Termination casts: A flexible approach to termination with
-general recursion''}.
+Non-termination is allowed, but it would be better to have it work in the same framework as equational warnings, namely warn when non-termination is possible, and try to find slow running code via symbolic execution (runtime errors for non termination are famouly not posible).
+Then we could say without caveat ``programs without warnings are proofs''.
+It might be possible for users to supply their own external proofs of termination\cite{casinghino2014combining}, or termination metrics\todo{Ats, ``Termination casts: A flexible approach to termination with general recursion''}.
 
 \subsubsection{Other effects}
 
-One of the difficulties of an effect system for dependent types is
-expressing the definitional equalities of the effect modality. Is
-$\mathtt{print"hello";print"world"}$
-$\equiv$ $\mathtt{print"helloworld"}$
-at type $\mathtt{IO\ Unit}$? by delaying equality checks to runtime
-these issues can be avoided until the research space is better explored.
-Effects risk making computation mathematically inelegant. In this
-thesis we avoided this inelegance for an error effect with a blame
-relation. This strategy could perhaps be applied to more interesting
-effect systems.
+One of the difficulties of an effect system for dependent types is expressing the definitional equalities of the effect modality.
+Is $\mathtt{print"hello";print"world"}$ $\equiv$ $\mathtt{print"helloworld"}$ at type $\mathtt{IO\ Unit}$?
+By delaying equality checks to runtime these issues can be avoided until the research space is better explored.
+Effects risk making computation mathematically inelegant.
+In this thesis we avoided this inelegance for an error effect with a blame system.
+Something analogous could perhaps be applied to more interesting effect systems.
 
-Both the symbolic execution and search above could be considered in
-terms of an effect in an effect system. Proof search could be localized
-though an effect modality, avoiding the non local examples above.
+Both the symbolic execution and search above could be considered in terms of an effect in an effect system.
+Proof search could be localized though an effect modality, avoiding the non local examples above.
 
 \subsection{User studies}
 
-The main proposition of this work is that it will make dependent types
-easier to learn and use. This should be demonstrated empirically with
-user studies.
+The main proposition of this work is that it will make dependent types easier to learn and use.
+This should be demonstrated empirically with user studies.
 
 \subsection{Semantics}
 
-The semantics explored in this thesis have been operational, this
-has lead to serviceable, but cumbersome, proofs. Ideally the denotational
-semantics of a typed language in this style should be explored. While
-there has been some exploration into untyped contextual equivalence
-for dependent types \cite{sjoberg2015dependently,jia2010dependent},
-untyped contextual equivalence is a weak relation \todo{Ian A. Mason and Carolyn L. Talcott. Equivalence in functional languages
-with effects. Journal of Functional Programming, 1(3):287--327, 1991}. A notion of dependently typed contextual equivalence would be an
-interesting and helpful direction for further study.
+The semantics explored in this thesis have been operational, this has lead to serviceable, but cumbersome, proofs.
+Ideally the denotational semantics of a typed language in this style should be explored.
+The entire system is designed with an unformalized notion of observational equivalence in mind.
+While there has been some exploration into untyped contextual equivalence for dependent types \cite{sjoberg2015dependently,jia2010dependent}, untyped contextual equivalence is a weak relation\todo{Ian A. Mason and Carolyn L. Talcott. Equivalence in functional languages
+with effects. Journal of Functional Programming, 1(3):287--327, 1991}.
+There is a dificult circularity when typed observational equivalence is extendned to dependent types.
+A notion of dependently typed observational equivalence would be an interesting and helpful direction for further study.
