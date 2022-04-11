@@ -86,18 +86,11 @@ latexmk draft.tex -pdf
   - [ ] schedual defense
   - [ ] Practice defense
   - [ ] Defend
-## Remove from the body of the thesis
-- [ ] Rework symbolic execution to work in the cast language
-- [ ] draft testing chapter
-- [ ] draft runtime proof search chapter
- 
-## TODO
-* formatting
-* join one of the writing groups/workshops?
 
 ## Related
 * https://github.com/marklemay/boston-university-thesis-template
 * https://github.com/marklemay/thesis-proposal
 * https://icfp21.sigplan.org/details/TyDe-2021/1/Gradual-Correctness-a-Dynamically-Bidirectional-Full-Spectrum-Dependent-Type-Theory-
   * https://github.com/marklemay/dDynamic
+  * https://github.com/marklemay/dtest-coq2
   * https://github.com/qcfu-bu/dtest-coq
