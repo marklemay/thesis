@@ -6,50 +6,31 @@
 
 Pattern matching seems simple, but is a surprisingly subtle.
 
-Even without dependent types, pattern matching is a strange programming
-construct. How important is it that patterns correspond exactly to
-a subset expression syntax? What about capture annotations or side
-conditions? Restricting patterns to constructors and variable means
-that it is hard to encapsulate functionality, a problem noticed as
-early as\cite{10.1145/41625.41653} \todo{review}. This has lead
-to making pattern behavior override-able in Scala via Extractor Objects.
-An extension in GHC allows some computations to happen within a pattern
-match via the $ViewPatterns$ extension \todo{lots of prior work https://gitlab.haskell.org/ghc/ghc/-/wikis/view-patterns}.
-It seems unreasonable to extend patterns to arbitrary computation
-(though this is allowed in the Curry language\footnote{https://curry.pages.ps.informatik.uni-kiel.de/curry-lang.org/}
-as a syntax for its logical programming features). 
+Even without dependent types, pattern matching is a strange programming construct. 
+How important is it that patterns correspond exactly to a subset expression syntax?
+What about capture annotations or side conditions?
+Restricting patterns to constructors and variable means that it is hard to encapsulate functionality, a problem noticed as early as \cite{10.1145/41625.41653}\todo{review}. 
+This has lead to making pattern behavior override-able in Scala via Extractor Objects.
+An extension in GHC allows some computations to happen within a pattern match via the $ViewPatterns$ extension\todo{font. lots of prior work https://gitlab.haskell.org/ghc/ghc/-/wikis/view-patterns}.
+It seems unreasonable to extend patterns to arbitrary computation (though this is allowed in the Curry language\footnote{https://curry.pages.ps.informatik.uni-kiel.de/curry-lang.org/} as a syntax for its logical programming features). 
 
-In the presence of full-spectrum dependent types, the perspective
-dramatically shifts. Any terminating typing procedure will necessarily
-exclude some type-able patterns and be unable to exclude some unreachable
-branches. Even though only data values are considered, dependent patterns
-are already attacking a much more difficult problem then in the non-dependent
-case. It may make sense to extend the notion of pattern matching to
-include other useful but difficult features. One such interesting
-feature was the $\mathsf{with}$ syntax of \cite{mcbride_mckinna_2004}.
+In the presence of full-spectrum dependent types, the perspective dramatically shifts.
+Any terminating typing procedure will necessarily exclude some type-able patterns and be unable to exclude some unreachable branches.
+Even though only data values are considered, dependent patterns are already attacking a much more difficult problem then in the non-dependent case.
+It may make sense to extend the notion of pattern matching to include other useful but difficult features.
+One such interesting feature was the $\mathsf{with}$ syntax of \cite{mcbride_mckinna_2004}.
 
-\todo{discuss stuck state of unification explicitly, x = f a vs. f a = g
-b, and how it for instance makes it so you can't prove transitivity
-of ID fa gb, ID gb hc -> ID fa hc. also calls into quesiton preservation
-entirely. }
+\todo{discuss stuck state of unification explicitly, x = f a vs. f a = g b, and how it for instance makes it so you can't prove transitivity
+of ID fa gb, ID gb hc -> ID fa hc. also calls into quesiton preservation entirely. }
 
-Epigram, Agda and Idris make pattern matching more powerful using
-$\mathsf{with}$ syntax that allows further pattern based branching
-by attaching a computation to a branch. This is justified as syntactic
-sugar that corresponds to helper functions that can be appropriately
-elaborated and type-checked. The language described in this thesis
-does not use the $\mathsf{with}$ side condition since nested case
-expressions carry the same computational behavior, and the elaboration
-to the cast language will allow possibly questionable typing anyway.
+Epigram, Agda and Idris make pattern matching more powerful using $\mathsf{with}$ syntax that allows further pattern based branching by attaching a computation to a branch.
+This is justified as syntactic sugar that corresponds to helper functions that can be appropriately elaborated and type-checked.
+The language described in this thesis does not use the $\mathsf{with}$ side condition since nested case expressions carry the same computational behavior, and the elaboration to the cast language will allow possibly questionable typing anyway.
 
-More aggressive choices should be explored beyond the $\mathsf{with}$
-construct. In principle it seems that dependent case expressions could
-be extended with relevant proof search, arbitrary computation or some
-amount of constraint solving, without being any theoretically worse
-than usual first order unification. 
+More aggressive choices should be explored beyond the $\mathsf{with}$ construct.
+In principle it seems that dependent case expressions could be extended with relevant proof search, arbitrary computation or some amount of constraint solving, without being any theoretically worse than usual first order unification. 
 
-\todo[inline]{Discus how stratified type systems like ATS handle things (additional
-equational information)}
+\todo[inline]{Discus how stratified type systems like ATS handle things (additional equational information)}
 
 % There are other questions that How should overlapping branches be handled? (think this got covered (HA!))
 
