@@ -80,7 +80,7 @@ latexmk draft.tex -pdf
 ## Plan
 - [x] April
   - [x] bug fixing/ testing
-  - [ ] rewrite Data chapter
+  - [x] rewrite Data chapter
   - [ ] revise final 3 chapters
   - [ ] re-apply for an extention
   - [ ] schedual defense

@@ -1,6 +1,61 @@
 
 \section{OLD JUNK}
 
+
+\subsubsection{Need to remove a cast}
+\todo{better name}
+ 
+Consider this surface language expression that extracts the last element from a non-empty list.
+Assume the function $last:(n:Nat)\rightarrow Vec\,A\,(S\,N)\rightarrow A$ is in scope.
+\todo{or just define the recursive function}
+ 
+\begin{lstlisting}[basicstyle={\ttfamily\small}]
+case v <_: Vec A (S x) => A > {
+| Cons _ a (Z) _ => a
+| Cons _ _ (S n) rest => last n rest
+}
+\end{lstlisting}
+ 
+This will elaborate into
+ 
+\begin{lstlisting}[basicstyle={\ttfamily\small}]
+case v <_: Vec A (S x) => A > {
+| (Cons A' a' (Z)::q rest) :: p => a' :: (inTC1(p))-1
+| (Cons A' a' (S n)::q rest)::p => last n (rest :: p')
+| (Nil A')::p => !TCon1(p)
+}
+\end{lstlisting}
+ 
+\todo[inline]{prettier expressions, rev to -1, in general it might be clearer if cast language is always in math mode}
+ 
+In the 2nd branch we have
+  $A':\star$, $a':A'$, $n:\mathtt{Nat}$,
+  $q:\mathtt{Nat}\approx \mathtt{Nat}$,
+  $rest:\mathtt{Vec}\,A'\,\left(\left(\mathtt{S}\,n\right)::q\right)$,
+  and $p:\mathtt{Vec}\,A'\,\left(\mathtt{S}\left(\left(\mathtt{S}\,n\right)::q\right)\right)\approx \mathtt{Vec}\,A\,\left(\mathtt{S}\,x\right)$.
+Elaboration cannot unify a solution unless we can remove casts, otherwise it becomes impossible to construct a path from $n \approx x$
+  from $\mathtt{Vec}\,A'\,\left(\left(\mathtt{S}\,n\right)\underline{::q}\right)\approx \mathtt{Vec}\,A\,\left(\mathtt{S}\,x\right)$, since the cast blocks
+  $\mathtt{S}\,n = \mathtt{S}\,x$ that would be derivable by unification in the surface language.
+We will need an operator that can remove casts from the endpoints of paths that arise from unification.
+We will call these operators $uncastL$ and $uncastR$ and they will be derivable in the cast language.
+With these operations we can match the process of surface level unification so that
+ 
+$p'\ =\ Cong_{x\Rightarrow \mathtt{Vec}\,A'\,x}\left(UncastR\left(refl\right)\right)\circ Cong_{x\Rightarrow \mathtt{Vec}\,x\,\left(\mathtt{S}\,n\right)}\left(TCon_{0}p\right):\ \mathtt{Vec}\,A'\,\left(\left(\mathtt{S}\,n\right)::q\right)\ \approx\ \mathtt{Vec}\,A\,\left(\mathtt{S}\,n\right)$
+ 
+Where
+$UncastR\left(refl\right): \left(\mathtt{S}\,n\right)::q  \approx \mathtt{S}\,n $
+ 
+In the first branch we have,
+  $A':\star$, $a':A'$,
+  $q:\mathtt{Nat}\approx \mathtt{Nat}$,
+  $rest:\mathtt{Vec}\,A'\,\left(\mathtt{Z}::q\right)$,
+  and $p:\mathtt{Vec}\,A'\,\left(\mathtt{S}\left(\mathtt{Z}::q\right)\right)\approx \mathtt{Vec}\,A\,\left(\mathtt{S}\,x\right)$.
+Unification can proceed to derive $TCon_{1}\left(Con_{0}\left(p\right)\right)^{-1}:\ x\approx \mathtt{Z}::q$
+and $TCon_{1}\left(p\right)^{-1}:\ A\approx A'$.
+ 
+In the final branch we have $p:\mathtt{Vec}\,A'\,\mathtt{Z}\approx \mathtt{Vec}\,A'\,\left(\mathtt{S}\,x\right)$,
+which is contradicted by $TCon_{1}p:\mathtt{Z}\approx \mathtt{S}\,x$
+
 \todo[inline]{Substantail changes will be made made to the formulaitons bellow}
 
 

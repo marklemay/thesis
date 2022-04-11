@@ -46,7 +46,9 @@ There are several differences to note from \ch{3}.
 \caption{Cast Language Syntax}
 \label{fig:cast-data-pre-syntax}
 \end{figure}
-  
+
+\todo{abreviations}
+
 In \ch{3} casts did double duty in both asserting an equality and changing the type of an underlying term.
 Now casts will hold evidence that may change the type of a term, and equality assertions get a new syntactic form with $a\sim_{\ell,o}^{C}b$.
 For instance, if we wanted to assume $\Nat{} $ and $\Bool{} $ are the same we could write $\Nat{} \sim_{\ell}^{\star}\Bool{} $ given a location $\ell$ to blame, since $\star$ shares the type of both $\Nat{} $ and $\Bool{} $.

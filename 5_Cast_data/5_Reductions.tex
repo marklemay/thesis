@@ -2,7 +2,7 @@
  
 \subsection{Function Fragment}
 
-A selection of reduction operations is listed in \Fref{cast-step}.
+A selection of reduction operations is listed in \Fref{cast-data-step}.
 Function reduction happens as usual.
 Reduction over a cast collects the argument and body evidence and uses an argument cast to insure that the argument will be of the correct type.
 Universes reduce away in the following rules.
@@ -16,103 +16,6 @@ In this thesis we have taken an extremely extensional perspective, terms are onl
 For instance this approach justifies equating the functions $\lambda x\Rightarrow x+1=\lambda x\Rightarrow1+x$ without proof, even though they are usually definitionally distinct.
 Therefore we will only blame inequality across functions if two functions that were asserted to be equal return different observations for ``the same'' input.
 Tracking that two functions should be equal becomes complicated, the system must be sensible under context, functions can take other higher order inputs, and function terms can be copied freely.
-
-
-
-
-\begin{figure}
-
-  \begin{align*}
-   \frac{x:A\in\varGamma}{\varGamma\vdash x\sqsupseteq x:A}\rulename{\sqsupseteq-var}
-    \quad & \quad 
-    \frac{\ }{\varGamma\vdash\star\sqsupseteq\star:\star}\rulename{\sqsupseteq-\star}
-    \\
-  \end{align*}
-  
-  \[
-  \frac{
-  \varGamma\vdash A\sqsupseteq A':\star \quad
-  \varGamma,A'\vdash B\sqsupseteq B':\star
-  }{
-    \varGamma\vdash\left(x:A\right)\rightarrow B\sqsupseteq\left(x:A'\right)\rightarrow B':\star
-  }\rulename{\sqsupseteq-\mathsf{fun}-ty}
-  \]
-  
-  \[
-  \frac{
-  \varGamma\vdash A:\star\quad\varGamma,A\vdash B:\star \quad
-  \varGamma,A\vdash b\sqsupseteq b':B
-  }{
-    \varGamma\ \vdash\ \mathsf{fun}\,f\,x\Rightarrow b\ \sqsupseteq\ \mathsf{fun}\,f\,x\Rightarrow b\ :\ \left(x:A\right)\rightarrow B
-  }\rulename{\sqsupseteq-\mathsf{fun}}
-  \]
-  \[
-  \frac{
-  \varGamma\vdash b\sqsupseteq b':\left(x:A'\right)\rightarrow B' \quad
-  \varGamma\vdash a\sqsupseteq a':A'
-  }{
-    \varGamma\vdash b\,a\sqsupseteq b'\,a':B'\left[x\coloneqq a'\right]
-  }\rulename{\sqsupseteq-\mathsf{fun}-app}
-  \]
-  
-  \[
-  \frac{\begin{array}{c}
-    \varGamma\vdash L\sqsupseteq A:\star\\
-    \varGamma\vdash L\sqsupseteq B:\star\\
-    \varGamma\vdash a\sqsupseteq a':A
-    \end{array}}{\varGamma\ \vdash\ a::L\ \sqsupseteq\ a'::L\ :\ B}\rulename{\sqsupseteq-::}
-  \]
-  
-  \begin{align*}
-    \frac{\begin{array}{c}
-    \varGamma\vdash a\sqsupseteq a':A'\\
-    \varGamma\vdash L\sqsupseteq A':\star\\
-    \varGamma\vdash L\sqsupseteq C:\star
-    \end{array}}{\varGamma\vdash a\sim_{\ell,o}^{L}b\sqsupseteq a'::L\ :\ C}\rulename{\sqsupseteq-\sim L}
-    \quad & \quad 
-    \frac{\begin{array}{c}
-    \varGamma\vdash b\sqsupseteq b':B'\\
-    \varGamma\vdash L\sqsupseteq B':\star\\
-    \varGamma\vdash L\sqsupseteq C:\star
-    \end{array}}{\varGamma\vdash a\sim_{\ell,o}^{L}b\sqsupseteq b'::L\ :\ C}\rulename{\sqsupseteq-\sim R}
-  \\
-  \end{align*}
-  
-  \begin{align*}
-    \frac{\begin{array}{c}
-    \varGamma\vdash a\sqsupseteq a'::L:C\\
-    \varGamma\vdash a\sqsupseteq c'::L:C\\
-    \varGamma\vdash b\sqsupseteq c'::L:C
-    \end{array}}{\varGamma\vdash a\cup^{L}b\sqsupseteq a'::L\ :\ C}\rulename{\sqsupseteq-\cup L}
-    \quad & \quad 
-    \frac{\begin{array}{c}
-    \varGamma\vdash b\sqsupseteq b'::L:C\\
-    \varGamma\vdash a\sqsupseteq c'::L:C\\
-    \varGamma\vdash b\sqsupseteq c'::L:C
-    \end{array}}{\varGamma\vdash a\cup^{L}b\sqsupseteq b'::L\ :\ C}\rulename{\sqsupseteq-\cup R}
-  \\
-  \end{align*}
-  
-  \begin{align*}
-    \frac{\begin{array}{c}
-    \varGamma\vdash a\sqsupseteq a':A'\\
-    A'\equiv B
-    \end{array}}{\varGamma\vdash a\sqsupseteq a':B}\rulename{\sqsupseteq-conv-ty}
-    \quad & \quad 
-    \frac{\begin{array}{c}
-    \varGamma\vdash a\sqsupseteq a':A'\\
-    a'\equiv b\\
-    \varGamma\vdash b:A'
-    \end{array}}{\varGamma\vdash a\sqsupseteq b:A'}\rulename{\sqsupseteq-conv-trm}
-  \\
-  \end{align*}
-  
-  \[
-  \frac{\varGamma\vdash a\sqsupseteq a:A}{\varGamma\vdash a:A}\rulename{ty-def}
-  \]
-\caption{Endpoints (non-data)}
-\label{fig:cast-endpoint-rules}
-\end{figure}
 
 
 \begin{figure}
@@ -172,7 +75,7 @@ Tracking that two functions should be equal becomes complicated, the system must
 \frac{\ }{\left(\left(a::L\right)::L'\right)\rightsquigarrow a::\left(L\cup^{\star}L'\right)}
 \]
 \caption{Cast Language Small Step (select rules)}
-\label{fig:cast-step}
+\label{fig:cast-data-step}
 \end{figure}
 
 \subsection{Data Reductions}
