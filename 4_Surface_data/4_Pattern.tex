@@ -1,26 +1,16 @@
 
 \section{Pattern Matching}
 
-Unfortunately, the direct eliminator style is cumbersome for programmers
-to deal with. For instance, Figure \ref{fig:data-eliminators} shows
-how $\mathtt{Vec}$ data can be directly eliminated to extract the
-first element of a non-empty list in the definition of $\mathtt{head'}$.
-The $\mathtt{head'}$ function needs to redirect unreachable vector
-inputs to a dummy type ($\mathtt{Unit}$) and requires several copies
-of the same $\mathtt{A}$ variable that are not identified automatically
-by the eliminator described in the last section. The usual solution
-is to extend case elimination with \textbf{Pattern matching.}
+Unfortunately, the direct eliminator style is cumbersome for programmers to deal with.
+For instance, Figure \ref{fig:data-eliminators} shows how $\mathtt{Vec}$ data can be directly eliminated to extract the first element of a non-empty list in the definition of $\mathtt{head'}$.
+The $\mathtt{head'}$ function needs to redirect unreachable vector inputs to a dummy type ($\mathtt{Unit}$) and requires several copies of the same $\mathtt{A}$ variable that are not identified automatically by the eliminator described in the last section.
+The usual solution is to extend case elimination with \textbf{Pattern matching.}
 
 Pattern matching is much more ergonomic than a direct eliminator $\mathsf{case}$.
-In Figure \ref{fig:data-eliminators}, the $\mathtt{head}$ defined
-though pattern matching is simpler and clearer. Nested constructor
-matching is now possible. When pattern matching is extended to dependent
-types variables will be assigned their definitions as needed, and
-unreachable branches can be omitted from code. For this reason, pattern
-matching has been considered an ``essential'' feature for dependently
-typed languages since \cite{coquand1992pattern} and is implemented
-implemented in most popular systems, such as Agda and the user facing
-language of Coq.
+In Figure \ref{fig:data-eliminators}, the $\mathtt{head}$ defined though pattern matching is simpler and clearer.
+Nested constructor matching is now possible.
+When pattern matching is extended to dependent types variables will be assigned their definitions as needed, and unreachable branches can be omitted from code.
+For this reason, pattern matching has been considered an ``essential'' feature for dependently typed languages since \cite{coquand1992pattern} and is implemented implemented in most popular systems, such as Agda and the user facing language of Coq.
 
 % This style of case elimination is pervasive in ML style languages and has become popular in more mainstream languages such as Python and Java (double check and perhaps not restrictions)
 
@@ -63,13 +53,12 @@ language of Coq.
 \end{figure}
 
 % Surface data syntax
-Figure \ref{fig:surface-data} shows the extensions to the surface
-language for data and pattern matching. Our case expression match
-a list of scrutinees, allowing us to be very precise about the typing
-of branches. Additionally this style allows for syntactic sugar for
-easy definitions of functions by cases. The syntax of the direct eliminator
-style $\mathsf{case}$s of the last section was designed to be a special
-case of pattern matching. \todo{Example of why it was needed}
+Figure \ref{fig:surface-data} shows the extensions to the surface language for data and pattern matching.
+Our case expression match a list of scrutinees, allowing us to be very precise about the typing of branches.
+Additionally this style allows for syntactic sugar for easy definitions of functions by cases.
+The syntax of the direct eliminator style $\mathsf{case}$s of the last section was designed to be a special case of pattern matching.
+\todo{Example of why it was needed}
+
 \begin{figure}
 \begin{tabular}{lcll}
 $m...$ & $\Coloneqq$ & ... & \tabularnewline
@@ -84,28 +73,25 @@ $pat$ & $\Coloneqq$ & $x$ & match a variable\tabularnewline
 \label{fig:surface-data}
 \end{figure}
 
-Patterns correspond to a specific form of expression syntax. When
-an expression matches a pattern it will capture the relevant subexpressions
-as variables. For instance, the expression. 
+Patterns correspond to a specific form of expression syntax.
+When an expression matches a pattern it will capture the relevant subexpressions as variables.
+For instance, the expression. 
 
 $Cons\,\mathbb{B}\,true\,\left(S\left(S\left(S\left(Z\right)\right)\right)\right)\,\left(Cons\,\mathbb{B}\,false\,\left(S\left(S\left(Z\right)\right)\right)\,y'\right)$
 
 will match the patterns
 \begin{itemize}
-\item $Cons\,w\,x\,y\,z$ with bindings $w=\mathbb{B}$, $x=true$, $y=3$,
-$z=Cons\,\mathbb{B}\,false\,\left(S\left(S\left(Z\right)\right)\right)\,y'$
+\item $Cons\,w\,x\,y\,z$ with bindings $w=\mathbb{B}$, $x=true$, $y=3$, $z=Cons\,\mathbb{B}\,false\,\left(S\left(S\left(Z\right)\right)\right)\,y'$
 \item $x$ with bindings $x=Cons\,\mathbb{B}\,true\,\left(S\left(S\left(S\left(Z\right)\right)\right)\right)\,\left(Cons\,\mathbb{B}\,false\,\left(S\left(S\left(Z\right)\right)\right)\,y'\right)$ 
-\item $Cons\,-\,x\,-\,\left(Cons\,-\,y\,-\,-\right)$ with bindings $x=true$,
-$y=false$
+\item $Cons\,-\,x\,-\,\left(Cons\,-\,y\,-\,-\right)$ with bindings $x=true$, $y=false$
 \end{itemize}
-When patterns are used in the case construct, the appropriate branch
-will reduce with the correct bindings in scope. Therefore the expression 
+When patterns are used in the case construct, the appropriate branch will reduce with the correct bindings in scope.
+Therefore the expression 
 
 $\mathsf{case}\,Cons\,\mathbb{B}\,true\,\left(S\left(S\left(S\left(Z\right)\right)\right)\right)\,\left(Cons\,\mathbb{B}\,false\,\left(S\left(S\left(Z\right)\right)\right)\,y'\right)\left\{ Cons\,-\,x\,-\,\left(Cons\,-\,y\,-\,-\right)\Rightarrow x\&y\right\} $
-reduces to $false$.
+ reduces to $false$.
 
-The explicit rules for pattern matching are listed in Figure \ref{fig:surface-data-match},
-where $\sigma$ will hold a possibly empty set of assignments.
+The explicit rules for pattern matching are listed in Figure \ref{fig:surface-data-match}, where $\sigma$ will hold a possibly empty set of assignments.
 
 \begin{figure}
 \[
@@ -127,13 +113,10 @@ where $\sigma$ will hold a possibly empty set of assignments.
 \label{fig:surface-data-match}
 \end{figure}
 
-It is now easier for case branches to overlap, which could allow nondeterministic
-reduction. There are several plausible ways to handle this, such as
-requiring each branch to have independent patterns, or requiring patterns
-have the same behavior when they overlap \cite{10.1007/978-3-642-54833-8_6}.
-For the purposes of this thesis, we will use the programatic convention
-that the first matching pattern takes precedence. For example, we
-will be able to type check
+It is now easier for case branches to overlap, which could allow nondeterministic reduction.
+There are several plausible ways to handle this, such as requiring each branch to have independent patterns, or requiring patterns have the same behavior when they overlap \cite{10.1007/978-3-642-54833-8_6}.
+For the purposes of this thesis, we will use the programatic convention that the first matching pattern takes precedence.
+For example, we will be able to type check
 
 \[
 \mathsf{case}\,4\,\left\langle s:\mathbb{N}\Rightarrow\mathbb{B}\right\rangle \left\{ |S\left(S\,-\right)\Rightarrow True\,|\,-\Rightarrow False\right\} 
@@ -142,18 +125,14 @@ will be able to type check
 and it will reduce to $True$.
 
 % pattern matching is hard
-While pattern matching is an extremely practical feature, typing these
-expressions tends to be messy. To implement dependently typed pattern
-matching, a procedure is needed to resolve the equational constraints
-that arise within each pattern, and to confirm the impossibility of
-unwritten branches.
+While pattern matching is an extremely practical feature, typing these expressions tends to be messy.
+To implement dependently typed pattern matching, a procedure is needed to resolve the equational constraints that arise within each pattern, and to confirm the impossibility of unwritten branches.\todo{ven generate impossible branches}
 
-Since arbitrary computation can be embedded in the arguments of a
-type constructor\footnote{At least in a full spectrum theory, such as the one we study here.},
-the equational constraints are undecidable in general. Any approach
-to constraint solving will have to be an approximation that performs
-well enough in practice. Usually this procedure usually takes the
-form of a first order unification. 
+Since arbitrary computation can be embedded in the arguments of a type constructor\footnote{
+  At least in a full spectrum theory, such as the one we study here.
+  }, the equational constraints are undecidable in general.
+Any approach to constraint solving will have to be an approximation that performs well enough in practice.
+Usually this procedure takes the form of a first order unification. 
 
 %Similarly it is undecidable when a given pattern cannot be inhabited, so coverage checking will also necessarily be a conservative approximation.
 
@@ -164,40 +143,30 @@ form of a first order unification.
 
 \subsection{First Order Unification}
 
-When type checking the branches of the a case expression, the patterns
-are interpreted as expressions under bindings for each variable used
-in the pattern. If these equations can be unified, then the brach
-will type-check under the variable assignments, with the additional
-typing information. For instance,
+When type checking the branches of the a case expression, the patterns are interpreted as expressions under bindings for each variable used in the pattern.
+If these equations can be unified, then the brach will type-check under the variable assignments, with the additional typing information.
+For instance,
 \begin{example}
 Type checking by unification
 
-the pattern $Cons\,x\,\left(S\,y\right)\,2\,z$
+The pattern $Cons\,x\,\left(S\,y\right)\,2\,z$
 
-could be checked against the type $Vec\,Nat\,w$
+Could be checked against the type $Vec\,Nat\,w$
 
-this implies the typings $x:*,y:Nat,\left(S\,y\right):x,2:Nat,z:Vec\,x\,2,\left(Cons\,x\,\left(S\,y\right)\,2\,z\right):Vec\,Nat\,w$
+This implies the typings $x:*,y:Nat,\left(S\,y\right):x,2:Nat,z:Vec\,x\,2,\left(Cons\,x\,\left(S\,y\right)\,2\,z\right):Vec\,Nat\,w$
 
-which in turn imply the equalities $x=Nat,w=3$
+Which in turn imply the equalities $x=Nat,w=3$
 \end{example}
 
-This is a very simple example, in the worst case we may have equations
-in the form $m\,n=m'\,n'$ which are hard to solve directly (but may
-become easy to solve if assignment of $m=\lambda x.x$, and $m'=\lambda-.0$
-are discovered).
+This is a very simple example, in the worst case we may have equations in the form $m\,n=m'\,n'$ which are hard to solve directly (but may become easy to solve if assignment of $m=\lambda x.x$, and $m'=\lambda-.0$ are discovered).
 
-One advantage of the first order unification approach is that if the
-algorithm succeeds, it will succeed with a unique, most general solution.
-Since assignments are maximal, we are sure that a unified pattern
-will still be able to match any well typed syntax.
+One advantage of the first order unification approach is that if the algorithm succeeds, it will succeed with a unique, most general solution.
+Since assignments are maximal, we are sure that a unified pattern will still be able to match any well typed syntax.
 
-A simplified version of a typical unification procedure is listed
-in Figure \ref{fig:surface-data-unification}. Several variations
-are explored in \cite{cockx_devriese_2018}. Unification is not guaranteed
-to terminate since it relies on definitional equalities, which are
-undecidable in the surface language. The unification procedure does
-not exclude the possibly cyclic assignments that could occur, such
-as $x=S\,x$\todo{as a threat to soundness this should be corrected?}. 
+A simplified version of a typical unification procedure is listed in Figure \ref{fig:surface-data-unification}.
+Several variations are explored in \cite{cockx_devriese_2018}.
+Unification is not guaranteed to terminate since it relies on definitional equalities, which are undecidable in the surface language.
+The unification procedure does not exclude the possibly cyclic assignments that could occur, such as $x=S\,x$\todo{as a threat to soundness this should be corrected?}. 
 
 \begin{figure}
 \[
@@ -228,33 +197,20 @@ as $x=S\,x$\todo{as a threat to soundness this should be corrected?}.
 \label{fig:surface-data-unification}
 \end{figure}
 
-After the branches have type checked we should makes sure that they
-are exhaustive, such that every possible branch will be covered. Usually
-the is done by generating a set of patterns that would cover all combinations
-of constructors and proving that the unlisted branches are unreachable.
-In general it is undecidable wether any given pattern is impossible
-or not, so a practical approximation must be chosen. Usually a branch
-is characterized as unreachable if a contradiction is found in the
-unification procedure. At least programmers have the ability to manually
-include non-obviously unreachable branches and prove their unreachability,
-(or direct those branches to dummy outputs). Though there is a real
-risk that the unification procedure gets stuck in ways that are not
-clear to the programmer, and a clean error message may be very difficult.
+After the branches have type checked we should makes sure that they are exhaustive, such that every possible branch will be covered.
+Usually the is done by generating a set of patterns that would cover all combinations of constructors and proving that the unlisted branches are unreachable.
+In general it is undecidable wether any given pattern is impossible or not, so a practical approximation must be chosen.
+Usually a branch is characterized as unreachable if a contradiction is found in the unification procedure.
+At least programmers have the ability to manually include non-obviously unreachable branches and prove their unreachability, (or direct those branches to dummy outputs).
+Though there is a real risk that the unification procedure gets stuck in ways that are not clear to the programmer, and a clean error message may be very difficult.
 
-But that set of patterns must still be generated, given the explicit
-branches the programmer introduced. There is no clear best way to
-do this since a more fine devision of patterns may allow enough additional
-definitional information to show unsatisfiability, while a more coarse
-devision of patterns will be more efficient. Agda uses a tree branching
-approach, that is efficient, but generates course patterns. The implementation
-of the language in this thesis generates patterns by a system of complements,
-this system seams slightly easier to implement, more uniform, and
-generates a much finer set of patterns then the case trees used in
-Agda. However this approach is exponentially less performant then
-Agda in the worse case.
+But that set of patterns must still be generated, given the explicit branches the programmer introduced.
+There is no clear best way to do this since a more fine devision of patterns may allow enough additional definitional information to show unsatisfiability, while a more coarse devision of patterns will be more efficient.
+Agda uses a tree branching\todo{cite} approach, that is efficient, but generates course patterns.
+The implementation of the language in this thesis generates patterns by a system of complements, this system seams slightly easier to implement, more uniform, and generates a finer set of patterns then the case trees used in Agda.
+However this approach is exponentially less performant then Agda in the worse case.\todo{thsi is less true now} 
 
-The bidirectional system can be extended with pattern matching with
-rules that look like 
+The bidirectional system can be extended with pattern matching with rules that look like 
 
 \[
 \frac{\begin{array}{c}
@@ -278,28 +234,18 @@ rules that look like
 \end{array}}{\Gamma\vdash\mathsf{case}\,\overline{n,}\,\left\{ \overline{|\,\overline{pat\Rightarrow}m}\right\} \overleftarrow{\,:\,}M}
 \]
 
-where $\Gamma\vdash\overline{pat}:_{E}?\Delta$ is shorthand for a
-set of equations that allow a list of patterns to type check under
-$\Delta$. and $\Gamma\vdash\overline{\overline{pat}}:\Delta\ \mathbf{complete}$
-is shorthand for the exhaustiveness check. 
+Where $\Gamma\vdash\overline{pat}:_{E}?\Delta$ is shorthand for a set of equations that allow a list of patterns to type check under $\Delta$, 
+  and $\Gamma\vdash\overline{\overline{pat}}:\Delta\ \mathbf{complete}$ is shorthand for the exhaustiveness check. 
 \begin{conjecture}
-Their exists a suitable\footnote{supporting at least subject reduction, type soundness, and regularity}
-extension to the surface language TAS that supports patten matching
-style elimination
+There exists a suitable\footnote{supporting at least subject reduction, type soundness, and regularity} extension to the surface language \ac{TAS} that supports patten matching style elimination
 \end{conjecture}
 
-This conjecture is not obvious since pattern matching is not consistent
-under reduction, or even well typed substitution. Probably the best
-way to work in that direction is to use explicit contextual equalities
-as in \cite{sjoberg2012irrelevance}.
+This conjecture is not obvious since pattern matching is not consistent under reduction, or even well typed substitution.
+Probably the best way to work in that direction is to use explicit contextual equalities as in \cite{sjoberg2012irrelevance}. \todo{or careful use of flex vars}
 \begin{conjecture}
-The bidirectional extension listed here is weakly annotatable with
-that extension to the surface language.
+The bidirectional extension listed here is weakly annotatable with that extension to the surface language.
 \end{conjecture}
 
-Additionally, it makes sense to allow some additional type annotations
-in the motive and for these annotations to switch the the type inference
-of the scrutinee into a type-check. The implementation includes this
-along with a simple syntax for modules, and even mutually defined
-data types. For simplicity these have been excluded from the formal
-presentation.
+Additionally, it makes sense to allow some additional type annotations in the motive and for these annotations to switch the the type inference of the scrutinee into a type-check.
+The implementation includes this along with a simple syntax for modules, and even mutually defined data types.
+For simplicity these have been excluded from the presentation here.
