@@ -1,0 +1,66 @@
+\section{Data}
+
+%What data defs/ constructors
+% The langugae defined in this thesus uses data definitions like those found in systems like Agda and Coq. 
+
+A dependent data type is defined by a type constructor indexed by
+arguments, and a set of data constructors that tag data and characterize
+their arguments. Several familiar data types are defined in Figure
+\ref{fig:data-defs}. For example, the data type $\mathtt{Nat}$ is
+is defined with the type constructor $\mathtt{Nat}$ (which has no
+type arguments), the data constructors $\mathtt{Z}$ which takes no
+further information and the data constructor $\mathtt{S}$ which is
+formed with the prior number. The data type $\mathtt{Vec}$ has two
+type arguments corresponding to the the type contained in the vector
+and its length, it has two data constructors that allow building an
+empty vector, or to add an element to the front of an existing vector.
+
+Data defined in this style is simple to build and reason about, since
+data can only be created from its constructors. Unfortunately the
+details of data elimination are a little more involved.
+
+\begin{figure}
+\begin{lstlisting}[basicstyle={\ttfamily\small}]
+data Void : * {};
+
+data Unit : * {
+| tt : Unit
+};
+
+data Bool : * {
+| True : Bool
+| False : Bool
+};
+ 
+data Nat : * {
+| Z : Nat
+| S : Nat -> Nat
+};
+three : Nat;
+three = S (S (S Z)));
+-- Syntactic sugar allows 3 = S (S (S Z)))
+
+data Vec : (A : *) -> Nat -> * {
+| Nil  : (A : *) -> Vec A Z
+| Cons : (A : *) -> A -> (x : Nat)
+        -> Vec A x -> Vec A (S x)
+};
+
+someBools : Vec Bool 2;
+someBools = Cons Bool True 1 (Cons Bool False 0 (Nil Bool));
+
+data Id : (A : *) -> A -> A -> * {
+| refl  : (A : *) -> (a : A) -> Id A a a
+};
+
+threeEqThree : Id Nat three three;
+threeEqThree = refl Nat three;
+\end{lstlisting}
+% include if notation is used
+% -- Syntactic sugar expands list notation,
+% -- for example
+% -- [True, False]<Bool> =
+% -- Cons Bool True 1 (Cons Bool False 1 (Nil Bool))
+ \caption{Definitions of Common Data Types}
+\label{fig:data-defs}
+\end{figure}
