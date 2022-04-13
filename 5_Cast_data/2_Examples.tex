@@ -260,6 +260,6 @@ peek (refl 4 :: Id Nat 0 1) = 4
 Another example of a term that might potentially lead to unexpected behavior is the peek function defined in \Fref{cast-peek}.
 $\mathtt{peek}$ will ignore several discrepancies in the index of the \Id{} type, if run in \whnf{}\footnote{
   The example can be extended to \cbv{} with functions, 
-  $\mathtt{peek' : Id (Unit -> Nat) (\\ - => 0) (\\ - => 1) -> Unit -> Nat}$.
+  $\mathtt{peek'} : \Id{} (\mathtt{Unit} \rightarrow \Nat{}) (\lambda - \Rightarrow 0) (\lambda - \Rightarrow 1)  \rightarrow  \mathtt{Unit} \rightarrow \Nat{}$.
 }.
 As in \ch{3}, our formalism uses a minimal amount of checking to maintain cast soundness, though more eager checking is implemented in the prototype.
