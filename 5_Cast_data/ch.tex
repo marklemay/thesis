@@ -4,19 +4,21 @@
  
 %Surprisingly, the cast system can be extended with a pattern matching construct without unification.
 \Ch{3} showed how to use the \ac{TAS} and the \bidir{} system as a guide to build a dependently typed language with runtime equality.
-The \ac{TAS} inspired the cast system, while the \bidir{} system corresponds to elaboration.
-% Specifically, the \bidir{} approach localizes the equality checks.
+The \ac{TAS} inspired the cast system, where the properties and lemmas of the \ac{TAS} can be extended with casts.
+While the \bidir{} system sujessted how to localize uncirtain assumptions that can be repurposed by elaboration as equality checks.
+
 In this Chapter we will extend these systems for dependently indexed data and pattern matching.
-This will turn out to be more complicated then the system in \ch{3}, since in \ch{3} equality was only testable at types which allowed for some syntactic and semantic shortcuts.
-In the presence of data, equality needs to be testable at terms, which will not necessarily have the same type.
-Additionally, the subtleties of pattern matching will need to be dealt with.
-While the intuition built up in \ch{3} still holds, the cast language will need the appropriate revisions.
+This will turn out to be more complicated then the system in \ch{3}, for two reasons.
+First, equality was only testable at types in \ch{3} which allowed for some syntactic and semantic shortcuts.
+In the presence of dependent data, equality needs to be testable at terms, which will not necessarily have the same type.
+Secound, the subtleties of pattern matching will need to be dealt with.
+While the intuition built up in \ch{3} still holds, the cast language will need to be revised.
  
 As before, we will take the (conjectured) surface language of \ch{4} and construct a cast language with corresponding features.
-Though it is difficult to formalize a \ac{TAS} and corresponding \bidir{} system that has pattern matching, informally the unification of pattern matching belongs in the \bidir{} system.
+Though it is difficult to formalize a \ac{TAS} and corresponding \bidir{} system that has pattern matching, we will assume the unification of pattern matching belongs in the \bidir{} system since it exists only to establish static correctness and is not needed for evaluation.
 Accordingly we will extend elaboration with a form of unification.
 Because we will not need to deal with unification in the cast language, the cast language can provide evidence that the cast system is \textbf{cast sound}. \todo{"show" if we ever get a proof}
-While the lack of a formal \ac{TAS} and \bidir{} system in \ch{4} will make the other properties of \ch{3} difficult to show, we will design the system with an eye towards preserving them.
+While the lack of a formal \ac{TAS} and \bidir{} system in \ch{4} will make the other properties of \ch{3} impossible to prove here, we will design the system with an eye towards preserving them.
  
 % \todo{formulate case consistently}
 % Elaboration should satisfy the additional correctness\todo{``gradual correctness''?} properties relative to a type assignment system and bidirectional system.
@@ -24,23 +26,23 @@ While the lack of a formal \ac{TAS} and \bidir{} system in \ch{4} will make the 
  
 Despite these caveats, there is an interesting interpretation of data and pattern matching when extended to the cast system.
  
-Consider the normal forms of data terms, in a conventionally typed language.
-In an empty context, data values must have a valid data constructor in head position (justifying the syntax of pattern matching).
-In the cast language, the normal form of data in an empty context can have casts applied to an expression.
-If the casts were blameless then the constructor in the head position will match the data type.
+In a conventionally typed language, the normal forms of data terms have a valid data constructor in the head position (justifying the syntax of pattern matching).
+In the cast language, the normal form of data can have casts applied to an expression.
+If the casts are blameless then the constructor in the head position will match the data type.
 % Casts are wrapped around terms during the elaboration procedure, and will accumulate during evaluation.
-If the pattern syntax is extended with a path variable that can represent evidence of equality, then that evidence can be extracted and used in the body of the branch.
+In the \clang{} pattern matching is extended with a path variable that can represent evidence of equality, then that evidence can be extracted and used in the body of the branch.
  
-As in conventional pattern matching, since the type constructor is known, it is possible to check the coverage of the patterns against its possible constructors.
+As in conventional pattern matching, since the type constructor is known, it is possible to check the coverage against all possible constructors.
 If every constructor is accounted for, only blameable \scruts{} are possible.
 Quantifying over evidence of equality allows blame to be redirected, so if the program gets stuck in a pattern branch it can blame the original faulty assumption.
  
-To account for unreachable patterns, we can record the proof of inequality that makes the unification unsatisfiable with explicit syntax that will expose blame.
-In the cast language it is possible for a case expression to reduce into such an ``unreachable'' branch.
+To account for ``unreachable patterns'' that are not stated in the \slang, we can record the proof of inequality in that branch.
+Since in the cast language, it is possible for a case expression to reduce into one of those ``unreachable'' branches.
 If this happens blame will be reflected back onto a specific problematic assumption of the input.
-This will require extending the cast language with terms to manipulate equality evidence directly.
+This will require extending the cast language with terms to manipulate equality evidence so that proofs of inequality can be encoded.
+\todo{probly needs an example figure}
  
-During elaboration, after a pattern is unified, we will inject the proofs of equality where needed so that they cast check. 
+% During elaboration, after a pattern is unified, we will inject the proofs of equality where needed so that they cast check. 
 % This will require that our notion of paths support congruence.
 
 
