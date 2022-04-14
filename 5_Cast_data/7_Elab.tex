@@ -39,16 +39,16 @@ For instance, $x\coloneqq_{C} 3$ means $x$ will be assigned $3$ because of $C$.
 \[
 \frac{
   U\left(\Delta @^{\approx TCon_{-}C}( \overline{b},\overline{b'} ) \cup E,a\right)\quad
-  a\equiv d_{\Delta}\overline{b}
-  \quad   a' \equiv d_{\Delta}\overline{b'}
+  a\rightsquigarrow^* D_{\Delta}\overline{b}
+  \quad   a' \rightsquigarrow^* D_{\Delta}\overline{b'}
 }{U\left(\left\{ a \approx_{C}^{L} a'\right\} \cup E,a\right)}
 \]
 
 \[
 \frac{
   U\left(\Delta @^{\approx DCon_{-}C}( \overline{b},\overline{b'} ) \cup E,a\right)\quad
-  a\equiv d_{\Delta\rightarrow D\overline{d}}\overline{b}
-  \quad   a' \equiv d_{\Delta\rightarrow D\overline{d}}\overline{b'}
+  a\rightsquigarrow^* d_{\Delta\rightarrow D\overline{d}}\overline{b}
+  \quad   a' \rightsquigarrow^* d_{\Delta\rightarrow D\overline{d}}\overline{b'}
 }{U\left(\left\{ a \approx_{C}^{L} a'\right\} \cup E,a\right)}
 \]
 
@@ -71,8 +71,8 @@ For instance,
   $\left(x \approx_{TCon_{1}x}^{\Nat{}}x+x\right) \left[x\coloneqq_{p} 3\right]$ $=$ $3 \sim_{TCon_{1}p}^{\Nat{}}3+3$,
   which is sensible when constraints are considered as a notation for endpoints.
 
-Additionally term constructor and type constructor injectivity is handled through an indexing operator similar to evaluation.
+Additionally term constructor and type constructor injectivity is handled through an indexing operator $@^{...}$ similar to evaluation.
 Finally we add rules to peel off casts so that unification remembers why terms have the appropriate type, and so unification will not get stuck.
 
-With the information extracted from unification elaboration can be elaborated with blameless casts that mimic the behavior of pattern matching in \ch{4}.
+With the information extracted from unification, terms can be elaborated with blameless casts that mimic the behavior of pattern matching in \ch{4}.
 The information can also be used to redirect blame from ``impossible'' branches.

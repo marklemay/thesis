@@ -37,10 +37,10 @@ As in conventional pattern matching, since the type constructor is known, it is 
 If every constructor is accounted for, only blameable \scruts{} are possible.
 Quantifying over evidence of equality allows blame to be redirected, so if the program gets stuck in a pattern branch it can blame the original faulty assumption.
 
-To account for ``unreachable patterns'' that are not stated in the \slang, we can record the proof of inequality in that branch.
-Since in the cast language, it is possible for a case expression to reduce into one of those ``unreachable'' branches.
+To account for ``unreachable patterns'' that are not stated in the \slang, we can record the proof of inequality for use at runtime.
+Since in the cast language, it is possible for a \case{} expression to reduce into one of those ``unreachable'' branches.
 If this happens blame will be reflected back onto a specific problematic assumption of the input.
-This will require extending the cast language with operations to manipulate equality evidence directly.
+This will involve extending the cast language with operations to manipulate equality evidence directly.
 Proofs of inequality will be able to appear in terms.
  
 % During elaboration, after a pattern is unified, we will inject the proofs of equality where needed so that they cast check. 
@@ -71,11 +71,11 @@ Proofs of inequality will be able to appear in terms.
 \todo[inline]{technically speaking, telescopes should generalize to the different syntactic classes}
 
 
-\subsection{Future work}
+\section{Future Work}
 
 \todo[inline]{Make equalities visible in the surface syntax}
 
 The system here has some simple inspiration that could be extended into pattern matching syntax more generally. 
 It seems useful to be able to read equational information out of patterns, especially in settings with rich treatment of equality.
-Matching equalities directly could be a semi-useful feature in Agda, or in univalent type theories such as CTT.
+Matching equalities directly could be a useful feature in Agda, or in univalent type theories where manipulating equations is more critical.% such as CTT.
 \todo[inline]{CTT data is related?}

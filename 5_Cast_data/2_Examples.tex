@@ -40,11 +40,11 @@ case x {
 The elaborated case expression covers all possible constructors for the data type constructor $\mathtt{Vec}$, including patterns that did appear in the surface term.
 Then unification solves the constraints to help elaborate the body.
  
-In the first branch $A:\star$, $a:A$, $y:\mathtt{Nat}$, while $p$ is a path variable that contains evidence that the type of $\mathtt{Cons\,A\,a\,y\,-}$ is $\mathtt{Vec\,Bool\,(S\,n)}$.
+In the first branch, the pattern captures typed variables, $A:\star$, $a:A$, $y:\mathtt{Nat}$, while $p$ is a path variable that contains evidence that the type of $\mathtt{Cons\,A\,a\,y\,-}$ is $\mathtt{Vec\,Bool\,(S\,n)}$.
 So we will say, $p:\mathtt{Vec}\ A\ (\mathtt{S}\,y)\approx\mathtt{Vec}\,\mathtt{Bool}\,(\mathtt{S}\,n)$.
 $TCon_{0}\,p$ extracts the 0th argument from the type constructor $p:\mathtt{Vec}\ \underline{A}\ (\mathtt{S}\,y)\approx\mathtt{Vec}\,\underline{\mathtt{Bool}}\,(\mathtt{S}\,n)$ resulting in the type $TCon_{0}p\ :\ A\approx\mathtt{Bool}$.
 The body of the branch casts $a$ along $TCon_{0}\,p$ to $\mathtt{Bool}$.
-Unlike in \ch{3}, casts will need to be generalized to contain evidence of equality.
+Casts will need to be generalized from \ch{3} to contain evidence of equality.
  
 In the the second branch, the pattern match gives $A:\star$, $p:\mathtt{Vec}\ A\ \mathtt{Z}\approx\mathtt{Vec}\,\mathtt{Bool}\,(\mathtt{S}\,y)$.
 The body of that branch encodes the contradiction using explicit blame syntax by observing $\mathtt{Z}\neq\mathtt{S}\,y$ with $TCon_{1}p$.
@@ -114,7 +114,7 @@ In the 3rd branch, $p1:\mathtt{Vec}\ Nat''\ 0\approx\mathtt{Vec}\ Nat'\ n'$, $p2
 \item
 Which is unsatisfiable by $TCon_1(p1) \cup DCon_0(TCon_1(p2)):0\approx1$.
 We don't need to know which sub path is problematic beforehand, only that the combination causes trouble.
-If this branch is reached, we can observe a problem in either branch or both.
+If this branch is reached, we can observe a problem in at least one path.
 \end{itemize}
 \end{itemize}
  
@@ -146,10 +146,9 @@ Additionally the elaborator will form a covering of implicit patterns that handl
 Since the unifier cannot find a contradiction for any of these cases, the user will be warned of possible runtime errors.
  
 \subsection{Congruence (embedding equalities in terms)}
-This surface expression that takes in a propositional proof that $2=2$ and uses the named witness to generate a vector of length 2 demonstrates some of the subtler possibilities that arise in dependently typed pattern matching.
+This surface expression that takes in a propositional proof that $2=2$ and uses the named witness to generate a vector of length 2, demonstrates some of the subtler possibilities that arise in dependently typed pattern matching.
 % This will typecheck in the surface language.
- 
-\todo[inline]{Note that an arbitrary choice was was made $InTC_{1}(p)$ $InTC_{2}(p)$}
+
 \begin{lstlisting}[basicstyle={\ttfamily\small}]
 case x <_:Id Nat 2 2 => Vec Bool 2> {
 | refl _ a => rep Bool True a
@@ -165,7 +164,8 @@ case x {
    :: Vec Bool (TCon_1(p))
 }
 \end{lstlisting}
- 
+\todo{standardize on the associativity of pat-match}
+
 In the branch, $N:\star$, $a:N$, and $p:\mathtt{Id}\ N\ a\ a\approx\mathtt{Id}\ \mathtt{Nat}\ 2\ 2$.
 Since we have $p:\mathtt{Id}\ N\ a\ a\approx\mathtt{Id}\ \mathtt{Nat}\ 2\ 2$, we can derive $TCon_0(p):\ N\ \approx\ \mathtt{Nat}$.
 Which can be used in $a::(TCon_0(p))$ to cast $a$ from $N$ to \Nat{}.
@@ -175,7 +175,7 @@ But then we need evidence that $\Vect{}\, \Bool{}\, (a :: (TCon_0(p)))\ \approx\
 \todo[inline]{avoiding these sperous casts is important for the conjectured gradual correctness, well typed surface language terms should not generate warnings}
 First, we need to select the subterm of interest, $\Vect{}\, \Bool{}\, \underline{(a :: (TCon_0(p)))}\ \approx\ Vect{}\, \Bool{}\, \underline{2}$.
 Equality evidence is constructed specifically so that it can be embedded into terms.
-If we have evidence, $q$, that shows $q\ :\ (a ::(TCon_0(p)))\ \approx\ 2$ then $\Vect{}\, \Bool{}\, \underline{q}\ :\ \Vect{}\, \Bool{}\, \underline{(a :: (TCon_0(p)))}\ \approx\ Vect{}\, \Bool{}\, \underline{2}$.
+If we have evidence, $q$, such that $q\ :\ (a ::(TCon_0(p)))\ \approx\ 2$ then $\Vect{}\, \Bool{}\, \underline{q}\ :\ \Vect{}\, \Bool{}\, \underline{(a :: (TCon_0(p)))}\ \approx\ Vect{}\, \Bool{}\, \underline{2}$.
 % The $Cong$ syntax explicitly embeds a path into a larger expression, here $Cong_{x=> (A : *) -> A -> \mathtt{Vec} \mathtt{Nat} x} ...$ selects the relevant part of the type.
  
 The cast system will only require that terms are equated up to a definitional equality that disregards casts so instead of needing to show $a :: (TCon_0(p))\ \approx\ 2$, we only have to show $a\ \approx\ 2$.

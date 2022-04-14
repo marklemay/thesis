@@ -1,14 +1,14 @@
 \section{Cast soundness}
 
 For the fragment without data, we can show cast soundness.
-And we conjecture that the proof could be extended to support data.
+Again we conjecture that the proof could be extended to support data.
  
 If $\varGamma\vdash a\sqsupseteq a':A'$, $\varGamma\ \mathbf{Empty}$ then either $a\ \mathbf{Consistent}$, $a\ \mathbf{Blame}_{\ell,o}$, or $a\rightsquigarrow b$.
 Again progress can be shown by extending the usual \ac{TAS} progress argument over the new constructs.
 
 The $\mathbf{Consistent}$ judgment (\Fref{cast-data-val}) generalizes being a value, to elements over $\cup$ and $\sim$.
 This only matters for functions, since they are treated extentionally (so that data constructors can be treated as functions).
-This relation can be restricted further to be more like a conventional value judgment, for instance enforcing the arguments of a data type are consistent.
+This relation can be restricted further to be more like a conventional value judgment, for instance enforcing the arguments of a data type are consistent, but these restrictions are not needed here.
 
 \begin{figure}
 \[

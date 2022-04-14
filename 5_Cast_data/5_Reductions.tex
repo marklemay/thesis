@@ -5,18 +5,15 @@
 A selection of reduction operations is listed in \Fref{cast-data-step}.
 
 Function reduction happens as usual.
- 
 % Reduction over a cast collects the argument and body evidence and uses an argument cast to insure that the argument will be of the correct type.
 Type universes reduce away in the following three rules.
- 
 Function types commute through $\sim$ and $\cup$ when their type annotations are the type universe.
- 
 When the type position is resolved to function type, arguments can be applied under $::$ and into $\sim$ and $\cup$.
 This allows data types to be treated like functions.
 For instance, $(\lambda x \Rightarrow\mathtt{S} x) \sim\mathtt{S}$ will never cause a blameable error.
  
 Finally, there are reductions to consolidate cast bookkeeping.
-In addition to the listed reductions, a reduction can happen recursively in any single sub-position.
+In addition to the listed reductions, a reduction can happen recursively in any sub-position.
 
 % \todo{these reductions are listed?}
 % In this thesis we have taken an extremely extensional perspective, terms are only different if an observation recognizes a difference.
@@ -91,7 +88,7 @@ Some reductions for data are listed in \Fref{Data-Reductions}.
 Elimination of data types is delegated to the $\mathbf{Match}$ judgment (that is unlisted). \todo{can reconstitute its type if their is no cast}
 $TCon_{i}$, and $DCon_{i}$ observations reduce to the expected index.
 Data types and data terms consolidate over $\sim$ and $\cup$ when a head constructor is shared and the type annotation has resolved, this needs to be computed by applying the indices point-wise against the typing telescope (see \Fref{Pointwise-Applications}).
-This is why the telescope annotation is explicit in the formalism (so reductions can happen independent of the typing context). 
+This is why the telescope annotation is explicit in the formalism (so reductions can happen independent of a context). 
 
 The important properties of reduction are 
 \begin{itemize}
