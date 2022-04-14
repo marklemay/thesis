@@ -1,21 +1,28 @@
 \section{Reductions}
  
 \subsection{Function Fragment}
-
+\todo{rule names might help here}
 A selection of reduction operations is listed in \Fref{cast-data-step}.
-Function reduction happens as usual.
-Reduction over a cast collects the argument and body evidence and uses an argument cast to insure that the argument will be of the correct type.
-Universes reduce away in the following rules.
-Functions commute out their arrows after their type annotations are trivialized.
-When the type position is resolved to function type, arguments can be applied under $::$ and into $\sim$ and $\cup$.
-Finally, there are reductions to clean up cast bookkeeping.
-In addition to the listed reductions, a reduction can happen recursively in any single sub-position (depending on reduction strategy).
 
-\todo{these reductions are listed?}
-In this thesis we have taken an extremely extensional perspective, terms are only different if an observation recognizes a difference.
-For instance this approach justifies equating the functions $\lambda x\Rightarrow x+1=\lambda x\Rightarrow1+x$ without proof, even though they are usually definitionally distinct.
-Therefore we will only blame inequality across functions if two functions that were asserted to be equal return different observations for ``the same'' input.
-Tracking that two functions should be equal becomes complicated, the system must be sensible under context, functions can take other higher order inputs, and function terms can be copied freely.
+Function reduction happens as usual.
+ 
+% Reduction over a cast collects the argument and body evidence and uses an argument cast to insure that the argument will be of the correct type.
+Type universes reduce away in the following three rules.
+ 
+Function types commute through $\sim$ and $\cup$ when their type annotations are the type universe.
+ 
+When the type position is resolved to function type, arguments can be applied under $::$ and into $\sim$ and $\cup$.
+This allows data types to be treated like functions.
+For instance, $(\lambda x \Rightarrow\mathtt{S} x) \sim\mathtt{S}$ will never cause a blameable error.
+ 
+Finally, there are reductions to consolidate cast bookkeeping.
+In addition to the listed reductions, a reduction can happen recursively in any single sub-position.
+
+% \todo{these reductions are listed?}
+% In this thesis we have taken an extremely extensional perspective, terms are only different if an observation recognizes a difference.
+% For instance this approach justifies equating the functions $\lambda x\Rightarrow x+1=\lambda x\Rightarrow1+x$ without proof, even though they are usually definitionally distinct.
+% Therefore we will only blame inequality across functions if two functions that were asserted to be equal return different observations for ``the same'' input.
+% Tracking that two functions should be equal becomes complicated, the system must be sensible under context, functions can take other higher order inputs, and function terms can be copied freely.
 
 
 \begin{figure}
@@ -80,7 +87,7 @@ Tracking that two functions should be equal becomes complicated, the system must
 
 \subsection{Data Reductions}
 
-Some select reductions are listed in \Fref{Data-Reductions}.
+Some reductions for data are listed in \Fref{Data-Reductions}.
 Elimination of data types is delegated to the $\mathbf{Match}$ judgment (that is unlisted). \todo{can reconstitute its type if their is no cast}
 $TCon_{i}$, and $DCon_{i}$ observations reduce to the expected index.
 Data types and data terms consolidate over $\sim$ and $\cup$ when a head constructor is shared and the type annotation has resolved, this needs to be computed by applying the indices point-wise against the typing telescope (see \Fref{Pointwise-Applications}).
@@ -96,7 +103,6 @@ The important properties of reduction are
 \end{itemize}
 % Matching is defined in \ref{fig:cast-data-match}.
 % Note that uncast terms are equivalent to refl cast terms.
-
 
 \begin{figure}
 \[
@@ -149,22 +155,20 @@ The important properties of reduction are
 \begin{figure}
 \begin{tabular}{llll}
 $\Delta@_{0}^{k\sim\ell,o}\left(\overline{a},\overline{b}\right)$ & = & $\Delta@^{k\sim\ell,o}\left(\overline{a},\overline{b}\right)$ \tabularnewline % & shorthand that begins the recursion\tabularnewline
-$\left(\left(x:A\right)\rightarrow\Delta\right)@_{i}^{k\sim\ell,o}\left(\left(a,\overline{a}\right),\left(b,\overline{b}\right)\right)$ & = & $\left(a\sim_{\ell,o.TCon_{i}}^{A}b\right),\left(\Delta\left[x\coloneqq\left(a\sim_{\ell,o.kCon_{i}}^{A}b\right)\right]\right)@_{i+1}^{\sim\ell,o}\left(\overline{a},\overline{b}\right)$  \tabularnewline % & non-empty list\tabularnewline
+$\left(\left(x:A\right)\rightarrow\Delta\right)@_{i}^{k\sim\ell,o}\left(\left(a,\overline{a}\right),\left(b,\overline{b}\right)\right)$ & = &
+\makecell[l]{$\left(a\sim_{\ell,o.TCon_{i}}^{A}b\right),$\\
+  $\left(\Delta\left[x\coloneqq\left(a\sim_{\ell,o.kCon_{i}}^{A}b\right)\right]\right)@_{i+1}^{\sim\ell,o}\left(\overline{a},\overline{b}\right)$}
+   \tabularnewline % & non-empty list\tabularnewline
 $\left(.\right)@_{i}^{k\sim\ell,o}\left(.,.\right)$ & = & $.$  \tabularnewline % & empty list\tabularnewline
 $\Delta@_{0}^{k\cup}\left(\overline{a},\overline{b}\right)$ & = & $\Delta@^{k\cup}\left(\overline{a},\overline{b}\right)$  \tabularnewline % & shorthand that begins the recursion\tabularnewline
 $\left(\left(x:A\right)\rightarrow\Delta\right)@_{i}^{k\cup}\left(\left(a,\overline{a}\right),\left(b,\overline{b}\right)\right)$ & = & $\left(a\cup^{A}b\right),\left(\Delta\left[x\coloneqq\left(a\cup^{A}b\right)\right]\right)@_{i+1}^{k\cup}\left(\overline{a},\overline{b}\right)$ \tabularnewline %  & non-empty list\tabularnewline
 $\left(.\right)@_{i}^{k\cup}\left(.,.\right)$ & = & $.$ \tabularnewline %  & empty list\tabularnewline
 \end{tabular}
-\caption{Pointwise Applications}
+\caption{Pointwise Indexing}
 \label{fig:Pointwise-Applications}
 \end{figure}
 
-
-
-
-
 \subsection{Endpoint Preservation}
-
 
 The system preserves typed endpoints over reductions.
  
@@ -173,5 +177,5 @@ The system preserves typed endpoints over reductions.
 \]
  
 For the fragment without data, this can be shown with some modifications to the argument in \ch{3}.
-And we conjecture that the proof could be extended to support data.
+We conjecture that the proof could be extended to support data.
 
