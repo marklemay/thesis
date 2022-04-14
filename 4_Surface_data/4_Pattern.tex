@@ -4,7 +4,7 @@
 Unfortunately, the direct eliminator style is cumbersome for programmers to deal with.
 For instance, Figure \ref{fig:data-eliminators} shows how $\mathtt{Vec}$ data can be directly eliminated to extract the first element of a non-empty list in the definition of $\mathtt{head'}$.
 The $\mathtt{head'}$ function needs to redirect unreachable vector inputs to a dummy type ($\mathtt{Unit}$) and requires several copies of the same $\mathtt{A}$ variable that are not identified automatically by the eliminator described in the last section.
-The usual solution is to extend case elimination with \textbf{Pattern matching.}
+The usual solution is to extend case elimination with \textbf{pattern matching}.
 
 Pattern matching is much more ergonomic than a direct eliminator $\mathsf{case}$.
 In Figure \ref{fig:data-eliminators}, the $\mathtt{head}$ defined though pattern matching is simpler and clearer.
@@ -28,8 +28,8 @@ For this reason, pattern matching has been considered an ``essential'' feature f
          | (S _) => A'
        }
    >{
-   | _ => (Z)   => (Nil _       ) => tt
-   | _ => (S _) => (Cons _ a _ _) => a
+   | _ => _ => (Nil _       ) => tt
+   | _ => _ => (Cons _ a _ _) => a
    } ;
 
   -- pattern match style
@@ -56,7 +56,7 @@ For this reason, pattern matching has been considered an ``essential'' feature f
 Figure \ref{fig:surface-data} shows the extensions to the surface language for data and pattern matching.
 Our case expression matches a list of \scruts{}, allowing us to be very precise about the typing of branches.
 Additionally this style allows for syntactic sugar for easy definitions of functions by cases.
-The syntax of the direct eliminator style $\mathsf{case}$s of the last section was designed to be a special case of pattern matching.
+The syntax of the direct eliminator style \case{}s of the last section was designed to be a special case of pattern matching outlined here.
 \todo{Example of why it was needed}
 
 \begin{figure}
@@ -76,7 +76,7 @@ $pat$ & $\Coloneqq$ & $x$ & match a variable\tabularnewline
 Patterns correspond to a specific form of expression syntax.
 When an expression matches a pattern it will capture the relevant subexpressions as variables.
 For instance, the expression. 
-
+\todo{font}
 $Cons\,\mathbb{B}\,true\,\left(S\left(S\left(S\left(Z\right)\right)\right)\right)\,\left(Cons\,\mathbb{B}\,false\,\left(S\left(S\left(Z\right)\right)\right)\,y'\right)$
 
 will match the patterns
@@ -88,8 +88,10 @@ will match the patterns
 When patterns are used in the case construct, the appropriate branch will reduce with the correct bindings in scope.
 Therefore the expression 
 
-$\mathsf{case}\,Cons\,\mathbb{B}\,true\,\left(S\left(S\left(S\left(Z\right)\right)\right)\right)\,\left(Cons\,\mathbb{B}\,false\,\left(S\left(S\left(Z\right)\right)\right)\,y'\right)\left\{ Cons\,-\,x\,-\,\left(Cons\,-\,y\,-\,-\right)\Rightarrow x\&y\right\} $
- reduces to $false$.
+% $\mathsf{case}\,Cons\,\mathbb{B}\,true\,\left(S\left(S\left(S\left(Z\right)\right)\right)\right)\,\left(Cons\,\mathbb{B}\,false\,\left(S\left(S\left(Z\right)\right)\right)\,y'\right)\left\{ Cons\,-\,x\,-\,\left(Cons\,-\,y\,-\,-\right)\Rightarrow x\&y\right\} $
+$\mathsf{case}\,Cons\,\mathbb{B}\,true\,3\,\left(Cons\,\mathbb{B}\,false\,2\,y'\right)\left\{ Cons\,-\,x\,-\,\left(Cons\,-\,y\,-\,-\right)\Rightarrow x\&y\right\} $
+
+reduces to $false$.
 
 The explicit rules for pattern matching are listed in Figure \ref{fig:surface-data-match}, where $\sigma$ will hold a possibly empty set of assignments.
 
@@ -166,7 +168,7 @@ Since assignments are maximal, we are sure that a unified pattern will still be 
 A simplified version of a typical unification procedure is listed in Figure \ref{fig:surface-data-unification}.
 Several variations are explored in \cite{cockx_devriese_2018}.
 Unification is not guaranteed to terminate since it relies on definitional equalities, which are undecidable in the surface language.
-The unification procedure does not exclude the possibly cyclic assignments that could occur, such as $x=S\,x$\todo{as a threat to soundness this should be corrected?}. 
+The unification procedure should also exclude the possibly cyclic assignments that could occur, such as $x=S\,x$. 
 
 \begin{figure}
 \[
@@ -201,8 +203,8 @@ After the branches have type checked we should make sure that they are exhaustiv
 Usually this is done by generating a set of patterns that would cover all combinations of constructors and proving that the unlisted branches are unreachable.
 In general it is undecidable whether any given pattern is impossible or not, so a practical approximation must be chosen.
 Usually a branch is characterized as unreachable if a contradiction is found in the unification procedure.
-At least programmers have the ability to manually include non-obviously unreachable branches and prove their unreachability, (or direct those branches to dummy outputs).
-Though there is a real risk that the unification procedure gets stuck in ways that are not clear to the programmer, and a clean error message may be very difficult.
+At least programmers have the ability to manually include non-obviously unreachable branches and prove their unreachability, or direct those branches to dummy outputs.
+Though there is a real risk that the unification procedure gets stuck in ways that are not clear to the programmer, and an understandable error message may be very difficult.
 
 But that set of patterns must still be generated, given the explicit branches the programmer introduced.
 There is no clear best way to do this since a more fine division of patterns may allow enough additional definitional information to show unsatisfiability, while a more coarse division of patterns will be more efficient.
@@ -239,12 +241,14 @@ Where $\Gamma\vdash\overline{pat}:_{E}?\Delta$ is shorthand for a set of equatio
 \begin{conjecture}
 There exists a suitable\footnote{supporting at least subject reduction, type soundness, and regularity} extension to the surface language \ac{TAS} that supports pattern matching style elimination
 \end{conjecture}
-
-This conjecture is not obvious since pattern matching is not consistent under reduction, or even well typed substitution.
-Probably the best way to work in that direction is to use explicit contextual equalities as in \cite{sjoberg2012irrelevance}. \todo{or careful use of flex vars}
 \begin{conjecture}
 The bidirectional extension listed here is weakly annotatable with that extension to the surface language.
 \end{conjecture}
+ 
+These conjectures are not obvious since pattern matching's unification is not necessarily preserved under reduction, or even well typed substitution.
+These properties could be recovered by limiting the flexible(assignable) variables of unification to those that appear in the pattern.
+Though doing so seems a little arbitrary, and is limiting to the programmer.
+Another way to formalize a \ac{TAS} is to use explicit contextual equalities as in \cite{sjoberg2012irrelevance}.
 
 Additionally, it makes sense to allow some additional type annotations in the motive and for these annotations to switch the type inference of the scrutinee into a type-check.
 The implementation includes this along with a simple syntax for modules, and even mutually defined data types.

@@ -2,7 +2,6 @@
 \label{chapter:SurfaceData}
 \thispagestyle{myheadings}
 
-\todo{more on parameters /indicies}
 \todo{flex vars, could probly make a s.r. system if unification is limited}
 
 User defined data is an important part of a realistic programming language.
@@ -18,9 +17,9 @@ However, such an encoding is inconvenient in practice.
 Since ``ease of use'' is the overriding concern for the system developed in this thesis, those encoding are an unrealistic way to use data.
 % However, the combination of user defined data and dependent types can be subtle.
 
-In this chapter we will show two different ways to add data to the \slang{} and \bidir{} system.
+In this Chapter we will show two different ways to add data to the \slang{} and \bidir{} system.
 The first, a direct eliminator scheme, is meta-theoretically well behaved but cumbersome for programmers.
-The second is based on pattern matching, and is extremely convenient, though its meta-theory is much more difficult.
+The second is based on pattern matching, and is extremely convenient, though its meta-theory is too difficult to show here.
 
 \input{4_Surface_data/2_Def}
 \input{4_Surface_data/3_Direct}
@@ -33,17 +32,18 @@ The second is based on pattern matching, and is extremely convenient, though its
 
 Many systems that target data only formalize a representative collection of data types, expecting the reader to be able to generalize the scheme.
 This data usually covers \Nat{}s (for recursive types) and dependent pairs (for dependent types). % and unit to end a chain of dependent pairs.
-For example, Martin L{\"o}f's original paper treated data this way\todo{confirm, cite}, and is still a common approach to data. % (for instance in \cite{jia2010dependent}).
+% For example, some of Martin L{\"o}f's original work treated data this way\todo{confirm, cite}, and it is still a common approach to data. % (for instance in \cite{jia2010dependent}).
 
 % Martin Lof generalized the notion of data to W types of well founded trees  and this still serves as a theoretical justification for data.
 
-\todo[inline]{Abbreviations!!}
-Unified Type Theory (UTT)\cite{luo1990extended,luo1994computation} is an extension to ECC that specifies a scheme to define strictly positive data types by way of a logical framework defined in \ac{MLTT}.
+Unified Type Theory (\ac{UTT})\cite{luo1990extended,luo1994computation} is an extension to \ac{ECC} that specifies a scheme to define strictly positive data types by way of a logical framework defined in \ac{MLTT}.
 This scheme generates primitive recursors for schematized data, and does not inherently support pattern matching.
 
-The Calculus of Inductive Constructions (CiC) is an extension to the calculus of constructions that includes a system of first class data definitions\todo{cite '93 COq report}.
-It evolved form Calculus of Constructions with Inductive Definitions (CCID) which was first presented in, \cite{10.1007/BFb0037116} but the most complete formulation is maintained as part of the Coq manual\footnote{https://coq.github.io/doc/v8.9/refman/language/cic.html}.
-A bidirectional account of CiC is given in \cite{lennonbertrand:LIPIcs.ITP.2021.24}, though it uses a different style of bidirectionally then discussed here to maintain compatibility with the existing Coq system.
+The Calculus of Inductive Constructions (\ac{Cic}) is an extension to the calculus of constructions that includes a system of first class data definitions\todo{cite '93 COq report}.
+It evolved form Calculus of Constructions, and seems to have been first presented in the Coq manual, where a formulation is still maintained\footnote{https://coq.github.io/doc/v8.9/refman/language/cic.html}.\todo{proper cite?}
+The meta theory was partially explored \cite{10.1007/BFb0037116} which presented the  Calculus of Constructions with Inductive Definitions (CCID) which is a restricted version of \ac{Cic}.
+A bidirectional account of \ac{Cic} is given in \cite{lennonbertrand:LIPIcs.ITP.2021.24}, though it uses a different style of bidirectionally then discussed here to maintain compatibility with the existing Coq system.
+% https://proofassistants.stackexchange.com/questions/1257/what-should-be-cited-for-the-calculus-of-inductive-constructions
 
 \todo[inline]{CTT, higher inductive types, quotient types}
 
@@ -52,23 +52,18 @@ A bidirectional account of CiC is given in \cite{lennonbertrand:LIPIcs.ITP.2021.
 \todo[inline]{Clean up this section}
 
 The scheme for dependent pattern matching was first presented by Thierry Coquand in \cite{coquand1992pattern}.
-
 Mcbride and Mckinna extended the power and theory of dependent pattern matching with several additional constructs such as $\mathsf{with}$ in \cite{mcbride_mckinna_2004}.
-
-Ulf Norell greatly simplified the presentation of pattern matching in his thesis \cite{norell2007towards}.
+Ulf Norell simplified the presentation of pattern matching in his thesis \cite{norell2007towards}.
+The subtleties of dependently pattern matching are explored in \cite{cockx_devriese_2018}, which has many informative examples, some of which were motivated by long standing bugs in Agda.
 
 \todo[inline]{A tutorial implementation of dynamic pattern unification Adam Gundry
 and Conor McBride (2012) http://adam.gundry.co.uk/pub/pattern-unify/
 (this links give you the choice to read a more detailed chapter of
 Adam Gundry's thesis instead)}
 
-The subtleties of dependently pattern matching are explored in \cite{cockx_devriese_2018}, which has many informative examples, some of which were motivated by long standing bugs in Agda.
 
 \todo[inline]{https://research.chalmers.se/en/publication/519011 ?}
 
 \todo[inline]{https://sozeau.gitlabpages.inria.fr/www/research/publications/Equations:\_A\_Dependent\_Pattern-Matching\_Compiler.pdf ?}
 
 \todo[inline]{http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.99.1405\&rep=rep1\&type=pdf ?}
-
-\todo[inline]{barras's thesis data}
-

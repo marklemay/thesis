@@ -3,9 +3,22 @@
 %What data defs/ constructors
 % The langugae defined in this thesus uses data definitions like those found in systems like Agda and Coq. 
 
-A dependent data type is defined by a type constructor indexed by arguments, and a set of data constructors that tag data and characterize their arguments.
+A dependent data type is defined by a type constructor indexed by arguments, and a set of data constructors that tag data and refine those arguments\footnote{
+ In more developed systems such as Coq and Agda data types may also have parameters.
+ These are indices that apply uniformly over the type and every term construtor.
+ For instance, the first argument of \Vect{} is often given by a parameter.
+% \begin{lstlisting}[basicstyle={\ttfamily\tiny}]
+% data Vec (A : *) : Nat -> * {
+% | Nil  : Vec A Z
+% | Cons : A -> (x : Nat) -> Vec A x -> Vec A (S x)
+% };
+% \end{lstlisting}
+ Parameters help remove clutter, help inference and erasure, and presumably have parametric properties\cite{10.1145/99370.99404}.
+ However parameters are easy to simulate with indexes, so for simplicity we will only deal with \emph{indexed} dependent data.
+ Parameters can simulate indexes with a suitable equality type\cite{sjoberg2012irrelevance}, though this is not always possible\cite[Section 8]{bertrand:hal-02896776}.
+}.
 Several familiar data types are defined in Figure \ref{fig:data-defs}.
-For example, the data type $\mathtt{Nat}$ is defined with the type constructor $\mathtt{Nat}$ (which has no type arguments), the data constructors $\mathtt{Z}$ which takes no further information and the data constructor $\mathtt{S}$ which is formed with the prior number.
+For example, the data type of natural numbers is defined with the type constructor $\mathtt{Nat}$ (which has no type arguments), the data constructors $\mathtt{Z}$ which takes no further information and the data constructor $\mathtt{S}$ which is formed with the prior number.
 The data type $\mathtt{Vec}$ has two type arguments corresponding to the type contained in the vector and its length; it has two data constructors that allow building an empty vector, or to add an element to the front of an existing vector.
 
 Data defined in this style is simple to build and reason about, since data can only be created from its constructors.

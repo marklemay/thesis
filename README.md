@@ -4,14 +4,15 @@ all work related to my thesis document, will eventually become public
  
 latest draft available [here](https://github.com/marklemay/thesis/releases)
 
-## What to Review
+## How to Review
+### Overall
 * Where are you first confused?
-* Where do you first get board?
+* Where do you first get bored?
 * how much new jargon should I introduce
-  * name the system `dDyamic`?
+  * name the programming language? `dDyamic`? `dTest`?
   * better name for the `surface language` and `cast language`?
   * `gradual correctness`?
-
+### What to Review
 * Abstract
   * photo ready?
 * Chapter 1
