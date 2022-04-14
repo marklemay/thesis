@@ -1,7 +1,7 @@
 \section{Endpoint Rules}
 
 Care must be taken so that typing is still sensible when an expression could have multiple interpretations.
-To do this we construct a new \csys{} to include term level endpoint information.
+To do this we construct a new \csys{} to include term level endpoint information that will generalize the cast relation of \ch{3]}.
 
 \subsection{Function Fragment}
 The rules for non-data terms are listed in \Fref{cast-endpoint-rules}.
@@ -93,9 +93,6 @@ The rules for non-data terms are listed in \Fref{cast-endpoint-rules}.
 \\
 \end{align*}
 
-\[
-\frac{\varGamma\vdash a\sqsupseteq a:A}{\varGamma\vdash a:A}\rulename{ty-def}
-\]
 \caption{Endpoints (non-data)}
 \label{fig:cast-endpoint-rules}
 \end{figure}
@@ -110,12 +107,30 @@ In addition to the usual type conversion rule we also have a term conversion rul
 Term conversion is important so that $\cup$ can associate terms under reduction.
 For instance, $\left(x\sim2\right)\cup\left(1+1\sim y\right)\sqsupseteq x, y$.
 
-We can recover a typing judgment when a term is its own endpoint (formalized in the \rulename{ty-def} rule).
+We can recover some of the familar judgments in \Fref{cast-data-endpoint-rules-def}.
+A term has well-cast when it is its own endpoint (formalized in the \rulename{ty-def} rule).
+Therefore a well-cast term can only have assert and unify syntax in proprer positions of casts. 
+Also we can suggestively write endpoints as an equality with $\approx$.
  
+ 
+\begin{figure}
+\[
+\frac{\varGamma\vdash a\sqsupseteq a:A}{\varGamma\vdash a:A}\rulename{ty-def}
+\]
+\[
+\frac{\varGamma\vdash a\sqsupseteq b:B \quad \varGamma\vdash a\sqsupseteq c:C}{
+  \varGamma\ \vdash\ a\ :\ \ b\,:\,B\ \approx\ c\,:\,C\
+  }\rulename{\approx-def}
+\]
+\caption{Definitions}
+\label{fig:cast-data-endpoint-rules-def}
+\end{figure}
+ 
+
 As usual, the system needs a suitable definition of $\equiv$.
 We use a transitive reflexive equivalence relation that respects reductions and ignores casts.
 Ignoring casts keeps terms from being made distinct by different casts, and prevents reductions from getting stuck for the purpose of equality.
-Note that unlike \ch{3} this means equivalence will not preserve Blame and we will need to rely on a more specific reduction relation that preserves both equivalence and blame.
+Note that unlike \ch{3} this means equivalence will not preserve blame and we will need to rely on a more specific reduction relation that preserves both equivalence and blame.
 \todo{constructing such an equivalence rigorously...}
 
 
@@ -124,24 +139,30 @@ Note that unlike \ch{3} this means equivalence will not preserve Blame and we wi
 The Rules for data endpoints are listed in \Fref{cast-Data-Endpoint-Rules}.
 
 \begin{figure}
-\[
-\frac{
+
+\begin{align*}
+  \frac{
   p\ :\ a:A\approx b:B\ \in\ \varGamma
 }{
-  \varGamma\vdash x\sqsupseteq a:A
-  }
-\]
-\[
-\frac{
-  p\ :\ a:A\approx b:B\ \in\ \varGamma
-}{\varGamma\vdash x\sqsupseteq b:B}
-\]
-\[
-\frac{\mathsf{data}\ D\ :\ \Delta\rightarrow\star\ \in\ \varGamma}{\varGamma\vdash D_{\Delta}\sqsupseteq D_{\Delta}:\Delta\rightarrow\star}
-\]
-\[
-\frac{d\ :\ \Delta\rightarrow D\overline{a}\ \in\ \varGamma}{\varGamma\vdash d_{\Delta\rightarrow D\overline{a}}\sqsupseteq d_{\Delta\rightarrow D\overline{a}}:\Delta\rightarrow D\overline{a}}
-\]
+  \varGamma\vdash p\sqsupseteq a:A
+  }\rulename{\sqsupseteq-var-L} \quad & \quad \frac{
+    p\ :\ a:A\approx b:B\ \in\ \varGamma
+  }{
+    \varGamma\vdash p\sqsupseteq b:B
+    }\rulename{\sqsupseteq-var-R} \\
+\end{align*}
+
+\begin{align*}
+\frac{\mathsf{data}\ D\ :\ \Delta\rightarrow\star\ \in\ \varGamma
+}{
+\varGamma\vdash D_{\Delta}\sqsupseteq D_{\Delta}:\Delta\rightarrow\star
+}\rulename{\sqsupseteq-TCon} \quad & \quad \frac{
+d\ :\ \Delta\rightarrow D\overline{a}\ \in\ \varGamma
+}{
+\varGamma\vdash d_{\Delta\rightarrow D\overline{a}}\sqsupseteq d_{\Delta\rightarrow D\overline{a}}:\Delta\rightarrow D\overline{a}
+}\rulename{\sqsupseteq-Con}\\
+\end{align*}
+
 \[
 \frac{\begin{array}{c}
 \varGamma\vdash\overline{a}\sqsupseteq\overline{a'}:\Delta\\
@@ -152,7 +173,8 @@ The Rules for data endpoints are listed in \Fref{cast-Data-Endpoint-Rules}.
 \forall\overline{p}\in\overline{?\,\overline{patc'}},\:\varGamma\vdash\overline{p}:\Delta\\
 \varGamma\vdash\overline{|\,\overline{patc}}\overline{?\,\overline{patc'}}:\Delta\ \mathbf{Complete}
 \end{array}}{
-  \varGamma\vdash\mathsf{case}\,\overline{a,}\,\left\{ \overline{|\,\overline{patc\Rightarrow}b} \overline{?\,\overline{patc'}} \right\} \sqsupseteq\mathsf{case}\,\overline{a',}\,\left\{ \overline{|\,\overline{patc\Rightarrow}b'} \overline{?\,\overline{patc'}} \right\} :B'\left[\Delta\coloneqq\overline{a'}\right]}
+  \varGamma\vdash\mathsf{case}\,\overline{a,}\,\left\{ \overline{|\,\overline{patc\Rightarrow}b} \overline{?\,\overline{patc'}} \right\} \sqsupseteq\mathsf{case}\,\overline{a',}\,\left\{ \overline{|\,\overline{patc\Rightarrow}b'} \overline{?\,\overline{patc'}} \right\} :B'\left[\Delta\coloneqq\overline{a'}\right]
+  }\rulename{\sqsupseteq-\mathsf{case}}
 \]
 \[
 \frac{\begin{array}{c}
@@ -162,26 +184,24 @@ The Rules for data endpoints are listed in \Fref{cast-Data-Endpoint-Rules}.
 \varGamma\vdash L\sqsupseteq b:B\\
 \mathbf{head}\,a\neq\mathbf{head}\,b\\
 \varGamma\vdash B:\star
-\end{array}}{\varGamma\vdash!_{L}^{L'}\sqsupseteq!_{L}^{L'}\ :\ B}
+\end{array}}{\varGamma\vdash!_{L}^{L'}\sqsupseteq!_{L}^{L'}\ :\ B}\rulename{\sqsupseteq-!}
 \]
 \[
 \frac{\begin{array}{c}
-\varGamma\vdash b\sqsupseteq D_{\Delta}\overline{a}:\star\end{array}\quad\mathbf{length}\,\Delta=\mathbf{length}\,\overline{a}}{\varGamma\vdash TCon_{i}\ b\sqsupseteq\Delta@_{i}\overline{a}}
+\varGamma\vdash b\sqsupseteq D_{\Delta}\overline{a}:\star\end{array}\quad\mathbf{length}\,\Delta=\mathbf{length}\,\overline{a}}{\varGamma\vdash TCon_{i}\ b\sqsupseteq\Delta@_{i}\overline{a}
+}\rulename{\sqsupseteq-TCon}
 \]
 \[
 \frac{\begin{array}{c}
-\varGamma\vdash b\sqsupseteq d_{\Delta\rightarrow D\overline{b}}\overline{a}\end{array}:D\overline{c}\quad\mathbf{length}\,\Delta=\mathbf{length}\,\overline{a}}{\varGamma\vdash DCon_{i}\ b\sqsupseteq\Delta@_{i}\overline{a}}
+\varGamma\vdash b\sqsupseteq d_{\Delta\rightarrow D\overline{b}}\overline{a}\end{array}:D\overline{c}\quad\mathbf{length}\,\Delta=\mathbf{length}\,\overline{a}}{\varGamma\vdash DCon_{i}\ b\sqsupseteq\Delta@_{i}\overline{a}
+}\rulename{\sqsupseteq-DCon}
 \]
-
-
-\begin{tabular}{lll}
-  $\left(\left(x:A\right)\rightarrow\Delta\right)@_{0}\left(a,\overline{b}\right)$ & = & $a:A$\tabularnewline
-  $\left(\left(x:A\right)\rightarrow\Delta\right)@_{i}\left(a,\overline{b}\right)$ & = & $\left(\Delta\left[x\coloneqq a\right]\right)@_{\left(i-1\right)}\overline{b}$\tabularnewline
-\end{tabular}
   
 \caption{Cast Data Endpoint Rules}
 \label{fig:cast-Data-Endpoint-Rules}
 \end{figure}
+
+\todo{supressing checks on telescopes}
 
 Assertion variables have endpoints at each side of the equality given from the typing judgment.
 Data type constructors and data term constructors have the function type implied by their definitions (and annotations that match).
@@ -192,7 +212,19 @@ Every pattern must type check against the telescope.
 The body of every pattern must have an endpoint consistent with the motive and pattern.
 Finally the constructors of the patterns must form a complete covering.
   
-Direct blame allows evidence with contradictory endpoints to inhabit any type.
+Direct blame allows evidence with contradictory endpoints to inhabit any type, as long as the evidence is obviously contradictory.
 
-Data types and data terms can be inspected, however the prior indices are needed to compute the types, so an index meta-function $@_{i}$ is defined.
+Data types and data terms can be inspected with \rulename{\sqsupseteq-TCon} and \rulename{\sqsupseteq-DCon}
+However the prior indices are needed to compute the types, so an index meta-function $@_{i}$ is defined.
+For instance, $TCon_1 (\Id{}\, (\Nat{}\sim\Bool{})\,(1\sim\True{})\,(1\sim\True{}))\ \sqsupseteq\  1\ :\ \Nat{}$ amd $TCon_1 (\Id{}\, (\Nat{}\sim\Bool{})\,(1\sim\True{})\,(1\sim\True{}))\ \sqsupseteq\  \True{}\ :\ \Bool{}$
+The function is defined in \Fref{cast-Data-index-1}.
 
+\begin{figure}
+
+\begin{tabular}{lll}
+  $\left(\left(x:A\right)\rightarrow\Delta\right)@_{0}\left(a,\overline{b}\right)$ & = & $a:A$\tabularnewline
+  $\left(\left(x:A\right)\rightarrow\Delta\right)@_{i}\left(a,\overline{b}\right)$ & = & $\left(\Delta\left[x\coloneqq a\right]\right)@_{\left(i-1\right)}\overline{b}$\tabularnewline
+\end{tabular}
+\caption{Typed Index Function}
+\label{fig:cast-Data-index-1}
+\end{figure}
