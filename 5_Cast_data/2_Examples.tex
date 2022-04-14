@@ -12,12 +12,12 @@ case x <_:Vec Bool (S n) => Bool> {
 }
 \end{lstlisting}
 
-Where $x$ has the type $\Vect{}\,A\,(\mathtt{S}\,n)$.
+Where $x$ has the apparent type $\Vect{}\,\Bool{}\,(\mathtt{S}\,n)$.
 
 What can go wrong in the presence of casts?
 \begin{itemize}
 \item
-A blamable cast may have made $x$ appear to be a Vector even when it is not.
+A blamable cast may have made $x$ appear to be a \Vect{} even when it is not.
 For instance, $\True{}::_{\ell}\Vect{}\,\Bool{}\,3$ (in \ch{3} notation).
 \item
 The vector may be empty but cast to look like it is inhabited.
@@ -41,30 +41,29 @@ The elaborated case expression covers all possible constructors for the data typ
 Then unification solves the constraints to help elaborate the body.
  
 In the first branch $A:\star$, $a:A$, $y:\mathtt{Nat}$, while $p$ is a path variable that contains evidence that the type of $\mathtt{Cons\,A\,a\,y\,-}$ is $\mathtt{Vec\,Bool\,(S\,n)}$.
-We might say, $p:\mathtt{Vec}\ A\ (\mathtt{S}\,y)\approx\mathtt{Vec}\,\mathtt{Bool}\,(\mathtt{S}\,n)$.
-$TCon_{0}\,p$ extracts the 0th argument from the type constructor $p:\mathtt{Vec}\ \underline{A}\ (\mathtt{S}\,y)\approx\mathtt{Vec}\,\underline{\mathtt{Bool}}\,(\mathtt{S}\,n)$ resulting in the type $TCon_{0}p\ :\ A\approx\mathtt{Bool}$\todo{
-  expand on this notation}.
+So we will say, $p:\mathtt{Vec}\ A\ (\mathtt{S}\,y)\approx\mathtt{Vec}\,\mathtt{Bool}\,(\mathtt{S}\,n)$.
+$TCon_{0}\,p$ extracts the 0th argument from the type constructor $p:\mathtt{Vec}\ \underline{A}\ (\mathtt{S}\,y)\approx\mathtt{Vec}\,\underline{\mathtt{Bool}}\,(\mathtt{S}\,n)$ resulting in the type $TCon_{0}p\ :\ A\approx\mathtt{Bool}$.
 The body of the branch casts $a$ along $TCon_{0}\,p$ to $\mathtt{Bool}$.
 Unlike in \ch{3}, casts will need to be generalized to contain evidence of equality.
  
 In the the second branch, the pattern match gives $A:\star$, $p:\mathtt{Vec}\ A\ \mathtt{Z}\approx\mathtt{Vec}\,\mathtt{Bool}\,(\mathtt{S}\,y)$.
-The body of the branch encodes the contradiction using explicit blame syntax by observing $\mathtt{Z}\neq\mathtt{S}\,y$ with $TCon_{1}p$.
+The body of that branch encodes the contradiction using explicit blame syntax by observing $\mathtt{Z}\neq\mathtt{S}\,y$ with $TCon_{1}p$.
 Any match in that branch must be blameable.
  
-Since there is no assertion made in either branch, no warnings will be generated for this elaborated case term.
+Since there is no assertion made in either branch, no warnings will be reported for this elaborated case term.
 Any failure that arises will be redirected to the scrutinee, which must have made a blameable assertion.
  
 Again consider the ways $x$ could go wrong,
 \begin{itemize}
 \item
-If the user tries to eliminate $\mathtt{True}::\mathtt{Vec}\,\mathtt{Bool}\,3$, the type constructor is not matched so the faulty assumption can be blamed automatically.
+If the user tries to eliminate $x=\mathtt{True}::\mathtt{Vec}\,\mathtt{Bool}\,3$, the type constructor is not matched so the faulty assumption can be blamed automatically.
 \item
 If the scrutinee is an empty \Vect{}, we will fall into the $\mathtt{Nil}$ branch, which will reflect the underlying faulty assumption, via the explicit blame syntax.
 \item
-If the \Vect{} is inhabited by an incorrect type, such as $\mathtt{Cons}\,\mathtt{Nat}\,3\,...\,...::\mathtt{Vec}\,\mathtt{Bool}\,5$, the case will return $3::\mathtt{Bool}$ with a cast that rests on the blamable assertion of $\mathtt{Vec}\,\mathtt{Nat}\,5\approx\mathtt{Vec}\,\mathtt{Bool}\,\,5$.
+If the \Vect{} is inhabited by an incorrect type, such as $\mathtt{Cons}\,\mathtt{Nat}\,3\,...\,...::_{\ell}\mathtt{Vec}\,\mathtt{Bool}\,5$, the case will return $3::_{\ell,...}\mathtt{Bool}$\todo{fill in ..., typeing jusdment and undeline the other?} with a cast that rests on the blamable assertion of $\mathtt{Vec}\,\mathtt{Nat}\,5\approx\mathtt{Vec}\,\mathtt{Bool}\,\,5$.
 When exactly this blame will surface depends on the evaluation and checking strategies.
 In the implemented language \cbv{} and check-by-value are used at runtime and the blame will surface before the pattern match.
-Using a \whnf{} strategy, as in the implemented elaborator, the blame will be embedded in the resulting term and discovered whenever that term is eliminated.
+Using a \whnf{} strategy the blame will be embedded in the resulting term and discovered whenever that term is eliminated. % , as in the implemented elaborator, 
 \end{itemize}
  
 \subsection{Sum}
@@ -97,9 +96,10 @@ In the first branch we have the variables in scope, $Nat':\star$, $Nat'':\star$,
 \todo{rename Nat' -> N, Nat'' -> N' }
 \begin{itemize}
 \item
-This means the elaborator can construct $TCon_0(p2):Nat'\approx\mathtt{Nat}$, $TCon_0(p1):Nat''\approx Nat'$ and can combine the evidence to show $TCon_0(p1) \cup TCon_0(p2):Nat''\approx\mathtt{Nat}$.
+This means the elaborator can construct $TCon_0(p2):Nat'\approx\mathtt{Nat}$, and $TCon_0(p1):Nat''\approx Nat'$.
+Thes facts can be combined to show $TCon_0(p1) \cup TCon_0(p2):Nat''\approx\mathtt{Nat}$.
 \item
-The elaborator knows from unification what the type of every sub expression is supposed to be, so casts can be injected using evidence from the pattern.
+The elaborator knows what the type of every sub expression is supposed to be, so casts can be injected using evidence from the pattern.
 \end{itemize}
 \item
 In the 2nd branch we have, $p:\mathtt{Vec}\ Nat''\ 0\approx\mathtt{Vec}\ Nat'\ 2$.
@@ -120,7 +120,7 @@ If this branch is reached, we can observe a problem in either branch or both.
  
 \subsection{Missing Branches}
 \todo{this example is a little meh, better with something that needs path evidence like ID}
-We can now address possible but unstated branches that were alluded to in \Ch{4}.
+What about unstated branches that cannot be excluded with type information?
 % For instance, variables may not be used in the body of a branch.
 Consider this partial pattern match where $\mathtt{rept}\ :\ (x: \Nat{}) \rightarrow \Vect{}\,\Bool{}\,x$,
  
@@ -146,9 +146,8 @@ Additionally the elaborator will form a covering of implicit patterns that handl
 Since the unifier cannot find a contradiction for any of these cases, the user will be warned of possible runtime errors.
  
 \subsection{Congruence (embedding equalities in terms)}
- 
-Another more complicated possibility is this surface expression that takes in a propositional proof that $2=2$ and uses the named witness to generate a vector of length 2.
-This will typecheck in the surface language.
+This surface expression that takes in a propositional proof that $2=2$ and uses the named witness to generate a vector of length 2 demonstrates some of the subtler possibilities that arise in dependently typed pattern matching.
+% This will typecheck in the surface language.
  
 \todo[inline]{Note that an arbitrary choice was was made $InTC_{1}(p)$ $InTC_{2}(p)$}
 \begin{lstlisting}[basicstyle={\ttfamily\small}]
@@ -167,7 +166,7 @@ case x {
 }
 \end{lstlisting}
  
-Where $N:\star$, $a:N$, and $p:\mathtt{Id}\ N\ a\ a\approx\mathtt{Id}\ \mathtt{Nat}\ 2\ 2$.
+In the branch, $N:\star$, $a:N$, and $p:\mathtt{Id}\ N\ a\ a\approx\mathtt{Id}\ \mathtt{Nat}\ 2\ 2$.
 Since we have $p:\mathtt{Id}\ N\ a\ a\approx\mathtt{Id}\ \mathtt{Nat}\ 2\ 2$, we can derive $TCon_0(p):\ N\ \approx\ \mathtt{Nat}$.
 Which can be used in $a::(TCon_0(p))$ to cast $a$ from $N$ to \Nat{}.
 But then we need evidence that $\Vect{}\, \Bool{}\, (a :: (TCon_0(p)))\ \approx\ \Vect{}\, \Bool{}\, 2$ to avoid a sperous assertion\todo{
@@ -176,7 +175,7 @@ But then we need evidence that $\Vect{}\, \Bool{}\, (a :: (TCon_0(p)))\ \approx\
 \todo[inline]{avoiding these sperous casts is important for the conjectured gradual correctness, well typed surface language terms should not generate warnings}
 First, we need to select the subterm of interest, $\Vect{}\, \Bool{}\, \underline{(a :: (TCon_0(p)))}\ \approx\ Vect{}\, \Bool{}\, \underline{2}$.
 Equality evidence is constructed specifically so that it can be embedded into terms.
-If we have evidence from $q\ :\ (a ::(TCon_0(p)))\ \approx\ 2$ then $\Vect{}\, \Bool{}\, \underline{q}\ :\ \Vect{}\, \Bool{}\, \underline{(a :: (TCon_0(p)))}\ \approx\ Vect{}\, \Bool{}\, \underline{2}$.
+If we have evidence, $q$, that shows $q\ :\ (a ::(TCon_0(p)))\ \approx\ 2$ then $\Vect{}\, \Bool{}\, \underline{q}\ :\ \Vect{}\, \Bool{}\, \underline{(a :: (TCon_0(p)))}\ \approx\ Vect{}\, \Bool{}\, \underline{2}$.
 % The $Cong$ syntax explicitly embeds a path into a larger expression, here $Cong_{x=> (A : *) -> A -> \mathtt{Vec} \mathtt{Nat} x} ...$ selects the relevant part of the type.
  
 The cast system will only require that terms are equated up to a definitional equality that disregards casts so instead of needing to show $a :: (TCon_0(p))\ \approx\ 2$, we only have to show $a\ \approx\ 2$.
@@ -189,7 +188,8 @@ For instance, given the elaboration above,
   \item if $x$ is $\mathtt{refl}\,\Nat{}\,2\ ::\ \Id{}\,\Nat{}\,0\,2\ ::\ \Id{}\,\Nat{}\,2\,2$ then blame will be discoverable from the $TCon_1$ observation.
   \item if $x$ is $\mathtt{refl}\,\Nat{}\,2\ ::\ \Id{}\,\Nat{}\,2\,0\ ::\ \Id{}\,\Nat{}\,2\,2$ then blame will not be discoverable and a blameless \Vect{} is constructed.
 \end{itemize}
-In general there is no way around this, equality evidence may be constructable in subtle ways, and we can't check everything.
+In general there is no way around this, equality evidence may be constructable in subtle ways.
+Not everything can be checked.
 
 \todo[inline]{Example: translate out to motive}
 

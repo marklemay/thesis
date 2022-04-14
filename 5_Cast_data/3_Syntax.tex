@@ -51,13 +51,14 @@ There are several differences to note from \ch{3}.
 
 In \ch{3} casts did double duty in both asserting an equality and changing the type of an underlying term.
 Now casts ($::$) will hold evidence that may change the type of a term, and assertions ($\sim$) will assert the specific equalities.
-For instance, if we wanted to assume \Nat{} and \Bool{} are the same we could write $\Nat{} \sim_{\ell}^{\star}\Bool{} $ given a location $\ell$ to blame, since $\star$ shares the type of both \Nat{} and \Bool{}.
-The cast operation will allow $1$ to be used as a \Bool{} by casting the assumption, $1::\left(\Nat{} \sim_{\ell}^{\star}\Bool{} \right)$.
+For instance, if we wanted to assume \Nat{} and \Bool{} are the same we could write $\Nat{} \sim_{\ell}^{\star}\Bool{} $ given a location $\ell$ to blame, since $\star$ is the type of both \Nat{} and \Bool{}.
+The cast operation will allow $1$ to be used as a \Bool{} by casting the assumption, $1::\left(\Nat{} \sim_{\ell}^{\star}\Bool{} \right)$. \todo{remind how chapter 3 looked? explicit shorthand?}
 
-Assertions that two terms are the same is written as $a\sim_{\ell,o}^{C}b$ and will evaluate $a$ and $b$ in parallel until a head constructor is reached on each branch.
+These assertions are written $a\sim_{\ell,o}^{C}b$ and will evaluate $a$ and $b$ in parallel until a head constructor is reached on each branch.
 If the constructor is the same it will commute out of the term.
 If the head constructor is different the term will get stuck with the information for the final blame message.
-For instance, $\left(1 \sim_{\ell}^{\Nat{}} 2 \right)\rightsquigarrow_{*} S\left(0 \sim_{\ell.DCon_{0}}^{\Nat{}} 1\right) $.
+For instance, $\left(1 \sim_{\ell}^{\Nat{}} 2 \right)\rightsquigarrow_{*} \mathtt{S}\left(0 \sim_{\ell.DCon_{0}}^{\Nat{}} 1\right) $, \todo{recall 2=SSZ?}where $DCon_{0}$ records that the issue occurs in the 0th argument of the outer $\mathtt{S}$ constructor.
+\todo{address posissibility of misalighned types, 1~True?}
 
 % Since this equational construct is already needed for functions, we
 % will use it to handle all equality assertions. For instance, $\left\{ \left(\lambda x\Rightarrow S\,x\right)Z\sim_{k,o,\ell}2+2\right\} \rightsquigarrow_{*}\left\{ S\,Z\sim_{k,o,\ell}S\,\left(1+2\right)\right\} \rightsquigarrow_{*}S\,\left\{ Z\sim_{k,o.DCon_{0},\ell}1+2\right\} \rightsquigarrow_{*}S\,\left\{ Z\sim_{k,o.DCon_{0},\ell}S\,2\right\} $.
@@ -68,18 +69,19 @@ The presence of assertions allows an expression to have different interpretation
 For instance, $\left(1 \sim_{\ell}^{\Nat{}} 2 \right)$, can be interpreted as $1$, $2$ or evidence that $1\approx2$.
 We call the concrete interpretations \textbf{endpoint}s, and they will be formalized in the next section.
 
-Assertions can be chained together with $\cup$ when two expressions share an endpoint, and evidence that the types are the same.
-For instance if we have $\Nat{} \sim_{\ell}^{\star}\Bool{}$ and $\Bool{} \sim_{\ell'}^{\star}String$, then we can associate \Nat{} and $String$, with $\left(\Nat{} \sim_{\ell}^{\star}\Bool{} \right)\cup^{\star}\left(\Bool{} \sim_{\ell'}^{\star}String\right)$.
+Assertions can be chained together with $\cup$ when two expressions share an endpoint. % , and evidence that the types are the same.
+For instance, if we have $\Nat{} \sim_{\ell}^{\star}\Bool{}$ and $\Bool{} \sim_{\ell'}^{\star}String$, then we can associate \Nat{} and $String$, with $\left(\Nat{} \sim_{\ell}^{\star}\Bool{} \right)\cup^{\star}\left(\Bool{} \sim_{\ell'}^{\star}String\right)$.
 % This chaining is needed for when multiple equalities are chained together by unification.
 
 Additionally, the syntax needs a way to point out that when a pattern is un-unifiable.
 This is what the explicit blame syntax ($!$) is for.
 For instance, if the unifier could derive $1=2$ from evidence $p_{1}:1=x$ and $p_{2}:2=x$ then elaboration can force blame with $!_{p_{1}:\cup^{\Nat{}}p_{2}}^{\Nat{}}$.
-Holding the type information isn't strictly needed, but allows us to provide better error messages.
+Holding the type information in the superscript isn't absolutely needed, but allows us to provide better error messages and reflects the implementation.
  
-The syntax allows for though with some differences from \ch{4}.
+The syntax allows data, though with some differences from \ch{4}.
 Data constructors and data type constructors now carry their explicit types, to emphasize that the type information will be needed for some reductions\footnote{
-  a more efficient implementation would probably not include them in the term syntax}.
+  This also reflects our implementation.
+  A more efficient implementation would probably not include them in the term syntax}.
 Motives are no longer needed on $\mathsf{case}$ expressions, and type/cast tracking will be handled implicitly.
 In addition to the handled patterns, $\mathsf{case}$ expressions also will contain a covering of unhandled patterns, for use in warnings and errors.
 Further, we allow two new observations, to observe the indices of data type constructors and term constructors respectively.
@@ -90,7 +92,7 @@ These variables are bound from the extended notion of patterns, and contain evid
 % This is justified by the normal forms of data terms in the cast language.
 % While in the surface language a normal form of data must have the data constructor in head position (justifying the surface language pattern syntax), in the cast language the normal form of data may accumulate a cast.
 
-Pattern matching across dependent data types will allow for observations that were impossible before.
+Pattern matching across dependent data types will allow for observations that were not possible in \ch{3}.
 For instance, it is now possible to observe specific arguments in type constructors and term constructors.
 Since function terms can appear as indices in data constructors and data type constructors it is now possible to observe functions though application $App_{a}$.
 % Observations have been extended to allow the term level checking that is now possible.

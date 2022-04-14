@@ -1,7 +1,7 @@
 \section{Endpoint Rules}
 
 Care must be taken so that typing is still sensible when an expression could have multiple interpretations.
-To do this we construct a new \csys{} to include term level endpoint information that will generalize the cast relation of \ch{3]}.
+To do this we construct a new \csys{} to include term level endpoint information that will generalize the cast relation of \ch{3}.
 
 \subsection{Function Fragment}
 The rules for non-data terms are listed in \Fref{cast-endpoint-rules}.
@@ -96,22 +96,23 @@ The rules for non-data terms are listed in \Fref{cast-endpoint-rules}.
 \caption{Endpoints (non-data)}
 \label{fig:cast-endpoint-rules}
 \end{figure}
- 
-The first rules extend the usual type assignment judgments to endpoints.
-The \rulename{\sqsupseteq-\mathsf{fun}-app} rule makes sure different endpoints are used in a type consistent way.
+
+The \rulename{\sqsupseteq-var} and \rulename{\sqsupseteq-\star} rules extend the usual type assignment judgments to endpoints.
+The \rulename{\sqsupseteq-\mathsf{fun}-ty} and \rulename{\sqsupseteq-\mathsf{fun}-app} rules makes sure different endpoints are used in a type consistent way.
 For example, $\left\{ \lambda x.x+1\sim not\right\} \left\{ 1\sim \False{} \right\} \sqsupseteq \True{} ,2$ and $\left\{ 1\sim2\right\} +\left\{ 10\sim3\right\} \sqsupseteq4,5,11,12$.
 The $\rulename{\sqsupseteq-::}$ rule allows using a term at a different type if the cast has compatible endpoints.
-The next rules allow endpoints to be extracted out of the left or right of $\sim$, and $\cup$ if they maintain enough information to track why those endpoints have the same type.
+The next rules allow endpoints to be extracted out of the left or right of $\sim$, and $\cup$ if they are well formed.\todo{separate into multiple paragraphs?}
 
 In addition to the usual type conversion rule we also have a term conversion rule.
 Term conversion is important so that $\cup$ can associate terms under reduction.
 For instance, $\left(x\sim2\right)\cup\left(1+1\sim y\right)\sqsupseteq x, y$.
+Additionally term conversion will allow for the equivalence of type cast information.
+For instance, $1::(\Nat{} \sim \Bool) \sqsupseteq 1 : \Nat{}$.
 
-We can recover some of the familar judgments in \Fref{cast-data-endpoint-rules-def}.
-A term has well-cast when it is its own endpoint (formalized in the \rulename{ty-def} rule).
-Therefore a well-cast term can only have assert and unify syntax in proprer positions of casts. 
-Also we can suggestively write endpoints as an equality with $\approx$.
- 
+Endpoints can be used to recover the more familiar notions in \Fref{cast-data-endpoint-rules-def}.
+A term is well-cast when it is its own endpoint (formalized in the \rulename{ty-def} rule).
+Therefore a well-cast term can only have assert and unify syntax in proper positions of casts.
+Also we can suggestively write two endpoints as an equality with $\approx$.
  
 \begin{figure}
 \[
@@ -126,17 +127,15 @@ Also we can suggestively write endpoints as an equality with $\approx$.
 \label{fig:cast-data-endpoint-rules-def}
 \end{figure}
  
-
 As usual, the system needs a suitable definition of $\equiv$.
-We use a transitive reflexive equivalence relation that respects reductions and ignores casts.
+We use an equivalence relation that respects reductions and substitutions while ignoring casts.
 Ignoring casts keeps terms from being made distinct by different casts, and prevents reductions from getting stuck for the purpose of equality.
 Note that unlike \ch{3} this means equivalence will not preserve blame and we will need to rely on a more specific reduction relation that preserves both equivalence and blame.
 \todo{constructing such an equivalence rigorously...}
 
-
 \subsection{Data Endpoints}
 
-The Rules for data endpoints are listed in \Fref{cast-Data-Endpoint-Rules}.
+The rules for data endpoints are listed in \Fref{cast-Data-Endpoint-Rules}.
 
 \begin{figure}
 
@@ -184,7 +183,8 @@ d\ :\ \Delta\rightarrow D\overline{a}\ \in\ \varGamma
 \varGamma\vdash L\sqsupseteq b:B\\
 \mathbf{head}\,a\neq\mathbf{head}\,b\\
 \varGamma\vdash B:\star
-\end{array}}{\varGamma\vdash!_{L}^{L'}\sqsupseteq!_{L}^{L'}\ :\ B}\rulename{\sqsupseteq-!}
+\end{array}}{\varGamma\vdash!_{L}^{L'}\sqsupseteq!_{L}^{L'}\ :\ B
+}\rulename{\sqsupseteq-!}
 \]
 \[
 \frac{\begin{array}{c}
@@ -206,18 +206,20 @@ d\ :\ \Delta\rightarrow D\overline{a}\ \in\ \varGamma
 Assertion variables have endpoints at each side of the equality given from the typing judgment.
 Data type constructors and data term constructors have the function type implied by their definitions (and annotations that match).
 
-To find the endpoints of a $\mathsf{case}$ expression first, find the endpoints of the \scruts{} and a pattern that it types under (the endpoint and typing judgment can be extended to lists and telescopes).
-A motive $B'$ must exist under the context extended with the telescope.
-Every pattern must type check against the telescope.
-The body of every pattern must have an endpoint consistent with the motive and pattern.
-Finally the constructors of the patterns must form a complete covering.
+The \rulename{\sqsupseteq-\mathsf{case}} states that a \case{} expression has a corresponding \case{} expression endpoint:
+\begin{itemize}
+  \item The endpoints of the \scruts{} correspond to an appropriate telescope that is compatible with the patterns\footnote{the endpoint and typing judgment can be extended to lists and telescopes}.
+  \item A motive $B'$ must exist under the context extended with that telescope.
+  \item Every pattern must cast-check against the telescope.
+  \item The body of every pattern must have an endpoint consistent with the motive and pattern.
+  \item The constructors of the patterns must form a complete covering of the telescope.
+\end{itemize}
   
-Direct blame allows evidence with contradictory endpoints to inhabit any type, as long as the evidence is obviously contradictory.
+In \rulename{\sqsupseteq-!} direct blame allows evidence with obviously contradictory endpoints to inhabit any type.
 
-Data types and data terms can be inspected with \rulename{\sqsupseteq-TCon} and \rulename{\sqsupseteq-DCon}
-However the prior indices are needed to compute the types, so an index meta-function $@_{i}$ is defined.
-For instance, $TCon_1 (\Id{}\, (\Nat{}\sim\Bool{})\,(1\sim\True{})\,(1\sim\True{}))\ \sqsupseteq\  1\ :\ \Nat{}$ amd $TCon_1 (\Id{}\, (\Nat{}\sim\Bool{})\,(1\sim\True{})\,(1\sim\True{}))\ \sqsupseteq\  \True{}\ :\ \Bool{}$
-The function is defined in \Fref{cast-Data-index-1}.
+Data types and data terms can be inspected with \rulename{\sqsupseteq-TCon} and \rulename{\sqsupseteq-DCon}.
+However the prior indices are needed to compute the types, so an index meta-function $@_{i}$ is defined (in \Fref{cast-Data-index-1}).
+For instance, $TCon_1 (\Id{}\, (\Nat{}\sim\Bool{})\,(1\sim\True{})\,(1\sim\True{}))\ \sqsupseteq\  1\ :\ \Nat{}$ while also  $... \sqsupseteq\  \True{}\ :\ \Bool{}$.
 
 \begin{figure}
 
