@@ -1,10 +1,10 @@
 \section{Cast soundness}
 
-Additionally, For the fragment without data, we can show cast soundness.
+For the fragment without data, we can show cast soundness.
 And we conjecture that the proof could be extended to support data.
  
 If $\varGamma\vdash a\sqsupseteq a':A'$, $\varGamma\ \mathbf{Empty}$ then either $a\ \mathbf{Consistent}$, $a\ \mathbf{Blame}_{\ell,o}$, or $a\rightsquigarrow b$.
-Again preservation can be shown by extending the usual \ac{TAS} preservation argument over the new constructs.
+Again progress can be shown by extending the usual \ac{TAS} progress argument over the new constructs.
 
 The $\mathbf{Consistent}$ judgment (\Fref{cast-data-val}) generalizes being a value, to elements over $\cup$ and $\sim$.
 This only matters for functions, since they are treated extentionally (so that data constructors can be treated as functions).
@@ -91,7 +91,7 @@ The cast language records every ``unhandled'' branch and if a scrutinee hits one
   This runtime error is conventional in ML style languages, and is even
 how Agda handles incomplete matches }.
 If a scrutinee list primitively contradicts the pattern coverage blame can be extracted from the scrutinee. 
-Since our type system will ensure complete coverage (based only on constructors) if a scrutinee escapes the complete pattern match in an empty context, it must be that there was blamable cast in the \scrut.
+Since our type system will ensure complete coverage (based only on constructors) if a scrutinee escapes the complete pattern match, it must be that there was blamable a cast in the \scrut.
 % We have elided most of the structural rules that extract blame from terms, paths, and casts.
 % We have left the structural rule for explicit blame for emphasis.
 
