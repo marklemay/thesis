@@ -7,7 +7,7 @@ The $\mathtt{head'}$ function needs to redirect unreachable vector inputs to a d
 The usual solution is to extend case elimination with \textbf{pattern matching}.
  
 Pattern matching is much more ergonomic than a direct eliminator $\mathsf{case}$.
-In Figure \ref{fig:data-eliminators}, the $\mathtt{head}$ and $\mathtt{mapVec}$ that are defined though pattern matching is simpler and clearer.
+In Figure \ref{fig:data-eliminators}, the $\mathtt{head}$ and $\mathtt{mapVec}$ functions that are defined though pattern matching is simpler and clearer.
 Additionally nested constructor matching is now possible as in the $\mathtt{sub3}$ function.
 
 When pattern matching is extended to dependent types, variables will be assigned their definitions as needed, and unreachable branches can be omitted from code.
