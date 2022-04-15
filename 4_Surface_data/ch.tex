@@ -18,7 +18,7 @@ Since our language is intended to be easy to use, user defined data will need to
 % However, the combination of user defined data and dependent types can be subtle.
 
 In this Chapter we will show two different ways to add data to the \slang{} and \bidir{} system.
-The first, a direct eliminator scheme, is meta-theoretically well behaved but cumbersome for programmers.
+The first, a direct eliminator scheme, is meta-theoretically well behaved but cumbersome to use.
 The second is based on pattern matching, and is extremely convenient, though its meta-theory is too difficult for a rigorous exposition.
 
 \input{4_Surface_data/2_Def}
@@ -35,6 +35,8 @@ This data usually covers \Nat{}s (for recursive types) and dependent pairs (for 
 % For example, some of Martin L{\"o}f's original work treated data this way\todo{confirm, cite}, and it is still a common approach to data. % (for instance in \cite{jia2010dependent}).
 
 % Martin Lof generalized the notion of data to W types of well founded trees  and this still serves as a theoretical justification for data.
+
+\todo[inline]{W types?}
 
 Unified Type Theory (\ac{UTT})\cite{luo1990extended,luo1994computation} is an extension to \ac{ECC} that specifies a scheme to define strictly positive data types by way of a logical framework defined in \ac{MLTT}.
 This scheme generates primitive recursors for schematized data, and does not inherently support pattern matching.
@@ -54,7 +56,7 @@ A bidirectional account of \ac{Cic} is given in \cite{lennonbertrand:LIPIcs.ITP.
 The scheme for dependent pattern matching was first presented by Thierry Coquand in \cite{coquand1992pattern}.
 Mcbride and Mckinna extended the power and theory of dependent pattern matching with several additional constructs such as $\mathsf{with}$ in \cite{mcbride_mckinna_2004}.
 Ulf Norell simplified the presentation of pattern matching in his thesis \cite{norell2007towards}.
-The subtleties of dependently pattern matching are explored in \cite{cockx_devriese_2018}, which has many informative examples, some of which were motivated by long standing bugs in Agda.
+The subtleties of dependently pattern matching are explored in \cite{cockx_devriese_2018}, which has many good examples, some of which were motivated by long standing bugs in Agda.
 
 \todo[inline]{A tutorial implementation of dynamic pattern unification Adam Gundry
 and Conor McBride (2012) http://adam.gundry.co.uk/pub/pattern-unify/

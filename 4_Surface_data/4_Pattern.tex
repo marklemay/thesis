@@ -5,9 +5,9 @@ Unfortunately, the direct eliminator style is cumbersome for programmers to deal
 For instance, Figure \ref{fig:data-eliminators} shows how $\mathtt{Vec}$ data can be directly eliminated to extract the first element of a non-empty list in the definition of $\mathtt{head'}$.
 The $\mathtt{head'}$ function needs to redirect unreachable vector inputs to a dummy type ($\mathtt{Unit}$) and requires several copies of the same $\mathtt{A}$ variable that are not identified automatically by the eliminator described in the last section.
 The usual solution is to extend case elimination with \textbf{pattern matching}.
-
+ 
 Pattern matching is much more ergonomic than a direct eliminator $\mathsf{case}$.
-In Figure \ref{fig:data-eliminators}, the $\mathtt{head}$ and $\mathtt{mapVec}$ defined though pattern matching is simpler and clearer.
+In Figure \ref{fig:data-eliminators}, the $\mathtt{head}$ and $\mathtt{mapVec}$ that are defined though pattern matching is simpler and clearer.
 Additionally nested constructor matching is now possible as in the $\mathtt{sub3}$ function.
 
 When pattern matching is extended to dependent types, variables will be assigned their definitions as needed, and unreachable branches can be omitted from code.
@@ -92,15 +92,13 @@ $pat$ & $\Coloneqq$ & $x$ & match a variable\tabularnewline
 
 Patterns correspond to a specific form of expression syntax.
 When an expression matches a pattern it will capture the relevant subexpressions as variables.
-For instance, the expression. 
-\todo{font}
-$Cons\,\mathbb{B}\,true\,\left(S\left(S\left(S\left(Z\right)\right)\right)\right)\,\left(Cons\,\mathbb{B}\,false\,\left(S\left(S\left(Z\right)\right)\right)\,y'\right)$
-
-will match the patterns
+For instance, the expression,
+  $\Cons{}\,\Bool{}\,\True{}\,3\,\left(\Cons{}\,\Bool{}\,\False{}\,2\,y'\right)$
+  will match the patterns:
 \begin{itemize}
 \item $Cons\,w\,x\,y\,z$ with bindings $w=\mathbb{B}$, $x=true$, $y=3$, $z=Cons\,\mathbb{B}\,false\,\left(S\left(S\left(Z\right)\right)\right)\,y'$
-\item $x$ with bindings $x=Cons\,\mathbb{B}\,true\,\left(S\left(S\left(S\left(Z\right)\right)\right)\right)\,\left(Cons\,\mathbb{B}\,false\,\left(S\left(S\left(Z\right)\right)\right)\,y'\right)$ 
-\item $Cons\,-\,x\,-\,\left(Cons\,-\,y\,-\,-\right)$ with bindings $x=true$, $y=false$
+\item $x$ with bindings $x = \Cons{}\,\Bool{}\,\True{}\,3\,\left(\Cons{}\,\Bool{}\,\False{}\,2\,y'\right)$
+\item $Cons\,-\,x\,-\,\left(Cons\,-\,y\,-\,-\right)$ with bindings $x = true$, $y = false$
 \end{itemize}
 When patterns are used in the case construct, the appropriate branch will reduce with the correct bindings in scope.
 Therefore the expression 
@@ -168,59 +166,75 @@ For instance,
 \begin{example}
 Type checking by unification
 
-The pattern $Cons\,x\,\left(S\,y\right)\,2\,z$
+The pattern $\Cons{}\,x\,\left(\Suc{}\,y\right)\,2\,z$ could be checked against the type $\Vect{}\,\Nat{}\,w$.
 
-Could be checked against the type $Vec\,Nat\,w$
+This implies the typings $x:\star$, $y:\Nat{}$, $\left(S\,y\right):x$, $2:\Nat{}$, $z:\Vect{}\,x\,2,\left(\Cons{}\,x\,\left(\Suc{}\,y\right)\,2\,z\right):\Vect{}\,\Nat{}\,w$.
 
-This implies the typings $x:*,y:Nat,\left(S\,y\right):x,2:Nat,z:Vec\,x\,2,\left(Cons\,x\,\left(S\,y\right)\,2\,z\right):Vec\,Nat\,w$
-
-Which in turn imply the equalities $x=Nat,w=3$
+Which in turn imply the equalities $x=\Nat{}$,$w=3$
 \end{example}
 
-This is a very simple example, in the worst case we may have equations in the form $m\,n=m'\,n'$ which are hard to solve directly (but may become easy to solve if assignment of $m=\lambda x.x$, and $m'=\lambda-.0$ are discovered).
+This is a simple example, in the worst case we may have equations in the form $m\,n=m'\,n'$ which are hard to solve directly (but may become easy to solve if assignment of $m=\lambda x.x$, and $m'=\lambda-.0$ are discovered).
 
 One advantage of the first order unification approach is that if the algorithm succeeds, it will succeed with a unique, most general solution.
 Since assignments are maximal, we are sure that a unified pattern will still be able to match any well typed syntax.
 
-A simplified version of a typical unification procedure is listed in Figure \ref{fig:surface-data-unification}.
-Several variations are explored in \cite{cockx_devriese_2018}.
+A simplified version of a typical unification procedure is listed in \Fref{surface-data-unification}.
+% Several variations are explored in \cite{cockx_devriese_2018}.
 Unification is not guaranteed to terminate since it relies on definitional equalities, which are undecidable in the surface language.
-The unification procedure should also exclude the possibly cyclic assignments that could occur, such as $x=S\,x$. 
+The unification procedure should also exclude the possibly cyclic assignments that could occur, such as $x=S\,x$.\todo{work this into the rules if not too much work}
 
 \begin{figure}
 \[
-\frac{\,}{U\left(\emptyset,\emptyset\right)}
+\frac{\,}{U\left(\emptyset,\emptyset\right)
+}\rulename{U-emp}
 \]
 
 \[
-\frac{U\left(E,a\right)\quad m\equiv m'}{U\left(\left\{ m\sim m'\right\} \cup E,a\right)}
+\frac{U\left(E,S\right)\quad m\equiv m'}{U\left(\left\{ m\approx m'\right\} \cup E,S\right)
+}\rulename{U-Del}
 \]
 
 \[
-\frac{U\left(E\left[x\coloneqq m\right],a\left[x\coloneqq m\right]\right)}{U\left(\left\{ x\sim m\right\} \cup E,\left\{ a,x\coloneqq m\right\} \right)}
+\frac{
+  U\left(E\left[x\coloneqq m\right],S\left[x\coloneqq m\right]\right)
+}{
+  U\left(\left\{ x\approx m\right\} \cup E,\left\{x\coloneqq m\right\} \cup S \right)
+}\rulename{U-var-L}
 \]
 
 \[
-\frac{U\left(E\left[x\coloneqq m\right],a\left[x\coloneqq m\right]\right)}{U\left(\left\{ m\sim x\right\} \cup E,a\cup\left\{ x\coloneqq m\right\} \right)}
+\frac{
+  U\left(E\left[x\coloneqq m\right],S\left[x\coloneqq m\right]\right)
+}{
+  U\left(\left\{ m\approx x\right\} \cup E, \left\{ x\coloneqq m\right\}  \cup S  \right)
+}\rulename{U-var-R}
 \]
 
 \[
-\frac{U\left(\overline{m}\sim\overline{m'}\cup E,a\right)\quad n\equiv d\overline{m}\quad n'\equiv d\overline{m'}}{U\left(\left\{ n\sim n'\right\} \cup E,a\right)}
+\frac{
+  U\left(\overline{m\approx m'}\cup E,S\right)\quad n\equiv d\overline{m}\quad n'\equiv d\overline{m'}
+}{
+  U\left(\left\{ n\approx n'\right\} \cup E,S\right)
+}\rulename{U-DCon-inj}
 \]
 
 \[
-\frac{U\left(\overline{m}\sim\overline{m'}\cup E,a\right)\quad N\equiv D\overline{m}\quad N'\equiv D\overline{m'}}{U\left(\left\{ N\sim N'\right\} \cup E,a\right)}
+\frac{
+  U\left(\overline{m\approx m'}\cup E,S\right)\quad N\equiv D\overline{m}\quad N'\equiv D\overline{m'}
+}{
+  U\left(\left\{ N\approx N'\right\} \cup E,S\right)
+}\rulename{U-TCon-inj}
 \]
-
+\todo[inline]{sepearte conv rule? better quantifiers for overlining}
 \caption{Surface Language Unification}
 \label{fig:surface-data-unification}
 \end{figure}
-
+\todo{note the untyped nature}
 After the branches have type checked we should make sure that they are exhaustive, such that every possible branch will be covered.
 Usually this is done by generating a set of patterns that would cover all combinations of constructors and proving that the unlisted branches are unreachable.
 In general it is undecidable whether any given pattern is impossible or not, so a practical approximation must be chosen.
 Usually a branch is characterized as unreachable if a contradiction is found in the unification procedure.
-At least programmers have the ability to manually include non-obviously unreachable branches and prove their unreachability, or direct those branches to dummy outputs.
+A programmer will always have the ability to manually include non-obviously unreachable branches and prove their unreachability, or direct those branches to dummy outputs.
 Though there is a real risk that the unification procedure gets stuck in ways that are not clear to the programmer, and an understandable error message may be very difficult.
 
 But that set of patterns must still be generated, given the explicit branches the programmer introduced.
@@ -265,8 +279,9 @@ The bidirectional extension listed here is weakly annotatable with that extensio
 These conjectures are not obvious since pattern matching's unification is not necessarily preserved under reduction, or even well typed substitution.
 These properties could be recovered by limiting the flexible(assignable) variables of unification to those that appear in the pattern.
 Though doing so seems a little arbitrary, and is limiting to the programmer.
-Another way to formalize a \ac{TAS} is to use explicit contextual equalities as in \cite{sjoberg2012irrelevance}.
+For instance, in $\mathtt{mapVec}$ the programmer will need to add the length of the \Vect{} to the pattern match so that $n$ is flexible.
+Another way to formalize a \ac{TAS} is to use explicit contextual equalities as in \cite{sjoberg2015dependently}.
 
 Additionally, it makes sense to allow some additional type annotations in the motive and for these annotations to switch the type inference of the scrutinee into a type-check.
 The implementation includes this along with a simple syntax for modules, and even mutually defined data types.
-For simplicity these have been excluded from the presentation here.
+For simplicity these have been excluded from the presentation here.\todo{confusing par?}
