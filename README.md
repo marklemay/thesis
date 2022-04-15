@@ -8,6 +8,7 @@ latest draft available [here](https://github.com/marklemay/thesis/releases)
 ### Overall
 * Where are you first confused?
 * Where do you first get bored?
+* What is 1 thing you would like an example of?
 * how much new jargon should I introduce
   * name the programming language? `dDyamic`? `dTest`?
   * better name for the `surface language` and `cast language`?

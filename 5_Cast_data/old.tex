@@ -399,16 +399,6 @@ In theory the system has an arbitrary slow down. As in Chapter 3,
 a cast that relies on non-terminating code can itself cause additional
 non-termination as paths are resolved.
 
-As written there are many redundant computations, and trying every
-combination of assumptions is very inefficient. Currently the implementation
-is quite slow, though there are several ways to speed things up. Caching
-redundant computation would help. Having a smarter embedding of $k$
-assignments would remove redundant work directly. To some extent $Cong$
-and $Assert$ can be made multi-arity to allow fewer jumps. But most
-helpful of all would be simplifying away unneeded casts. More advanced
-options include using proof search to find casts that will never cause
-an error.
-
 \todo[inline]{paremetricity}
 
 \todo[inline]{relation to fun-ext}

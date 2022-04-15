@@ -3,17 +3,65 @@
 How should a program observe data?
 Since a term of a given data type can only be created with one of the constructors from its definition, we can completely handle a data expression if each possible constructor is accounted for.
 For instance, $\mathtt{Nat}$ has the two constructors $\mathtt{Z}$ and $\mathtt{S}$ (which holds the preceding number), so the expression $\mathsf{case}\,n\,\left\{ |\,Z\Rightarrow Z\,|\,S\,x\Rightarrow x\right\}$ will extract the proceeding number from $n$ (or $0$ if $n=0$).
-In this light, boolean case elimination corresponds to the if-then-else expression found in many mainstream languages. 
+We will call the term being inspected the \textbf{\scrut{}}\footnote{also called a \textbf{discriminee}}, here $n$ is the \scrut{}.
+% In this light, boolean case elimination corresponds to the if-then-else expression found in many mainstream languages.
+ 
+This $\mathtt{Nat}$ elimination is type checkable since we know the intended output type of each branch (\Nat{} in the above example), and can check that they are compatible.
+But in the presence of dependent types the output may not be obvious.
 
 We will need to extend the syntax of $\mathsf{case}$s to support dependent type checking.
 Specifically, we will need to add a \textbf{motive} annotation that allows the type checker to compute the output type of the branches if they vary in terms of the input.
-For instance, recursively generating a vector of a given length\todo{give explicit example, note the motive}.
-We may also want to use some values of the type level argument to calculate the motive, and type the branches.
-This will be allowed with additional bindings in the motive and in each branch\todo{give explicit of data eliminations that uses these annotations}.
-In general, motive annotations will be treated like the typing annotations in \ch{2}, in that the \ac{TAS} will only allow correct motives in a well typed term, and that the motive will be definitionally irrelevant.
+For instance, recursively generating a vector of a given length as in the $\mathtt{rep}$ funciotn in \Fref{data-elim-examples}.
+There the motive is $\mathtt{n'\ :\ Nat\ =>\ Vec\ A\ n'}$ each branch is typed knowing what it has observed about the input.
+For instance, in the first branch $\mathtt{Nil\ A}$ :  $\mathtt{Vec\ A\ 0}$.
+This allows the output to generalize to any term, even those that do not begin with a constructor.
+For instance, $\mathtt{rep\ Bool\ True\ }x$ : $\mathtt{Vec\ Bool\ }x$ if $x$ : \Nat{} is in scope.
 
+\begin{figure}
+\begin{lstlisting}[basicstyle={\ttfamily\small}]
+rep : (A : *) -> A -> (n : Nat) -> Vec A n ;
+rep A a n = 
+  case n < n' : Nat => Vec A n' >{
+    | (Z)   => Nil A
+    | (S p) => Cons A a p (rep A a p)
+    } ;
+
+trues : Vec Bool 3;
+trues = rep Bool True 3;
+-- = [True,True,True]
+
+mapVec' : (A : *) -> (n : Nat) -> Vec A n 
+ -> (B : *) -> (A -> B)
+ -> Vec B n ;
+mapVec' A n v =
+  case A, n, v 
+    < A : * => n : Nat => _ : Vec A n 
+      => (B : *) -> (A -> B) -> Vec B n 
+    >{
+   | _ => _ => (Nil A)          
+     => \ B => \ _ => Nil B
+   | _ => _ => (Cons A a pn pv) 
+     => \ B => \ f => Cons B (f a) pn (mapVec A pn pv B f)
+  };
+
+falses : Vec Bool 3;
+falses = mapVec Bool 3 trues Bool not;
+-- = [False,False,False]
+\end{lstlisting}
+\caption{Repeat}
+\label{fig:data-elim-examples}
+\end{figure}
+
+We may also want to use some values of the type level argument to calculate the motive, and type the branches.
+This will be allowed with additional bindings in the motive and in each branch.
+For example the $\mathtt{mapVec}'$ function in \Fref{data-elim-examples}.
+In $\mathtt{mapVec'}$ the motive allows the output to vary along with the length argument $n$ that appears in the type position.
+% For this language the \scrut{} list, motive and pattern
+In general, the motive will be treated like the typing annotations in \ch{2}, in that the \ac{TAS} will only allow correct motives in a well typed term, motives will not be required and the motive will be definitionally irrelevant.
+ 
 This version of data can be given by extending the surface language syntax in \ch{2}, as in \Fref{data-defs}.
-Data type constructors and data term constructors are treated like functions.
+Data type constructors and data term constructors are presented as function like identifiers (in this syntax they reuse function application to collect arguments).
+% In general thy are treated like functions.
 % This direct eliminator scheme is roughly similar to how Coq handles data in its core language.
 
 \begin{figure}
@@ -66,14 +114,19 @@ $v$ & $\Coloneqq$ & ... & \tabularnewline
 
 \todo[inline]{motive should not need to insist on the type info of the binder? grey out? Grey out things that are surface syntax but not needed for theory?}
 
-The case eliminator first takes the explicit type arguments, followed by a \textbf{scrutinee}\footnote{also called a \textbf{discriminee}} of correct type.
-Then optionally a motive that characterizes the output type of each branch with all the type arguments and scrutinee abstracted and in scope.
-For instance, this case expression checks if a vector $x$ is empty,
+\todo{as in the examples}
+As in the examples the case eliminator first takes the explicit type arguments, followed by a \scrut{} list. % of correct type.
+Then optionally a motive that characterizes the output type of each branch with all the type arguments and arguments for each element of the \scruts{}. % an abstracted and in scope.
 
-\[\begin{array}{rl}
-x:\Vect{}\,\Bool{}\,1\vdash & \\
- & \mathsf{case}\,\Bool{},1,x\,\left\langle y\Rightarrow z\Rightarrow s:\Vect{}\,y\,z\Rightarrow\Bool{}\right\rangle \\
- & \left\{ 
+For instance, this \case{} expression checks if a vector $x$ : $x:\Vect{}\,\Bool{}\,1$ is empty,
+
+\[
+  \begin{array}{l}
+% x:\Vect{}\,\Bool{}\,1\vdash & \\
+%  & 
+ \mathsf{case}\,\Bool{},1,x\,\left\langle y\Rightarrow z\Rightarrow s:\Vect{}\,y\,z\Rightarrow\Bool{}\right\rangle \\
+%  & 
+ \left\{ 
     \begin{array}{rrrrl}
     |&y\Rightarrow& z\Rightarrow& \Nil{}\,-\Rightarrow& \True{} \\
     |&y\Rightarrow& z\Rightarrow& \Cons{}\,----\Rightarrow& \False{}
@@ -82,8 +135,8 @@ x:\Vect{}\,\Bool{}\,1\vdash & \\
 \end{array}
 \]
 
-We include a little more syntax than is strictly necessary, since the $\Bool{},1,$ list could be inferred and the $y\Rightarrow z\Rightarrow$ binders are not needed in the branch.
-This slightly verbose case eliminator syntax is designed to be forward compatible with the pattern matching system used in the rest of this Chapter. 
+The grammar includes a little more syntax than is strictly necessary, since the $\Bool{},1$ list could be inferred and the $y\Rightarrow z\Rightarrow$ binders are not needed in the branch.
+This slightly verbose case eliminator syntax is designed to be forward compatible with the pattern matching system used in the rest of this thesis. 
 
 Additionally we define telescopes, which generalize zero or more typed bindings\todo{Cite De Bruijn for telescopes}.
 This allows a much cleaner definition of data than is otherwise possible.
@@ -91,14 +144,17 @@ This allows a much cleaner definition of data than is otherwise possible.
 Expressions in a list can be used to generalize dependent pairs, and can be type checked against a telescope.
 For instance, the list $\mathtt{Nat},2,2,\mathtt{refl}\,\mathtt{Nat}\,2$ type checks against $\left(X:\star\right)\rightarrow\left(y:X\right)\rightarrow\left(z:X\right)\rightarrow\left(-:Id\ X\,y\,z\right)$.
 This becomes helpful in several situations, but especially when we need work with the listed arguments of the data type constructor.
-We will allow several syntactic puns, such as treating telescopes as prefixes for function types. For instance, 
+We will allow several syntactic puns, such as treating telescopes as prefixes for function types.
+For instance, 
   if $\Delta=\left(y:\mathtt{Nat}\right)\rightarrow\left(z:\mathtt{Nat}\right)\rightarrow\left(-:Id\ \mathtt{Nat}\,y\,z\right)$
   then writing $f:\Delta\rightarrow\mathtt{Nat}$
   will be shorthand for $f:\left(y:\mathtt{Nat}\right)\rightarrow\left(z:\mathtt{Nat}\right)\rightarrow Id\ \mathtt{Nat}\,y\,z\rightarrow\mathtt{Nat}$.
-\todo{move this down to the typing section?}
+
 
 In the presence of general recursion case elimination is powerful.
-Well-founded recursion can be used to represent inductive proofs.\todo{say with rep example}.
+For instance, all the functions in \Fref{data-elim-examples} use recursion.
+Additionally, well-founded recursion can be used to represent inductive proofs.\todo{example}.
+
 
 Adding data allows for two additional sources of bad behavior: incomplete matches, and nontermination from non-strictly positive data. 
 
@@ -134,7 +190,7 @@ data Bad : * {
 };
 
 selfApply : Bad -> Bad;
-selfApply = \ b =>
+selfApply b =
   case b {
     | C f => f b
   };
@@ -154,7 +210,7 @@ Since non-termination is already allowed in the surface \ac{TAS}, we will not re
 
 % co-inductive uses of data
 
-\subsection{Type assignment System}
+\subsection{Type Assignment System}
 
 Before the typing rules for data can be considered, first some meta rules must be presented that will allow the simultaneous type-checking of lists and telescopes.
 These rules are listed in \ref{fig:surface-data-meta-ty}, and are standard.
@@ -198,8 +254,8 @@ The rules are listed in Figure \ref{fig:surface-data-ok}.
 The $\rulename{\mathbf{ok}-abs-data}$ rule allows data to be considered abstractly if it is formed with a plausible telescope.
 $\rulename{\mathbf{ok}-data}$ checks a full data definition with an abstract reference to a data definition in context, which allows recursive data definitions such as $\mathtt{Nat}$ which needs $\mathtt{Nat}$ to be in scope to define the $\mathtt{S}$ constructor.
 This thesis does not formalize a syntax that adds data to context, though a very simple module system has been implemented in the prototype.
-It is taken for granted that any well formed data in context is fine.\todo{awk}
-This presentation of data definitions largely follows \cite{sjoberg2012irrelevance}. 
+It is taken for granted that any scheme to add well formed data into a type context is fine.
+% This presentation of data definitions largely follows \cite{sjoberg2012irrelevance}. 
 
 \begin{figure}
 \[
@@ -222,12 +278,18 @@ This presentation of data definitions largely follows \cite{sjoberg2012irrelevan
 \end{figure}
 
 The type assignment system with direct elimination must be extended with the rules in \ref{fig:surface-data-ty}.
-These rules make use of several convenient shorthands: $\mathsf{data}\,D\,\Delta\in\Gamma$ and $d\,:\,\varTheta\rightarrow D\overline{m}\in\Gamma$ extract the type constructor definitions and data constructor definitions from the context respectively.
-$\rulename{ty-TCon}$ and $\rulename{ty-Con}$ allow type and data constructors to be used as functions of appropriate type.
-The $\rulename{ty-}\mathsf{case}<>$ rule types a case expression by ensuring that the correct data definition for $D$ is in context, the scrutinee $n$ has the correct type, the motive $M$ is well formed under the type arguments and the scrutinee, % The motive requires checking in the case of empty data
+The \rulename{ty-TCon} and \rulename{ty-Con} rules allow type and data constructors to be used as functions of appropriate type.
+The \rulename{ty-\case{}<>} rule types a case expression by ensuring that the correct data definition for $D$ is in context, the scrutinee $n$ has the correct type, the motive $M$ is well formed under the type arguments and the scrutinee, % The motive requires checking in the case of empty data
   finally every data constructor is verified to have a corresponding branch.
-$\rulename{ty-}\mathsf{case}$ allows for the same typing logic, but does not require the motive be annotated in syntax.
+\rulename{ty-\case{}} allows for the same typing logic, but does not require the motive be annotated in syntax.
 In both rules we allow telescopes to rename their variables with the shorthand $\overline{x}:\Delta$.
+
+These rules make use of several convenient shorthands:
+  $\mathsf{data}\,D\,\Delta\in\Gamma$ and $d\,:\,\varTheta\rightarrow D\overline{m}\in\Gamma$ extract the type constructor definitions and data constructor definitions from the context respectively;
+  telescopes can be added to context, such as $\Gamma,\overline{x}:\Delta,z:D\,\overline{x}\vdash M:\star$;
+  telescopes can be added to context, reparameterized by an existing list of vars, $\Gamma,\overline{y}_{d}:\varTheta$;
+  and telescopes can be used as variable lists to substitute against, as in $\varTheta\coloneqq\overline{y}_{d}$.
+  \todo{bullet?}
 
 \begin{figure}
 \[
@@ -249,7 +311,8 @@ In both rules we allow telescopes to rename their variables with the shorthand $
 \end{array}}{\begin{array}{c}
 \Gamma\vdash\mathsf{case}\,\overline{N,}n\,\left\langle \overline{x\Rightarrow}z:D\,\overline{x}\Rightarrow M\right\rangle \left\{ \overline{|\,\overline{x\Rightarrow}\,d\overline{y}_{d}\,\Rightarrow m_{d}}\right\} \\
 :M\left[\overline{x}\coloneqq\overline{N},z\coloneqq n\right]
-\end{array}}\rulename{ty-}\mathsf{case}<>
+\end{array}
+}\rulename{ty-\case{}<>} 
 \]
 
 \[
@@ -262,7 +325,8 @@ In both rules we allow telescopes to rename their variables with the shorthand $
 \end{array}}{\begin{array}{c}
 \Gamma\vdash\mathsf{case}\,\overline{N,}n\,\left\{ \overline{|\,\overline{x\Rightarrow}\,d\overline{y}_{d}\,\Rightarrow m_{d}}\right\} \\
 :M\left[\overline{x}\coloneqq\overline{N},z\coloneqq n\right]
-\end{array}}\rulename{ty-}\mathsf{case}
+\end{array}
+}\rulename{ty-\case{}}
 \]
 
 \caption{Surface Language Data Typing}
@@ -327,8 +391,6 @@ We are now in a position to select a sub relation of $\Rrightarrow$ reductions t
 This relation could be used to prove type safety, and is close to the reduction used in the implementation.
 The rules are listed in \Fref{surface-data-cbv}.
 
-\todo[inline]{explicitly extend cbv over lists?}
-
 \begin{figure}
 \[
 \frac{\,}{
@@ -356,9 +418,8 @@ The rules are listed in \Fref{surface-data-cbv}.
 \label{fig:surface-data-cbv}
 \end{figure}
 
-\todo[inline]{extend step over lists}
-
-Finally we characterize what it means for a context to be empty in the presence of data in \Fref{surface-data-empty}.
+Finally we need to redefine what it means for a type context to be empty in the presence of data definitions (in \Fref{surface-data-empty}).
+We will say a context is empty only if it contains concrete data definitions.
 
 \begin{figure}
 \[
@@ -374,36 +435,32 @@ Finally we characterize what it means for a context to be empty in the presence 
 \end{figure}
 
 Since a system with a similar presentation has proven type soundness in \cite{sjoberg2012irrelevance}\todo{switch to vilhelms thesis?}, we will not prove the type soundness of the system here.
-For clarity we will list the important properties as conjectures.
-\begin{conjecture}
-The surface language extended with data and elimination preserves types over reduction.
-\end{conjecture}
+% For clarity we will list the important properties as conjectures.
 
-% ...
-\begin{conjecture}
+\begin{claim}
+The surface language extended with data and elimination preserves types over reduction.
+\end{claim}
+
+\begin{claim}
 The surface language extended with data and elimination has progress
 if $\Gamma\,\mathbf{Empty}$, \textup{$\Gamma\vdash m:M$}, then $m$
 is a value, or $m\rightsquigarrow m'$ .
-\end{conjecture}
+\end{claim}
 
-% ...
-\begin{conjecture}
-The surface language extended with data and elimination is type sound.
-\end{conjecture}
-
+\begin{claim}
+The surface language extended with data and a direct elimnator scheme is type sound.
+\end{claim}
 
 \subsection{Bidirectional Type Checking}
 
 A bidirectional type checking procedure exists for the type assignment rules listed above.
 An outline of these rules is in \Fref{surface-data-empty}.
-As noted in \cite{10.1145/3450952}, the bidirectional rules around data are open to some interpretation.
-The dependent case simplifies these questions since only a few rules are sensible.
 
 The type of data constructors and type constructors can always be inferred.
-If the motive does not depend on the scrutinee or type arguments, it can be used to check against the type of the branches.
-An unmotivated $\mathsf{case}$ will be type checked.
-A $\mathsf{case}$ with a motive will have its type inferred.
-\todo{actually more complicated then that}
+% If the motive does not depend on the scrutinee or type arguments, it can be used to check against the type of the branches.
+A \case{} with a motive will have its type inferred, and the motive will be used to check every branch in the \rulename{\overrightarrow{ty}-\case{}<>} rule.
+An unmotivated \case{} will be type checked by an argument ignoring type dependency with the \rulename{\overleftarrow{ty}-\case{}} rule.
+% These rules rely on generalizing 
 
 \begin{figure}
 \[
@@ -419,38 +476,45 @@ A $\mathsf{case}$ with a motive will have its type inferred.
 \mathsf{data}\,D\,\Delta\left\{ ...\right\} \in\Gamma\\
 \Gamma\vdash\overline{N}\overleftarrow{\,:\,}\Delta\quad\Gamma\vdash n\overleftarrow{\,:\,}D\overline{N}\\
 \Gamma,\overline{x}:\Delta,z:D\,\overline{x}\vdash M\overleftarrow{\,:\,}\star\\
-\forall\:d\,:\,\varTheta\rightarrow D\overline{o}\in\Gamma.\quad\Gamma,\overline{y}_{d}:\varTheta\vdash m_{d}\left[\overline{x}\coloneqq\overline{o}\right]\overleftarrow{\,:\,}M\left[\overline{x}\coloneqq\overline{o},z\coloneqq d\,\overline{y}_{d}\right]
+\forall\:d\,:\,\varTheta\rightarrow D\overline{o}\in\Gamma.\quad\Gamma,\overline{y}_{d}:\varTheta\vdash m_{d}\left[\overline{x}\coloneqq\overline{o}'\right]\overleftarrow{\,:\,}M\left[\overline{x}\coloneqq\overline{o}',z\coloneqq d\,\overline{y}_{d}\right]
 \end{array}}{\begin{array}{c}
 \Gamma\vdash\mathsf{case}\,\overline{,N},n\,\left\langle \overline{x\Rightarrow}z:D\,\overline{x}\Rightarrow M\right\rangle \left\{ \overline{|\,\overline{x\Rightarrow}(d\,\overline{y}_{d})\Rightarrow m_{d}}\right\} \\
 \overrightarrow{\,:\,}M\left[\overline{x}\coloneqq\overline{N},z\coloneqq n\right]
-\end{array}}\rulename{\overrightarrow{ty}-}\mathsf{case}<>
+\end{array}
+}\rulename{\overrightarrow{ty}-\case{}<>}
 \]
 
+% even though it is jenk to check M : *, this is needed to handle the case with empty types, otherwhise thesre is norestiction on teh syntax of M
+%  it is fine  since this rule is entirely optional, and only exists to hint at how to infer simply typed things
 \[
 \frac{\begin{array}{c}
 \mathsf{data}\,D\,\Delta\left\{ ...\right\} \in\Gamma\\
 \Gamma\vdash\overline{N}\overleftarrow{\,:\,}\Delta\quad\Gamma\vdash n\overrightarrow{\,:\,}D\overline{N}\\
 \Gamma\vdash M\overleftarrow{\,:\,}\star\\
-\forall\:d\,:\,\varTheta\rightarrow D\overline{o}\in\Gamma.\quad\Gamma,\overline{y}_{d}:\varTheta\vdash m_{d}\left[\overline{x}\coloneqq\overline{o}\right]\overleftarrow{\,:\,}M
-\end{array}}{\Gamma\vdash\mathsf{case}\,\overline{N,}n\,\left\{ \overline{|\overline{x\Rightarrow}\,(d\,\overline{y}_{d})\Rightarrow m_{d}}\right\} \overleftarrow{\,:\,}M}\rulename{\overleftarrow{ty}-}\mathsf{case}<>
+\forall\:d\,:\,\varTheta\rightarrow D\overline{o}\in\Gamma.\quad\Gamma,\overline{y}_{d}:\varTheta\vdash m_{d}\left[\overline{x}\coloneqq\overline{o}'\right]\overleftarrow{\,:\,}M
+\end{array}}{
+  \Gamma\vdash\mathsf{case}\,\overline{N,}n\,\left\{ \overline{|\overline{x\Rightarrow}\,(d\,\overline{y}_{d})\Rightarrow m_{d}}\right\} \overleftarrow{\,:\,}M
+}\rulename{\overleftarrow{ty}-\case{}}
 \]
 
-\todo[inline]{reparam o in $\left[\overline{x}\coloneqq\overline{o}\right]$ also}
-
+where 
+\[
+\overline{o}'= \overline{o}\left[\varTheta \coloneqq \overline{y}_{d} \right]
+\]
 \caption{Surface Language Bidirectional type checking }
 \label{fig:surface-data-bi-ty}
 \end{figure}
 
-We can confidently conjecture that the desired bidirectional properties hold.
-\begin{conjecture}
+The desired bidirectional properties hold.
+\begin{claim}
 The data extension to the bidirectional surface language is type sound.
-\end{conjecture}
+\end{claim}
 
-\begin{conjecture}
+\begin{claim}
 The data extension to the bidirectional surface language is weakly annotatable from the data extension of the surface language.\todo{symbolically}
-\end{conjecture}
+\end{claim}
 
-This is a minimal (and somewhat crude) accounting of bidirectional data.
-It is possible to imagine syntactic sugar that doesn't require the $\overline{N,}$ and $\overline{x\Rightarrow}\,$ the in case expression of the $\rulename{\overleftarrow{ty}-}\mathsf{case}<>$ rule.
-In the dependent rule $\rulename{\overrightarrow{ty}-}\mathsf{case}<>$ it is also possible to imagine some type constructor arguments being inferred.
+This is a minimal (and somewhat crude) accounting of bidirectional data in the direct eliminator style.
+It is possible to imagine syntactic sugar that doesn't require the $\overline{N,}$ and $\overline{x\Rightarrow}$ the in case expression of the \rulename{\overleftarrow{ty}-\case{}} rule.
+In the rule \rulename{\overrightarrow{ty}-\case{}<>} it is also possible to imagine some type constructor arguments being inferred.
 These features and more will be subsumed by the dependent pattern matching of the next section, though this will complicate the meta-theory.

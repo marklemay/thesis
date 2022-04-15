@@ -2,8 +2,6 @@
 \label{chapter:SurfaceData}
 \thispagestyle{myheadings}
 
-\todo{flex vars, could probly make a s.r. system if unification is limited}
-
 User defined data is an important part of a realistic programming language.
 Programmers need to be able to define concrete types that are meaningful for the problems they are trying to solve.
 
@@ -12,14 +10,16 @@ For instance, ``primitive'' data types like \Nat{} and \Bool{} are degenerate fo
 Dependent data can represent mathematical predicates like equality or the evenness of a number.
 Dependent data can also be used to preserve invariants, like the length of a list in \Vect{}, or the ``color'' of a node in a red-black-tree.
 
-The encoding scheme for data presented in \ch{2} could handle all of these cases.
-However, such an encoding is inconvenient in practice.
-Since ``ease of use'' is the overriding concern for the system developed in this thesis, those encoding are an unrealistic way to use data.
+The encoding scheme for data presented in \ch{2} could handle all of these cases, so data types will not add any theoretical power to the system.
+However, those encodings are very inconvenient. 
+Since our language is intended to be easy to use, user defined data will need to be supported.
+% Since ``ease of use'' is the overriding concern for the system developed in this thesis, we cannot us
+% those encoding are an unrealistic way to use data.
 % However, the combination of user defined data and dependent types can be subtle.
 
 In this Chapter we will show two different ways to add data to the \slang{} and \bidir{} system.
 The first, a direct eliminator scheme, is meta-theoretically well behaved but cumbersome for programmers.
-The second is based on pattern matching, and is extremely convenient, though its meta-theory is too difficult to show here.
+The second is based on pattern matching, and is extremely convenient, though its meta-theory is too difficult for a rigorous exposition.
 
 \input{4_Surface_data/2_Def}
 \input{4_Surface_data/3_Direct}
@@ -67,3 +67,7 @@ Adam Gundry's thesis instead)}
 \todo[inline]{https://sozeau.gitlabpages.inria.fr/www/research/publications/Equations:\_A\_Dependent\_Pattern-Matching\_Compiler.pdf ?}
 
 \todo[inline]{http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.99.1405\&rep=rep1\&type=pdf ?}
+
+% Intrestingly  \cite{10.1145/3450952}, the bidirectional rules around data are open to some interpretation.\todo{specifically...}
+% The dependent case simplifies these questions since only a few rules are sensible.
+% Intrestingly, with dependent data, many of these choices  

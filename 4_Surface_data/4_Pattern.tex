@@ -7,8 +7,9 @@ The $\mathtt{head'}$ function needs to redirect unreachable vector inputs to a d
 The usual solution is to extend case elimination with \textbf{pattern matching}.
 
 Pattern matching is much more ergonomic than a direct eliminator $\mathsf{case}$.
-In Figure \ref{fig:data-eliminators}, the $\mathtt{head}$ defined though pattern matching is simpler and clearer.
-Nested constructor matching is now possible.
+In Figure \ref{fig:data-eliminators}, the $\mathtt{head}$ and $\mathtt{mapVec}$ defined though pattern matching is simpler and clearer.
+Additionally nested constructor matching is now possible as in the $\mathtt{sub3}$ function.
+
 When pattern matching is extended to dependent types, variables will be assigned their definitions as needed, and unreachable branches can be omitted from code.
 For this reason, pattern matching has been considered an ``essential'' feature for dependently typed languages since \cite{coquand1992pattern} and is implemented in most popular systems, such as Agda and the user facing language of Coq.
 
@@ -16,33 +17,49 @@ For this reason, pattern matching has been considered an ``essential'' feature f
 
 \begin{figure}
 \begin{lstlisting}[basicstyle={\ttfamily\small}]
- -- direct eliminator style
- head' : (A : *) -> (n : Nat) ->
-   Vec A (S n) ->
-   A ;
- head' A n v =
-   case A, (S n), v <
-     A' => n' => _ : Vec A' n' =>
-       case n' < _ => *> {
-         | (Z  ) => Unit
-         | (S _) => A'
-       }
-   >{
-   | _ => _ => (Nil _       ) => tt
-   | _ => _ => (Cons _ a _ _) => a
-   } ;
+-- direct eliminator style
+head' : (A : *) -> (n : Nat)
+  -> Vec A (S n) 
+  -> A ;
+head' A n v =
+  case A, (S n), v <
+    A' => n' => _ : Vec A' n' =>
+      case n' < _ => *> {
+        | (Z  ) => Unit
+        | (S _) => A'
+      }
+  >{
+  | _ => _ => (Nil _       ) => tt
+  | _ => _ => (Cons _ a _ _) => a
+  } ;
 
-  -- pattern match style
- head : (A : *) -> (n : Nat) ->
-   Vec A (S n) ->
-   A ;
- head A n v =
-   case v < _ => A > {
-   | (Cons _ a _ _) => a
-   } ;
+-- pattern match style
+head : (A : *) -> (n : Nat)
+  -> Vec A (S n) 
+  -> A ;
+head A n v =
+  case v < _ => A > {
+  | (Cons _ a _ _) => a
+  } ;
+
+mapVec : (A : *) -> (n : Nat) -> Vec A n 
+  -> (B : *) -> (A -> B)
+  -> Vec B n ;
+mapVec A n v B f =
+  case v 
+  < _ : Vec A n => Vec B n >{
+  | (Nil A)          => Nil B
+  | (Cons A a pn pv) 
+    => Cons B (f a) pn (mapVec A pn pv B f)
+  };
+
+sub3 : Nat -> Nat ;
+sub3 n =
+  case n < _ => Nat > {
+  | (S (S (S x))) => x
+  | _ => 0
+  } ;
 \end{lstlisting}
-
-\todo[inline]{match the single eliminator syntax}
 
 \todo[inline]{clean when I get motive inference working}
 
