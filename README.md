@@ -1,8 +1,7 @@
 # thesis
-all work related to my thesis document, will eventually become public
 [![Build LaTeX document](https://github.com/marklemay/thesis/actions/workflows/build-thesis.yml/badge.svg)](https://github.com/marklemay/thesis/actions/workflows/build-thesis.yml)
  
-latest draft available [here](https://github.com/marklemay/thesis/releases/download/thesis/thesis.pdf)
+[Latest draft](https://github.com/marklemay/thesis/releases/download/thesis/thesis.pdf)
 
 ## How to Review
 ### Overall
