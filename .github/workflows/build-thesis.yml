@@ -36,7 +36,9 @@ jobs:
         uses: softprops/action-gh-release@v1
 #        if: startsWith(github.ref, 'refs/tags/')
         with:
-          draft: true
+          tag_name : thesis
+          prerelease : true
+#           draft: true
           files: thesis.pdf
 
 # see https://dev.to/mrturkmen/latex-with-github-actions-4580
