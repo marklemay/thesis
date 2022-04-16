@@ -73,7 +73,7 @@ sub3 n =
 Figure \ref{fig:surface-data} shows the extensions to the surface language for data and pattern matching.
 Our case expression matches a list of \scruts{}, allowing us to be very precise about the typing of branches.
 Additionally this style allows for syntactic sugar for easy definitions of functions by cases.
-The syntax of the direct eliminator style \case{}s of the last section was designed to be a special case of pattern matching outlined here.
+The direct eliminator style \case{} of the last section is a special case of pattern matching outlined here.
 \todo{Example of why it was needed}
 
 \begin{figure}
@@ -96,17 +96,18 @@ For instance, the expression,
   $\Cons{}\,\Bool{}\,\True{}\,3\,\left(\Cons{}\,\Bool{}\,\False{}\,2\,y'\right)$
   will match the patterns:
 \begin{itemize}
-\item $Cons\,w\,x\,y\,z$ with bindings $w=\mathbb{B}$, $x=true$, $y=3$, $z=Cons\,\mathbb{B}\,false\,\left(S\left(S\left(Z\right)\right)\right)\,y'$
+\item $\Cons{}\,w\,x\,y\,z$ with bindings $w=\Bool{}$, $x=\True{}$, $y=3$, $z=\Cons{}\,\Bool{}\,\False{}\,2\,y'$
 \item $x$ with bindings $x = \Cons{}\,\Bool{}\,\True{}\,3\,\left(\Cons{}\,\Bool{}\,\False{}\,2\,y'\right)$
-\item $Cons\,-\,x\,-\,\left(Cons\,-\,y\,-\,-\right)$ with bindings $x = true$, $y = false$
+\item $\Cons{}\,-\,x\,-\,\left(\Cons{}\,-\,y\,-\,-\right)$ with bindings $x = \True{}$, $y = \False{}$
 \end{itemize}
 When patterns are used in the case construct, the appropriate branch will reduce with the correct bindings in scope.
 Therefore the expression 
 
 % $\mathsf{case}\,Cons\,\mathbb{B}\,true\,\left(S\left(S\left(S\left(Z\right)\right)\right)\right)\,\left(Cons\,\mathbb{B}\,false\,\left(S\left(S\left(Z\right)\right)\right)\,y'\right)\left\{ Cons\,-\,x\,-\,\left(Cons\,-\,y\,-\,-\right)\Rightarrow x\&y\right\} $
-$\mathsf{case}\,Cons\,\mathbb{B}\,true\,3\,\left(Cons\,\mathbb{B}\,false\,2\,y'\right)\left\{ Cons\,-\,x\,-\,\left(Cons\,-\,y\,-\,-\right)\Rightarrow x\&y\right\} $
+$\case{}\,\Cons{}\,\Bool{}\,\True{}\,3\,\left(\Cons{}\,\Bool{}\,\False{}\,2\,y'\right)
+ \left\{ \Cons{}\,-\,x\,-\,\left(\Cons{}\,-\,y\,-\,-\right)\Rightarrow x\&y\right\} $
 
-reduces to $false$.
+reduces to \False{}.
 
 The explicit rules for pattern matching are listed in Figure \ref{fig:surface-data-match}, where $\sigma$ will hold a possibly empty set of assignments.
 
@@ -133,13 +134,13 @@ The explicit rules for pattern matching are listed in Figure \ref{fig:surface-da
 It is now easier for case branches to overlap, which could allow non-deterministic reduction.
 There are several plausible ways to handle this, such as requiring each branch to have independent patterns, or requiring patterns have the same behavior when they overlap \cite{10.1007/978-3-642-54833-8_6}.
 For the purposes of this thesis, we will use the programmatic convention that the first matching pattern takes precedence.
-For example, we will be able to type check
+For example, the following will type check
 
 \[
-\mathsf{case}\,4\,\left\langle s:\mathbb{N}\Rightarrow\mathbb{B}\right\rangle \left\{ |S\left(S\,-\right)\Rightarrow True\,|\,-\Rightarrow False\right\} 
+\case{}\,4\,\left\langle s:\Nat{}\Rightarrow\Bool{}\right\rangle \left\{ |\Suc{}\left(\Suc{}\,-\right)\Rightarrow \True{}\,|\,-\Rightarrow \False{}\right\} 
 \]
 
-and it will reduce to $True$.
+and it will reduce to \True{}.
 
 % pattern matching is hard
 While pattern matching is an extremely practical feature, typing these expressions tends to be messy.
@@ -181,7 +182,7 @@ Since assignments are maximal, we are sure that a unified pattern will still be 
 A simplified version of a typical unification procedure is listed in \Fref{surface-data-unification}.
 % Several variations are explored in \cite{cockx_devriese_2018}.
 Unification is not guaranteed to terminate since it relies on definitional equalities, which are undecidable in the surface language.
-The unification procedure should also exclude the possibly cyclic assignments that could occur, such as $x=S\,x$.\todo{work this into the rules if not too much work}
+The unification procedure should also exclude the possibly cyclic assignments that could occur, such as $x=\Suc{}\,x$.\todo{work this into the rules if not too much work}
 
 \begin{figure}
 \[
@@ -281,7 +282,8 @@ These properties could be recovered by limiting the flexible(assignable) variabl
 Though doing so seems a little arbitrary, and is limiting to the programmer.
 For instance, in $\mathtt{mapVec}$ the programmer will need to add the length of the \Vect{} to the pattern match so that $n$ is flexible.
 Another way to formalize a \ac{TAS} is to use explicit contextual equalities as in \cite{sjoberg2015dependently}.
-
-Additionally, it makes sense to allow some additional type annotations in the motive and for these annotations to switch the type inference of the scrutinee into a type-check.
-The implementation includes this along with a simple syntax for modules, and even mutually defined data types.
-For simplicity these have been excluded from the presentation here.\todo{confusing par?}
+ 
+The prototype implementation goes further than what is outlined here.
+For instance, the prototype allows some additional type annotations in the motive and for these annotations to switch the type inference of the scrutinee into a type-check.
+The implementation also has a simple syntax for modules, and even mutually defined data types.
+For simplicity these have been excluded from the presentation here.

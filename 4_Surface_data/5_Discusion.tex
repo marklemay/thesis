@@ -16,12 +16,10 @@ It seems unreasonable to extend patterns to arbitrary computation (though this i
 
 In the presence of full-spectrum dependent types, the perspective dramatically shifts.
 Any terminating typing procedure will necessarily exclude some type-able patterns and be unable to exclude some unreachable branches.
-Even though only data values are considered, dependent patterns are already attacking a much more difficult problem than in the non-dependent case.
-It may make sense to extend the notion of pattern matching to include other useful but difficult features.
-One such interesting feature is the $\mathsf{with}$ syntax of \cite{mcbride_mckinna_2004}.
+Even though only data constructors are considered, dependent patterns are already attacking a much more difficult problem than in the non-dependent case.
+It may make sense to extend the notion of pattern matching to include other useful but difficult features such as the $\mathsf{with}$ syntax of \cite{mcbride_mckinna_2004}.
 
-\todo{discuss stuck state of unification explicitly, x = f a vs. f a = g b, and how it for instance makes it so you can't prove transitivity
-of ID fa gb, ID gb hc -> ID fa hc. also calls into quesiton preservation entirely. }
+\todo{discuss stuck state of unification explicitly, x = f a vs. f a = g b, and how it for instance makes it so you can't prove transitivity of ID fa gb, ID gb hc -> ID fa hc. also calls into quesiton preservation entirely. }
 
 Epigram, Agda and Idris make pattern matching more powerful using $\mathsf{with}$ syntax that allows further pattern based branching by attaching a computation to a branch.
 This is justified as syntactic sugar that corresponds to helper functions that can be appropriately elaborated and type-checked.
@@ -36,7 +34,7 @@ In principle it seems that dependent case expressions could be extended with rel
 
 The details of pattern matching change the logical character of the system\cite{cockx_devriese_2018}.
 Since non-termination is allowed in the language described here, the logical issues that arise from patterns are less of a concern than the immediate logical unsoundness that was discussed in \ch{2}.
-However, it is worth noting that pattern matching as described here validates axiom k and thus appears unsuitable for Hott or CTT developments.\todo{acronyms}
+However, it is worth noting that pattern matching as described here validates axiom k and thus appears unsuitable for univalent developments.% Hott or CTT developments.\todo{acronyms}
 
 This Chapter has glossed over the definitional behavior of $\mathsf{case}$s, since we plan to sidestep definitional issues entirely with the cast language.
 It is worth noting that there are several ways to set up the definitional reductions.

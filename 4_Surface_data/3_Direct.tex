@@ -113,7 +113,7 @@ $v$ & $\Coloneqq$ & ... & \tabularnewline
 % \label{fig:surface-pre-syntax-data-abrev-1}
 % \end{figure}
 
-\todo[inline]{motive should not need to insist on the type info of the binder? grey out? Grey out things that are surface syntax but not needed for theory?}
+\todo[inline]{motive should not need to insist on the type info of the binder? grey out? Grey out things that are surface syntax but not needed for theory? addforce a paren round the only intrestingin the scrutinee list?}
 
 \todo{as in the examples}
 As in the examples the case eliminator first takes the explicit type arguments, followed by a \scrut{} list. % of correct type.
@@ -128,9 +128,9 @@ For instance, this \case{} expression checks if a vector $x:\Vect{}\,\Bool{}\,1$
  \mathsf{case}\,\Bool{},1,x\,\left\langle y\Rightarrow z\Rightarrow s:\Vect{}\,y\,z\Rightarrow\Bool{}\right\rangle \\
 %  & 
  \left\{ 
-    \begin{array}{rrrrl}
-    |&y\Rightarrow& z\Rightarrow& \Nil{}\,-\Rightarrow& \True{} \\
-    |&y\Rightarrow& z\Rightarrow& \Cons{}\,----\Rightarrow& \False{}
+    \begin{array}{llll}
+    | y&\Rightarrow z&\Rightarrow \Nil{}\,-&\Rightarrow \True{} \\
+    | y&\Rightarrow z&\Rightarrow \Cons{}\,----&\Rightarrow \False{}
     \end{array}
     \right\} 
 \end{array}
@@ -153,7 +153,8 @@ For instance,
 
 In the presence of general recursion case elimination is powerful.
 For instance, all the functions in \Fref{data-elim-examples} use recursion.
-Additionally, well-founded recursion can be used to represent inductive proofs.\todo{example}.
+Additionally, well-founded recursion can be used to represent inductive proofs.
+\todo{example}
 
 Adding data allows for two new potential sources of bad behavior: incomplete matches, and nontermination from non-strictly positive data. 
 
@@ -162,9 +163,8 @@ Adding data allows for two new potential sources of bad behavior: incomplete mat
 Consider the match 
 
 \[
-x:\mathbb{N}\vdash\mathsf{case}\,x\,\left\langle s:\mathbb{N}\Rightarrow\mathbb{B}\right\rangle \left\{ |S-\Rightarrow True\right\} 
+x:\Nat{}\vdash\case{}\,x\,\left\langle s:\Nat{}\Rightarrow\Bool{}\right\rangle \left\{ |\Suc{}-\Rightarrow \True{}\right\} 
 \]
-\todo{font?}
 
 This match will ``get stuck'' if $0$ is substituted for $x$.
 Recall that the key theorem of the surface language is type soundness, ``well typed terms don't get stuck''.

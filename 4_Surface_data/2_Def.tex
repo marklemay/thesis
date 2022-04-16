@@ -13,7 +13,7 @@ A dependent data type is defined by a type constructor indexed\footnote{
 % | Cons : A -> (x : Nat) -> Vec A x -> Vec A (S x)
 % };
 % \end{lstlisting}
- Parameters help remove clutter, help inference and erasure, and presumably have parametric properties\cite{10.1145/99370.99404}.
+ Parameters help remove clutter, help inference and erasure, and presumably have parametric properties, in the sense of \cite{10.1145/99370.99404}.
  However parameters are easy to simulate with indexes, so for simplicity we will only deal with \emph{indexed} dependent data.
  Parameters can simulate indexes with a suitable equality type\cite{sjoberg2012irrelevance}, though this is not always possible\cite[Section 8]{bertrand:hal-02896776}.
 } by arguments, and a set of data constructors that tag data and refine those arguments.
