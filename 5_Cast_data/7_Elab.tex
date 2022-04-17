@@ -1,12 +1,6 @@
 \section{Elaboration}
-Without data, elaboration can be extended from \ch{3} by asserting a cast where an infer meets a check.
 
-\[
-\frac{\varGamma\vdash m\,\textbf{Elab}\ a\overrightarrow{\,:\,}A}{\varGamma\vdash m\overleftarrow{\,:_{\ell,o}\,}B\ \textbf{Elab}\left(a::\left(A\sim_{\ell,o}^{\star}B\right)\right)}
-\rulename{\overleftarrow{\textbf{Elab}}-cast}
-\]
-
-\todo{this is actually a simplification, since there may be ambient equalities that need to be supported}
+\subsection{Unification}
 
 To handle elaboration over pattern matching, we will need to extend unification from \ch{4} to accommodate casts (\Fref{cast-data-unification}).
 We will now track not just equational constraints, but also why the constraints hold, and why the types are the same.
@@ -74,5 +68,16 @@ For instance,
 Additionally term constructor and type constructor injectivity is handled through an indexing operator $@^{...}$ similar to evaluation.
 Finally we add rules to peel off casts so that unification remembers why terms have the appropriate type, and so unification will not get stuck.
 
+\subsection{Elaboration}
+Without data, elaboration can be extended from \ch{3} by asserting a cast where an infer meets a check.
+
+\[
+\frac{\varGamma\vdash m\,\textbf{Elab}\ a\overrightarrow{\,:\,}A}{\varGamma\vdash m\overleftarrow{\,:_{\ell,o}\,}B\ \textbf{Elab}\left(a::\left(A\sim_{\ell,o}^{\star}B\right)\right)}
+\rulename{\overleftarrow{\textbf{Elab}}-cast}
+\]
+
+\todo{this is actually a simplification, since there may be ambient equalities that need to be supported}
+However the situation becomes more complicated with pattern matched data.
 With the information extracted from unification, terms can be elaborated with blameless casts that mimic the behavior of pattern matching in \ch{4}.
 The information can also be used to redirect blame from ``impossible'' branches.
+However the elaboration procedure als needs to be extended with a scope of assignments to cast into and out of making a formal presentation difficult.

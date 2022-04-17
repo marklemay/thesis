@@ -7,7 +7,7 @@ If $\varGamma\vdash a\sqsupseteq a':A'$, $\varGamma\ \mathbf{Empty}$ then either
 Again progress can be shown by extending the usual \ac{TAS} progress argument over the new constructs.
 
 The $\mathbf{Consistent}$ judgment (\Fref{cast-data-val}) generalizes being a value, to elements over $\cup$ and $\sim$.
-This only matters for functions, since they are treated extentionally (so that data constructors can be treated as functions).
+This only matters for functions, since they are treated extentionally (so that under applied data constructors can be treated as functions).
 This relation can be restricted further to be more like a conventional value judgment, for instance enforcing the arguments of a data type are consistent, but these restrictions are not needed here.
 
 \begin{figure}
@@ -40,33 +40,40 @@ This relation can be restricted further to be more like a conventional value jud
 
 \[
 \frac{
-  \mathbf{length}\,\Delta < \mathbf{length}\,\overline{a}
+  a\ \mathbf{Consistent_{\mathsf{fun}}}
 }{
-  D_{\Delta}\overline{a}\ \mathbf{Consistent_{\mathsf{fun}}}
+  a::\left(x:A\right)\rightarrow B\ \mathbf{Consistent_{\mathsf{fun}}}}
+\]
+
+\[
+\frac{
+  \mathbf{length}\,\overline{a} < \mathbf{length}\,\Delta
+}{
+  D_{\Delta}\,\overline{a}\ \mathbf{Consistent_{\mathsf{fun}}}
 }
 \]
 
 \[
 \frac{
-  \mathbf{length}\,\Delta < \mathbf{length}\,\overline{a}
+  \mathbf{length}\,\overline{b} < \mathbf{length}\,\Delta
 }{
-  d_{\Delta\rightarrow D\overline{a}}\ \mathbf{Consistent_{\mathsf{fun}}}
+  d_{\Delta\rightarrow D\overline{a}}\,\overline{b}\ \mathbf{Consistent_{\mathsf{fun}}}
 }
 \]
 
 \[
 \frac{
-  \mathbf{length}\,\Delta = \mathbf{length}\,\overline{a}
+  \mathbf{length}\,\overline{a} = \mathbf{length}\,\Delta
 }{
-  D_{\Delta}\overline{a}\ \mathbf{Consistent}
+  D_{\Delta}\,\overline{a}\ \mathbf{Consistent}
 }
 \]
 
 \[
 \frac{
-  \mathbf{length}\,\Delta = \mathbf{length}\,\overline{a}
+  \mathbf{length}\,\overline{b} = \mathbf{length}\,\Delta
 }{
-  d_{\Delta\rightarrow D\overline{a}}\ \mathbf{Consistent}
+  d_{\Delta\rightarrow D\overline{a}}\,\overline{b}\ \mathbf{Consistent}
 }
 \]
 
@@ -76,7 +83,7 @@ This relation can be restricted further to be more like a conventional value jud
 
 
 The $a\ \mathbf{Blame}_{\ell,o}$ judgment means a witness of error can be extracted from the term $a$ pointing to the original source location $\ell$ with observation $o$.
-The only important rule is,
+The most important rule is,
 
 \[
 \frac{\mathbf{head}\ a\neq\mathbf{head}\ b\quad}{a\sim_{\ell,o}^{L}b\ \mathbf{Blame}_{\ell,o}}

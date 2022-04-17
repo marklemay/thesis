@@ -175,7 +175,7 @@ But then we need evidence that $\Vect{}\, \Bool{}\, (a :: (TCon_0(p)))\ \approx\
 \todo[inline]{avoiding these sperous casts is important for the conjectured gradual correctness, well typed surface language terms should not generate warnings}
 First, we need to select the subterm of interest, $\Vect{}\, \Bool{}\, \underline{(a :: (TCon_0(p)))}\ \approx\ Vect{}\, \Bool{}\, \underline{2}$.
 Equality evidence is constructed specifically so that it can be embedded into terms.
-If we have evidence, $q$, such that $q\ :\ (a ::(TCon_0(p)))\ \approx\ 2$ then $\Vect{}\, \Bool{}\, \underline{q}\ :\ \Vect{}\, \Bool{}\, \underline{(a :: (TCon_0(p)))}\ \approx\ Vect{}\, \Bool{}\, \underline{2}$.
+If we have evidence, $q$, such that $q\ :\ (a ::(TCon_0(p)))\ \approx\ 2$ then $\Vect{}\, \Bool{}\, \underline{q}\ :\ \Vect{}\, \Bool{}\, \underline{(a :: (TCon_0(p)))}\ \approx\ \Vect{}\, \Bool{}\, \underline{2}$.
 % The $Cong$ syntax explicitly embeds a path into a larger expression, here $Cong_{x=> (A : *) -> A -> \mathtt{Vec} \mathtt{Nat} x} ...$ selects the relevant part of the type.
  
 The cast system will only require that terms are equated up to a definitional equality that disregards casts so instead of needing to show $a :: (TCon_0(p))\ \approx\ 2$, we only have to show $a\ \approx\ 2$.
