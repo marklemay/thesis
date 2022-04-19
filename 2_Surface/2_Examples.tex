@@ -41,7 +41,7 @@ $X:\star,x:X$ & $\vdash refl_{x:X}$ & $\coloneqq\lambda-\,cx\Rightarrow cx$ & $:
 \label{fig:surface-examples}
 \end{sidewaysfigure}
 
-\subsection{Church encodings}
+\subsection{Church Encodings}
 
 Data types are expressible using Church encodings, (in the style of System F).
 Church encodings embed the elimination principle of a data type into higher order functions.
@@ -63,10 +63,10 @@ The $Either$ type is handled if both possibilities are handled, so it is defined
 % not necessarily convenient
 Church encodings provide a theoretically lightweight way of working with data in a minimal lambda calculus.
 However, they are inconvenient.
-For instance, the predecessor function on natural numbers is not as simple as its behavior would imply.
+For instance, the predecessor function on natural numbers is not as simple as it would seem.
 To make the system easier for programmers, data types will be added directly in Chapter 4.
 
-\subsection{Proposition encodings}
+\subsection{Proposition Encodings}
 
 In general we associate the truth value of a proposition with the inhabitation of a type by a meaningful value.
 This meaningful inhabitant corresponds to a proof.
@@ -83,9 +83,9 @@ With dependent types, more interesting logical predicates can be encoded.
 For instance, we can characterize when a number is even with $Even_{c}\,x$.
 We can show that $2$ is even by showing that $Even_{c}\,2_{c}$ is inhabited with the term $\lambda s\Rightarrow s\,tt_{c}$.
 
-Other predicates are encodable in the style of Calculus of Constructions\cite{10.1016/0890-5401(88)90005-3}.
-For instance, we can encode the existential as $\exists_{c}$ as shown in \Fref{surface-examples}.
-Then if we want to show $\exists_{c}x:\mathbb{N}_{c}\Rightarrow\,Even_{c}\,x$ we need to find a suitable inhabitant of that type.
+Other predicates are encodable in this style (See \cite{Martin-Lof-1971,cardelli1986polymorphic,10.1016/0890-5401(88)90005-3} for more examples).
+For instance, we can encode the existential quantifier as $\exists_{c}$ as shown in \Fref{surface-examples}.
+Then we can show $\exists_{c}x:\mathbb{N}_{c}\Rightarrow\,Even_{c}\,x$ with a suitable inhabitant of that type.
 $0$ is clearly an even number, so our inhabitant could be $\lambda f\Rightarrow f\,0_{c}\,tt_{c}$.
 Note that the existential is equivalent to the tuple if $Y$ does not depend on the value of $X$.
 
@@ -121,14 +121,14 @@ Note that such functions are not possible in the Calculus of Constructions.
 
 \subsection{Inequalities}
 
-Large eliminations can be used to prove inequalities that can be hard or impossible to express in other minimal dependent type theories such as the Calculus of Constructions.
+Large eliminations can be used to prove inequalities that can be hard or impossible to express in other minimal dependent type theories. % such as the Calculus of Constructions.
 For instance,
 
 \begin{tabular}{lcll}
-  $\lambda pr\Rightarrow pr\,\left(\lambda x\Rightarrow x\right)\,\perp_{c}$ & : & $\lnot_{c}\star\doteq_{\star}\perp_{c}$ & \makecell{the type universe is distinct\\ from Logical False}\tabularnewline
-  $\lambda pr\Rightarrow pr\,\left(\lambda x\Rightarrow x\right)\,tt_{c}$ & : & $\lnot_{c}Unit_{c}\doteq_{\star}\perp_{c}$ &  \makecell{Logical True is distinct\\ from Logical False}\tabularnewline
-  $\lambda pr\Rightarrow pr\,toLogic\,tt_{c}$ & : & $\lnot true_{c}\doteq_{\mathbb{B}_{c}}false_{c}$ &  \makecell{boolean true and false\\ are distinct}\tabularnewline
-  $\lambda pr\Rightarrow pr\,isPos\,tt_{c}$ & : & $\lnot1_{c}\doteq_{\mathbb{N}_{c}}0_{c}$ & 1 and 0 are distinct\tabularnewline
+  $\lambda pr\Rightarrow pr\,\left(\lambda x\Rightarrow x\right)\,\perp_{c}$ & : & $\lnot_{c}(\star\doteq_{\star}\perp_{c})$ & \makecell{the type universe is distinct\\ from Logical False}\tabularnewline
+  $\lambda pr\Rightarrow pr\,\left(\lambda x\Rightarrow x\right)\,tt_{c}$ & : & $\lnot_{c}(Unit_{c}\doteq_{\star}\perp_{c})$ &  \makecell{Logical True is distinct\\ from Logical False}\tabularnewline
+  $\lambda pr\Rightarrow pr\,toLogic\,tt_{c}$ & : & $\lnot true_{c}(\doteq_{\mathbb{B}_{c}}false_{c})$ &  \makecell{boolean true and false\\ are distinct}\tabularnewline
+  $\lambda pr\Rightarrow pr\,isPos\,tt_{c}$ & : & $\lnot1_{c}()\doteq_{\mathbb{N}_{c}}0_{c})$ & 1 and 0 are distinct\tabularnewline
   \end{tabular}
   
 \todo[inline]{1st not sensible in CC}
@@ -136,13 +136,14 @@ For instance,
 \todo[inline]{2 possibly in CC?}
 
 Note that a proof of $\lnot1_{c}\doteq_{\mathbb{N}_{c}}0_{c}$ is not possible in the Calculus of Constructions\cite{10.2307/2274575}\footnote{
-  Martin Hofmann excellently motivates the reasoning in the exercises of \cite{hofmann_1997}}.
+  Martin Hofmann excellently motivates the reasoning in the exercises of \cite{hofmann_1997}.
   % For any encoding of Nats [Guevers?]
+}.
 \todo[inline]{citation is actually for an MLTT, but if good enough for Hoff good enough for me}
 
 \subsection{Recursion}
 
-Additionally, the syntax of functions build in unrestricted recursion.
+The syntax of functions build in unrestricted recursion.
 Though not always necessary, recursion can be very helpful for writing programs.
 For instance, here is (an inefficient) function that calculates Fibonacci numbers.
 

@@ -14,12 +14,13 @@ While the type systems of mainstream programming languages allow tracking simple
 Dependent types allow complicated properties to be assumed and verified, such as a provably correct sorting function
 
 \[
-sort\,:\,\left(input:List\,\mathbb{N}\right)\rightarrow\Sigma ls:List\,\mathbb{N}.IsSorted\,input\,ls
+% sort\,:\,\left(input:List\,\Nat\right)\rightarrow\Sigma ls:List\,\mathbb{N}.IsSorted\,input\,ls
+sort\ :\ \left(input:\mathtt{List}\ \Nat{}\right)\rightarrow\Sigma ls:\mathtt{List}\ \Nat{}.\mathtt{IsSorted}\ input\ ls
 \]
 
 by providing an appropriate definition of $sort$ at that type.
 From the programmer's perspective, the function arrow and the implication arrow are the same.
-The proof $IsSorted$ is no different than any other term of a datatype like $List$ or $\mathbb{N}$.
+The proof $\mathtt{IsSorted}$ is no different than any other term of a datatype like $\mathtt{List}$ or $\Nat{}$.
 
 The power of dependent types has been recognized for decades.
 Dependent types form the backbone of several poof systems, such as Coq\cite{Coq12}, Lean\cite{10.1007/978-3-030-79876-5_37}, and Agda\cite{norell2007towards}.
@@ -46,12 +47,12 @@ A version of the following type checks in virtually all dependent type systems:
 \todo[inline]{expand this example? perhaps at the head of a constant vector first? ``and this reasoning can be abstracted under functions'' }
 
 \begin{align*}
-\mathtt{Bool} & :*,\\
-\mathtt{Nat} & :*,\\
-\mathtt{Vec} & :*\rightarrow\mathtt{Nat}\rightarrow*,\\
+\mathtt{Bool} & : \star,\\
+\mathtt{Nat} & : \star,\\
+\mathtt{Vec} & :\star \rightarrow\mathtt{Nat}\rightarrow \star,\\
 \mathtt{add} & :\mathtt{Nat}\rightarrow\mathtt{Nat}\rightarrow\mathtt{Nat},\\
-\mathtt{rep} & :\left(A:*\right)\rightarrow A\rightarrow\left(x:\mathtt{Nat}\right)\rightarrow\mathtt{Vec\,}A\,x,\\
-\mathtt{head} & :\left(A:*\right)\rightarrow\left(x:\mathtt{Nat}\right)\rightarrow\mathtt{Vec}\,A\,\left(\mathtt{add}\,1\,x\right)\rightarrow A
+\mathtt{rep} & :\left(A:\star\right)\rightarrow A\rightarrow\left(x:\mathtt{Nat}\right)\rightarrow\mathtt{Vec\,}A\,x,\\
+\mathtt{head} & :\left(A:\star\right)\rightarrow\left(x:\mathtt{Nat}\right)\rightarrow\mathtt{Vec}\,A\,\left(\mathtt{add}\,1\,x\right)\rightarrow A
 \end{align*}
 \[
 \vdash\lambda x.\mathtt{head}\,\mathtt{Bool}\,x\,\left(\mathtt{rep}\,\mathtt{Bool}\,\mathtt{true}\,\left(\mathtt{add}\,1\,x\right)\right)\,:\,\mathtt{Nat}\rightarrow\mathtt{Bool}
@@ -59,9 +60,11 @@ A version of the following type checks in virtually all dependent type systems:
 
 \todo[inline]{make this a ``code'' example?}
 
-Where $\rightarrow$ is a function and $*$ means that the function results in a type.
-$\mathtt{Vec}$ is a list indexed by the type of element it contains and its length.
-$\mathtt{Vec}$ is a type that depends on its length.
+Where $\rightarrow$ is a function and $\star$ is the "type of types".
+$\mathtt{Vec}$ is a list indexed by the type of element it contains and its length\footnote{
+  Definitions of these types and functions can be found in \Ch{5}.
+}.
+$\mathtt{Vec}$ has type dependency since it is a type that depends on its length.
 $\mathtt{rep}$ is a dependent function that produces a list containing a type with a given length by repeating its input that number of times.
 $\mathtt{head}$ is a dependent function that expects a list of length $\mathtt{add}\,1\,x$, returning the first element of that non-empty list.
 
@@ -115,7 +118,7 @@ This philosophy will likely go over better with programmers.
 More concretely, whenever possible, static errors should be replaced with
 \begin{itemize}
 \item static warnings containing the same information,
-\item and more concrete and clear runtime errors that correspond to one of the warnings
+\item and more concrete and clear runtime errors that correspond to one of the warnings.
 \end{itemize}
 \Fref{intro-standard-workflow} illustrates the standard workflow from the perspective of programmers in most typed languages.
 \Fref{intro-thesis-workflow} shows the workflow that is explored in this thesis.
@@ -187,9 +190,9 @@ The proposed workflow presented in this thesis is justified by:
 \begin{itemize}
 \item The strict relation between warnings and runtime errors.
 A runtime error will always correspond exactly to a reported warning, always validating the warning with a specific example.
-\item A form of type soundness holds, programs will never ``get stuck'' unless a concrete witness of warning is found.
+\item A form of type soundness holds, programs will never ``get stuck'' unless a concrete witness that corresponds to the warning is found.
 \item Programs that type check against a model type system will not have warnings, and therefore cannot have errors.
-\item Other than warnings and errors the runtime behavior is similar to a conventional type theory.
+\item Other than warnings and errors the runtime behavior is similar to other conventional dependently typed languages.
 % this is actually true, even in a normalizing theory, the runtime behavior is standard
 \end{itemize}
 
@@ -259,10 +262,8 @@ It will generate warnings like the following
 may have the wrong type
 \end{itemize}
 First note that the program has assumed several of the standard properties of substitution.
-Formalizing substitution in a dependent type theory is a substantial
-\todo{this might be really underselling it, we are talking months of effort}
-task\cite{10.1145/3293880.3294101}\todo{cite some of the libs}.
 Informally substitution and binding is usually considered obvious and uninteresting, and little explanation is usually given\footnote{A convention that will be followed in this thesis}.
+However formalizing substitution in a dependent type theory is usually a substantial task\cite{10.1145/3293880.3294101}.
 
 Second, the type contexts have been encoded as functions.
 This would be a reasonable encoding in a mainstream functional language since it hides the uninteresting lookup information.
@@ -289,10 +290,11 @@ There are many flavors of dependent types that can be explored, this thesis atte
 Specifically,
 \begin{itemize}
 \item The type system in this thesis is a \textbf{full spectrum} dependent type system.
-The full-spectrum approach is the most uniform approach to dependent type theory, computation behaves the same at the term and type level.
-This is contrasted with a leveled theory where terms embedded in types may have different or limited behavior\footnote{this is the approach taken in ATS, and refinement type systems}.
+The full-spectrum approach is the most uniform approach to dependent type theory: computation behaves the same at the term and type level.
+This is contrasted with a leveled theory where terms embedded in types may have different or limited behavior\footnote{
+  this is the approach taken in ATS, and refinement type systems}.
 The full-spectrum approach is popular with theorem provers and has been advocated by many authors \cite{10.1145/289423.289451,norell2007towards,brady2013idris,sjoberg2012irrelevance}.
-While the full spectrum approach offers tradeoffs (it is harder to deal with effects), it seems to be the most predictable from the programmer's perspective.
+While the full spectrum approach offers tradeoffs (it is harder to deal with effects), it seems to be the most predictable from a newcomer's perspective.
 \item Data types and pattern matching are essential to practical programming, so they are included in the implementation.
 While it is theoretically possible to simulate data types via church encodings, they are too awkward for programmers to work with, and would complicate the runtime errors this system hopes to deliver.
 To provide a better programming experience data types are built into the system and pattern matching is supported.
@@ -317,14 +319,14 @@ It would be premature to deal with any other properties until definitional equal
 
 Inserting runtime equality checks into a dependent types system is easier said than done.
 \begin{itemize}
-\item In the presence of Dependent types, equality checks may drift into types.
+\item In the presence of dependent types, equality checks may drift into types.
 What does it mean when a term is a list of length $\mathtt{Bool}$?
 \item Terms can ``get stuck'' in new ways. 
 What happens when an equality check is used as a function by being applied with an argument?
 What happens when a check blocks a pattern match?
 \item Equality is not decidable at many types, even in the empty context.
 For instance, functions of type $\mathtt{Nat}\rightarrow\mathtt{Nat}$ do not have decidable equality.
-Therefore the types that embed them do not have decidable equality.
+Therefore the types that embed functions of type $\mathtt{Nat}\rightarrow\mathtt{Nat}$ do not have decidable equality.
 \end{itemize}
 These problems are solved by extending dependent type theory with a cast checking operator.
 This cast operator will ``get stuck'' if there is a discrepancy, and we can show that a program will always resolve to a value or get stuck in such a way that a counterexample can be reported.
@@ -366,7 +368,10 @@ To make the presentation easier, features will be added to the language in stage
 \begin{itemize}
 \item Chapter 2 describes a dependently typed language (without data) intended to model standard dependent type theories, called the \textbf{Surface Language}.
 \textbf{Type soundness} is proven and a \bidir{} type checking procedure system is presented.
-Though the system is not original, the proof presented is the simplest complete progress and preservation style proof I am aware of for a dependent type system.   
+Though the system is not original, the proof presented is the simplest complete progress and preservation style proof I am aware of for a dependent type system\footnote{
+  \cite{sjoberg2015dependently} made a similar claim, though since it included more features (such as data), our proof would technically be simpler.
+  \MartinL{} had a similar proof for a similar system in his unpublished notes \cite{Martin-Lof-1971}, though that predates some of the proof techniques used in \Ch{2}.
+}.
 \item Chapter 3 describes a dependently typed language (without data) with embedded equality checks, called the \textbf{cast language}.
 The cast language has its own version of type soundness, called \textbf{cast soundness}.
 Cast soundness is proven for the language, using a similar strategy to the type soundness proof of Chapter 2.
@@ -374,7 +379,7 @@ An Elaboration procedure takes most (untyped) terms of the surface syntax into t
 Several desirable properties for elaboration are presented. % and conjectured.
 \item Chapter 4 reviews how dependent data and pattern matching can be added to the surface language and explores some of the issues of data in a dependent type system.
 \item Chapter 5 shows how to extend the cast language with dependent data and pattern matching.
-Surprisingly the inclusion of dependent data requires a much more complicated system then Chapter 3, since finer observations are observable.
+Surprisingly the inclusion of dependent data requires several changes to the system in \Ch{3}, since finer observations are observable.
 \item Chapter 6 discusses other ideas related to usability and future work, such as automated testing and runtime proof search.
 These systems are made feasible given the more flexible approach to equality addressed in the rest of the thesis.
 \end{itemize}

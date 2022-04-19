@@ -17,6 +17,7 @@
   * photo ready?
 * Chapter 1
   * is a plausible argument made
+  * should be readable by a general audience
   * spelling, grammar
 * Chapter 2
   * proofs are correct

@@ -18,7 +18,7 @@ As much as possible, the syntax uses standard modern notation\footnote{
  In \cite{10.1016/0890-5401(88)90005-3} it might be written $\left(\lambda X:\star\right)\left(\lambda x:X\right)x\ :\,\left[X:\star\right]\left[x:X\right]X$.
  In \cite{HoTTbook} it might be written $\lambda X.\lambda x.x\ :\,\underset{\left(X:\mathcal{U}\right)}{\prod}X\rightarrow X$.}\todo{Martin Loff/Hoff (TODO pr notation)}.
  
-The surface type system will serve both as foundation for later chapters and a self contained technical introduction to dependent types.
+The surface type system will serve both as a foundation for later chapters and a self contained technical introduction to dependent types.
 Even when using the full system described in later chapters, programmers will only need to think about the surface system.
 By design, the machinery that deals with equality addressed in later chapters will be invisible to programers.
 Everything presented in later chapters is designed to reinforce an understanding of the surface type system, and make it easier to use.
@@ -41,8 +41,8 @@ Type annotations are written with two colons to differentiate it from the formal
 In the implemented language a user of the programming language would use a single colon.
  
 There is no distinction between types and terms in the syntax\footnote{
- terms and types are usually separated, except in the syntax of full-spectrum dependent type systems where separating them would require many redundant rules.
- }, both are referred to as expressions.
+ Terms and types are usually separated, except in the syntax of \fullSp{} dependent type systems where separating them would require many redundant rules.
+}, both are referred to as expressions.
 However, capital meta variables are used in positions that are intended as types, and lowercase meta variables are used when an expression is intended to be a term.
 For instance, in annotation syntax where $m::M$ means $m$ can be a term and $M$ should be a type.
 % Meta variables that intend to quantify equivalent terms will be noted with primes or subscripts,

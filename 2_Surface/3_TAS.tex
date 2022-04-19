@@ -5,10 +5,10 @@ When is an expression reasonable? The expression $\star\star\star\star$ is allow
 Type systems can disallow bad terms like these which in turn prevents bad runtime behavior.
  
 We will present our type system as a \textbf{type assignment system} (\ac{TAS}).
-Type assignment systems are convenient to study the theory of a dependently typed language, because they do not require type annotations. %and will be easier to work with than other styles of typing that require variables to be annotated.
+Type assignment systems are convenient to study the theory of a dependently typed language, because terms do not need to contain information to help type checking, complicating the syntax. %type annotations. %and will be easier to work with than other styles of typing that require variables to be annotated.
 % For instance, $\mathsf{fun}\,f\,x\Rightarrow m$ does not require a type be given for $f$ or $a$.
 \todo{church/curry?}
-Practically this means that the type assignment system may need to infer an unrealistic amount of information if used as a type checking algorithm.
+Practically this means that the type assignment system may need to ``infer'' an unrealistic amount of information if used as a type checking algorithm.
 This also means that terms do not necessarily have unique typings.
 For instance $\tasys\lambda x\Rightarrow x:\mathbb{N}_{c}\rightarrow\mathbb{N}_{c}$, and $\tasys\lambda x\Rightarrow x:\mathbb{B}_{c}\rightarrow\mathbb{B}_{c}$.
 These issues will be addressed when the more practical, \bidir{} type system is introduced.
@@ -71,7 +71,6 @@ Type soundness can be shown with a \textbf{progress} and \textbf{preservation}\f
  For instance, \cite[Part 2]{pierce2002types}, \cite{KOKKE2020102440}, and \cite[Chapter 11]{chlipala2017formal}.
  % Chapter 3 of \cite{sjoberg2015dependently} has a similar progress and preservation style proof for a dependently typed language.
  }.
-\todo{cite parts of things in latex?}
 \todo{TAPL cites Harper as a co-originator of progress-preservation.
 Maybe just email him?  it might be also good to get him for intractability (blum stuff).
 might want to review his book first}
@@ -81,33 +80,34 @@ By iterating these lemmas together, it is possible to show that the type system 
 For a progress and preservation style proof of a dependently typed language, everything hinges on a suitable definition of the $\equiv$ relation.
  
 The $\equiv$ relation characterizes when terms are ``obviously'' or ``automatically'' equal.
-Because the $\equiv$ relation is usually based on the definition of computation, rather then on extrinsic properties, it is called \textbf{definitional equality}\todo{is that actually why?}\footnote{also called \textbf{Judgmental Equality}, since it is defined via judgments}.
+Because the $\equiv$ relation is usually based on the definition of computation, rather then on observable properties, it is called \textbf{definitional equality}\todo{is that actually why?}\footnote{
+  also called \textbf{Judgmental Equality}, since it is defined via judgments
+}.
 Usually it is desirable to make the definitional equality relation as large as possible, since the programmer in the system will get more equalities ``for free''.
-This chapter will opt for an easier (but less powerful) $\equiv$ relation, since Chapter 3 will give an alternative way to avoid definitional equalities during type checking.
+This Chapter will opt for an easier (but less powerful) $\equiv$ relation, since Chapter 3 will propose a way to avoid definitional equality in general.
  
-In a progress and preservation style proof, the $\equiv$ relation should
+In a progress and preservation style proof, the $\equiv$ relation should:
  
 \begin{itemize}
-\item be reflexive, $m\equiv m$
-\item be symmetric, if $m\equiv m'$ then $m'\equiv m$
-\item be transitive, if $m\equiv m'$ and $m'\equiv m''$ then $m\equiv m''$
-\item be closed under substitutions and evaluation, for instance if $m\equiv m'$ and $n\equiv n'$ then $m\left[x\coloneqq n\right]\equiv m'\left[x\coloneqq n'\right]$
-\item distinguish between type constructors, for instance $\star\cancel{\equiv}\left(x:N\right)\rightarrow M$
+\item Be reflexive, $m\equiv m$
+\item Be symmetric, if $m\equiv m'$ then $m'\equiv m$
+\item Be transitive, if $m\equiv m'$ and $m'\equiv m''$ then $m\equiv m''$
+\item Be closed under substitutions and evaluation, for instance if $m\equiv m'$ and $n\equiv n'$ then $m\left[x\coloneqq n\right]\equiv m'\left[x\coloneqq n'\right]$
+\item Distinguish between type formers, for instance $\star\cancel{\equiv}\left(x:N\right)\rightarrow M$
 \end{itemize}
-A particularly simple definition of $\equiv$ arises by equating any terms that share a reduct via a system of parallel reductions
+A particularly clean definition of $\equiv$ arises by equating any terms that share a reduct via a system of parallel reductions,
  
 \[
 \frac{m\Rrightarrow_{\ast}\,n\quad m'\Rrightarrow_{\ast}\,n}{m\equiv m'}\,\rulename{\equiv-Def}
 \]
  
-this relation
+This relation:
 \begin{itemize}
-\item is reflexive, by definition
-\item is symmetric, automatically
-\item is transitive, if $\Rrightarrow_{\ast}$ is confluent
-\item is closed under substitution if $\Rrightarrow_{\ast}$ is closed under
-substitution, closed under evaluation automatically
-\item distinguishes type constructors, if they are stable under reduction.
+\item Is reflexive, by definition
+\item Is symmetric, automatically
+\item Is transitive, if $\Rrightarrow_{\ast}$ is confluent
+\item Is closed under substitution if $\Rrightarrow_{\ast}$ is closed under substitution, closed under evaluation automatically
+\item Distinguishes type constructors, if they are stable under reduction.
 For instance,
 \begin{itemize}
 \item if $\forall NM.\left(x:N\right)\rightarrow M\Rrightarrow P$ implies $P=\left(x:N'\right)\rightarrow M'$
@@ -278,7 +278,7 @@ By repeated $\rulename{\Rrightarrow_{\ast}-sub}$ and $\equiv\rulename{-Def}$
  
 To prove the transitivity of the $\equiv$, we will first need to prove that \textbf{$\Rrightarrow_{\ast}$ }is \textbf{confluent}.
 A relation $R$ is confluent\footnote{also called \textbf{Church-Rosser}} when, for all $m$, $n$, $n'$, if $mRn$ and $\:mRn'$ then exists exists $n''$ such that $nRn''$. % and $n'Rn''$.
-If a relation is confluent, in a sense, specific paths don't matter since you can alway rejoin at a future destination.
+If a relation is confluent, in a sense, specific reduction choices don't matter since you can alway rejoin at a future destination.
  
  
 \begin{figure}
@@ -364,7 +364,7 @@ If $m\Rrightarrow\,m'$, $m\Rrightarrow\,m''$, implies $m'\Rrightarrow\,\textbf{m
 \end{lem}
  
 \begin{proof}
-By thr triangle property.
+By the triangle property.
  % Since $\textbf{max}\left(m\right)=\textbf{max}\left(m\right)$ .
 \end{proof}
 \begin{thm}
@@ -461,7 +461,8 @@ Substitution Preservation
  
 The following rule is admissible\footnote{
  This lemma is sufficient for our informal account of variable substitution and binding.
- A fully formal account will be sensitive to the specific binding strategy, and may need to prove this lemma as a corollary from simultaneous substitutions}
+ A fully formal account will be sensitive to the specific binding strategy, and we may need to prove this lemma as a corollary from simultaneous substitutions.
+}
 \[
 \frac{\Gamma\tasys n:N\quad\Gamma,x:N,\Gamma'\tasys m:M}{\Gamma,\Gamma'\left[x\coloneqq n\right]\tasys m\left[x\coloneqq n\right]:M\left[x\coloneqq n\right]}
 \]
@@ -614,7 +615,7 @@ For non-dependently typed programming languages, these steps are easy to charact
 If we characterize computation with the $\Rrightarrow$ relation, the progress lemma holds in a meaningless way since we can always take a reflexive step.
 Thus a less reflexive relation is needed.
 Ideally the relation should also be deterministic and a sub relation of $\Rrightarrow_{*}$.
-We can choose a call-by-value relation since this meets all the properties required, and is a standard execution strategy that reflects actual implementations.
+We can choose a \cbv{} relation since this meets all the properties required, and is a standard execution strategy that reflects actual implementations.
  
 \begin{figure}
 \begin{tabular}{lcl}
@@ -655,8 +656,8 @@ Additionally the Type universe is a value, and function types are values.
 \label{fig:surface-reduction-step}
 \end{figure}
  
-A call-by-value relation is defined in \Fref{surface-reduction-step}.
-The reductions are standard for a call-by-value lambda calculus, except that type annotations are only removed from values.
+A \cbv{} relation is defined in \Fref{surface-reduction-step}.
+The reductions are standard for a \cbv{} lambda calculus, except that type annotations are only removed from values.
  
 \todo{explicitly define stuck}
 \begin{fact}
@@ -732,7 +733,7 @@ As usual this follows form induction on the typing derivation
  
 \end{proof}
 \todo{awk}
-Progress via call-by-value can be seen as a specific sub-strategy of $\Rrightarrow$.
+Progress via \cbv{} can be seen as a specific sub-strategy of $\Rrightarrow$.
 An interpreter is always free to take any $\Rrightarrow$, but if it is unclear which $\Rrightarrow$ to take, either it is a value and no further steps are required, or can fall back on $\rightsquigarrow$ until the the outermost computation has completed.
  
 \subsection{Type Soundness}

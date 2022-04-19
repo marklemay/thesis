@@ -86,15 +86,17 @@ The inference judgment is unique up to syntax!
 For example $x:Vec\,3\vdash x\overrightarrow{\,:\,}Vec\,3$, but $x:Vec\,3\, \cancel{\vdash}\, x\overrightarrow{\,:\,}Vec\,\left(1+2\right)$.
 This could cause unexpected behavior around function applications.
 For instance, if $\Gamma\vdash m\overrightarrow{\,:\,}\mathbb{N}\rightarrow\mathbb{N}$ then $\Gamma\vdash m\,7\overrightarrow{\,:\,}\mathbb{N}$ will infer, but only because the $\rightarrow$ is in the head position of the type $\mathbb{N}\underline{\rightarrow}\mathbb{N}$.
-If $\Gamma\vdash m\overrightarrow{\,:\,}\left(\mathbb{N}\rightarrow\mathbb{N}::\star\right)$ then $::$ is in the head position of $\mathbb{N}\rightarrow\mathbb{N}\underline{::}\star$ and $\Gamma\cancel{\vdash}m\,7\overrightarrow{\,:\,}\mathbb{N}$ will will not infer.
+If $\Gamma\vdash m\overrightarrow{\,:\,}\left((\mathbb{N}\rightarrow\mathbb{N})::\star\right)$ then $::$ is in the head position of $(\mathbb{N}\rightarrow\mathbb{N})\underline{::}\star$ and $\Gamma\cancel{\vdash}m\,7\overrightarrow{\,:\,}\mathbb{N}$ will will not infer.
  
 A similar issue exists with check rules around function definitions.
 For instance, $\vdash\left((\lambda x\Rightarrow x)::\mathbb{N}\rightarrow\mathbb{N}\right)\ \overrightarrow{\,:\,}\mathbb{N}\rightarrow\mathbb{N}$ will infer, but if computation blocks the $\rightarrow$ from being in the head position, inference will be impossible.
-As in the expression, $\left((\lambda x\Rightarrow x)::\left(\mathbb{N}\rightarrow\mathbb{N}\underline{::}\star\right)\right)$ which will not infer.
+As in the expression, $\left((\lambda x\Rightarrow x)::\left((\mathbb{N}\rightarrow\mathbb{N})\underline{::}\star\right)\right)$ which will not infer.
  
 For these reasons, many presentations of \bidir{} dependent typing will evaluate the types needed for $\overleftarrow{ty}-\mathsf{fun}$, and $\rulename{\overrightarrow{ty}-\mathsf{fun}-app}$ into weak head normal form\footnote{as in \cite{COQUAND1996167}}.
 With that caveat, this document opts for an unevaluated version of the rules to make some properties easier to present and prove.
-Specifically, this will allow us to present a terminating elaboration procedure in Chapter 3.
+Specifically, this will allow us to present a terminating elaboration procedure in Chapter 3\footnote{
+  The prototype uses the more conventional \whnf{} check up to some "time bound", which is easier in practice but more messy in theory.
+}.
 % the simplest possible presentation of \bidir{} type checking.
  
 \todo[inline]{alternative listed in appendix}
@@ -104,12 +106,12 @@ Specifically, this will allow us to present a terminating elaboration procedure 
  
 It is possible to take the ideas of bidirectional typing very far.
 More advanced \bidir{} implementations such as Agda\cite{norell2007towards} even perform unification as part of their \bidir{} type checking.
-There will always be ways to make type inference more powerful, at the cost of complexity.
+% There will always be ways to make type inference more powerful, at the cost of complexity.
  
 \subsection{The \Bidir{} System is Type Sound}
  
 It is possible to prove \bidir{} type systems are type sound directly\cite{nanevski2005dependent}.
-But it would be difficult for the system described here since type annotations evaluate away, contradiction the normal preservation lemma.
+But it would be difficult for the system described here since type annotations evaluate away, contradicting the normal preservation lemma.
 Alternatively we can show that a \bidir{} typing judgment implies a type assignment system typing judgment.
  
 \begin{thm}

@@ -1,11 +1,13 @@
-\section{Related work}
+\section{Related Work}
  
-\subsection{Bad logics, ok programming languages?}
+\subsection{Bad Logics, ok Programming Languages?}
  
-Unsound logical systems that work as programming languages go back to at least Church's lambda calculus which was originally intended to be part of a foundation for mathematics\footnote{``There may, indeed, be other applications of the system than its use as a logic.''\cite[p.349]{10.2307/1968337}}.\todo{review citation}
-In the 1970s, Per Martin-L{\"o}f proposed a system with \tit{}\todo{cite it?} that was shown logically unsound by Girard (as described in the introduction of \cite{Martin-Lof-1972}).
+Unsound logical systems that work as programming languages go back to at least Church's lambda calculus which was originally intended to be part of a foundation for mathematics\footnote{
+  ``There may, indeed, be other applications of the system than its use as a logic.''\cite[p.349]{10.2307/1968337}
+}.
+In the 1970s, \MartinL{} proposed a system with \tit{}\cite{Martin-Lof-1971} that was shown logically unsound by Girard (as described in the introduction of \cite{Martin-Lof-1972}).
 In the 1980s, Cardelli explored the domain semantics of a system with general recursive dependent functions and \tit{}\cite{cardelli1986polymorphic}.
-Independently, Viggo and Stoltenberg-Hansen\cite{PALMGREN1990135} explored the domain semantics of Martin-L{\"o}f's type theory with a fixed point operator.
+Independently, Viggo and Stoltenberg-Hansen\cite{PALMGREN1990135} explored the domain semantics of \MartinL{}'s type theory with a fixed point operator.
 \todo{Per Martin-L{\"o}f anticipated this work in unpublished lectures and an Abstract.}
 
 The first progress and preservation style proof of type soundness for a language with general recursive dependent functions and \tit{} seem to come from the Trellys Project\cite{sjoberg2012irrelevance}.
@@ -14,8 +16,8 @@ Additionally, the surface language uses a simpler notion of definitional equalit
 Later work in the Trellys Project\cite{casinghino2014combining,casinghino2014combiningthesis} used modalities to separate terminating and non-terminating fragments of the language, to allow both general recursion and logically sound reasoning. %, though the annotation burden seems high in retrospect .
 In general, the surface language has been deeply informed by the Trellys project\cite{sjoberg2012irrelevance,casinghino2014combining,casinghino2014combiningthesis,sjoberg2015programming,sjoberg2015dependently} and the Zombie language\footnote{https://github.com/sweirich/trellys} it produced.
  
-\todo{type in type as a well known shortcut, videos of Andraj, Conner MB saying it }
-\todo{section on \bidir{} dependent type systems, citing http://www.cse.chalmers.se/\textasciitilde nad/publications/altenkirch-et-al-flops2010.pdf https://www.seas.upenn.edu/\textasciitilde sweirich/papers/congruence-extended.pdf posibly https://arxiv.org/pdf/1203.4716.pdf https://drops.dagstuhl.de/opus/volltexte/2021/13919/pdf/LIPIcs-ITP-2021-24.pdf}
+\todo[inline]{type in type as a well known shortcut, videos of Andraj, Conner MB saying it }
+\todo[inline]{section on \bidir{} dependent type systems, citing http://www.cse.chalmers.se/\textasciitilde nad/publications/altenkirch-et-al-flops2010.pdf https://www.seas.upenn.edu/\textasciitilde sweirich/papers/congruence-extended.pdf posibly https://arxiv.org/pdf/1203.4716.pdf https://drops.dagstuhl.de/opus/volltexte/2021/13919/pdf/LIPIcs-ITP-2021-24.pdf}
  
 \subsection{Implementations}
  
@@ -43,14 +45,15 @@ From the perspective of the surface language this impredictivity is modest, but 
 Several other systems were developed that directly extended or modified the Calculus of Constructions.
 The Extended Calculus of Constructions (\ac{ECC})\cite{luo1990extended,luo1994computation}, extends the Calculus of Constructions with a predicative hierarchy of universes and dependent pair types.
 The Implicit Calculus of Constructions (\ac{ICC})\cite{10.1007/3-540-45413-6_27,10.1007/978-3-540-78499-9_26} presents an extrinsic typing system\footnote{
- Sometimes called \textbf{Curry-style}, in contrast to intrinsic type systems which are sometimes called \textbf{Church-style}.
- }, unlike the Type Assignment System presented in this Chapter, the Implicit Calculus of Constructions allows implicit qualification over terms in addition to explicit quantification over terms (also a hierarchy of universes, and a universe of ``sets'').
+  Sometimes called \textbf{Curry-style}, in contrast to intrinsic type systems which are sometimes called \textbf{Church-style}.
+}.
+Unlike the Type Assignment System presented in this Chapter, the Implicit Calculus of Constructions allows implicit qualification over terms in addition to explicit quantification over terms (also a hierarchy of universes, and a universe of ``sets'').
 Other extensions to the Calculus of Constructions that are primarily concerned with data will be surveyed in Chapter 4.
  
-The lambda cube\todo{cite!} is a system for relating 8 interesting typed lambda caluli to each other.
+The lambda cube\todo{cite!} is a system for relating 8 interesting typed lambda calculi to each other.
 Presuming terms should always depend on terms, there are 3 additional dimensions of dependency: term depending on types, types dependent on types, and types depending on terms.
 The simply typed lambda calculus has only term dependency.
-System F additionally allows Types to depend on types.
+System F additionally allows types to depend on types.
 The Calculus of Constructions has all forms of dependency\footnote{Recommended reading Chapter 14 \cite{sorensen2006lectures}}.
  
 Pure Type Systems (\ac{PTS})\footnote{previously called \textbf{Generalized Type Systems}} generalizes the lambda cube to allow any number of type universes with any forms of dependency.
@@ -59,22 +62,22 @@ Universe hierarchies can also be embedded in a \ac{PTS}.
 The system described in this Chapter is almost a \ac{PTS}, except that it contains unrestricted recursion and the method of type annotation is different.
 All pure type systems such as System F and the Calculus of Constructions have corresponding terms in the Surface Language, by renaming their type universes into the surface language type universe.
  
-\todo{citations for PTS: (Terlouw, 1989; Berardi, 1988; Barendregt, 1991, 1992; Jutting, McKinna, and Pollack, 1994; McKinna and Pollack, 1993; Pollack, 1994).
+\todo[inline]{citations for PTS: (Terlouw, 1989; Berardi, 1988; Barendregt, 1991, 1992; Jutting, McKinna, and Pollack, 1994; McKinna and Pollack, 1993; Pollack, 1994).
 According to TAPL}
  
-As previously mentioned Martin L{\"o}f Type Theory (\ac{MLTT})\cite{Martin-Lof-1972} is one of the oldest frameworks for dependent type systems.
-MLTT is designed to be open, so that new constructs can be added with the appropriate introduction, elimination, computation, and typing rules.
+As previously mentioned \MartinL{} Type Theory (\ac{MLTT})\cite{Martin-Lof-1972} is one of the oldest frameworks for dependent type systems.
+\ac{MLTT} is designed to be open, so that new constructs can be added with the appropriate introduction, elimination, computation, and typing rules.
 The base system comes with a predicative hierarchy of universes, and at least dependently typed functions and a propositional equality type.
 The system has two flavors characterized by its handling of definitional equality.
 If types are only identified by computation (as the system described in this Chapter) it is called Intentional Type Theory (\ac{ITT}).
 If the system allows proofs of equality to associate types, it is called Extensional Type Theory (\ac{ETT}).
 Since \ac{MLTT} is open ended, the Calculus of Constructions can be added to it as a subsystem\cite{aspinall2004dependent,hofmann1997extensional}.
-Many of the examples from this Chapter are adapted from examples that were first worked out in early versoins of \ac{MLTT}.
-\todo{cite that manuscript? I don't think ML wants it cited. most eamples were collected by martin lof  and some go back to russle} 
+Many of the examples from this Chapter are adapted from examples that were collected with early versions of \ac{MLTT}\cite{Martin-Lof-1971}.
+\todo{most eamples were collected by martin lof  and some go back to russle} 
  
-\todo{go back to Russle?}
-\todo{solving universe constraints?}
-\todo{cite the autosubst proof}
+\todo[inline]{go back to Russle?}
+\todo[inline]{solving universe constraints?}
+\todo[inline]{cite the autosubst proof}
  
 % \bidir{}
 % [109] Benjamin C. Pierce and David N. Turner. Local type inference. ACM Transactions on Programming Languages and Systems, 22(1):1–44, January 2000.
