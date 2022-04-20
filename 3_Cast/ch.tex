@@ -3,7 +3,7 @@
 \thispagestyle{myheadings}
  
 \Ch{2} outlined a minimal dependent type system.
-Like all dependent type systems, the surface language has a fundamental problem: Definitional equalities are pervasive and unintuitive.
+Like all dependent type systems, the surface language has a fundamental problem: definitional equalities are pervasive and unintuitive.
  
 %% example of dependent types
 For instance, the motivating example from the introduction can be stated more precisely in terms of the surface language.
@@ -18,7 +18,7 @@ Recall, dependent types can prevent an out-of-bounds error when indexing into a 
 \vdash\lambda x\Rightarrow\mathtt{head}\,\mathbb{B}_{c}\,x\,\left(\mathtt{rep}\,\mathbb{B}_{c}\,true_{c}\,\left(1_{c}+_{c}x\right)\right)\,:\,\mathbb{N}_{c}\rightarrow\mathbb{B}_{c}
 \]
 
-$\mathtt{head}$ is a function that expects a list of length $1_{c}+_{c}y$, making it impossible for $\mathtt{head}$ to inspect an empty list.
+Where $\mathtt{head}$ is a function that expects a list of length $1_{c}+_{c}y$, making it impossible for $\mathtt{head}$ to inspect an empty list.
 
 %% example of problem
 Unfortunately, the following will not type check in the surface language,
@@ -28,27 +28,27 @@ Unfortunately, the following will not type check in the surface language,
 \]
 
 %% explanation of example
-\sloppy While ``obviously'' $1+x=x+1$, in the surface language, definitional equality does not associate these two terms, $1_{c}+_{c}x\cancel{\equiv}x+_{c}1_{c}$.
+\sloppy While ``obviously'' $1+x=x+1$, in the surface language definitional equality does not associate these two terms, $1_{c}+_{c}x\cancel{\equiv}x+_{c}1_{c}$.\todo{unroll the definitions?}
  
-This chapter will tackle the issue of definitional equalities by avoiding them.
+This Chapter will handle the issue of definitional equalities by avoiding them.
 The system will optimistically assume equalities implied by the programer and deal with incorrect equalities at runtime in a principled way.
-This will be done with the \textbf{cast system} described in this chapter.
-The cast system is comprised of
+This will be done with the \textbf{cast system} described in this Chapter.
+The cast system is comprised of:
 \begin{itemize}
 \item The \textbf{cast language}, a dependently typed language with embedded runtime checks that have evaluation behavior.
 \item The \textbf{elaboration procedure} that transforms appropriate untyped surface syntax into a well cast terms.
 \todo{as a picture}
 \end{itemize}
  
-The presentation in this chapter mirrors the system in \ch{2}.
-The cast language plays the role of the type assignment system, while the elaboration procedure corresponds with the \bidir{} system.
+The presentation in this chapter mirrors \ch{2}.
+The cast system plays the role of the type assignment system, while the elaboration procedure corresponds with the \bidir{} system.
  
 We show that a novel form of type soundness holds, that we call \textbf{cast soundness}.
 Instead of ``well typed terms don't get stuck'', we prove ``well cast terms don't get stuck without blame''.
  
-Additionally, by construction, blame will carry the necessary information to construct a reasonable runtime error message.
-Several desirable properties hold for the system overall. \todo{which?}
- 
+By construction, blame will carry the necessary information to construct a reasonable runtime error message.
+Several desirable properties, modeled on the gradual guarantee of gradual types, relate the cast system elaboration and the \bidir{} system of \ch{2}.
+
 \section{Cast Language}
  
 \begin{figure}
@@ -56,16 +56,16 @@ Several desirable properties hold for the system overall. \todo{which?}
 \multicolumn{4}{l}{source locations,}\tabularnewline
 $\ensuremath{\ell}$ &  &  & \tabularnewline
 \multicolumn{4}{l}{variable contexts,}\tabularnewline
-$H$ & $\Coloneqq$ & $\lozenge$ $|$ $H,x:A$ & \tabularnewline
+$\Gamma$,$H$ & $\Coloneqq$ & $\lozenge$ $|$ $\Gamma,x:A$ & \tabularnewline
 \multicolumn{4}{l}{expressions,}\tabularnewline
-$a,b$,$A,B$ & $\Coloneqq$ & $x$ & \tabularnewline
+$a$,$b$,$A$,$B$ & $\Coloneqq$ & $x$ & \tabularnewline
 & $|$ & $a::_{A,\ensuremath{\ell},o}B$ & cast\tabularnewline
 & $|$ & $\star$ & \tabularnewline
 & $|$ & $\left(x:A\right)\rightarrow B$ & \tabularnewline
 & $|$ & $\mathsf{fun}\,f\,x\Rightarrow b$ & \tabularnewline
 & $|$ & $b\,a$ & \tabularnewline
 \multicolumn{4}{l}{observations,}\tabularnewline
-o & $\Coloneqq$ & . & current location\tabularnewline
+o & $\Coloneqq$ & . & \tabularnewline
 & $|$ & $o.arg$ & function type-arg\tabularnewline
 & $|$ & $o.bod[a]$ & function type-body\tabularnewline
 \end{tabular}
@@ -81,7 +81,7 @@ o & $\Coloneqq$ & . & current location\tabularnewline
 The syntax for the cast language can be found in \Fref{cast-pre-syntax}.
 By design the cast language is almost identical to the surface language except that the cast construct has been added and annotations have been removed.
 
-The cast language can assume arbitrary equalities over types, $A=B$, with a cast, $a::_{A,\ensuremath{\ell},o}B$ given
+The cast language can assume type equalities on top of terms, $A=B$, with a cast, $a::_{A,\ensuremath{\ell},o}B$ given
 \begin{itemize}
 \item an underlying term $a$,
 \item a source location $\ell$ where it was asserted,
@@ -95,7 +95,7 @@ Observations allow indexing into terms to pinpoint errors.
 For instance, if we want to highlight the $C$ sub expression in $\left(x:A\right)\rightarrow\left(y:\left(x:B\right)\rightarrow\underline{C}\right)\rightarrow D$ we can use the observation $..Bod[x].arg.Bod[y]$.
 In general, the $C$ may specifically depend on $x$ and $y$ so they are tracked as part of the observation.
 For instance, given the type $\left(X:\star\right)\rightarrow X$ we might want to point out $A$ when $X=A\rightarrow B$ resulting in the type $\left(X:\star\right)\rightarrow\left(\underline{A}\rightarrow B\right)$.
-The observation would then read $..Bod[A\rightarrow B].arg$ recording the specific type argument that allows an argument to be inspected.
+The observation would then read $..Bod[A\rightarrow B].arg$\todo{clean .. from syntax} recording the specific type argument that produces a body that can be inspected.
  
 Locations and observations will be used to form blame and produce the runtime error message users will see if their assumptions are wrong.
  
@@ -114,33 +114,35 @@ $a::_{A}B$ & written & $a::B$ & when & the the type of $a$ is clear\tabularnewli
 \subsection{How Should Casts Reduce?}
 
 How does the cast construct interact with the existing constructs?
-If casts should not block reduction when ther is no problem.
-Casts should also not get in the way of type checking.
-There are three interactions that could cause a term to be stuck in evaluation or block type checking:
+Casts should not block reduction when there is no problem.
+Casts should also not get in the way of cast checking\todo{CAS? checking implies a prodecure? type checking?}.
+There are three combinations of syntax that could cause a term to be stuck in evaluation or block cast checking:
 
-\begin{tabular}{ll}
-$\star::B$ & universe under cast\tabularnewline
-$\left(\left(x:A\right)\rightarrow B\right)::C$ & function type under cast\tabularnewline
-$\left(b::C\right)a$ & application blocked by cast\tabularnewline
+\begin{tabular}{lll}
+$\star::B$ & universe under cast & will it ``type check'' as a type?\tabularnewline
+$\left(\left(x:A\right)\rightarrow B\right)::C$ & function type under cast & will it ``type check'' as a type?\tabularnewline
+$\left(b::C\right)a$ & application to a cast & will it block reduction?\tabularnewline
 \end{tabular}
 
-When possible, obvious casts should evaporate, freeing up the underlying term for further reduction and type checking.
+When possible, obvious casts should reduce away, freeing up the underlying term for further reduction and type checking.
 \Fref{cast-aprox-red} shows approximately how these reductions should be carried out.
 The most interesting case is when a cast confirms that the applied term is a function, but with potentially different input and output types.
-Then we use the function type syntax to determine a reasonable cast over the argument, and maintain the appropriate cast over the resulting computation.
-This operation is similar to the way higher order contracts invert the polarity of blame for the arguments of higher order functions \cite{10.1145/581478.581484} and also found in gradual type systems, such as \cite{10.1007/978-3-642-00590-9_1}.
+Then we use the function type syntax to determine a reasonable cast over the argument, and maintain the appropriate cast over the resulting computation\footnote{
+  This operation is similar to the way higher order contracts invert the polarity of blame for the arguments of higher order functions \cite{10.1145/581478.581484} and also found in gradual type systems, such as \cite{10.1007/978-3-642-00590-9_1}.
+}\todo{perhaps just more to prior work?}.
+
 
 \begin{sidewaysfigure}
 \begin{tabular}{ccccc}
 $\star::\star$ & $\rightsquigarrow$ & $\star$ &  & \tabularnewline
 $\star::B$ & $\rightsquigarrow$ & $\star::B'$ & when  & $B\rightsquigarrow B'$\tabularnewline
-$\star::_{\ell,o}B$ & blame & $\ell,o$ & when  & $B$ cannot be $\star$ \tabularnewline
-$\left(\left(x:A\right)\rightarrow B\right)::\star$ & $\rightsquigarrow$ & $\left(\left(x:A\right)\rightarrow B\right)::\star$ & $\rightsquigarrow$ & \tabularnewline
+$\star::_{\ell,o}B$ & \Blame{} & $\ell,o$ & when  & $B$ cannot be $\star$ \tabularnewline
+$\left(\left(x:A\right)\rightarrow B\right)::\star$ & $\rightsquigarrow$ & $\left(x:A\right)\rightarrow B$ &  & \tabularnewline
 $\left(\left(x:A\right)\rightarrow B\right)::C$ & $\rightsquigarrow$ & $\left(\left(x:A\right)\rightarrow B\right)::C'$ & when  & $C\rightsquigarrow C'$\tabularnewline
-$\left(\left(x:A\right)\rightarrow B\right)::_{\ell,o}C$ & blame & $\ell,o$ & when  & $C$ cannot be $\star$ \tabularnewline
+$\left(\left(x:A\right)\rightarrow B\right)::_{\ell,o}C$ & \Blame{} & $\ell,o$ & when  & $C$ cannot be $\star$ \tabularnewline
 $\left(b::_{\left(x:A'\right)\rightarrow B'}\left(x:A\right)\rightarrow B\right)a$ & $\rightsquigarrow$ & $\left(b\,\left(a::A'\right)\right)::_{B'\left[x\coloneqq a::A'\right]}B\left[x\coloneqq A\right]$ &  & \tabularnewline
 $\left(b::C\right)a$ & $\rightsquigarrow$ & $\left(b::C'\right)a$ & when  & $C\rightsquigarrow C'$\tabularnewline
-$\left(b::_{\ell,o}C\right)a$ & blame & $\ell,o$ & when  & $C$ cannot be $\left(x:A\right)\rightarrow B$ \tabularnewline
+$\left(b::_{\ell,o}C\right)a$ & \Blame{} & $\ell,o$ & when  & $C$ cannot be $\left(x:A\right)\rightarrow B$ \tabularnewline
 \end{tabular}
 
 \caption{Approximate Cast Language Reductions}
@@ -152,11 +154,11 @@ When a term reaches this state a separate blame relation will extract the runtim
 Type universes live in the type universe, so any cast that contradicts this should be blamed.
 Similarly for function types.
 Terms that take input must be functions, so any cast that contradicts this should blame the source location.
-The fully formal reduction rules are listed later, but their complete detail can be distracting.
+% The fully formal reduction rules are listed later, but their complete detail can be distracting.
 \todo{awk}
 
 Note that the rules outlined here are not deterministic since there are cases when we might blame or continue reducing the argument.
-One of the subtle innovations of the system described in this chapter is to completely separate blame from reduction.
+One of the subtle innovations of the system described in this Chapter is to completely separate blame from reduction.
 This sidesteps many of the complexities of having a reduction relevant $\mathtt{abort}$ term in a dependent type theory \cite{sjoberg2012irrelevance,pedrot2018failure}.
 As far as reduction is concerned, bad terms simply ``get stuck'' as it might on a variable from a nonempty typing context.
 Otherwise the reduction behavior is well behaved.
@@ -169,8 +171,10 @@ $a::_{C}C$ & $\rightsquigarrow_{=}$ & $a$ &  & \tabularnewline
 $a::_{C'}C$ & $\rightsquigarrow_{\equiv}$ & $a$ & when & $C'\equiv C$\tabularnewline
 \end{tabular}
 
-However these rules preclude extracting blame that may be embedded within the casts themselves.
-These rules also seem to complicate the meta theory.
+However these ignore that blame that may be hiding within the cast syntax ($C$, $C'$).
+In \ch{6} we will separate the syntax casts from the assertions equalities they can contain, making reductions like the above reasonable.
+But for this Chapter the theory will be easier with a single cast assert syntax.
+% These rules also seem to complicate the meta theory.
 Despite this we will use these reductions in examples to keep the book keeping to a minimum.
 
 \input{3_Cast/2_Examples}

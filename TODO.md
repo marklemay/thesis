@@ -1,7 +1,3 @@
-https://github.com/michaelt/martin-lof/blob/master/pdfs/martin-loef1971%20-%20A%20Theory%20of%20Types.pdf
-
-
-
 library request
 * ~~https://link.springer.com/book/10.1007/978-1-4471-0963-1~~
 * print https://link-springer-com.ezproxy.bu.edu/content/pdf/10.1007%2FBFb0037116.pdf
@@ -44,7 +40,6 @@ explain is strictly stronger in the full dependent setting. Finally, while AGT p
 intuitions for this work, graduality as embedding-projection pairs was the key technical driver in
 the design of CastCIC."
 
-
 Formatting
 * when polishing each chapter do a search to find and replace cruft with macros
 * nice looking multi tabbed proof format?
@@ -59,6 +54,7 @@ Formatting
 * http://lists.seas.upenn.edu/pipermail/types-list/2019/002163.html
 
 Send to people for review
+* email the wirting dpt. and see if they would do editing?
 * CH2/4 Zach
 * almost done Luara
 * Eric's friends
@@ -71,6 +67,8 @@ Send to people for review
 
 defence 
 * 1 page cheatsheet
-  * protocal (1 hour talk, questions, private meetings with candidate, private with comitte, ...)
+  * protocal (1 hour talk, questions, private meetings with candidate, private with comitte, ...) as opening slide
   * syntax, formulas
 * mic check remote people
+
+Fun drinks owed to proof readers: ...

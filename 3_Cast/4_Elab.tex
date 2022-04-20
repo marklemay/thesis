@@ -1,5 +1,7 @@
 \section{Elaboration}
 
+\todo[inline]{resolve var for the typing context of this section: H? Gamma? some other greek?}
+
 % overview
 Even though the cast language allows us to optimistically assert equalities, manually noting every cast would be cumbersome.
 This bureaucracy is solved with an elaboration procedure that translates (untyped) terms from the surface language into the cast language.
@@ -11,7 +13,7 @@ Instead of performing a static equality check when the inference mode and the ch
 
 First we enrich the surface language with location information, $\ell$, at every position that could result in a type mismatch in \Fref{surface-pre-syntax-loc}.
 Note that the location tags match exactly with the check annotations of the \bidir{} system.
-For technical reasons the set of locations is nonempty, and a specific null location $.$\todo{- instead of . ?} is designated.
+For technical reasons the set of locations is nonempty, and a specific null location ($.$)\todo{- instead of . ?} is designated.
 That null location can be used when we need to generate fresh terms, but have no sensible location information available.
 All the meta theory from \ch{2} goes through assuming that all locations are equivalent and by generating null locations when needed\footnote{
 For instance, the parallel reduction relation will associate all locations,
@@ -76,7 +78,7 @@ $f:\mathbb{N}\rightarrow\mathbb{B}\rightarrow\mathbb{B}\vdash f_{\ell}7_{\ell'}3
 Unlike in gradual typing, we cannot elaborate arbitrary untyped syntax.
 The underlying type of a cast needs to be known so that a function type can swap its argument type at application.
 For instance, $\lambda x\Rightarrow x$ will not elaborate since the intended type is not known.
-Fortunately, our experimental testing suggests that a majority of randomly generated terms can be elaborated, while only a small minority of terms would type-check in the surface language.
+Fortunately, our experimental testing suggests that a majority of randomly generated terms can be elaborated, while only a small minority of terms would type check in the surface language.
 The programmer can make any term elaborate if they annotate the intended type.
 For instance, $\left(\lambda x\Rightarrow x\right)::*\rightarrow*$ will elaborate.
 
@@ -167,6 +169,7 @@ $|\mathsf{fun}\,f\,x\Rightarrow b|$ & = & $\mathsf{fun}\,f\,x\Rightarrow|b|$\tab
 $|b\,a|$ & = & $|b|\,|a|$\tabularnewline
 $|H,x:M|$ & = & $|H|,x:|M|$\tabularnewline
 \end{tabular}
+\todo[inline]{center this tab}
 \caption{Erasure}
 \label{fig:erasure}
 \end{figure}
@@ -228,7 +231,7 @@ Which if true would lead to the corollary
 \begin{conjecture}
 blame never points to something that checked in the \bidir{} system
  
-if $\vdash m\overrightarrow{\,:\,}M$, and $\vdash\textbf{Elab}\ m\,a\overrightarrow{\,:\,}A$, then for no $a\rightsquigarrow_{*}a'$ will $\textbf{Blame}\:\ell\,o\:a'$ occur
+if $\vdash m\overrightarrow{\,:\,}M$, and $\vdash\textbf{Elab}\ m\,a\overrightarrow{\,:\,}A$, then for no $a\rightsquigarrow_{*}a'$ will \blame{a'}{\ell}{o} occur.
  
 \todo{revise precisely with labels}
 \end{conjecture}

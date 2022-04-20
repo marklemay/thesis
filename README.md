@@ -4,6 +4,8 @@
 [Latest draft](https://github.com/marklemay/thesis/releases/download/thesis/thesis.pdf)
 
 ## How to Review
+Printed draft chapters are in the draft folder by my desk.
+Ask me if you would like a pdf with custom formatting (for instance single spaced, editing notes included), or your own printed copy.
 ### Overall
 * Where are you first confused?
 * Where do you first get bored?
