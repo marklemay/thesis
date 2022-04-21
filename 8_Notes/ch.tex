@@ -1,20 +1,20 @@
 \chapter{Notes and Future Work}
 \label{chapter:Notes}
 \thispagestyle{myheadings}
+ 
+The content of this thesis was achieved through much trial and error.
+There were several experiments that while interesting and promising, did not cleanly fit into the narrative of the first 5 Chapters.
+This Chapter contains an idealized\footnote{
+  For instance, automated testing procedure was originally specified and implemented on a different language than the cast language described in this thesis.
+  Accordingly the notations have changed, to be sensible in the context of the rest of the thesis. % , often improving/simplifing the presentation.
+  Further, automated testing procedure has not yet been reimplemented on the current version of the prototype.
+} review of what was tried, and hopefully provide hints about how one might productively try again.
+ 
+The goal was always to make a dependently typed language as approachable as python\footnote{We have perhaps succeeded in making a dependently typed language as approachable as Haskell.}.
+While I believe a full-spectrum dependently typed language with runtime definitional equality checking, dependent pattern matching and with no restrictions on recursion are part of that practical language, there are still lingering usability issues.
+For those who share the dream of more reliable software through easier to use dependently typed languages, here are some lines of work for your consideration.
 
-The content of this thesis was achived through much trial and error.
-There were several experiments that while intresting and promising, did not cleanly fit into the narative of this thesis.
-This Chapter contains an (idealized\footnote{
-  For instance, symbolic exicution was origionally specified and implemented on a different language then the cast language described in this thesis.
-  Acordingly the the notations have changed, often improving/simplifing the presentation.
-  However symbolic exicution has not yet been reimplemented on the current verion of the prototype (as of this submision).
-}) review of what was tried, and hopfully provide hints aobut how one might more productively be able to try again.
 
-The goal was always to make a dependently typed langaguage as approachable as python\footnote{We have perhaps suceeded in makeing a dependently typed language as approacable as Haskell.}.
-While I firmly believe a full-spectrum dependently typed langauge with runtime defintional equivelence, deppendent pattern matching and with no restrictions on recursion are part of that pracitcal language, there are still lingering usability issues.
-For those who share the dream of more reliable software through easier to use dependently typed languages, here are some lines of work worth your consideration.
-
-\todo[inline]{TODO need to redo all teh notation of Sym-ex}
 \input{8_Notes/1_Sym} 
 \input{8_Notes/2_Proof_Search}
 
@@ -25,30 +25,30 @@ For those who share the dream of more reliable software through easier to use de
 \subsection{Effects}
 
 The last and biggest hurdle to bring dependent types into a mainstream programming language is by providing a reasonable way to handle effects.
-Though dependent types and effects have been studied I am not aware of any full spectrum system that has implemented those systems.
+Though dependent types and effects have been studied I am not aware of any full spectrum system that has implemented those theories.
 It is not even completely clear how best to add an effect system into Haskell, the closest ``mainstream'' language to the one studied here.\todo{cites!!}
 
 While trying carefully to avoid effects in this thesis, we still have encountered 2 important effects: blame based error and non-termination.
 
 \subsubsection{Errors}
 
-The current system handles blame based runtime errors and static warnings in a unique way.
+The current system implements blame based runtime errors and static warnings in a unique way.
 There is no control flow for errors built into the reduction or CBV relations, and there is no way to handle an error.
 Every potential error is linked to a static warning.
 There are a few features that would be good to experiment with:
 
-Allow users to provide proofs of equality to remove warnings by having them define and annotate an appropriate identity type.
+It might be nice to allow users to provide proofs of equality to remove warnings by having them define and annotate an appropriate identity type.
 This would allow the language to act more like an Extensional Type Theory.
 Programmers could justify these proofs as a way to remove runtime checks and make code (and testing) faster.
 Just as with \ac{ETT} many desirable properties such as function extensionality would still not be provable.
-We have pushed this to future work since there are already many explored strategies for dealing with equality proofs in an Intentional Type Theory that are completely compatible with the current implementation.
+We have pushed this to future work since there are already many explored strategies for dealing with equality proofs in an Intentional Type Theory that are suitable for avoiding warnings in the current implementation.
 
 Currently blame based errors aren't handled\footnote{or catch}.
 Programmers may want to use the information from a bad cast to build the final output, it might even be possible to capture a well typed term that witnesses the inequality.
 For instance,
-
+\todo{fix example}
 \begin{lstlisting}
-f : Vec y -> string;
+f : Vec 1 -> string;
 
 h : (x : Nat) -> string;
 h x =

@@ -3,32 +3,31 @@
 One of the advantages of type checking is the immediacy of feedback.
 This thesis outlines a system that will give warning messages immediately, but requires evaluation to give the detailed error messages that are most helpful when correcting a program.
 This is especially important if the user wants to use the system as a proof language, and will not generally execute their proofs.
-A symbolic evaluation system recaptures some of that quicker feedback, by having a system that passively tries to find errors.
+An automatic testing system recaptures some of that quicker feedback, by having a system that passively tries to find errors.
 This ideal workflow appears in \Fref{notes-workflow}.\todo{in contrast to ch 1}
 
 
 \begin{figure}
-\begin{lstlisting}
-edit program
-  |      
-  |                     _
-  v                    | v
-  Elaboration       -> testing   ^
-  |              |               | runtime error
-  | no warnings  | type warnings |
-  v              v               |
-    run program   ---------------
-\end{lstlisting}
-
-\todo[inline]{better graphics}
-
+% \begin{lstlisting}
+% edit program
+%   |      
+%   |                     _
+%   v                    | v
+%   Elaboration       -> testing   ^
+%   |              |               | runtime error
+%   | no warnings  | type warnings |
+%   v              v               |
+%     run program   ---------------
+% \end{lstlisting}
+\includegraphics[width=5in]{fig/best-workflow.pdf}
+% https://docs.google.com/presentation/d/1FSXDKsZlYFDNP8f6HprCrWV7gBRyW03PmIP0KkOprIA/edit#slide=id.g11561a4b8c2_0_0
 \caption{Ideal Workflow}
 \label{fig:notes-workflow}
 \end{figure}
  
 Adding a testing system to the prototype is more complicated than originally expected, and a good theory of dependently typed testing is incomplete.
  
-Given those caveats, we do have a (practical?) testing procedure and some examples that might inform theory.
+Given those caveats, we do have a (practical?) testing procedure and some examples that might inform future theoretical work.
  
 \section{Observable Blame}
 Since this procedure operates over the cast language, we must decide what constitutes a reasonable testing environment
@@ -44,14 +43,14 @@ An approximate approach can build partial equational contexts based on fixing ob
  
 % These contexts are correct up to some constraint.\todo{??}
  
-\section{Test environment}
+\section{Test Environment}
 The syntax for a test environment is listed in \Fref{sym-env-obs}.
-The first rule allows a cast context that is intended to contain data definitions for the term under test.
+The clause allows a cast context that is intended to contain data definitions for the term under test.
 We can declare test variables of type ($\star$) of partial function type and partial data type.
 We call them partial because they immediately defer to other test variables.
 The syntax allows functions to assign an output test variable to any input.
 The last 3 rules support data which as usual complicates things far more than you might expect.
-Since we use endpoints to handle data, we will need to handle them symbolically, they turn out to act like constraints that the environment should respect.
+Since we use endpoints to handle data, we will need to handle them symbolically, they turn out to act like constraints that the testing environment should respect.
 
 \begin{figure}
 \begin{tabular}{lcll}
@@ -59,14 +58,14 @@ Since we use endpoints to handle data, we will need to handle them symbolically,
 \multicolumn{4}{l}{$X$, $Y$, $F$, $x$, $y$, $f$, $p$, $q$}\tabularnewline
 \multicolumn{4}{l}{environment,}\tabularnewline
 $I$ & $\Coloneqq$ & $\varGamma$ & context (to hold data definitions)\tabularnewline
-  & | & $I,X:\star$ & \tabularnewline
-  & | & $I,X\Rightarrow\star$ & \tabularnewline
-  & | & $I,X\Rightarrow\left(x:Y\right)\rightarrow Fx$ & \tabularnewline
-  & | & $I,f:\left(z:A\right)\rightarrow B$ & \tabularnewline
-  & | & $I,fa\Rightarrow y$ & \tabularnewline
-  & | & $I,X\Rightarrow D_{\Delta}\overline{x}$ & \tabularnewline
-  & | & $I,x\Rightarrow\left(d_{\Delta\rightarrow D\overline{A}}\overline{y}\right)::D\overline{p}$ & \tabularnewline
-  & | & $I,p:a\approx_{q}b$ & \tabularnewline
+  & $|$ & $I,X:\star$ & \tabularnewline
+  & $|$ & $I,X\Rightarrow\star$ & \tabularnewline
+  & $|$ & $I,X\Rightarrow\left(x:Y\right)\rightarrow Fx$ & \tabularnewline
+  & $|$ & $I,f:\left(z:A\right)\rightarrow B$ & \tabularnewline
+  & $|$ & $I,fa\Rightarrow y$ & \tabularnewline
+  & $|$ & $I,X\Rightarrow D_{\Delta}\overline{x}$ & \tabularnewline
+  & $|$ & $I,x\Rightarrow\left(d_{\Delta\rightarrow D\overline{A}}\overline{y}\right)::D\overline{p}$ & \tabularnewline
+  & $|$ & $I,p:a\approx_{q}b$ & \tabularnewline
 \multicolumn{4}{l}{Environmental Reduction,}\tabularnewline
 \multicolumn{4}{l}{$I\vdash  a:A\ \vartriangleright b:B$}\tabularnewline
 \end{tabular}
@@ -235,7 +234,7 @@ Terms without labels can be skipped entirely.
 \item Can choose assignments strategically avoiding or activating blame as desired.
 \item Since examples are built up partially the partial contexts can avoid introducing their own blame by construction.
 \item Handle higher order functions, recursions, and self reference gracefully.
-For instance, the equations $f:Nat\rightarrow Nat$, $f\left(f\,0\right)=1$ and $f\left(3\right)=3$ can be in the context if there is an assignment that implies $f\,0\neq3$
+For instance, the equations $f: \Nat{} \rightarrow \Nat{}$, $f\left(f\,0\right)=1$ and $f\left(3\right)=3$ can be in the context if there is an assignment that implies $f\,0\neq3$
 \end{itemize}
   
   
@@ -255,7 +254,7 @@ For instance, the equations $f:Nat\rightarrow Nat$, $f\left(f\,0\right)=1$ and $
  % For instance, the procedure outlined above would allow $!!$ to be reached in $\left(\lambda xf\Rightarrow f(!!)\right)loop\quad:\star\rightarrow\star$ even though there is no context that would allow this to cause blame.
  % \todo{ins't as crisp an example as I would like}
  \item
- A version of parallel-or can be specified by the assignment context even though such a term is unconstructable in the language, $por:\mathbb{B}\rightarrow\mathbb{B}\rightarrow\mathbb{B},por\ loop\ \True{} \Rightarrow  \True{}, por\ \True{} \ loop \Rightarrow \True{},por\ \False{}\ \False{} \Rightarrow  \False{}$.
+ A version of parallel-or can be specified by the assignment context even though such a term is unconstructable in the language, $por:\Bool{}\rightarrow\Bool{}\rightarrow\Bool{},por\ loop\ \True{} \Rightarrow  \True{}, por\ \True{} \ loop \Rightarrow \True{},por\ \False{}\ \False{} \Rightarrow  \False{}$.
  Here all assignments are well typed, and each output can be differentiated by a different input.
 \todo{G. Plotkin, LCF considered as a programming language, Theoretical
 Computer Science 5 (1977) 223\{255. as cited in https://alleystoughton.us/research/por.pdf}
@@ -264,7 +263,7 @@ Computer Science 5 (1977) 223\{255. as cited in https://alleystoughton.us/resear
 \subsection{Related and Future Work}
  
 Formalizing a complete and efficient testing procedure along these lines is still future work.
-There are likely insights to be gained from the large body of research on symbolic execution, especially work that deals with typed higher order functions.
+However there have been other attempts to automatically test functional code that are worth mentioning
 % A fully formal account would deal with a formal semantics of the cast language.
  
 \subsubsection{Testing}
@@ -274,7 +273,7 @@ Property based testing involves writing functions that encode the properties of 
 It is only natural that some of that research has been extended to dependent types:
 \begin{itemize}
 \item
-QuickChick\footnote{https://github.com/QuickChick/QuickChick} \cite{denes2014quickchick}\cite{lampropoulos2017generating,lampropoulos2017beginner,lampropoulos2018random}
+QuickChick\footnote{https://github.com/QuickChick/QuickChick} \cite{denes2014quickchick,lampropoulos2017generating,lampropoulos2017beginner,lampropoulos2018random}
  uses type-level predicates to construct generators with soundness and completeness properties, but without support for higher order functions.
 However, testing requires building types classes that establish the properties needed by the testing framework such as decidable equality.
 This is presumably out of reach of novice Coq users.
@@ -283,11 +282,12 @@ This is presumably out of reach of novice Coq users.
 Current work in this area uses coverage guided techniques in \cite{lampropoulos2019coverage} like those in symbolic execution.
 More recently Benjamin Pierce has used Afl on compiled Coq code as a way to generate counter examples\footnote{https://www.youtube.com/watch?v=dfZ94N0hS4I}\todo{review this, maybe there's a paper or draft now?}.
 \end{itemize}
-\item \cite{dybjer2003combining} added QuickCheck style testing to (version 1) of Agda.
+\item \cite{dybjer2003combining} added QuickCheck style testing to (version 1 of) Agda.
 \end{itemize}
  
 \subsubsection{Symbolic Execution}
  
+There are likely insights to be gained from the research on symbolic execution, especially work that deals with typed higher order functions.
 Symbolic evaluation is a technique to efficiently extract errors from programs.
 Usually this happens in the context of an imperative language with the assistance of an SMT solver.\todo{acronym}
 Symbolic evaluation can be supplemented with other techniques and an extensive literature exists on the topic.
@@ -316,7 +316,8 @@ However conjectures made in that preliminary work were false (the procedure woul
 % The underlying languages has improved substantially since that work.
 \end{itemize}
 The appearance of $por$ hints that the approach presented here could be revised in terms of games semantics.
-Though a dependently typed game semantics also seem to be a number of unanswered questions, that correspond roughly to the issues listed above.
+Though a dependently typed game semantics also seem to have a number of unanswered questions, that correspond roughly to the issues listed above.
 Though game semantics for dependent types is a complicated subject in and of itself, and has only begun to be studied \cite{VAKAR2018401}.
-Additionally it seems helpful to allow programmers to program their own solvers that could greatly increase the search speed.
+
+% Additionally it seems helpful to allow programmers to program their own solvers that could greatly increase the search speed.
 % Some preliminary work is done in \cite{VAKAR2018401}, though there language is not full spectrum and they use definitional equality to characterize observability.

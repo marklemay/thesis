@@ -11,19 +11,19 @@ The solution proposed here is additional syntax that will search for a term of t
 Given the sorting function 
 
 \[
-\mathtt{sort}:\mathtt{List}\,\mathbb{N}\rightarrow\mathtt{List}\,\mathbb{N}
+\mathtt{sort}:\mathtt{List}\,\Nat{}\rightarrow\mathtt{List}\,\Nat{}
 \]
 
 and given the first order predicate that 
 
 \[
-\mathtt{IsSorted}:\mathtt{List}\,\mathbb{N}\rightarrow*
+\mathtt{IsSorted}:\mathtt{List}\,\Nat{}\rightarrow*
 \]
 
 then it is possible to assert that $\mathtt{sort}$ behaves as expected with
 
 \[
-\lambda x.?:\left(x:\mathtt{List}\,\mathbb{N}\right)\rightarrow\mathtt{IsSorted}\left(\mathtt{sort}x\right)
+\lambda x.?:\left(x:\mathtt{List}\,\Nat{}\right)\rightarrow\mathtt{IsSorted}\left(\mathtt{sort}x\right)
 \]
 
 This term will act like any other function at runtime, given a $\mathtt{List}$ input the function will verify that the $\mathtt{sort}$ correctly handled that input, or the term will give an error, or non-terminate.
@@ -32,15 +32,15 @@ Additionally, this would allow prototyping form first order specification.
 For instance,
 
 \begin{align*}
-data\ \mathtt{Mult} & :\mathbb{N}\rightarrow\mathbb{N}\rightarrow\mathbb{N}\rightarrow*\ where\\
-\mathtt{base} & :\left(x:\mathbb{N}\right)\rightarrow\mathtt{Mult}\ 0\ x\ 0\\
-\mathtt{suc} & :\left(x\,y\,z:\mathbb{N}\right)\rightarrow\mathtt{Mult}\,x\,y\,z\rightarrow\mathtt{Mult}\,\left(1+x\right)\,y\,(y+z)
+data\ \mathtt{Mult} & :\Nat{}\rightarrow\Nat{}\rightarrow\Nat{}\rightarrow*\ where\\
+\mathtt{base} & :\left(x:\Nat{}\right)\rightarrow\mathtt{Mult}\ 0\ x\ 0\\
+\mathtt{suc} & :\left(x\,y\,z:\Nat{}\right)\rightarrow\mathtt{Mult}\,x\,y\,z\rightarrow\mathtt{Mult}\,\left(1+x\right)\,y\,(y+z)
 \end{align*}
 
 can be used to prototype
 
 \[
-\mathtt{div}=\lambda z.\lambda x.\mathtt{fst}\left(?:\sum y:\mathbb{N}.\mathtt{Mult}x\,y\,z\right)
+\mathtt{div}=\lambda z.\lambda x.\mathtt{fst}\left(?:\sum y:\Nat{}.\mathtt{Mult}x\,y\,z\right)
 \]
 
 % The symbolic execution described above can precompute many of these solutions in advance.
@@ -53,7 +53,7 @@ Ground data types do not need to worry about the path equalities since all the c
 Non ground data can be very hard to work with when functions or function types are considered. For instance,
 
 \[
-?:\sum f:\mathbb{N}\rightarrow\mathbb{N}.\mathtt{Id}\left(f,\lambda x.x+1\right)\&\mathtt{Id}\left(f,\lambda x.1+x\right)
+?:\sum f:\Nat{}\rightarrow\Nat{}.\mathtt{Id}\left(f,\lambda x.x+1\right)\&\mathtt{Id}\left(f,\lambda x.1+x\right)
 \]
 
 It is tempting to make the $?$ operator sensitive to more than just the type.
@@ -111,6 +111,7 @@ However it is rare to make those features available at runtime.
 Logic programing languages such as Prolog\footnote{https://www.swi-prolog.org/}, Datalog\footnote{https://docs.racket-lang.org/datalog/}, and miniKanren\footnote{http://minikanren.org/} use ``proof search'' as their primary method of computation.
 Dependent data types can be seen as a kind of logical programming predicate\todo{cite the Curry lang, bird lang?}.
 The Twelf project\footnote{http://twelf.org/wiki/Main\_Page} makes use of runtime proof search and has some support for dependent types, but the underlying theory cannot be considered full-spectrum.
-The only full spectrum systems that purports to handle solving in this way are the gradual dependent type work\cite{DBLP:journals/corr/abs-1906-06469}.
-\cite{bertrand:hal-02896776} has a good explanation of why extending graduality to dependent indexed types is difficult.
+Gradual dependent type research is working towards a similar goal \cite{DBLP:journals/corr/abs-1906-06469}, but \cite{bertrand:hal-02896776} has a good explanation of why extending graduality to dependent indexed types is difficult.
+
+\todo{probly better via an effect sys}
 % though it is unclear how that work handles the non locality of constraints given their local $?$ operator.
