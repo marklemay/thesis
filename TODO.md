@@ -56,13 +56,16 @@ Formatting
 Send to people for review
 * Chapter 6.1, Fuzzing person 
 * internet
-* CH2/4 Zach
 * almost done Luara
 * Eric's friends
 * contact authors about https://arxiv.org/pdf/2107.04859.pdf, should probly invite to defence
   * address concern that this is novel
+* CH2/4 June
 * The thank EE guy for maintaining the latex (show off the modifications)
 
+editing:
+* go through every footnote ang make it a snetence or not
+* same for proof
 
 defence 
 * 1 page cheatsheet

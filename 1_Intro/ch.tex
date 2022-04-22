@@ -60,7 +60,7 @@ A version of the following type checks in virtually all dependent type systems:
 
 \todo[inline]{make this a ``code'' example?}
 
-Where $\rightarrow$ is a function and $\star$ is the "type of types".
+Where $\rightarrow$ is a function and $\star$ is the ``type of types''.
 $\mathtt{Vec}$ is a list indexed by the type of element it contains and its length\footnote{
   Definitions of these types and functions can be found in \Ch{5}.
 }.
@@ -83,8 +83,8 @@ For example, the following will not type check in any conventional dependent typ
 \cancel{\vdash}\lambda x.\mathtt{head}\,\mathtt{Bool}\,x\,\left(\mathtt{rep}\,\mathtt{Bool}\,\mathtt{true}\,\left(\mathtt{add}\,x\,1\right)\right)\,:\,\mathtt{Nat}\rightarrow\mathtt{Bool}
 \]
 
-While ``obviously'' $1+x=x+1$, in the majority of dependently typed languages, $\mathtt{add}\,1\,x\equiv\mathtt{add}\,x\,1$ is not a ``definitional'' equality.
-``Definitional equality'' is the name for the conservative approximation of equality used by dependent type systems for when two types are clearly the same.
+While ``obviously'' $1+x=x+1$, in the majority of dependently typed languages, $\mathtt{add}\,1\,x\equiv\mathtt{add}\,x\,1$ is not a definitional equality.
+\textbf{Definitional equality} is the name for the conservative approximation of equality used by dependent type systems for when two types are clearly the same.
 This prevents the use of a term of type
 $\mathtt{Vec}\,\mathtt{Bool}\,\left(\underline{\mathtt{add}\,1\,x}\right)$
 where a term of type
@@ -111,14 +111,15 @@ Which is exactly the kind of specific feedback programers want when fixing bugs.
 \section{A Different Workflow}
 
 This thesis advocates an alternative usage of types. In most types systems a programmer can't run programs until the type system is convinced of their correctness\footnote{
- often requiring a graduate degree and uncommon patience}.
+ This often requires a graduate degree and uncommon patience.
+}.
 Where this thesis argues ``the programmer is always right (until proven wrong)''.
 This philosophy will likely go over better with programmers.
 
-More concretely, whenever possible, static errors should be replaced with
+More concretely, whenever possible, static errors should be replaced with:
 \begin{itemize}
-\item static warnings containing the same information,
-\item and more concrete and clear runtime errors that correspond to one of the warnings.
+\item Static warnings containing the same information.
+\item More concrete and clear runtime errors that correspond to one of the warnings.
 \end{itemize}
 \Fref{intro-standard-workflow} illustrates the standard workflow from the perspective of programmers in most typed languages.
 \Fref{intro-thesis-workflow} shows the workflow that is explored in this thesis.
@@ -166,7 +167,7 @@ These diagrams make it clear why there is so much pressure for type errors to be
 Type errors block programmers from running programs! However complaints about the type errors are probably better addressed by resolving the mismatch between the expectations of the programmer and the design of the underlying type theory.
 Better worded error messages are unlikely to bridge this gap when the type system doubts $x+1=1+x$.
 
-The standard workflow seems sufficient for type systems in many mainstream typed programming languages.
+The standard workflow seems sufficient for type systems in many mainstream typed programming languages. \todo{Ramsy flagged something around here but can't see the message}
 Though there is experimental evidence that even OCaml can be easier to learn and use with the proposed workflow \cite{10.1145/2951913.2951915}.
 In the presence of dependent types the standard workflow is challenging for both beginners and experts, making a new approach much more critical.
 
@@ -176,7 +177,7 @@ always a subset of syntax, or changes the syntax}
 
 By switching to the proposed workflow, type errors become type warnings, and the programmer is free to run their program and experiment, while still presented with all the information they would have gotten from a type error (in the form of warnings).
 If there are no warnings, the programmer could call their program a proof along the lines of the Curry-Howard correspondence\footnote{
-  In the system presented here the programmer will need to manually verify termination
+  In the system presented here the programmer will need to manually verify termination.
 }\todo{cite?}.
 If there is value in a type error it comes from the message itself and not the inconvenience it causes programmers.
 
@@ -201,12 +202,20 @@ A runtime error will always correspond exactly to a reported warning, always val
 While the primary benefit of this system is the ability to experiment more freely with dependent types, while still getting the full feedback of a dependent type system, it is also possible to encode examples that would be unfeasible in existing systems.
 This comes from accepting warnings that are justified with external mathematical or programmatic intuition, even while being theoretically thorny in dependent type theory.
 
-For instance, here is part of an interpreter for interpreter for System F\todo{cite?}\footnote{
+For instance, here is part of an interpreter for System F\todo{cite?}\footnote{
  System F is one of the foundational systems used to study programming languages.
  It is possible to fully encode evaluation and proofs into Agda, but it is difficult if computation, like substitution, happens in a type.
- In our system, it is possible to start with the ideal type indexed encoding and build an interpreter, without proving any properties of substitution.
+ In teh system described in this thesis, it is possible to start with the ideal type indexed encoding and build an interpreter, without proving any properties of substitution.
 } that encodes the type of the term at the type level.
 The step function asserts type preservation of the interpreter in its function signature.
+It will generate warnings like the following:
+
+\todo{``It will generate the following warnings'' need to clean up some bugs here}
+
+\begin{itemize}
+\item $\mathtt{tbod}$ in $\mathtt{Term\ (tSubCtx\ targ\ ctx)\ (tSubt\ targ\ \underline{tbod})}$
+may have the wrong type
+\end{itemize}
 
 \begin{figure}
 \begin{lstlisting}[basicstyle={\ttfamily\small}]
@@ -246,7 +255,7 @@ Term ctx ty ;
 step ctx ty trm =
 case trm <_ => Term ctx ty > {
 | (app _ targ tbod (lam _ _ _ bod) a) =>
- sub ctx targ a tbod bod
+  sub ctx targ a tbod bod
 | x => x
 };
 \end{lstlisting}
@@ -255,26 +264,22 @@ case trm <_ => Term ctx ty > {
 \label{fig:ex-sysf}
 \end{figure}
 
-It will generate warnings like the following
-\todo{``It will generate the following warnings'' need to clean up some bugs here}
-\begin{itemize}
-\item $\mathtt{tbod}$ in $\mathtt{Term\ (tSubCtx\ targ\ ctx)\ (tSubt\ targ\ \underline{tbod})}$
-may have the wrong type
-\end{itemize}
-First note that the program has assumed several of the standard properties of substitution.
-Informally substitution and binding is usually considered obvious and uninteresting, and little explanation is usually given\footnote{A convention that will be followed in this thesis}.
+First, note that the program has assumed several of the standard properties of substitution.
+Informally substitution and binding is usually considered obvious and uninteresting, and little explanation is usually given\footnote{
+  A convention that will be followed in this thesis.
+}.
 However formalizing substitution in a dependent type theory is usually a substantial task\cite{10.1145/3293880.3294101}.
 
 Second, the type contexts have been encoded as functions.
 This would be a reasonable encoding in a mainstream functional language since it hides the uninteresting lookup information.
 This encoding would be inadvisable in other dependently typed languages since equality over functions is so fraught.
-Here we can rest on our intuition that functions that act the same are the same.
+Here we can rest on the intuition that functions that act the same are the same.
 
 Finally it is perfectly possible that there is a bug in the code invalidating one of the assumptions.
 There are two options for the programmer:
 \begin{itemize}
-\item reformulate the above code so that there are no warnings, formally proving all the required properties in the language (this is possible but would take prohibitive effort)
-\item exercise the $step$ function using standard software testing techniques.
+\item Reformulate the above code so that there are no warnings, formally proving all the required properties in the language (this is possible but would take prohibitive effort).
+\item Exercise the $step$ function using standard software testing techniques.
 If the interpreter does not preserve types, then a concrete counter example can be found.
 \end{itemize}
 The programmer is free to choose how much effort should go into removing warnings.
@@ -286,8 +291,9 @@ But even if the programmer wanted a fully formally correct interpreter, it would
 
 \section{Design Decisions}
 
-There are many flavors of dependent types that can be explored, this thesis attempts to always use the simplest and most programmer friendly formulations.
-Specifically,
+There are many flavors of dependent types that can be explored.
+This thesis attempts to always use the simplest and most programmer friendly formulations.
+Specifically:
 \begin{itemize}
 \item The type system in this thesis is a \textbf{full spectrum} dependent type system.
 The full-spectrum approach is the most uniform approach to dependent type theory: computation behaves the same at the term and type level.
@@ -307,7 +313,7 @@ This removes any justification for a type universe hierarchy, so the system will
 Similarly non-strict data definitions are allowed.
 \item Aside from the non-termination and runtime errors mentioned above, effects will not be allowed.
 Even though effects seem essential to mainstream programing, they are a very complicated area of active research that will not be considered here.
-The language studied is a ``pure'' (in the sense  Haskell) functional language.
+The language studied is a ``pure'' (in the sense of Haskell) functional language.
 As in Haskell, effects can be simulated with other language constructs.
 \end{itemize}
 It is possible to imagine a system where a wide range of properties are held optimistically and tested at runtime.
@@ -361,7 +367,7 @@ Unsatisfiable branches can redirect blame as needed.
 % \label{fig:intro-thesis-workflow-1}
 % \end{figure}
 
-While apparently a simple idea, the technical details required to manage checks that delay until runtime in a dependently typed language is fairly involved.
+While apparently a simple idea, the technical details required to manage checks that delay until runtime in a dependently typed language are fairly involved.\todo{awk}
 To make the presentation easier, features will be added to the language in stages.
 
 \todo[inline]{This should probably be expanded}

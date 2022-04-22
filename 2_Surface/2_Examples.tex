@@ -91,7 +91,7 @@ Note that the existential is equivalent to the tuple if $Y$ does not depend on t
 
 One of the most interesting propositions is the proposition of equality.
 $\doteq$ is referred to as \textbf{Leibniz equality} since two terms are equal when they behave the same on all predicates\footnote{
-  Originally, Leibniz assumed a metaphysical notion of identification of ``substance''s, not a mathematical notion of equality\cite[Section 9]{Leibniz1686}.
+  Originally, Leibniz assumed a metaphysical identification of ``substance'', not a mathematical notion of equality\cite[Section 9]{Leibniz1686}.
   Over time the principle evolved into the current notion of ``the identification of indiscernibles'', and is referred to as \textbf{Leibniz's law}.}.
   \todo{cite the ency of philosophy}
 We can prove $\doteq$ is an equivalence within the system by proving it is reflexive, symmetric, and transitive.
@@ -122,14 +122,14 @@ Note that such functions are not possible in the Calculus of Constructions.
 \subsection{Inequalities}
 
 Large eliminations can be used to prove inequalities that can be hard or impossible to express in other minimal dependent type theories. % such as the Calculus of Constructions.
-For instance,
+For instance, \todo{ramsy flaged something here, was it the page break?}
 
 \begin{tabular}{lcll}
   $\lambda pr\Rightarrow pr\,\left(\lambda x\Rightarrow x\right)\,\perp_{c}$ & : & $\lnot_{c}(\star\doteq_{\star}\perp_{c})$ & \makecell{the type universe is distinct\\ from Logical False}\tabularnewline
   $\lambda pr\Rightarrow pr\,\left(\lambda x\Rightarrow x\right)\,tt_{c}$ & : & $\lnot_{c}(Unit_{c}\doteq_{\star}\perp_{c})$ &  \makecell{Logical True is distinct\\ from Logical False}\tabularnewline
   $\lambda pr\Rightarrow pr\,toLogic\,tt_{c}$ & : & $\lnot true_{c}(\doteq_{\mathbb{B}_{c}}false_{c})$ &  \makecell{boolean true and false\\ are distinct}\tabularnewline
   $\lambda pr\Rightarrow pr\,isPos\,tt_{c}$ & : & $\lnot1_{c}()\doteq_{\mathbb{N}_{c}}0_{c})$ & 1 and 0 are distinct\tabularnewline
-  \end{tabular}
+\end{tabular}
   
 \todo[inline]{1st not sensible in CC}
 
@@ -152,5 +152,5 @@ $\mathsf{fun}\,f\,x\Rightarrow case_{c}\,x\,0_{c}\left(\lambda px\Rightarrow cas
 Assuming appropriate definitions for $case_{c}$, and subtraction.
 
 Recursion can also be used to simulate induction. 
-We won't see much of recursion until Chapter 4, when data types are introduced and larger examples are easier to express.
+We will not see much of recursion until \ch{4}, when data types are introduced and larger examples are easier to express.
 \todo[inline]{GCD, recursive types?}

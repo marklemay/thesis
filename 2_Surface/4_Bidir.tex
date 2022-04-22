@@ -18,9 +18,13 @@ Luckily there's a better way.
 \subsection{\Bidir{} Type Checking}
  
 \textbf{\Bidir{} type checking} is a popular form of lightweight type inference, which strikes a good compromise between the required type annotations and the simplicity of the procedure, allowing for localized errors\footnote{\cite{christiansen2013bidirectional} is a good tutorial, \cite{10.1145/3450952} is a survey of the technique}.
-In the usual \bidir{} typing schemes, annotations are only required at the top-level, or around a function that is directly applied to an argument\footnote{more generally when an elimination reduction is possible.}.
+In the usual \bidir{} typing schemes, annotations are only required at the top-level, or around a function that is directly applied to an argument\footnote{
+  More generally when an elimination reduction is possible.
+}.
 For example $(\lambda x\Rightarrow x+x)7$ would need to be written $\left((\lambda x\Rightarrow x+x)::\mathbb{N}\rightarrow\mathbb{N}\right)7$.
-Since programers rarely write functions that are immediately evaluated, this style of type checking usually only needs top level functions to be annotated\footnote{Even in Haskell, with full Hindley-Milner type inference, top level type annotations are encouraged.}\todo{ref style guide.
+Since programers rarely write functions that are immediately evaluated, this style of type checking usually only needs top level functions to be annotated\footnote{
+  Even in Haskell, with full Hindley-Milner type inference, top level type annotations are encouraged.
+}\todo{ref style guide.
 the point was similarly made in Agda thesis.}.
 In fact, almost every example in \Fref{surface-examples} has enough annotations to type check \bidir{}{}ly without further information.
  

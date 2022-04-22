@@ -80,7 +80,7 @@ By iterating these lemmas together, it is possible to show that the type system 
 For a progress and preservation style proof of a dependently typed language, everything hinges on a suitable definition of the $\equiv$ relation.
  
 The $\equiv$ relation characterizes when terms are ``obviously'' or ``automatically'' equal.
-Because the $\equiv$ relation is usually based on the definition of computation, rather then on observable properties, it is called \textbf{definitional equality}\todo{is that actually why?}\footnote{
+Because the $\equiv$ relation is usually based on the definition of computation, rather than on observable properties, it is called \textbf{definitional equality}\todo{is that actually why?}\footnote{
   also called \textbf{Judgmental Equality}, since it is defined via judgments
 }.
 Usually it is desirable to make the definitional equality relation as large as possible, since the programmer in the system will get more equalities ``for free''.
@@ -192,7 +192,7 @@ The following rule is admissible,
 \end{lem}
  
 \begin{proof}
-by induction on the syntax of $m$
+By induction on the syntax of $m$.
 \end{proof}
 \begin{fact}
 $\Rrightarrow_{\ast}$ is reflexive.
@@ -222,11 +222,9 @@ The following rule is admissible for every substitution $\sigma$
 \end{lem}
  
  
-\todo{is this lemma needed or is it just to accommodate stupid binding stuff
-in coq?}
+\todo{is this lemma needed or is it just to accommodate stupid binding stuff in coq?}
 \begin{proof}
-by induction on the $\Rrightarrow$ relation, using \rulename{\Rrightarrow-refl}
-in the \rulename{\Rrightarrow-var} case.
+By induction on the $\Rrightarrow$ relation, using \rulename{\Rrightarrow-refl} in the \rulename{\Rrightarrow-var} case.
 \end{proof}
 \begin{lem}
 $\Rrightarrow$ is closed under substitutions that step.
@@ -240,7 +238,7 @@ The following rule is admissible
 \]
 \end{lem}
 \begin{proof}
-by induction on the $\Rrightarrow$ relation.
+By induction on the $\Rrightarrow$ relation.
 \end{proof}
  
 \begin{lem}
@@ -252,7 +250,7 @@ is admissible
 \end{lem}
  
 \begin{proof}
-by induction on the $\Rrightarrow_{\ast}$ relation.
+By induction on the $\Rrightarrow_{\ast}$ relation.
 \end{proof}
 \begin{lem}
 $\equiv$ is closed under substitutions that step.
@@ -271,7 +269,7 @@ $\equiv$ is closed under substituted reduction.
 \]
  
 \begin{proof}
-By repeated $\rulename{\Rrightarrow_{\ast}-sub}$ and $\equiv\rulename{-Def}$
+By repeated $\rulename{\Rrightarrow_{\ast}-sub}$ and $\equiv\rulename{-Def}$.
 \end{proof}
  
 \subsubsection{Transitivity}
@@ -348,12 +346,10 @@ If $m\Rrightarrow\,m'$ then $m'\Rrightarrow \textbf{max}\left(m\right)$ .
 \end{lem}
  
 \begin{proof}
-by induction on the derivation $m\Rrightarrow\,m'$, with the only interesting cases are where a reduction is not taken
+By induction on the derivation $m\Rrightarrow\,m'$, with the only interesting cases are where a reduction is not taken,
 \begin{casenv}
-\item in the case of \rulename{\Rrightarrow-::} , $m'\Rrightarrow \textbf{max}\left(m\right)$
-by \rulename{\Rrightarrow-::-red}
-\item in the case of \rulename{\Rrightarrow-\mathsf{fun}-app} , $m'\Rrightarrow \textbf{max}\left(m\right)$
-by \rulename{\Rrightarrow-\mathsf{fun}-app-red} \todo{fix formatting}
+\item In the case of \rulename{\Rrightarrow-::}, $m'\Rrightarrow \textbf{max}\left(m\right)$, by \rulename{\Rrightarrow-::-red}.
+\item In the case of \rulename{\Rrightarrow-\mathsf{fun}-app}, $m'\Rrightarrow \textbf{max}\left(m\right)$ by \rulename{\Rrightarrow-\mathsf{fun}-app-red} \todo{fix formatting}.
 \end{casenv}
 \end{proof}
 \begin{lem}
@@ -376,7 +372,7 @@ there exists $n'''$ such that $n'\Rrightarrow\,n'''$ ,$n''\Rrightarrow\,n'''$
 \end{thm}
  
 \begin{proof}
-by repeated application of the diamond property.
+By repeated application of the diamond property.
 \end{proof}
 It follows that
 \begin{thm}
@@ -411,10 +407,10 @@ $\forall N,M,P.\left(x:N\right)\rightarrow M\Rrightarrow_{\ast}P\:\mathrm{implie
 \end{lem}
  
 \begin{proof}
-by induction on $\Rrightarrow_{\ast}$
+By induction on $\Rrightarrow_{\ast}$,
 \begin{casenv}
- \item $\rulename{\Rrightarrow_{\ast}-refl}$ follows directly
- \item $\rulename{\Rrightarrow_{\ast}-trans}$ follows via the induction hypothesis and noting only the $\rulename{\Rrightarrow-\mathsf{fun}-ty}$ rule is possible as a step
+ \item $\rulename{\Rrightarrow_{\ast}-refl}$ follows directly.
+ \item $\rulename{\Rrightarrow_{\ast}-trans}$ follows via the induction hypothesis and noting only the $\rulename{\Rrightarrow-\mathsf{fun}-ty}$ rule is possible as a step.
 \end{casenv}
 \end{proof}
 Therefore the we can derive an important fact about $\equiv$
@@ -454,7 +450,7 @@ The following rule is admissible
 \end{thm}
  
 \begin{proof}
-by induction on typing derivations
+By induction on typing derivations.
 \end{proof}
 \begin{lem}
 Substitution Preservation
@@ -469,7 +465,7 @@ The following rule is admissible\footnote{
 \end{lem}
  
 \begin{proof}
-by induction on typing derivations
+By induction on typing derivations.
  
 \begin{casenv}
  \item \rulename{ty-var} follows by weakening the substituted term
@@ -503,12 +499,12 @@ the following rule is admissible
 \end{lem}
  
 \begin{proof}
-by induction over typing derivations
+By induction over typing derivations,
  
 \begin{casenv}
- \item \rulename{ty-var} follows since $\equiv$ is symmetric
+ \item \rulename{ty-var} follows since $\equiv$ is symmetric.
 % \item \rulename{ty-\mathsf{fun}-ty} and \rulename{ty-\mathsf{fun}} ...
- \item All other cases follow directly or by induction
+ \item All other cases follow directly or by induction.
 \end{casenv}
 \end{proof}
  
@@ -546,7 +542,7 @@ $\mathsf{fun}$-Inversion
 \end{cor}
  
 \begin{proof}
-by noting that $\left(x:N\right)\rightarrow M\equiv\left(x:N\right)\rightarrow M$, by reflexivity
+By noting that $\left(x:N\right)\rightarrow M\equiv\left(x:N\right)\rightarrow M$, by reflexivity.
 \end{proof}
 %TODO: Note that the result of this lemma will always produce derivations of equal or smaller height to the input typing derivation.
 % unneeded
@@ -560,7 +556,7 @@ The following rule is admissible
 \end{thm}
  
 \begin{proof}
-by induction on the typing derivation $\Gamma\tasys m:M$, specializing on $m\Rrightarrow m'$,
+By induction on the typing derivation $\Gamma\tasys m:M$, specializing on $m\Rrightarrow m'$,
 \todo{formatting}
 \begin{casenv}
  \item \rulename{ty-::} when \rulename{\Rrightarrow-::}, we must show $\Gamma\tasys m'::M':\,M$ and $\Gamma\tasys M':\star$
@@ -610,7 +606,7 @@ by induction on the typing derivation $\Gamma\tasys m:M$, specializing on $m\Rri
 \subsection{Progress}
  
 The second key theorem to show is called progress.
-For a well typed term in an empty context, then a further step can be taken or computation is finished.
+The progress theorem states: for a well typed term in an empty context, then a further step can be taken or computation is finished.
 For non-dependently typed programming languages, these steps are easy to characterize, but for dependent types there are issues.\todo{awk}
 If we characterize computation with the $\Rrightarrow$ relation, the progress lemma holds in a meaningless way since we can always take a reflexive step.
 Thus a less reflexive relation is needed.
@@ -672,14 +668,16 @@ the following rule is admissible
  
 Thus $\rightsquigarrow$ also preserves types.
  
-We will need a technical lemma that determines the syntax a value of function type must be in an empty context
+We will need a technical lemma that determines the syntax of a value in an empty context.
+These lemmas are usually called canonical form lemmas.
+Since the language of this chapter is so minimal, we only need to characterize the canonical form of functions.
  
 \begin{lem}
  $\mathsf{fun}$-Canonical form (generalized)
  If $\tasys v\,:\,P$ and $P\equiv\left(x:N\right)\rightarrow M$ then $v=\mathsf{fun}\,f\,x\Rightarrow m$.
 \end{lem}
 \begin{proof}
-by induction on the typing derivation
+By induction on the typing derivation,
  
 \begin{casenv}
 \item \rulename{ty-\mathsf{fun}} follows immediately
@@ -738,7 +736,7 @@ An interpreter is always free to take any $\Rrightarrow$, but if it is unclear w
  
 \subsection{Type Soundness}
  
-The language has type soundness, well typed terms will never ``get stuck'' in the surface language.
+The language has type soundness: well typed terms will never ``get stuck'' in the surface language.
 This follows by iterating the progress and preservation lemmas.
  
 \todo{be explicit about the disconnect between type computation via par, and term level cbv}
@@ -864,7 +862,7 @@ For instance,
 ... & f\,0_{c}\,1_{c}
 \end{align*}
 
- what should be deduced for the type of $f$? One possibility is $f:\left(n:\mathbb{N}\right)\rightarrow n\,\star\,\left(\lambda-\Rightarrow\mathbb{N}_{c}\right)\,\mathbb{B}_{c}\rightarrow...$.
+What should be deduced for the type of $f$? One possibility is $f:\left(n:\mathbb{N}\right)\rightarrow n\,\star\,\left(\lambda-\Rightarrow\mathbb{N}_{c}\right)\,\mathbb{B}_{c}\rightarrow...$.
 But there are infinitely other possibilities.
 Worse, if there is an error, it may be impossible to localize to a specific region of code.
 To make a practical type checker we need to insist that the user include some type annotations.
