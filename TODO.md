@@ -54,15 +54,14 @@ Formatting
 * http://lists.seas.upenn.edu/pipermail/types-list/2019/002163.html
 
 Send to people for review
-* email the wirting dpt. and see if they would do editing?
+* Chapter 6.1, Fuzzing person 
+* internet
 * CH2/4 Zach
 * almost done Luara
 * Eric's friends
-* Chapter 5.1, Fuzzing person 
-* internet
 * contact authors about https://arxiv.org/pdf/2107.04859.pdf, should probly invite to defence
-  * address concernce that this is novel
-* The thank EE guy for maintaining the latex
+  * address concern that this is novel
+* The thank EE guy for maintaining the latex (show off the modifications)
 
 
 defence 
@@ -71,4 +70,5 @@ defence
   * syntax, formulas
 * mic check remote people
 
-Fun drinks owed to proof readers: ...
+Fun drinks owed to proof readers:
+* Ramsay

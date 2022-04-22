@@ -50,7 +50,8 @@ In some cases it is possible to find and report a contradiction.
 Experiments along these lines have been limited to ground data types, and fix an arbitrary solution for every type problem.
 Ground data types do not need to worry about the path equalities since all the constructors will be concrete.
 
-Non ground data can be very hard to work with when functions or function types are considered. For instance,
+Non ground data can be very hard to work with when functions, function types or universes are considered.
+For instance,
 
 \[
 ?:\sum f:\Nat{}\rightarrow\Nat{}.\mathtt{Id}\left(f,\lambda x.x+1\right)\&\mathtt{Id}\left(f,\lambda x.1+x\right)
@@ -69,8 +70,8 @@ pr = refl Nat 1;
 
 Will likely give the warning error ``n =?= 1 in Id Nat \uline{n} 1''.
 It will then likely give the runtime error ``0=!=1''.
-Since the only information to solve $\mathtt{?}$ is the type $\mathtt{Nat}$ and an arbitrary term of type $\mathtt{Nat}$ will be 0.
-Most users would expect $n$ to be solved for $1$.
+Since the only information to solve $\mathtt{?}$ is the type $\mathtt{Nat}$ and an arbitrary term of type $\mathtt{Nat}$ will probably be solved with 0.
+Most users would expect the context to be considered and $n$ to be solved with $1$.
 
 However constraints assigned in this manner can be extremely non-local.
 For instance,

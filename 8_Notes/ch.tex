@@ -33,28 +33,31 @@ While trying carefully to avoid effects in this thesis, we still have encountere
 \subsubsection{Errors}
 
 The current system implements blame based runtime errors and static warnings in a unique way.
-There is no control flow for errors built into the reduction or CBV relations, and there is no way to handle an error.
+There is no control flow for errors built into the reduction or \cbv{} relations, and there is no way to handle an error within the program.
 Every potential error is linked to a static warning.
-There are a few features that would be good to experiment with:
+There are a few features that would be good to experiment with.
 
-It might be nice to allow users to provide proofs of equality to remove warnings by having them define and annotate an appropriate identity type.
+Ideally we could allow users to provide proofs of equality to remove warnings by having them define and annotate an appropriate identity type.
 This would allow the language to act more like an Extensional Type Theory.
 Programmers could justify these proofs as a way to remove runtime checks and make code (and testing) faster.
 Just as with \ac{ETT} many desirable properties such as function extensionality would still not be provable.
 We have pushed this to future work since there are already many explored strategies for dealing with equality proofs in an Intentional Type Theory that are suitable for avoiding warnings in the current implementation.
 
-Currently blame based errors aren't handled\footnote{or catch}.
+Currently blame based errors aren't handled\footnote{or caught}.
 Programmers may want to use the information from a bad cast to build the final output, it might even be possible to capture a well typed term that witnesses the inequality.
 For instance,
 \todo{fix example}
 \begin{lstlisting}
-f : Vec 1 -> string;
+f : Vec String 1 -> String;
+f x = case x {
+  Cons _ a _ _ => a
+}
 
-h : (x : Nat) -> string;
+h : (x : Nat) -> String;
 h x =
   handle{
-    f (rep x)
-  } pr : x != y => "whoops" ;
+    f (rep String "hi" x)
+  } pr : x != 1 => "whoops" ;
 \end{lstlisting}
 
 Though additional research would be needed for exactly the form the contradictions should take if they are made available to the handler.
@@ -62,7 +65,7 @@ Though additional research would be needed for exactly the form the contradictio
 Handling effects in a dependent type system is subtle\footnote{everything about dependent types is subtle} since the handling construct can observe differences that should not otherwise be apparent.
 This is most clearly seen in the generalization of Herbelin's paradox\todo{independent cite} presented in \cite{pedrot2020fire}.
 The problem is that the value of a \Bool{} term may depend on effects that cause logical unsoundness (or worse).
-The paradox can be instantiated to the system presented in this thesis with an additional handling construct,
+The paradox can be presented in our system with an additional handling construct,
 
 \begin{lstlisting}
 h : (u : Unit) -> Bool;
@@ -82,9 +85,9 @@ hIsTrue u =
 hIsTrue !! : Id Bool true false
 \end{lstlisting}
 
-Interestingly this term is not as bad as the paradox makes out.
+Interestingly this term is not as bad as the paradox would be in other settings.
 A warning is given so we would not expect logical soundness.
-If evaluated in \whnf{} he term will produce blame witnessing the static warning given.
+If evaluated in \whnf{} the term will produce blame witnessing the static warning given.
 
 \todo{doe ther errors kind of work like those Error TT papers?} 
 
@@ -106,17 +109,20 @@ Something analogous could perhaps be applied to more interesting effect systems.
 Both the symbolic execution and search above could be considered in terms of an effect in an effect system.
 Proof search could be localized though an effect modality, avoiding the non local examples above.
 
-\subsection{User studies}
-
+\section{User studies}
+ 
 The main proposition of this work is that it will make dependent types easier to learn and use.
 This should be demonstrated empirically with user studies.
-
-\subsection{Semantics}
-
+ 
+\section{Semantics}
+ 
 The semantics explored in this thesis have been operational, this has led to serviceable, but cumbersome, proofs.
-Ideally the denotational semantics of a typed language in this style should be explored.
-The entire system is designed with an unformalized notion of observational equivalence\todo{foot also called...} in mind.
-While there has been some exploration into untyped contextual equivalence for dependent types \cite{sjoberg2015dependently,jia2010dependent}, untyped contextual equivalence is a weak relation\todo{Ian A. Mason and Carolyn L. Talcott. Equivalence in functional languages
-with effects. Journal of Functional Programming, 1(3):287--327, 1991}.
-There is a difficult circularity when typed observational equivalence is extended to dependent types.
-A notion of dependently typed observational equivalence would be an interesting and helpful direction for further study.
+Ideally less syntactic semantics of a typed language in this style should be explored.
+ 
+For instance, the entire system is designed with an unformalized notion of observational equivalence\todo{foot also called...} in mind.
+While there has been some exploration into untyped observational equivalence for dependent types in \cite{sjoberg2015dependently,jia2010dependent}, it uses untyped contextual equivalence, which is a weak relation\todo{
+  Ian A. Mason and Carolyn L. Talcott. Equivalence in functional languages
+  with effects. Journal of Functional Programming, 1(3):287--327, 1991}.
+A version of typed operational equivalence is considered in \cite{VAKAR2018401} though they consider definitional distinctions observable. % (is does notseem reasonable to consider
+There is a difficult circularity when trying to define typed observational equivalence in a dependently typed setting.
+A good of dependently typed observational equivalence would be an interesting and helpful direction for further study.

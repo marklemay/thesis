@@ -12,10 +12,10 @@ This turned out to be surpassingly more subtle than expected.
 As we saw in Chapter 3, the programmer's intent needs to be inferred, so that a reasonable check can be localized.
 This is possible through an extension to bidirectional type checking.
 Runtime errors complicate the semantics, this issue was sidestepped by applying a new relation that extracts blame.
-Checks need their own runtime behavior, which is straightforward in the pure functional setting.
+Checks need their own runtime behavior, which is possible in the pure functional setting.
 
-Further, user defined data turned out to be far more complicated than anticipated.
-Extending pattern matching to track equalities seems like a clever idea, however the formalism in Chapter 5 is not as simple as we might like.
+Further, user defined data turned out to be far more complicated than expected.
+Extending pattern matching to track equalities seems like a clever idea, however the formalism in Chapter 5 is still more complicated then we would like.
 It is unclear if a simpler approach is possible.
 
 Finally, in Chapter 6, there are several ways to improve the current system and build towards future work.
@@ -26,8 +26,11 @@ Type systems can still be designed to harshly avoid errors, but by creating a pa
 For instance, many interesting linear type systems are currently being explored, allowing warnings may make these systems more usable to programmers who are not used to those restrictions.
 
 Dependent types have seemed on the verge of mainstream use for decades.
-While dependent types are not mainstream yet, they have the unique potential to bridge the gap between those who program and those who prove.
+While dependent types are not there yet, they have the unique potential to bridge the gap between those who program and those who prove.
 Each community has built invaluable expertise that could benefit the other.
 Once that connection is made solid, more robust software is the least we should expect.
 
-While this thesis has not single handedly made this connection, I think it is a necessary piece of the puzzle.
+While this thesis has not single handedly made this connection, I think it is a necessary piece of the puzzle.\todo{better sign off? ONLY YOU can solve these problems}
+% I'll leave these ideas with you now.
+% Good luck.
+
