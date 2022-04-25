@@ -439,25 +439,26 @@ minus
 \@ifundefined{thechapter}{}{\def\thefigure{\thechapter$\cdot$\arabic{figure}}}
 
 
-%       BIBLIOGRAPHY
-% Scientific-style bibliography: no number, first line indented backwards
-% Note that for proper citations apalike.bst BiBTeX style file and apalike.sty
-% Latex style file need to be used.
-\def\thebibliography#1{\def\baselinestretch{1.2}
-%\section*{\centerline{References}}
-\chapter*{\centerline{References}}
-%\addcontentsline{toc}{section}{References}
-\addcontentsline{toc}{chapter}{References}
-\list
-{}{
-  \setlength{\itemindent}{-1em}
-  \setlength{\leftmargin}{1em} 
-%  \setlength{\leftmargin}{0.6in} % Change suggested by Saikat Ray
-%  \setlength{\rightmargin}{0.1in} % Change suggested by Saikat Ray
-  \usecounter{enumi}}
-\def\newblock{\hskip .11em plus .33em minus -.07em}
-}
-\def\endthebibliography{\endlist}
+% see if my preffered bib style will be allowed by the library
+% %       BIBLIOGRAPHY
+% % Scientific-style bibliography: no number, first line indented backwards
+% % Note that for proper citations apalike.bst BiBTeX style file and apalike.sty
+% % Latex style file need to be used.
+% \def\thebibliography#1{\def\baselinestretch{1.2}
+% %\section*{\centerline{References}}
+% \chapter*{\centerline{References}}
+% %\addcontentsline{toc}{section}{References}
+% \addcontentsline{toc}{chapter}{References}
+% \list
+% {}{
+%   \setlength{\itemindent}{-1em}
+%   \setlength{\leftmargin}{1em} 
+% %  \setlength{\leftmargin}{0.6in} % Change suggested by Saikat Ray
+% %  \setlength{\rightmargin}{0.1in} % Change suggested by Saikat Ray
+%   \usecounter{enumi}}
+% \def\newblock{\hskip .11em plus .33em minus -.07em}
+% }
+% \def\endthebibliography{\endlist}
 
 
 %               USEFUL MACROS
