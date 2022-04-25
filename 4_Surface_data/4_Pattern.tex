@@ -147,7 +147,7 @@ While pattern matching is an extremely practical feature, typing these expressio
 To implement dependently typed pattern matching, a procedure is needed to resolve the equational constraints that arise within each pattern, and to confirm the impossibility of unwritten branches.\todo{ven generate impossible branches}
 
 Since arbitrary computation can be embedded in the arguments of a type constructor\footnote{
-  At least in a full spectrum theory, such as the one we study here.
+  At least in a \fullSp{} theory, such as the one we study here.
   }, the equational constraints are undecidable in general.
 Any approach to constraint solving will have to be an approximation that performs well enough in practice.
 Usually this procedure takes the form of a first order unification. 

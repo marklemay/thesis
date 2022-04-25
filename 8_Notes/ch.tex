@@ -11,9 +11,8 @@ This Chapter contains an idealized\footnote{
 } review of what was tried, and hopefully provide hints about how one might productively try again.
  
 The goal was always to make a dependently typed language as approachable as python\footnote{We have perhaps succeeded in making a dependently typed language as approachable as Haskell.}.
-While I believe a full-spectrum dependently typed language with runtime definitional equality checking, dependent pattern matching and with no restrictions on recursion are part of that practical language, there are still lingering usability issues.
+While I believe a \fullSp{} dependently typed language with runtime definitional equality checking, dependent pattern matching and with no restrictions on recursion are part of that practical language, there are still lingering usability issues.
 For those who share the dream of more reliable software through easier to use dependently typed languages, here are some lines of work for your consideration.
-
 
 \input{8_Notes/1_Sym} 
 \input{8_Notes/2_Proof_Search}
@@ -25,7 +24,7 @@ For those who share the dream of more reliable software through easier to use de
 \subsection{Effects}
 
 The last and biggest hurdle to bring dependent types into a mainstream programming language is by providing a reasonable way to handle effects.
-Though dependent types and effects have been studied I am not aware of any full spectrum system that has implemented those theories.
+Though dependent types and effects have been studied I am not aware of any \fullSp{} system that has implemented those theories.
 It is not even completely clear how best to add an effect system into Haskell, the closest ``mainstream'' language to the one studied here.\todo{cites!!}
 
 While trying carefully to avoid effects in this thesis, we still have encountered 2 important effects: blame based error and non-termination.

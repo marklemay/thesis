@@ -14,7 +14,7 @@ This has led to making pattern behavior override-able in Scala via Extractor Obj
 An extension in GHC allows some computations to happen within a pattern match via the $\mathtt{ViewPatterns}$ extension\todo{font. lots of prior work https://gitlab.haskell.org/ghc/ghc/-/wikis/view-patterns}.
 It seems unreasonable to extend patterns to arbitrary computation (though this is allowed in the Curry language\footnote{https://curry.pages.ps.informatik.uni-kiel.de/curry-lang.org/} as a syntax for its logical programming features). 
 
-In the presence of full-spectrum dependent types, the perspective dramatically shifts.
+In the presence of \fullSp{} dependent types, the perspective dramatically shifts.
 Any terminating typing procedure will necessarily exclude some type-able patterns and be unable to exclude some unreachable branches.
 Even though only data constructors are considered, dependent patterns are already attacking a much more difficult problem than in the non-dependent case.
 It may make sense to extend the notion of pattern matching to include other useful but difficult features such as the $\mathsf{with}$ syntax of \cite{mcbride_mckinna_2004}.

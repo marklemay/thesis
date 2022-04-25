@@ -64,7 +64,7 @@ Where $\rightarrow$ is a function and $\star$ is the ``type of types''.
 $\mathtt{Vec}$ is a list indexed by the type of element it contains and its length\footnote{
   Definitions of these types and functions can be found in \Ch{5}.
 }.
-$\mathtt{Vec}$ has type dependency since it is a type that depends on its length.
+$\mathtt{Vec}$ is a dependent type since it is a type of list that depends on its length.
 $\mathtt{rep}$ is a dependent function that produces a list containing a type with a given length by repeating its input that number of times.
 $\mathtt{head}$ is a dependent function that expects a list of length $\mathtt{add}\,1\,x$, returning the first element of that non-empty list.
 
@@ -105,7 +105,7 @@ Worse, the type system may even make it difficult to experiment with the $\matht
 Why stop programmers when there is a definitional equality ``error''? \todo{Awk, in HM it makes sense to block}
 
 There appears to be no reason! Alternatively, we can track unclear equalities and if the program ``gets stuck'', we are able to stop the program execution and provide a concrete witness for the inequality at runtime.
-If the buggy add function above is encountered at runtime, we can give a runtime error stating $\mathtt{add}\,1\,8=9\,\neq\,0=\mathtt{add}\,8\,1$.
+If the buggy $\mathtt{add}$ function above is encountered at runtime, we can give a runtime error stating $\mathtt{add}\,1\,8=9\,\neq\,0=\mathtt{add}\,8\,1$.
 Which is exactly the kind of specific feedback programers want when fixing bugs.
 
 \section{A Different Workflow}
@@ -137,7 +137,7 @@ More concretely, whenever possible, static errors should be replaced with:
 % run program
 % \end{lstlisting}
 
-\includegraphics[width=5in]{fig/standardWorkflow.pdf}
+\centerline{\includegraphics[width=5in]{fig/standardWorkflow.pdf}}
 % https://docs.google.com/presentation/d/1FSXDKsZlYFDNP8f6HprCrWV7gBRyW03PmIP0KkOprIA/edit#slide=id.g11561a4b8c2_0_0
 
 \caption{Standard Typed Programming Workflow}
@@ -156,19 +156,19 @@ More concretely, whenever possible, static errors should be replaced with:
 % v              v               |
 %    run program   ---------------
 % \end{lstlisting}
-\includegraphics[width=5in]{fig/new-workflow.pdf}
+\centerline{\includegraphics[width=5in]{fig/new-workflow.pdf}}
 % https://docs.google.com/presentation/d/1FSXDKsZlYFDNP8f6HprCrWV7gBRyW03PmIP0KkOprIA/edit#slide=id.g11561a4b8c2_0_0
 
 \caption{Workflow for this Thesis}
 \label{fig:intro-thesis-workflow}
 \end{figure}
 
-These diagrams make it clear why there is so much pressure for type errors to be better in dependently typed programming\cite{eremondi2019framework}.
+These diagrams make it clear why there is so much pressure for type errors to be better in dependently typed programming. % \cite{eremondi2019framework}. % think I can assert that fact without citation, also that doc has slichly different claims
 Type errors block programmers from running programs! However complaints about the type errors are probably better addressed by resolving the mismatch between the expectations of the programmer and the design of the underlying type theory.
 Better worded error messages are unlikely to bridge this gap when the type system doubts $x+1=1+x$.
 
 The standard workflow seems sufficient for type systems in many mainstream typed programming languages. \todo{Ramsy flagged something around here but can't see the message}
-Though there is experimental evidence that even OCaml can be easier to learn and use with the proposed workflow \cite{10.1145/2951913.2951915}.
+Though there is experimental evidence that even OCaml can be easier to learn and use with the proposed workflow\cite{10.1145/2951913.2951915}.
 In the presence of dependent types the standard workflow is challenging for both beginners and experts, making a new approach much more critical.
 
 \todo[inline]{
@@ -295,12 +295,12 @@ There are many flavors of dependent types that can be explored.
 This thesis attempts to always use the simplest and most programmer friendly formulations.
 Specifically:
 \begin{itemize}
-\item The type system in this thesis is a \textbf{full spectrum} dependent type system.
-The full-spectrum approach is the most uniform approach to dependent type theory: computation behaves the same at the term and type level.
+\item The type system in this thesis is a \textbf{\fullSp{}} dependent type system.
+The \fullSp{} approach is the most uniform approach to dependent type theory: computation behaves the same at the term and type level.
 This is contrasted with a leveled theory where terms embedded in types may have different or limited behavior\footnote{
   this is the approach taken in ATS, and refinement type systems}.
-The full-spectrum approach is popular with theorem provers and has been advocated by many authors \cite{10.1145/289423.289451,norell2007towards,brady2013idris,sjoberg2012irrelevance}.
-While the full spectrum approach offers tradeoffs (it is harder to deal with effects), it seems to be the most predictable from a newcomer's perspective.
+The \fullSp{} approach is popular with theorem provers and has been advocated by many authors \cite{10.1145/289423.289451,norell2007towards,brady2013idris,sjoberg2012irrelevance}.
+While the \fullSp{} approach offers tradeoffs (it is harder to deal with effects), it seems to be the most predictable from a newcomer's perspective.
 \item Data types and pattern matching are essential to practical programming, so they are included in the implementation.
 While it is theoretically possible to simulate data types via church encodings, they are too awkward for programmers to work with, and would complicate the runtime errors this system hopes to deliver.
 To provide a better programming experience data types are built into the system and pattern matching is supported.
