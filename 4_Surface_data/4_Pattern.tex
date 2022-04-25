@@ -4,9 +4,9 @@
 Unfortunately, the direct eliminator style is cumbersome for programmers to deal with.
 For instance, Figure \ref{fig:data-eliminators} shows how $\mathtt{Vec}$ data can be directly eliminated to extract the first element of a non-empty list in the definition of $\mathtt{head'}$.
 The $\mathtt{head'}$ function needs to redirect unreachable vector inputs to a dummy type ($\mathtt{Unit}$) and requires several copies of the same $\mathtt{A}$ variable that are not identified automatically by the eliminator described in the last section.
-The usual solution is to extend case elimination with \textbf{pattern matching}.
+The usual solution is to extend \case{} elimination with \textbf{pattern matching}.
  
-Pattern matching is much more ergonomic than a direct eliminator $\mathsf{case}$.
+Pattern matching is much more ergonomic than a direct eliminator \case{}.
 In Figure \ref{fig:data-eliminators}, the $\mathtt{head}$ and $\mathtt{mapVec}$ functions that are defined though pattern matching is simpler and clearer.
 Additionally nested constructor matching is now possible as in the $\mathtt{sub3}$ function.
 
@@ -70,8 +70,8 @@ sub3 n =
 \end{figure}
 
 % Surface data syntax
-Figure \ref{fig:surface-data} shows the extensions to the surface language for data and pattern matching.
-Our case expression matches a list of \scruts{}, allowing us to be very precise about the typing of branches.
+Figure \ref{fig:surface-data} shows the extensions to the \slang{} for data and pattern matching.
+Our \case{} expression matches a list of \scruts{}, allowing us to be very precise about the typing of branches.
 Additionally this style allows for syntactic sugar for easy definitions of functions by cases.
 The direct eliminator style \case{} of the last section is a special case of pattern matching outlined here.
 \todo{Example of why it was needed}
@@ -79,14 +79,14 @@ The direct eliminator style \case{} of the last section is a special case of pat
 \begin{figure}
 \begin{tabular}{lcll}
 $m...$ & $\Coloneqq$ & ... & \tabularnewline
- & $|$ & $\mathsf{case}\,\overline{n,}\,\left\{ \overline{|\,\overline{pat\Rightarrow}m}\right\} $ & data elim. without motive\tabularnewline
- & $|$ & $\mathsf{case}\,\overline{n,}\,\left\langle \overline{x\Rightarrow}M\right\rangle \left\{ \overline{|\,\overline{pat\Rightarrow}m}\right\} $ & data elim. with motive\tabularnewline
+ & $|$ & $\case{} \,\overline{n,}\,\left\{ \overline{|\,\overline{pat\Rightarrow}m}\right\} $ & data elim. without motive\tabularnewline
+ & $|$ & $\case{} \,\overline{n,}\,\left\langle \overline{x\Rightarrow}M\right\rangle \left\{ \overline{|\,\overline{pat\Rightarrow}m}\right\} $ & data elim. with motive\tabularnewline
 \multicolumn{4}{l}{patterns,}\tabularnewline
 $pat$ & $\Coloneqq$ & $x$ & match a variable\tabularnewline
  & $|$ & $(d\,\overline{pat})$ & match a constructor\tabularnewline
 \end{tabular}
 
-\caption{Surface Language Data}
+\caption{\SLang{} Data}
 \label{fig:surface-data}
 \end{figure}
 
@@ -100,10 +100,10 @@ For instance, the expression,
 \item $x$ with bindings $x = \Cons{}\,\Bool{}\,\True{}\,3\,\left(\Cons{}\,\Bool{}\,\False{}\,2\,y'\right)$
 \item $\Cons{}\,-\,x\,-\,\left(\Cons{}\,-\,y\,-\,-\right)$ with bindings $x = \True{}$, $y = \False{}$
 \end{itemize}
-When patterns are used in the case construct, the appropriate branch will reduce with the correct bindings in scope.
+When patterns are used in the \case{} construct, the appropriate branch will reduce with the correct bindings in scope.
 Therefore the expression 
 
-% $\mathsf{case}\,Cons\,\mathbb{B}\,true\,\left(S\left(S\left(S\left(Z\right)\right)\right)\right)\,\left(Cons\,\mathbb{B}\,false\,\left(S\left(S\left(Z\right)\right)\right)\,y'\right)\left\{ Cons\,-\,x\,-\,\left(Cons\,-\,y\,-\,-\right)\Rightarrow x\&y\right\} $
+% $\case{} \,Cons\,\mathbb{B}\,true\,\left(S\left(S\left(S\left(Z\right)\right)\right)\right)\,\left(Cons\,\mathbb{B}\,false\,\left(S\left(S\left(Z\right)\right)\right)\,y'\right)\left\{ Cons\,-\,x\,-\,\left(Cons\,-\,y\,-\,-\right)\Rightarrow x\&y\right\} $
 $\case{}\,\Cons{}\,\Bool{}\,\True{}\,3\,\left(\Cons{}\,\Bool{}\,\False{}\,2\,y'\right)
  \left\{ \Cons{}\,-\,x\,-\,\left(\Cons{}\,-\,y\,-\,-\right)\Rightarrow x\&y\right\} $
 
@@ -127,11 +127,11 @@ The explicit rules for pattern matching are listed in Figure \ref{fig:surface-da
 \frac{\,}{.\,\mathbf{Match}_{\emptyset}\,.}
 \]
 
-\caption{Surface Language Match}
+\caption{\SLang{} Match}
 \label{fig:surface-data-match}
 \end{figure}
 
-It is now easier for case branches to overlap, which could allow non-deterministic reduction.
+It is now easier for \case{} branches to overlap, which could allow non-deterministic reduction.
 There are several plausible ways to handle this, such as requiring each branch to have independent patterns, or requiring patterns have the same behavior when they overlap \cite{10.1007/978-3-642-54833-8_6}.
 For the purposes of this thesis, we will use the programmatic convention that the first matching pattern takes precedence.
 For example, the following will type check
@@ -161,7 +161,7 @@ Usually this procedure takes the form of a first order unification.
 
 \subsection{First Order Unification}
 
-When type checking the branches of a case expression, the patterns are interpreted as expressions under bindings for each variable used in the pattern.
+When type checking the branches of a \case{} expression, the patterns are interpreted as expressions under bindings for each variable used in the pattern.
 If these equations can be unified, then the branch will type-check under the variable assignments, with the additional typing information.
 For instance,
 \begin{example}
@@ -181,7 +181,7 @@ Since assignments are maximal, we are sure that a unified pattern will still be 
 
 A simplified version of a typical unification procedure is listed in \Fref{surface-data-unification}.
 % Several variations are explored in \cite{cockx_devriese_2018}.
-Unification is not guaranteed to terminate since it relies on definitional equalities, which are undecidable in the surface language.
+Unification is not guaranteed to terminate since it relies on definitional equalities, which are undecidable in the \slang{}.
 The unification procedure should also exclude the possibly cyclic assignments that could occur, such as $x=\Suc{}\,x$.\todo{work this into the rules if not too much work}
 
 \begin{figure}
@@ -227,7 +227,7 @@ The unification procedure should also exclude the possibly cyclic assignments th
 }\rulename{U-TCon-inj}
 \]
 \todo[inline]{sepearte conv rule? better quantifiers for overlining}
-\caption{Surface Language Unification}
+\caption{\SLang{} Unification}
 \label{fig:surface-data-unification}
 \end{figure}
 \todo{note the untyped nature, typed varients}
@@ -242,9 +242,9 @@ But that set of patterns must still be generated, given the explicit branches th
 There is no clear best way to do this since a more fine division of patterns may allow enough additional definitional information to show unsatisfiability, while a more coarse division of patterns will be more efficient.
 Agda uses a tree branching\todo{cite} approach that is efficient, but generates course patterns.
 The implementation of the language in this thesis generates patterns by a system of complements, this system seems slightly easier to implement, more uniform, and generates a finer set of patterns then the case trees used in Agda.
-However this approach is exponentially less performant then Agda in the worse case.\todo{thsi is less true now} 
+However this approach is less performant then Agda in the worse case.
 
-The bidirectional system can be extended with pattern matching with rules that look like 
+The \bidir{} system can be extended with pattern matching with rules that look like 
 
 \[
 \frac{\begin{array}{c}
@@ -253,7 +253,7 @@ The bidirectional system can be extended with pattern matching with rules that l
 \forall\:i\,\left(\Gamma\vdash\overline{pat}_{i}:_{E}?\Delta\quad U\left(E,\sigma\right)\quad\sigma\left(\Gamma,|\overline{pat}_{i}|\right)\vdash\sigma m\overleftarrow{\,:\,}\sigma\left(M\left[\Delta\coloneqq\overline{pat}_{i}\right]\right)\right)\\
 \Gamma\vdash\overline{\overline{pat}}:\Delta\ \mathbf{complete}
 \end{array}}{\begin{array}{c}
-\Gamma\vdash\mathsf{case}\,\overline{n,}\,\left\langle \Delta_{?}\Rightarrow M\right\rangle \left\{ \overline{|\,\overline{pat\Rightarrow}m}\right\} \\
+\Gamma\vdash \case{} \,\overline{n,}\,\left\langle \Delta_{?}\Rightarrow M\right\rangle \left\{ \overline{|\,\overline{pat\Rightarrow}m}\right\} \\
 \overrightarrow{\,:\,}M\left[\Delta_{?}\coloneqq\overline{n}\right]
 \end{array}}
 \]
@@ -265,16 +265,16 @@ The bidirectional system can be extended with pattern matching with rules that l
 \Gamma\vdash\overline{n}\overrightarrow{\,:\,}\ \Delta\\
 \forall\:i\,\left(\Gamma\vdash\overline{pat}_{i}:_{E}?\Delta\quad U\left(E,\sigma\right)\quad\sigma\left(\Gamma,|\overline{pat}_{i}|\right)\vdash\sigma m\overleftarrow{\,:\,}\sigma\left(M\right)\right)\\
 \Gamma\vdash\overline{\overline{pat}}:\Delta\ \mathbf{complete}
-\end{array}}{\Gamma\vdash\mathsf{case}\,\overline{n,}\,\left\{ \overline{|\,\overline{pat\Rightarrow}m}\right\} \overleftarrow{\,:\,}M}
+\end{array}}{\Gamma\vdash \case{} \,\overline{n,}\,\left\{ \overline{|\,\overline{pat\Rightarrow}m}\right\} \overleftarrow{\,:\,}M}
 \]
 
 Where $\Gamma\vdash\overline{pat}:_{E}?\Delta$ is shorthand for a set of equations that allow a list of patterns to type check under $\Delta$, 
   and $\Gamma\vdash\overline{\overline{pat}}:\Delta\ \mathbf{complete}$ is shorthand for the exhaustiveness check. 
 \begin{conjecture}
-There exists a suitable\footnote{supporting at least subject reduction, type soundness, and regularity} extension to the surface language \ac{TAS} that supports pattern matching style elimination
+There exists a suitable\footnote{supporting at least subject reduction, type soundness, and regularity} extension to the \slang{} \ac{TAS} that supports pattern matching style elimination
 \end{conjecture}
 \begin{conjecture}
-The bidirectional extension listed here is weakly annotatable with that extension to the surface language.
+The \bidir{} extension listed here is weakly annotatable with that extension to the \slang{}.
 \end{conjecture}
  
 These conjectures are not obvious since pattern matching's unification is not necessarily preserved under reduction, or even well typed substitution.
@@ -284,6 +284,6 @@ For instance, in $\mathtt{mapVec}$ the programmer will need to add the length of
 Another way to formalize a \ac{TAS} is to use explicit contextual equalities as in \cite{sjoberg2015dependently}.
  
 The prototype implementation goes further than what is outlined here.
-For instance, the prototype allows some additional type annotations in the motive and for these annotations to switch the type inference of the scrutinee into a type-check.
+For instance, the prototype allows some additional type annotations in the motive and for these annotations to switch the type inference of the \scrut{} into a type-check.
 The implementation also has a simple syntax for modules, and even mutually defined data types.
 For simplicity these have been excluded from the presentation here.

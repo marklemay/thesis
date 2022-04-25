@@ -13,7 +13,7 @@ Neither the \ac{TAS} system or the \bidir{} systems have these properties\footno
  
 \subsection{Logical Inconsistency}
  
-The surface language is logically inconsistent, since every type is inhabited.
+The \slang{} is logically inconsistent, since every type is inhabited.
  
 \begin{example}
 Every Type is Inhabited (by recursion)
@@ -40,7 +40,7 @@ Non-termination seems not to matter for programming languages in practice.
 For instance, in ML the type $\mathtt{f:Int->Int}$ does not imply the termination of $\mathtt{f\,2}$.
 While unproductive non-termination is always a bug, it seems an easy bug to detect and fix when it occurs in programs.
 In mainstream languages, types help to communicate the intent of termination, even though termination is not guaranteed by the type system.
-Importantly, no computation is prevented in the surface language in order to preserve logical consistency.
+Importantly, no computation is prevented in the \slang{} in order to preserve logical consistency.
 Due to the halting problem, there is no way to allow all the terminating computations and exclude all the nonterminating computations.
 A tradeoff must be made, and programmers likely care more about having all possible computations than preventing non-termination.
 Therefore, logical unsoundness seems suitable for a dependently typed programming language.
@@ -49,7 +49,7 @@ Therefore, logical unsoundness seems suitable for a dependently typed programmin
  
 \todo{add ref to inequalities}
  
-While the surface language supports proofs, not every term typed in the surface language is a proof.
+While the \slang{} supports proofs, not every term typed in the \slang{} is a proof.
 Terms can still be called proofs as long as the safety of recursion and \tit{} are checked externally.
 In this sense, the listed example inequalities are proofs, as they make no use of general recursion (so all recursions are well founded) and universes are used in a safe way (for instance predicative universe levels could be assigned).
 In an advanced implementation, an automated process could supply warnings when constructs are used in potentially unsafe ways.
@@ -117,6 +117,6 @@ Most importantly for the system described in this thesis, users are expected to 
 Unlike the \bidir{} described in this section, the elaboration of \ch{3} is technically decidable.
 % The elaboration procedure will be formally related to teh .... so formalizing it is important
 
-% that will bypass the bidirectional procedure described here.
+% that will bypass the \bidir{} procedure described here.
 \todo{then why review?}
 % That elaboration procedure is also undecidable, but only for extremely pathological terms.

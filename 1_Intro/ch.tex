@@ -48,14 +48,14 @@ A version of the following type checks in virtually all dependent type systems:
 
 \begin{align*}
 \mathtt{Bool} & : \star,\\
-\mathtt{Nat} & : \star,\\
-\mathtt{Vec} & :\star \rightarrow\mathtt{Nat}\rightarrow \star,\\
-\mathtt{add} & :\mathtt{Nat}\rightarrow\mathtt{Nat}\rightarrow\mathtt{Nat},\\
-\mathtt{rep} & :\left(A:\star\right)\rightarrow A\rightarrow\left(x:\mathtt{Nat}\right)\rightarrow\mathtt{Vec\,}A\,x,\\
-\mathtt{head} & :\left(A:\star\right)\rightarrow\left(x:\mathtt{Nat}\right)\rightarrow\mathtt{Vec}\,A\,\left(\mathtt{add}\,1\,x\right)\rightarrow A
+\Nat{}  & : \star,\\
+\mathtt{Vec} & :\star \rightarrow\Nat{} \rightarrow \star,\\
+\mathtt{add} & :\Nat{} \rightarrow\Nat{} \rightarrow\Nat{} ,\\
+\mathtt{rep} & :\left(A:\star\right)\rightarrow A\rightarrow\left(x:\Nat{} \right)\rightarrow\mathtt{Vec\,}A\,x,\\
+\mathtt{head} & :\left(A:\star\right)\rightarrow\left(x:\Nat{} \right)\rightarrow\mathtt{Vec}\,A\,\left(\mathtt{add}\,1\,x\right)\rightarrow A
 \end{align*}
 \[
-\vdash\lambda x.\mathtt{head}\,\mathtt{Bool}\,x\,\left(\mathtt{rep}\,\mathtt{Bool}\,\mathtt{true}\,\left(\mathtt{add}\,1\,x\right)\right)\,:\,\mathtt{Nat}\rightarrow\mathtt{Bool}
+\vdash\lambda x.\mathtt{head}\,\mathtt{Bool}\,x\,\left(\mathtt{rep}\,\mathtt{Bool}\,\mathtt{true}\,\left(\mathtt{add}\,1\,x\right)\right)\,:\,\Nat{} \rightarrow\mathtt{Bool}
 \]
 
 \todo[inline]{make this a ``code'' example?}
@@ -80,7 +80,7 @@ One of the deepest underlying reasons for this frustration is the way dependent 
 For example, the following will not type check in any conventional dependent type system with user defined addition,
 
 \[
-\cancel{\vdash}\lambda x.\mathtt{head}\,\mathtt{Bool}\,x\,\left(\mathtt{rep}\,\mathtt{Bool}\,\mathtt{true}\,\left(\mathtt{add}\,x\,1\right)\right)\,:\,\mathtt{Nat}\rightarrow\mathtt{Bool}
+\cancel{\vdash}\lambda x.\mathtt{head}\,\mathtt{Bool}\,x\,\left(\mathtt{rep}\,\mathtt{Bool}\,\mathtt{true}\,\left(\mathtt{add}\,x\,1\right)\right)\,:\,\Nat{} \rightarrow\mathtt{Bool}
 \]
 
 While ``obviously'' $1+x=x+1$, in the majority of dependently typed languages, $\mathtt{add}\,1\,x\equiv\mathtt{add}\,x\,1$ is not a definitional equality.
@@ -331,8 +331,8 @@ What does it mean when a term is a list of length $\mathtt{Bool}$?
 What happens when an equality check is used as a function by being applied with an argument?
 What happens when a check blocks a pattern match?
 \item Equality is not decidable at many types, even in the empty context.
-For instance, functions of type $\mathtt{Nat}\rightarrow\mathtt{Nat}$ do not have decidable equality.
-Therefore the types that embed functions of type $\mathtt{Nat}\rightarrow\mathtt{Nat}$ do not have decidable equality.
+For instance, functions of type $\Nat{} \rightarrow \Nat{}$ do not have decidable equality.
+Therefore the types that embed functions of type $\Nat{} \rightarrow \Nat{}$ do not have decidable equality.
 \end{itemize}
 These problems are solved by extending dependent type theory with a cast checking operator.
 This cast operator will ``get stuck'' if there is a discrepancy, and we can show that a program will always resolve to a value or get stuck in such a way that a counterexample can be reported.
@@ -372,19 +372,19 @@ To make the presentation easier, features will be added to the language in stage
 
 \todo[inline]{This should probably be expanded}
 \begin{itemize}
-\item Chapter 2 describes a dependently typed language (without data) intended to model standard dependent type theories, called the \textbf{Surface Language}.
+\item Chapter 2 describes a dependently typed language (without data) intended to model standard dependent type theories, called the \textbf{\slang{}}.
 \textbf{Type soundness} is proven and a \bidir{} type checking procedure system is presented.
 Though the system is not original, the proof presented is the simplest complete progress and preservation style proof I am aware of for a dependent type system\footnote{
   \cite{sjoberg2015dependently} made a similar claim, though since it included more features (such as data), our proof would technically be simpler.
   \MartinL{} had a similar proof for a similar system in his unpublished notes \cite{Martin-Lof-1971}, though that predates some of the proof techniques used in \Ch{2}.
 }.
-\item Chapter 3 describes a dependently typed language (without data) with embedded equality checks, called the \textbf{cast language}.
-The cast language has its own version of type soundness, called \textbf{cast soundness}.
+\item Chapter 3 describes a dependently typed language (without data) with embedded equality checks, called the \textbf{\clang{}}.
+The \clang{} has its own version of type soundness, called \textbf{cast soundness}.
 Cast soundness is proven for the language, using a similar strategy to the type soundness proof of Chapter 2.
-An Elaboration procedure takes most (untyped) terms of the surface syntax into terms in the cast language.
+An Elaboration procedure takes most (untyped) terms of the surface syntax into terms in the \clang{}.
 Several desirable properties for elaboration are presented. % and conjectured.
-\item Chapter 4 reviews how dependent data and pattern matching can be added to the surface language and explores some of the issues of data in a dependent type system.
-\item Chapter 5 shows how to extend the cast language with dependent data and pattern matching.
+\item Chapter 4 reviews how dependent data and pattern matching can be added to the \slang{} and explores some of the issues of data in a dependent type system.
+\item Chapter 5 shows how to extend the \clang{} with dependent data and pattern matching.
 Surprisingly the inclusion of dependent data requires several changes to the system in \Ch{3}, since finer observations are observable.
 \item Chapter 6 discusses other ideas related to usability and future work, such as automated testing and runtime proof search.
 These systems are made feasible given the more flexible approach to equality addressed in the rest of the thesis.

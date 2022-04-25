@@ -1,4 +1,4 @@
-\section{\Bidir{} Surface Language}
+\section{\Bidir{} \SLang{}}
  
 % Annotate all the vars
 There are many possible ways to localize the type checking process.
@@ -74,12 +74,12 @@ Checking judgments force terms that could have multiple typings in the \ac{TAS} 
 \rulename{\overleftarrow{ty}-conv}
 \]
  
-\caption{Surface Language \Bidir{} Typing Rules}
+\caption{\SLang{} \Bidir{} Typing Rules}
 \label{fig:surface-bityping-rules}
 \end{figure}
  
 % review the typing rule
-The surface language supports \bidir{} type-checking over the syntax with the rules in \Fref{surface-bityping-rules}.
+The \slang{} supports \bidir{} type-checking over the syntax with the rules in \Fref{surface-bityping-rules}.
 The rules are almost the same as before, except that typing direction is now explicit in the judgment.
  
 As mentioned, \bidir{} type checking handles higher order functions very well.
@@ -106,9 +106,9 @@ Specifically, this will allow us to present a terminating elaboration procedure 
 \todo[inline]{alternative listed in appendix}
 \todo[inline]{what else does the algorithm infer not listed here}
 \todo[inline]{More about extending the system so constraint solving can happen under a check judgment }
-\todo[inline]{Clearly explain why this is needed for the cast system, annotating every var is cumbersome, constraint solving is iffy when things may be undecidable}
+\todo[inline]{Clearly explain why this is needed for the \csys{}, annotating every var is cumbersome, constraint solving is iffy when things may be undecidable}
  
-It is possible to take the ideas of bidirectional typing very far.
+It is possible to take the ideas of \bidir{} typing very far.
 More advanced \bidir{} implementations such as Agda\cite{norell2007towards} even perform unification as part of their \bidir{} type checking.
 % There will always be ways to make type inference more powerful, at the cost of complexity.
  

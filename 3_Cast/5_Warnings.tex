@@ -3,7 +3,7 @@
 As presented here, not every cast corresponds to a reasonable warning.
 For instance, $\left(\lambda x\Rightarrow x\right)::_{\star\rightarrow\star}\star\rightarrow\star$ is a possible output from elaboration.
 By the rules given the cast will not reduce without input, it will never cause blame.
-In fact since the user only interacts with the surface language, any cast $a::_{A}B$ where $|A|\equiv|B|$ will not produce an understandable warning.
+In fact since the user only interacts with the \slang{}, any cast $a::_{A}B$ where $|A|\equiv|B|$ will not produce an understandable warning.
 % A reasonable first attempt would be to simply remove the casts of the form $a::_{A}A$, but this ignores the possibility that casts themselves may contain casts\todo{example}.
 % Currently the implementation leaves most casts intact and filters our equivalent casts from the warnings shown to the user
  

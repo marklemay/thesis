@@ -3,15 +3,15 @@
 \todo[inline]{resolve var for the typing context of this section: H? Gamma? some other greek?}
 
 % overview
-Even though the cast language allows us to optimistically assert equalities, manually noting every cast would be cumbersome.
-This bureaucracy is solved with an elaboration procedure that translates (untyped) terms from the surface language into the cast language.
-If the term is well typed in the surface language, elaboration will produce a term without blamable errors.
+Even though the \clang{} allows us to optimistically assert equalities, manually noting every cast would be cumbersome.
+This bureaucracy is solved with an elaboration procedure that translates (untyped) terms from the \slang{} into the \clang{}.
+If the term is well typed in the \slang{}, elaboration will produce a term without blamable errors.
 Terms with unproven equality in types are mapped to a cast with enough information to point out the original source when an inequality is witnessed.
  
 Elaboration serves a similar role as the \bidir{} type system did in \ch{2}, and uses a similar methodology.
 Instead of performing a static equality check when the inference mode and the check mode meet, a runtime cast is inserted asserting the types are equal.
 
-First we enrich the surface language with location information, $\ell$, at every position that could result in a type mismatch in \Fref{surface-pre-syntax-loc}.
+First we enrich the \slang{} with location information, $\ell$, at every position that could result in a type mismatch in \Fref{surface-pre-syntax-loc}.
 Note that the location tags match exactly with the check annotations of the \bidir{} system.
 For technical reasons the set of locations is nonempty, and a specific null location ($.$)\todo{- instead of . ?} is designated.
 That null location can be used when we need to generate fresh terms, but have no sensible location information available.
@@ -36,7 +36,7 @@ $m,n,M,N$ & $\Coloneqq$ & $x$ & variable\tabularnewline
 & $|$ & $\left(x:M_{\ell}\right)\rightarrow N_{\ell'}$ & function type\tabularnewline
 & $|$ & $\mathsf{fun}\,f\,x\Rightarrow m$ & function\tabularnewline
 & $|$ & $m_{\ell}\,n$ & application\tabularnewline
-\end{tabular}\caption{Surface Language Syntax, With Locations}
+\end{tabular}\caption{\SLang{} Syntax, With Locations}
 \label{fig:surface-pre-syntax-loc}
 \end{figure}
 
@@ -48,7 +48,7 @@ $\left(x:M_{\ell}\right)\rightarrow N_{\ell'}$ & written & $\left(x:M\right)\rig
 $m_{\ell}\,n$ & written & $m_{\ensuremath{}}\,n$ & when & $\ell$ is irrelevant\tabularnewline
 \end{tabular}
 
-\caption{Surface Language Abbreviations}
+\caption{\SLang{} Abbreviations}
 \label{fig:surface-pre-syntax-loc-abrev}
 \end{figure}
 
@@ -78,7 +78,7 @@ $f:\mathbb{N}\rightarrow\mathbb{B}\rightarrow\mathbb{B}\vdash f_{\ell}7_{\ell'}3
 Unlike in gradual typing, we cannot elaborate arbitrary untyped syntax.
 The underlying type of a cast needs to be known so that a function type can swap its argument type at application.
 For instance, $\lambda x\Rightarrow x$ will not elaborate since the intended type is not known.
-Fortunately, our experimental testing suggests that a majority of randomly generated terms can be elaborated, while only a small minority of terms would type check in the surface language.
+Fortunately, our experimental testing suggests that a majority of randomly generated terms can be elaborated, while only a small minority of terms would type check in the \slang{}.
 The programmer can make any term elaborate if they annotate the intended type.
 For instance, $\left(\lambda x\Rightarrow x\right)::*\rightarrow*$ will elaborate.
 
@@ -189,7 +189,7 @@ by mutual induction on the $\textbf{Elab}$ derivations
 It follows that whenever an elaborated cast term evaluates, the corresponding surface term evaluates consistently.
 Explicitly,
 \begin{thm}
-Surface language and cast language have consistent evaluation
+\Slang{} and \clang{} have consistent evaluation
  
 if $H\vdash m\,\textbf{Elab}\ a\overrightarrow{\,:\,}A$, and $a\rightsquigarrow_{*}\star$ then $m\rightsquigarrow_{*}\star$
  
@@ -218,7 +218,7 @@ by mutual induction on $\textbf{Elab}$ derivations
 \end{proof}
 Some additional properties are conjectured to hold, though they have not yet been proven.
 \begin{conjecture}
-Every term well typed in the \bidir{} surface language elaborates
+Every term well typed in the \bidir{} \slang{} elaborates
  
 if $\Gamma\vdash$, then there exists $H$ such that $\Gamma\,\textbf{Elab}\,H$
  

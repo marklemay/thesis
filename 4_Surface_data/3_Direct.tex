@@ -2,16 +2,16 @@
 
 How should a program observe data?
 Since a term of a given data type can only be created with one of the constructors from its definition, we can completely handle a data expression if each possible constructor is accounted for.
-For instance, $\mathtt{Nat}$ has the two constructors $\mathtt{Z}$ and $\mathtt{S}$ (which holds the preceding number), so the expression $\mathsf{case}\,n\,\left\{ |\,Z\Rightarrow Z\,|\,S\,x\Rightarrow x\right\}$ will extract the proceeding number from $n$ (or $0$ if $n=0$).
+For instance, \Nat{} has the two constructors $\mathtt{Z}$ and \Suc (which holds the preceding number), so the expression $\mathsf{case}\,n\,\left\{ |\,Z\Rightarrow Z\,|\,S\,x\Rightarrow x\right\}$ will extract the proceeding number from $n$ (or $0$ if $n=0$).
 We will call the term being inspected the \textbf{\scrut{}}\footnote{also called a \textbf{discriminee}}, here $n$ is the \scrut{}.
 % In this light, boolean case elimination corresponds to the if-then-else expression found in many mainstream languages.
  
-This $\mathtt{Nat}$ elimination is type checkable since we know the intended output type of each branch (\Nat{} in the above example), and can check that they are compatible.
+This \Nat{} elimination is type checkable since we know the intended output type of each branch (\Nat{} in the above example), and can check that they are compatible.
 But in the presence of dependent types the output may not be obvious.
 
-We will need to extend the syntax of $\mathsf{case}$s to support dependent type checking.
+We will need to extend the syntax of \case{}s to support dependent type checking.
 Specifically, we will need to add a \textbf{motive} annotation that allows the type checker to compute the output type of the branches if they vary in terms of the input.
-For instance, the case in the the $\mathtt{rep}$ function in \Fref{data-elim-examples}, has the motive $\mathtt{n'\ :\ Nat\ =>\ Vec\ A\ n'}$.
+For instance, the \case{} in the the $\mathtt{rep}$ function in \Fref{data-elim-examples}, has the motive $\mathtt{n'\ :\ Nat\ =>\ Vec\ A\ n'}$.
 Each branch is typed knowing what it has observed about the input.
 For instance, in the first branch $\mathtt{Nil\ A}$ :  $\mathtt{Vec\ A\ 0}$.
 This allows the input to generalize to any appropriately typed term, even those that do not begin with a constructor.
@@ -55,12 +55,12 @@ falses = mapVec Bool 3 trues Bool not;
 
 We may also want to use some values of the type level argument to calculate the motive, and type the branches.
 This will be allowed with additional bindings in the motive and in each branch.
-For example the $\mathtt{mapVec}'$ function in \Fref{data-elim-examples}.
+For example the $\mathtt{mapVec'}$ function in \Fref{data-elim-examples}.
 In $\mathtt{mapVec'}$ the motive allows the output to vary along with the length argument $n$ that appears in the type position.
 % For this language the \scrut{} list, motive and pattern
 In general, the motive will be treated like the typing annotations in \ch{2}, in that we will only allow correct motives in a well typed term, motives are not always required, and the motive will be definitionally irrelevant.
 
-This version of data can be given by extending the surface language syntax in \ch{2}, as in \Fref{data-defs}.
+This version of data can be given by extending the \slang{} syntax in \ch{2}, as in \Fref{data-defs}.
 Data type constructors and data term constructors are presented as function like identifiers (in this syntax they reuse function application to collect arguments).
 % In general thy are treated like functions.
 % This direct eliminator scheme is roughly similar to how Coq handles data in its core language.
@@ -85,15 +85,15 @@ $\Gamma$ & $\Coloneqq$ & ... & \tabularnewline
 $m,...$ & $\Coloneqq$ & ... & \tabularnewline
  & $|$ & $D$ & type cons.\tabularnewline
  & $|$ & $d$ & data cons.\tabularnewline
- & $|$ & $\mathsf{case}\,\overline{N,}n\,\left\{ \overline{|\overline{x\Rightarrow}(d\,\overline{y})\Rightarrow m}\right\} $ & data elim.\tabularnewline
- & $|$ & $\mathsf{case}\,\overline{N,}n\,\left\langle \overline{x\Rightarrow}\,y:D\,\overline{x}\Rightarrow M\right\rangle \left\{ \overline{|\overline{x\Rightarrow}(d\,\overline{y})\Rightarrow m}\right\} $ & data elim. (motive)\tabularnewline
+ & $|$ & $\case{}\,\overline{N,}n\,\left\{ \overline{|\overline{x\Rightarrow}(d\,\overline{y})\Rightarrow m}\right\} $ & data elim.\tabularnewline
+ & $|$ & $\case{}\,\overline{N,}n\,\left\langle \overline{x\Rightarrow}\,y:D\,\overline{x}\Rightarrow M\right\rangle \left\{ \overline{|\overline{x\Rightarrow}(d\,\overline{y})\Rightarrow m}\right\} $ & data elim. (motive)\tabularnewline
 \multicolumn{4}{l}{values,}\tabularnewline
 $v$ & $\Coloneqq$ & ... & \tabularnewline
  & $|$ & $D\,\overline{v}$ & \tabularnewline
  & $|$ & $d\,\overline{v}$ & \tabularnewline
 \end{tabular}
 
-\caption{Surface Language (Direct Eliminator) Data}
+\caption{\SLang{} (Direct Eliminator) Data}
 \label{fig:surface-data-min}
 \end{figure}
 
@@ -109,14 +109,14 @@ $v$ & $\Coloneqq$ & ... & \tabularnewline
 
 % \todo[inline]{review if there are more abbreviations around?}
 
-% \caption{Surface Language Abbreviations}
+% \caption{\SLang{} Abbreviations}
 % \label{fig:surface-pre-syntax-data-abrev-1}
 % \end{figure}
 
-\todo[inline]{motive should not need to insist on the type info of the binder? grey out? Grey out things that are surface syntax but not needed for theory? addforce a paren round the only intrestingin the scrutinee list?}
+\todo[inline]{motive should not need to insist on the type info of the binder? grey out? Grey out things that are surface syntax but not needed for theory? addforce a paren round the only intrestingin the \scrut{} list?}
 
 \todo{as in the examples}
-As in the examples the case eliminator first takes the explicit type arguments, followed by a \scrut{} list. % of correct type.
+As in the examples the \case{} eliminator first takes the explicit type arguments, followed by a \scrut{} list. % of correct type.
 Then optionally a motive that characterizes the output type of each branch with all the type arguments and arguments for each element of the \scruts{}. % an abstracted and in scope.
 
 For instance, this \case{} expression checks if a vector $x:\Vect{}\,\Bool{}\,1$ is empty,
@@ -125,7 +125,7 @@ For instance, this \case{} expression checks if a vector $x:\Vect{}\,\Bool{}\,1$
   \begin{array}{l}
 % x:\Vect{}\,\Bool{}\,1\vdash & \\
 %  & 
- \mathsf{case}\,\Bool{},1,x\,\left\langle y\Rightarrow z\Rightarrow s:\Vect{}\,y\,z\Rightarrow\Bool{}\right\rangle \\
+  \case{}\,\Bool{},1,x\,\left\langle y\Rightarrow z\Rightarrow s:\Vect{}\,y\,z\Rightarrow\Bool{}\right\rangle \\
 %  & 
  \left\{ 
     \begin{array}{llll}
@@ -137,21 +137,21 @@ For instance, this \case{} expression checks if a vector $x:\Vect{}\,\Bool{}\,1$
 \]
 
 The grammar includes a little more syntax than is strictly necessary, since the $\Bool{},1$ list could be inferred from the type of $x$ and the $y\Rightarrow z\Rightarrow$ binders are not needed in the branch.
-This slightly verbose case eliminator syntax is designed to be forward compatible with the pattern matching system used in the rest of this thesis. 
+This slightly verbose \case{} eliminator syntax is designed to be forward compatible with the pattern matching system used in the rest of this thesis. 
 
 Additionally we define telescopes, which generalize zero or more typed bindings\todo{Cite De Bruijn for telescopes}.
 This allows a much cleaner definition of data than is otherwise possible.
 % Also we define syntactic lists that allow zero or more pieces of syntax.
 Expressions in a list can be type checked against a telescope. % can be used to generalize dependent pairs, and 
-For instance, the list $\mathtt{Nat},2,2,\mathtt{refl}\,\mathtt{Nat}\,2$ type checks against $\left(X:\star\right)\rightarrow\left(y:X\right)\rightarrow\left(z:X\right)\rightarrow\left(-:\Id{}\ X\,y\,z\right)$.
+For instance, the list $\Nat{},2,2,\mathtt{refl}\,\Nat{}\,2$ type checks against $\left(X:\star\right)\rightarrow\left(y:X\right)\rightarrow\left(z:X\right)\rightarrow\left(-:\Id{}\ X\,y\,z\right)$.
 This becomes helpful in several situations, but especially when we need work with the listed arguments of the data type constructor.
 We will allow several syntactic puns, such as treating telescopes as prefixes for function types.
 For instance, 
-  if $\Delta=\left(y:\mathtt{Nat}\right)\rightarrow\left(z:\mathtt{Nat}\right)\rightarrow\left(-:\Id{}\ \mathtt{Nat}\,y\,z\right)$
-  then writing $f:\Delta\rightarrow\mathtt{Nat}$
-  will be shorthand for $f:\left(y:\mathtt{Nat}\right)\rightarrow\left(z:\mathtt{Nat}\right)\rightarrow \Id{}\ \mathtt{Nat}\,y\,z\rightarrow\mathtt{Nat}$.
+  if $\Delta=\left(y:\Nat{} \right)\rightarrow\left(z:\Nat{} \right)\rightarrow\left(-:\Id{}\ \Nat{} \,y\,z\right)$
+  then writing $f:\Delta\rightarrow\Nat{} $
+  will be shorthand for $f:\left(y:\Nat{} \right)\rightarrow\left(z:\Nat{} \right)\rightarrow \Id{}\ \Nat{} \,y\,z\rightarrow\Nat{}$.
 
-In the presence of general recursion case elimination is powerful.
+In the presence of general recursion \case{} elimination is powerful.
 For instance, all the functions in \Fref{data-elim-examples} use recursion.
 Additionally, well-founded recursion can be used to represent inductive proofs.
 \todo{example}
@@ -167,16 +167,16 @@ x:\Nat{}\vdash\case{}\,x\,\left\langle s:\Nat{}\Rightarrow\Bool{}\right\rangle \
 \]
 
 This match will ``get stuck'' if $0$ is substituted for $x$.
-Recall that the key theorem of the surface language is type soundness, ``well typed terms don't get stuck''.
-Since verifying every constructor has a branch is relatively easy, the surface language \ac{TAS} will require every constructor to be handled in order to type check with direct elimination.
-This is in contrast to most programming languages, which do allow incomplete patterns, though usually a warning is given, and a runtime error is raised if the scrutinee cannot be handled.
+Recall that the key theorem of the \slang{} is type soundness, ``well typed terms don't get stuck''.
+Since verifying every constructor has a branch is relatively easy, the \slang{} \ac{TAS} will require every constructor to be handled in order to type check with direct elimination.
+This is in contrast to most programming languages, which do allow incomplete patterns, though usually a warning is given, and a runtime error is raised if the \scrut{} cannot be handled.
 
 % Since this is a "well behaved" failure
 
-This thesis already has a philosophy for handling warnings and runtime errors through the cast language.
-When we get to the cast language data in \ch{5}, we will allow non-exhaustive data to be reported as a warning and that will allow ``unmatched'' errors to be observed at runtime.
+This thesis already has a philosophy for handling warnings and runtime errors through the \clang{}.
+When we get to the \clang{} data in \ch{5}, we will allow non-exhaustive data to be reported as a warning and that will allow ``unmatched'' errors to be observed at runtime.
 
-For similar reasons, in the direct eliminator scheme, we will insist that each constructor is handled at most once, so there is no ambiguity for how a case is eliminated.
+For similar reasons, in the direct eliminator scheme, we will insist that each constructor is handled at most once, so there is no ambiguity for how a \case{} is eliminated.
 
 \subsubsection{(non-)Strict Positivity}
 
@@ -203,7 +203,7 @@ The $\mathtt{C}$ constructor in the definitions of $\mathtt{Bad}$ has a self ref
 Non-strictly positive data definitions can cause non-termination, independent of the two other sources of non-termination already considered (general recursion and \tit{}).
 Dependent type systems usually require a strictness check on data definitions to avoid this possibility.
 However, this would disallow some useful constructions like higher order abstract syntax. % , or an encoding of department forms that must be complete three weeks before the date that they are needed to schedule.
-Since non-termination is already allowed in the surface \ac{TAS}, we will not restrict the surface language to strictly positive data.
+Since non-termination is already allowed in the surface \ac{TAS}, we will not restrict the \slang{} to strictly positive data.
 
 \todo{who cam up with this first? Martin Lof?}
 
@@ -251,7 +251,7 @@ Lists of expressions can be said to have the type of the telescope if every expr
 Data definitions can be added to contexts if all of their constituents are well typed and \textbf{ok}.
 The rules are listed in Figure \ref{fig:surface-data-ok}.
 The $\rulename{\mathbf{ok}-abs-data}$ rule allows data to be considered abstractly if it is formed with a plausible telescope.
-$\rulename{\mathbf{ok}-data}$ checks a full data definition with an abstract reference to a data definition in context, which allows recursive data definitions such as $\mathtt{Nat}$ which needs $\mathtt{Nat}$ to be in scope to define the $\mathtt{S}$ constructor.
+$\rulename{\mathbf{ok}-data}$ checks a full data definition with an abstract reference to a data definition in context, which allows recursive data definitions such as \Nat{} which needs \Nat{} to be in scope to define the \Suc constructor.
 This thesis does not formalize a syntax that adds data to context, though a very simple module system has been implemented in the prototype.
 It is taken for granted that any scheme to add well formed data into a type context is fine.
 % This presentation of data definitions largely follows \cite{sjoberg2012irrelevance}. 
@@ -272,13 +272,13 @@ It is taken for granted that any scheme to add well formed data into a type cont
 \frac{\Gamma\vdash\mathsf{data}\,D\,:\,\Delta\left\{ \overline{|\,d\,:\,\varTheta\rightarrow D\overline{m}}\right\} \,\mathbf{ok}}{\Gamma,\mathsf{data}\,D\,:\,\Delta\left\{ \overline{|\,d\,:\,\varTheta\rightarrow D\overline{m}}\right\} \,\mathbf{ok}}\rulename{\mathbf{ok}-data-ext}
 \]
 
-\caption{Surface Language Data $\mathbf{ok}$}
+\caption{\SLang{} Data $\mathbf{ok}$}
 \label{fig:surface-data-ok}
 \end{figure}
 
 The type assignment system with direct elimination must be extended with the rules in \ref{fig:surface-data-ty}.
 The \rulename{ty-TCon} and \rulename{ty-Con} rules allow type and data constructors to be used as functions of appropriate type.
-The \rulename{ty-\case{}<>} rule types a case expression by ensuring that the correct data definition for $D$ is in context, the scrutinee $n$ has the correct type, the motive $M$ is well formed under the type arguments and the scrutinee, % The motive requires checking in the case of empty data
+The \rulename{ty-\case{}<>} rule types a \case{} expression by ensuring that the correct data definition for $D$ is in context, the \scrut{} $n$ has the correct type, the motive $M$ is well formed under the type arguments and the \scrut{}, % The motive requires checking in the case of empty data
   finally every data constructor is verified to have a corresponding branch.
 \rulename{ty-\case{}} allows for the same typing logic, but does not require the motive be annotated in syntax.
 In both rules we allow telescopes to rename their variables with the shorthand $\overline{x}:\Delta$.
@@ -308,7 +308,7 @@ These rules make use of several convenient shorthands:
 \Gamma,\overline{y}_{d}:\varTheta\vdash m_{d}\left[\overline{x}\coloneqq\overline{o}\left[\varTheta\coloneqq\overline{y}_{d}\right]\right]:M\left[\overline{x}\coloneqq\overline{o}\left[\varTheta\coloneqq\overline{y}_{d}\right],z\coloneqq d\,\overline{y}_{d}\right]\\
 \mathrm{No\ duplicate\ branches}
 \end{array}}{\begin{array}{c}
-\Gamma\vdash\mathsf{case}\,\overline{N,}n\,\left\langle \overline{x\Rightarrow}z:D\,\overline{x}\Rightarrow M\right\rangle \left\{ \overline{|\,\overline{x\Rightarrow}\,d\overline{y}_{d}\,\Rightarrow m_{d}}\right\} \\
+\Gamma\vdash \case{} \,\overline{N,}n\,\left\langle \overline{x\Rightarrow}z:D\,\overline{x}\Rightarrow M\right\rangle \left\{ \overline{|\,\overline{x\Rightarrow}\,d\overline{y}_{d}\,\Rightarrow m_{d}}\right\} \\
 :M\left[\overline{x}\coloneqq\overline{N},z\coloneqq n\right]
 \end{array}
 }\rulename{ty-\case{}<>} 
@@ -323,13 +323,13 @@ These rules make use of several convenient shorthands:
 \forall\:d\,:\,\varTheta\rightarrow D\overline{o}\in\Gamma.\\
 \Gamma,\overline{y}_{d}:\varTheta\vdash m_{d}\left[\overline{x}\coloneqq\overline{o}\left[\varTheta\coloneqq\overline{y}_{d}\right]\right]:M\left[\overline{x}\coloneqq\overline{o}\left[\varTheta\coloneqq\overline{y}_{d}\right],z\coloneqq d\,\overline{y}_{d}\right]
 \end{array}}{\begin{array}{c}
-\Gamma\vdash\mathsf{case}\,\overline{N,}n\,\left\{ \overline{|\,\overline{x\Rightarrow}\,d\overline{y}_{d}\,\Rightarrow m_{d}}\right\} \\
+\Gamma\vdash \case{} \,\overline{N,}n\,\left\{ \overline{|\,\overline{x\Rightarrow}\,d\overline{y}_{d}\,\Rightarrow m_{d}}\right\} \\
 :M\left[\overline{x}\coloneqq\overline{N},z\coloneqq n\right]
 \end{array}
 }\rulename{ty-\case{}}
 \]
 
-\caption{Surface Language Data Typing}
+\caption{\SLang{} Data Typing}
 \label{fig:surface-data-ty}
 \end{figure}
 
@@ -337,7 +337,7 @@ These rules make use of several convenient shorthands:
 
 Extensions to the parallel reduction rules are listed in Figure \ref{fig:surface-data-red}.
 They follow the scheme of parallel reductions laid out in \ch{2}.
-The \rulename{\Rrightarrow-\case{}-red} rule\footnote{Also called $\iota$, or Iota reduction}\todo{mention beta in footnote in CH2} reduces a case expression by choosing the appropriate branch.
+The \rulename{\Rrightarrow-\case{}-red} rule\footnote{Also called $\iota$, or Iota reduction}\todo{mention beta in footnote in CH2} reduces a \case{} expression by choosing the appropriate branch.
 The \rulename{\Rrightarrow-\case{}<>-red} rule removes the motive annotation, much like the annotation rule in \ch{2}.
 The rules \rulename{\Rrightarrow-\case{}<>}, \rulename{\Rrightarrow-D}, and \rulename{\Rrightarrow -d} keep the $\Rrightarrow$ relation reflexive.
 The reduction relation is generalized to lists in the expected way.
@@ -348,7 +348,7 @@ The reduction relation is generalized to lists in the expected way.
 \overline{N}\Rrightarrow\overline{N'}\quad\overline{m}\Rrightarrow\overline{m'}\\
 \exists\overline{x\Rightarrow}(d\,\overline{y}_{d})\Rightarrow m_{d}\in\left\{ \overline{|\,\overline{x\Rightarrow}(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} \\
 m_{d}\Rrightarrow m_{d}'
-\end{array}}{\mathsf{case}\,\overline{N,}\,d\overline{m}\,\left\{ \overline{|\,\overline{x\Rightarrow}(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} \Rrightarrow m_{d}\left[\overline{x}\coloneqq\overline{N'},\overline{y}_{d}\coloneqq\overline{m'}\right]
+\end{array}}{ \case{} \,\overline{N,}\,d\overline{m}\,\left\{ \overline{|\,\overline{x\Rightarrow}(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} \Rrightarrow m_{d}\left[\overline{x}\coloneqq\overline{N'},\overline{y}_{d}\coloneqq\overline{m'}\right]
 } \rulename{\Rrightarrow-\case{}-red} 
 \]
 
@@ -358,8 +358,8 @@ m_{d}\Rrightarrow m_{d}'
 \forall\overline{x\Rightarrow}(d\,\overline{y}_{d})\Rightarrow m_{d}\in\left\{ \overline{|\,\overline{\Rightarrow x}\Rightarrow(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} .\:m_{d}\Rrightarrow m_{d}'
 \end{array}}{
   \begin{array}{rl}
-               & \mathsf{case}\,\overline{N,}\,m\,\left\langle ...\right\rangle \left\{ \overline{|\,\overline{\Rightarrow x}\Rightarrow(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} \\
-  \Rrightarrow & \mathsf{case}\,\overline{N',}\,m'\left\{ \overline{|\,\overline{\Rightarrow x}\Rightarrow(d'\,\overline{y}_{d'})\Rightarrow m_{d'}'}\right\} 
+               & \case{} \,\overline{N,}\,m\,\left\langle ...\right\rangle \left\{ \overline{|\,\overline{\Rightarrow x}\Rightarrow(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} \\
+  \Rrightarrow & \case{} \,\overline{N',}\,m'\left\{ \overline{|\,\overline{\Rightarrow x}\Rightarrow(d'\,\overline{y}_{d'})\Rightarrow m_{d'}'}\right\} 
 \end{array}
   } \rulename{\Rrightarrow-\case{}<>-red} 
 \]
@@ -370,8 +370,8 @@ m_{d}\Rrightarrow m_{d}'
 M\Rrightarrow M'\\
 \forall\overline{x\Rightarrow}(d'\,\overline{y}_{d'})\Rightarrow m_{d'}\in\left\{ \overline{|\,\overline{\Rightarrow x}\Rightarrow(d\,\overline{y}_{d})\Rightarrow m_{d}}\right\} .\:m_{d'}\Rrightarrow m'_{d'}
 \end{array}}{\begin{array}{c}
-\mathsf{case}\,\overline{N,}\,m\,\left\langle \overline{x\Rightarrow}z:D\,\overline{x}\Rightarrow M\right\rangle \left\{ \overline{|\,\overline{\Rightarrow x}\Rightarrow(d\,\overline{y}_{d})\Rightarrow m_{d}}\right\} \Rrightarrow\\
-\mathsf{case}\,\overline{N,}\,m'\,\left\langle \overline{x\Rightarrow}z:D\,\overline{x}\Rightarrow M'\right\rangle \left\{ \overline{|\,\overline{\Rightarrow x}\Rightarrow(d\,\overline{y}_{d})\Rightarrow m'_{d}}\right\} 
+  \case{} \,\overline{N,}\,m\,\left\langle \overline{x\Rightarrow}z:D\,\overline{x}\Rightarrow M\right\rangle \left\{ \overline{|\,\overline{\Rightarrow x}\Rightarrow(d\,\overline{y}_{d})\Rightarrow m_{d}}\right\} \Rrightarrow\\
+  \case{} \,\overline{N,}\,m'\,\left\langle \overline{x\Rightarrow}z:D\,\overline{x}\Rightarrow M'\right\rangle \left\{ \overline{|\,\overline{\Rightarrow x}\Rightarrow(d\,\overline{y}_{d})\Rightarrow m'_{d}}\right\} 
 \end{array}
 }\rulename{\Rrightarrow-\case{}<>} 
 \]
@@ -383,7 +383,7 @@ M\Rrightarrow M'\\
 \frac{\,}{d\Rrightarrow d}\rulename{\Rrightarrow-d}
 \]
 \todo[inline]{make array formatting consistent}
-\caption{Surface Language Data Reduction}
+\caption{\SLang{} Data Reduction}
 \label{fig:surface-data-red}
 \end{figure}
 
@@ -395,26 +395,26 @@ The rules are listed in \Fref{surface-data-cbv}.
 \[
 \frac{\,}{
   \begin{array}{rl}
-   & \mathsf{case}\,\overline{N,}\,n\,\left\langle ...\right\rangle \left\{ \overline{|\,\overline{\Rightarrow x}\Rightarrow(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} \\
-   \rightsquigarrow & \mathsf{case}\,\overline{N,}\,n\left\{ \overline{|\,\overline{\Rightarrow x}\Rightarrow(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} 
+   & \case{} \,\overline{N,}\,n\,\left\langle ...\right\rangle \left\{ \overline{|\,\overline{\Rightarrow x}\Rightarrow(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} \\
+   \rightsquigarrow & \case{} \,\overline{N,}\,n\left\{ \overline{|\,\overline{\Rightarrow x}\Rightarrow(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} 
   \end{array}
    }\rulename{\rightsquigarrow-\case{}<>}
 \]
 
 \[
-\frac{\exists\overline{x\Rightarrow}(d\,\overline{y}_{d})\Rightarrow m_{d}\in\left\{ \overline{|\,\overline{x\Rightarrow}(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} }{\mathsf{case}\,\overline{V,}\,d\overline{v}\,\left\{ \overline{|\,\overline{x\Rightarrow}(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} \rightsquigarrow m_{d}\left[\overline{x}\coloneqq\overline{V},\overline{y}_{d}\coloneqq\overline{v}\right]
+\frac{\exists\overline{x\Rightarrow}(d\,\overline{y}_{d})\Rightarrow m_{d}\in\left\{ \overline{|\,\overline{x\Rightarrow}(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} }{\case{} \,\overline{V,}\,d\overline{v}\,\left\{ \overline{|\,\overline{x\Rightarrow}(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} \rightsquigarrow m_{d}\left[\overline{x}\coloneqq\overline{V},\overline{y}_{d}\coloneqq\overline{v}\right]
 }\rulename{\rightsquigarrow-\case{}-red}
 \]
 
 \[
-\frac{\overline{N}\rightsquigarrow\overline{N'}}{\mathsf{case}\,\overline{N,}\,n\,\left\{ \overline{|\,\overline{x\Rightarrow}(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} \rightsquigarrow\mathsf{case}\,\overline{N',}\,n\,\left\{ \overline{|\,\overline{x\Rightarrow}(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} }\,
+\frac{\overline{N}\rightsquigarrow\overline{N'}}{\case{} \,\overline{N,}\,n\,\left\{ \overline{|\,\overline{x\Rightarrow}(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} \rightsquigarrow \case{} \,\overline{N',}\,n\,\left\{ \overline{|\,\overline{x\Rightarrow}(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} }\,
 \]
 
 \[
-\frac{n\rightsquigarrow n'}{\mathsf{case}\,\overline{V,}\,n\,\left\{ \overline{|\,\overline{x\Rightarrow}(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} \rightsquigarrow\mathsf{case}\,\overline{V,}\,n'\,\left\{ \overline{|\,\overline{x\Rightarrow}(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} }\,
+\frac{n\rightsquigarrow n'}{\case{} \,\overline{V,}\,n\,\left\{ \overline{|\,\overline{x\Rightarrow}(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} \rightsquigarrow \case{} \,\overline{V,}\,n'\,\left\{ \overline{|\,\overline{x\Rightarrow}(d'\,\overline{y}_{d'})\Rightarrow m_{d'}}\right\} }\,
 \]
 
-\caption{Surface Language Data CBV}
+\caption{\SLang{} Data \CbV{}}
 \label{fig:surface-data-cbv}
 \end{figure}
 
@@ -430,7 +430,7 @@ We will say a context is empty only if it contains concrete data definitions.
 \frac{\Gamma\,\mathbf{Empty}\quad\Gamma\vdash\mathsf{data}\,D\,:\,\Delta\left\{ \overline{|\,d\,:\,\varTheta_{d}\rightarrow D\overline{m}_{d}}\right\} \,\mathbf{ok}}{\Gamma,\mathsf{data}\,D\,:\,\Delta\left\{ \overline{|\,d\,:\,\varTheta_{d}\rightarrow D\overline{m}_{d}}\right\} \,\mathbf{Empty}}\rulename{Empty-ctx}
 \]
 
-\caption{Surface Language Empty}
+\caption{\SLang{} Empty}
 \label{fig:surface-data-empty}
 \end{figure}
 
@@ -438,26 +438,26 @@ Since a system with a similar presentation has proven type soundness in \cite{sj
 % For clarity we will list the important properties as conjectures.
 
 \begin{claim}
-The surface language extended with data and elimination preserves types over reduction.
+The \slang{} extended with data and elimination preserves types over reduction.
 \end{claim}
 
 \begin{claim}
-The surface language extended with data and elimination has progress
+The \slang{} extended with data and elimination has progress
 if $\Gamma\,\mathbf{Empty}$, \textup{$\Gamma\vdash m:M$}, then $m$
 is a value, or $m\rightsquigarrow m'$ .
 \end{claim}
 
 \begin{claim}
-The surface language extended with data and a direct elimnator scheme is type sound.
+The \slang{} extended with data and a direct elimnator scheme is type sound.
 \end{claim}
 
-\subsection{Bidirectional Type Checking}
+\subsection{\Bidir{} Type Checking}
 
-A bidirectional type checking procedure exists for the type assignment rules listed above.
+A \bidir{} type checking procedure exists for the type assignment rules listed above.
 An outline of these rules is in \Fref{surface-data-empty}.
 
 The type of data constructors and type constructors can always be inferred.
-% If the motive does not depend on the scrutinee or type arguments, it can be used to check against the type of the branches.
+% If the motive does not depend on the \scrut{} or type arguments, it can be used to check against the type of the branches.
 A \case{} with a motive will have its type inferred, and the motive will be used to check every branch in the \rulename{\overrightarrow{ty}-\case{}<>} rule.
 An unmotivated \case{} will be type checked by an argument ignoring type dependency with the \rulename{\overleftarrow{ty}-\case{}} rule.
 % These rules rely on generalizing 
@@ -478,7 +478,7 @@ An unmotivated \case{} will be type checked by an argument ignoring type depende
 \Gamma,\overline{x}:\Delta,z:D\,\overline{x}\vdash M\overleftarrow{\,:\,}\star\\
 \forall\:d\,:\,\varTheta\rightarrow D\overline{o}\in\Gamma.\quad\Gamma,\overline{y}_{d}:\varTheta\vdash m_{d}\left[\overline{x}\coloneqq\overline{o}'\right]\overleftarrow{\,:\,}M\left[\overline{x}\coloneqq\overline{o}',z\coloneqq d\,\overline{y}_{d}\right]
 \end{array}}{\begin{array}{c}
-\Gamma\vdash\mathsf{case}\,\overline{,N},n\,\left\langle \overline{x\Rightarrow}z:D\,\overline{x}\Rightarrow M\right\rangle \left\{ \overline{|\,\overline{x\Rightarrow}(d\,\overline{y}_{d})\Rightarrow m_{d}}\right\} \\
+\Gamma\vdash \case{} \,\overline{,N},n\,\left\langle \overline{x\Rightarrow}z:D\,\overline{x}\Rightarrow M\right\rangle \left\{ \overline{|\,\overline{x\Rightarrow}(d\,\overline{y}_{d})\Rightarrow m_{d}}\right\} \\
 \overrightarrow{\,:\,}M\left[\overline{x}\coloneqq\overline{N},z\coloneqq n\right]
 \end{array}
 }\rulename{\overrightarrow{ty}-\case{}<>}
@@ -493,7 +493,7 @@ An unmotivated \case{} will be type checked by an argument ignoring type depende
 \Gamma\vdash M\overleftarrow{\,:\,}\star\\
 \forall\:d\,:\,\varTheta\rightarrow D\overline{o}\in\Gamma.\quad\Gamma,\overline{y}_{d}:\varTheta\vdash m_{d}\left[\overline{x}\coloneqq\overline{o}'\right]\overleftarrow{\,:\,}M
 \end{array}}{
-  \Gamma\vdash\mathsf{case}\,\overline{N,}n\,\left\{ \overline{|\overline{x\Rightarrow}\,(d\,\overline{y}_{d})\Rightarrow m_{d}}\right\} \overleftarrow{\,:\,}M
+  \Gamma\vdash \case{} \,\overline{N,}n\,\left\{ \overline{|\overline{x\Rightarrow}\,(d\,\overline{y}_{d})\Rightarrow m_{d}}\right\} \overleftarrow{\,:\,}M
 }\rulename{\overleftarrow{ty}-\case{}}
 \]
 
@@ -501,20 +501,20 @@ where
 \[
 \overline{o}'= \overline{o}\left[\varTheta \coloneqq \overline{y}_{d} \right]
 \]
-\caption{Surface Language Bidirectional type checking }
+\caption{\SLang{} \Bidir{} type checking }
 \label{fig:surface-data-bi-ty}
 \end{figure}
 
-The desired bidirectional properties hold.
+The desired \bidir{} properties hold.
 \begin{claim}
-The data extension to the bidirectional surface language is type sound.
+The data extension to the \bidir{} \slang{} is type sound.
 \end{claim}
 
 \begin{claim}
-The data extension to the bidirectional surface language is weakly annotatable from the data extension of the surface language.\todo{symbolically}
+The data extension to the \bidir{} \slang{} is weakly annotatable from the data extension of the \slang{}.\todo{symbolically}
 \end{claim}
 
-This is a minimal (and somewhat crude) accounting of bidirectional data in the direct eliminator style.
-It is possible to imagine syntactic sugar that doesn't require the $\overline{N,}$ and $\overline{x\Rightarrow}$ the in case expression of the \rulename{\overleftarrow{ty}-\case{}} rule.
+This is a minimal (and somewhat crude) accounting of \bidir{} data in the direct eliminator style.
+It is possible to imagine syntactic sugar that doesn't require the $\overline{N,}$ and $\overline{x\Rightarrow}$ the in \case{} expression of the \rulename{\overleftarrow{ty}-\case{}} rule.
 In the rule \rulename{\overrightarrow{ty}-\case{}<>} it is also possible to imagine some type constructor arguments being inferred.
 These features and more will be subsumed by the dependent pattern matching of the next section. % , though this will complicate the meta-theory.

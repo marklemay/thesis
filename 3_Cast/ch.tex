@@ -1,12 +1,12 @@
-\chapter{The Dependent Cast System}
+\chapter{The Dependent \CSys{}}
 \label{chapter:Cast}
 \thispagestyle{myheadings}
  
 \Ch{2} outlined a minimal dependent type system.
-Like all dependent type systems, the surface language has a fundamental problem: definitional equalities are pervasive and unintuitive.
+Like all dependent type systems, the \slang{} has a fundamental problem: definitional equalities are pervasive and unintuitive.
  
 %% example of dependent types
-For instance, the motivating example from the introduction can be stated more precisely in terms of the surface language.
+For instance, the motivating example from the introduction can be stated more precisely in terms of the \slang{}.
 Recall, dependent types can prevent an out-of-bounds error when indexing into a length indexed list.
 
 \begin{align*}
@@ -21,35 +21,35 @@ Recall, dependent types can prevent an out-of-bounds error when indexing into a 
 Where $\mathtt{head}$ is a function that expects a list of length $1_{c}+_{c}y$, making it impossible for $\mathtt{head}$ to inspect an empty list.
 
 %% example of problem
-Unfortunately, the following will not type check in the surface language,
+Unfortunately, the following will not type check in the \slang{},
 
 \[
 \cancel{\vdash}\lambda x\Rightarrow\mathtt{head}\,\mathbb{B}_{c}\,x\,\left(\mathtt{rep}\,\mathbb{B}_{c}\,true_{c}\,\left(x+_{c}1_{c}\right)\right)\,:\,\mathbb{N}_{c}\rightarrow\mathbb{B}_{c}
 \]
 
 %% explanation of example
-\sloppy While ``obviously'' $1+x=x+1$, in the surface language definitional equality does not associate these two terms, $1_{c}+_{c}x\cancel{\equiv}x+_{c}1_{c}$.\todo{unroll the definitions?}
+\sloppy While ``obviously'' $1+x=x+1$, in the \slang{} definitional equality does not associate these two terms, $1_{c}+_{c}x\cancel{\equiv}x+_{c}1_{c}$.\todo{unroll the definitions?}
  
 This Chapter will handle the issue of definitional equalities by avoiding them.
 The system will optimistically assume equalities implied by the programer and deal with incorrect equalities at runtime in a principled way.
-This will be done with the \textbf{cast system} described in this Chapter.
-The cast system is comprised of:
+This will be done with the \textbf{\csys{}} described in this Chapter.
+The \csys{} is comprised of:
 \begin{itemize}
-\item The \textbf{cast language}, a dependently typed language with embedded runtime checks that have evaluation behavior.
+\item The \textbf{\clang{}}, a dependently typed language with embedded runtime checks that have evaluation behavior.
 \item The \textbf{elaboration procedure} that transforms appropriate untyped surface syntax into a well cast terms.
 \todo{as a picture}
 \end{itemize}
  
 The presentation in this chapter mirrors \ch{2}.
-The cast system plays the role of the type assignment system, while the elaboration procedure corresponds with the \bidir{} system.
+The \csys{} plays the role of the type assignment system, while the elaboration procedure corresponds with the \bidir{} system.
  
 We show that a novel form of type soundness holds, that we call \textbf{cast soundness}.
 Instead of ``well typed terms don't get stuck'', we prove ``well cast terms don't get stuck without blame''.
  
 By construction, blame will carry the necessary information to construct a reasonable runtime error message.
-Several desirable properties, modeled on the gradual guarantee of gradual types, relate the cast system elaboration and the \bidir{} system of \ch{2}.
+Several desirable properties, modeled on the gradual guarantee of gradual types, relate the \csys{} elaboration and the \bidir{} system of \ch{2}.
 
-\section{Cast Language}
+\section{\CLang{}}
  
 \begin{figure}
 \begin{tabular}{lcll}
@@ -73,15 +73,15 @@ o & $\Coloneqq$ & . & \tabularnewline
 \todo[inline]{would $a_{A}:?:_{\ensuremath{\ell},o}B$ be clearer syntax then $a::_{A,\ensuremath{\ell},o}B$?}
 \todo[inline]{would it be clearer to add the $\ell$ to the observation?}
 
-\caption{Cast Language Syntax}
+\caption{\CLang{} Syntax}
 \label{fig:cast-pre-syntax}
 \end{figure}
 
 %% pre-syntax
-The syntax for the cast language can be found in \Fref{cast-pre-syntax}.
-By design the cast language is almost identical to the surface language except that the cast construct has been added and annotations have been removed.
+The syntax for the \clang{} can be found in \Fref{cast-pre-syntax}.
+By design the \clang{} is almost identical to the \slang{} except that the cast construct has been added and annotations have been removed.
 
-The cast language can assume type equalities on top of terms, $A=B$, with a cast, $a::_{A,\ensuremath{\ell},o}B$ given
+The \clang{} can assume type equalities on top of terms, $A=B$, with a cast, $a::_{A,\ensuremath{\ell},o}B$ given
 \begin{itemize}
 \item an underlying term $a$,
 \item a source location $\ell$ where it was asserted,
@@ -99,7 +99,7 @@ The observation would then read $..Bod[A\rightarrow B].arg$\todo{clean .. from s
  
 Locations and observations will be used to form blame and produce the runtime error message users will see if their assumptions are wrong.
  
-In addition to the abbreviations from \ch{2}, some new abbreviations for the cast language are listed in \Fref{cast-pre-syntax-abrev}.
+In addition to the abbreviations from \ch{2}, some new abbreviations for the \clang{} are listed in \Fref{cast-pre-syntax-abrev}.
 \begin{figure}
 \begin{tabular}{lclll}
 $a::_{A,\ensuremath{\ell},o}B$ & written & $a::_{A,\ensuremath{\ell}}B$ & when & the observation is not relevant\tabularnewline
@@ -107,7 +107,7 @@ $a::_{A,\ensuremath{\ell}}B$ & written & $a::_{A}B$ & when & the location is not
 $a::_{A}B$ & written & $a::B$ & when & the the type of $a$ is clear\tabularnewline
 \end{tabular}
 
-\caption{Surface Language Abbreviations}
+\caption{\SLang{} Abbreviations}
 \label{fig:cast-pre-syntax-abrev}
 \end{figure}
 
@@ -145,7 +145,7 @@ $\left(b::C\right)a$ & $\rightsquigarrow$ & $\left(b::C'\right)a$ & when  & $C\r
 $\left(b::_{\ell,o}C\right)a$ & \Blame{} & $\ell,o$ & when  & $C$ cannot be $\left(x:A\right)\rightarrow B$ \tabularnewline
 \end{tabular}
 
-\caption{Approximate Cast Language Reductions}
+\caption{Approximate \CLang{} Reductions}
 \label{fig:cast-aprox-red}
 \end{sidewaysfigure}
 Sometimes casts are correct in blocking reductions.

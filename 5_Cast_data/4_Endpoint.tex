@@ -172,8 +172,8 @@ d\ :\ \Delta\rightarrow D\overline{a}\ \in\ \varGamma
 \forall\overline{p}\in\overline{?\,\overline{patc'}},\:\varGamma\vdash\overline{p}:\Delta\\
 \varGamma\vdash\overline{|\,\overline{patc}}\overline{?\,\overline{patc'}}:\Delta\ \mathbf{Complete}
 \end{array}}{
-  \varGamma\vdash\mathsf{case}\,\overline{a,}\,\left\{ \overline{|\,\overline{patc\Rightarrow}b} \overline{?\,\overline{patc'}} \right\} \sqsupseteq\mathsf{case}\,\overline{a',}\,\left\{ \overline{|\,\overline{patc\Rightarrow}b'} \overline{?\,\overline{patc'}} \right\} :B'\left[\Delta\coloneqq\overline{a'}\right]
-  }\rulename{\sqsupseteq-\mathsf{case}}
+  \varGamma\vdash \case{} \,\overline{a,}\,\left\{ \overline{|\,\overline{patc\Rightarrow}b} \overline{?\,\overline{patc'}} \right\} \sqsupseteq \case{} \,\overline{a',}\,\left\{ \overline{|\,\overline{patc\Rightarrow}b'} \overline{?\,\overline{patc'}} \right\} :B'\left[\Delta\coloneqq\overline{a'}\right]
+  }\rulename{\sqsupseteq-\case{}}
 \]
 \[
 \frac{\begin{array}{c}
@@ -206,7 +206,7 @@ d\ :\ \Delta\rightarrow D\overline{a}\ \in\ \varGamma
 Assertion variables have endpoints at each side of the equality given from the typing judgment.
 Data type constructors and data term constructors have the function type implied by their definitions (and annotations that match).
 
-The \rulename{\sqsupseteq-\mathsf{case}} states that a \case{} expression has a corresponding \case{} expression endpoint:
+The \rulename{\sqsupseteq-\case{}} states that a \case{} expression has a corresponding \case{} expression endpoint:
 \begin{itemize}
   \item The endpoints of the \scruts{} correspond to an appropriate telescope that is compatible with the patterns\footnote{the endpoint and typing judgment can be extended to lists and telescopes}.
   \item A motive $B'$ must exist under the context extended with that telescope.

@@ -18,7 +18,7 @@ A dependent data type is defined by a type constructor indexed\footnote{
  Parameters can simulate indexes with a suitable equality type\cite{sjoberg2012irrelevance}, though this is not always possible\cite[Section 8]{bertrand:hal-02896776}.
 } by arguments, and a set of data constructors that tag data and refine those arguments.
 Several familiar data types are defined in Figure \ref{fig:data-defs}.
-For example, the data type of natural numbers is defined with the type constructor $\mathtt{Nat}$ (which has no type arguments), the data constructors $\mathtt{Z}$ which takes no further information and the data constructor $\mathtt{S}$ which is formed with the prior number.
+For example, the data type of natural numbers is defined with the type constructor \Nat{} (which has no type arguments), the data constructors $\mathtt{Z}$ which takes no further information and the data constructor \Suc which is formed with the prior number.
 The data type $\mathtt{Vec}$ has two type arguments corresponding to the type contained in the vector and its length; it has two data constructors that allow building an empty vector, or to add an element to the front of an existing vector.
 
 Data defined in this style is simple to build and reason about, since data can only be created from its constructors.

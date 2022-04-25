@@ -1,10 +1,10 @@
-\chapter{Data in the Cast Language}
+\chapter{Data in the \CLang{}}
 \label{chapter:CastData}
 \thispagestyle{myheadings}
  
-%Surprisingly, the cast system can be extended with a pattern matching construct without unification.
+%Surprisingly, the \csys{} can be extended with a pattern matching construct without unification.
 \Ch{3} showed how to use the \ac{TAS} and the \bidir{} system as a guide to build a dependently typed language with runtime equality.
-The \ac{TAS} inspired the cast system, where the properties and lemmas of the \ac{TAS} can be extended with casts.
+The \ac{TAS} inspired the \csys{}, where the properties and lemmas of the \ac{TAS} can be extended with casts.
 While the \bidir{} system suggested how to localize uncertain assumptions that can be repurposed by elaboration as equality checks.
  
 In this Chapter we will extend these systems for dependently indexed data and pattern matching.
@@ -12,22 +12,22 @@ This will turn out to be more complicated than the system in \ch{3}, for two rea
 First, equality was only testable at types in \ch{3} which allowed for some syntactic and semantic shortcuts.
 In the presence of dependent data, equality needs to be testable at terms, which will not necessarily have the same type.
 Second, the subtleties of pattern matching will need to be dealt with.
-While the intuition built up in \ch{3} still holds, the cast language will need to be revised.
+While the intuition built up in \ch{3} still holds, the \clang{} will need to be revised.
 
-As before, we will take the (conjectured) surface language of \ch{4} and construct a cast language with corresponding features.
+As before, we will take the (conjectured) \slang{} of \ch{4} and construct a \clang{} with corresponding features.
 Though it is difficult to formalize a \ac{TAS} and corresponding \bidir{} system that has pattern matching, we will assume the unification of pattern matching belongs in the \bidir{} system since it exists only to establish static correctness and is not needed for evaluation.
 Accordingly we will extend elaboration with a form of unification.
-Because we will not need to deal with unification in the cast language, the cast language can provide evidence that the cast system is \textbf{cast sound}. \todo{"show" if we ever get a proof}
+Because we will not need to deal with unification in the \clang{}, the \clang{} can provide evidence that the \csys{} is \textbf{cast sound}. \todo{"show" if we ever get a proof}
 While the lack of a formal \ac{TAS} and \bidir{} system in \ch{4} will make the other properties of \ch{3} impossible to prove here, we will design the system with an eye towards preserving them.
 
 % \todo{formulate case consistently}
-% Elaboration should satisfy the additional correctness\todo{``gradual correctness''?} properties relative to a type assignment system and bidirectional system.
+% Elaboration should satisfy the additional correctness\todo{``gradual correctness''?} properties relative to a type assignment system and \bidir{} system.
 % In this case we will target the conjectured TAS from Chapter 4, with a first order unification style pattern matching.
 
-Despite these caveats, there is an interesting interpretation of data and pattern matching when extended to the cast system.
+Despite these caveats, there is an interesting interpretation of data and pattern matching when extended to the \csys{}.
 
 In a conventionally typed language, the normal forms of data terms have a valid data constructor in the head position (justifying the syntax of pattern matching).
-In the cast language, the normal form of data can have casts applied to an expression.
+In the \clang{}, the normal form of data can have casts applied to an expression.
 If the casts are blameless then the constructor in the head position will match the data type.
 % Casts are wrapped around terms during the elaboration procedure, and will accumulate during evaluation.
 In the \clang{} pattern matching is extended with a path variable that can represent evidence of equality, then that evidence can be extracted and used in the body of the branch.
@@ -38,9 +38,9 @@ If every constructor is accounted for, only blameable \scruts{} are possible.
 Quantifying over evidence of equality allows blame to be redirected, so if the program gets stuck in a pattern branch it can blame the original faulty assumption.
 
 To account for ``unreachable patterns'' that are not stated in the \slang, we can record the proof of inequality for use at runtime.
-Since in the cast language, it is possible for a \case{} expression to reduce into one of those ``unreachable'' branches.
+Since in the \clang{}, it is possible for a \case{} expression to reduce into one of those ``unreachable'' branches.
 If this happens blame will be reflected back onto a specific problematic assumption of the input.
-This will involve extending the cast language with operations to manipulate equality evidence directly.
+This will involve extending the \clang{} with operations to manipulate equality evidence directly.
 Proofs of inequality will be able to appear in terms.
  
 % During elaboration, after a pattern is unified, we will inject the proofs of equality where needed so that they cast check. 
@@ -71,7 +71,7 @@ Proofs of inequality will be able to appear in terms.
 \todo[inline]{technically speaking, telescopes should generalize to the different syntactic classes}
 
 \section{Future Work}
-\todo[inline]{flex vars, refining elaborated patterns, elaborating more scrutinees into the scrut list}
+\todo[inline]{flex vars, refining elaborated patterns, elaborating more \scruts{} into the scrut list}
 
 The system presented here improves on several earlier systems and implementation experiments.
 There is reason to believe things could be improved further.

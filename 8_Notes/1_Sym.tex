@@ -30,9 +30,9 @@ Adding a testing system to the prototype is more complicated than originally exp
 Given those caveats, we do have a (practical?) testing procedure and some examples that might inform future theoretical work.
  
 \subsection{Observable Blame}
-Since this procedure operates over the cast language, we must decide what constitutes a reasonable testing environment
+Since this procedure operates over the \clang{}, we must decide what constitutes a reasonable testing environment
  
-A one hole context\todo{cite? other people don't?} $C[-]$ can be defined for the cast languages presented in this thesis.
+A one hole context\todo{cite? other people don't?} $C[-]$ can be defined for the \clang{}s presented in this thesis.
 We can say that blame is observable if $\vdash a:A$ and $\vdash C[a]:B$ and $C[a]\rightsquigarrow_{*}b$ and $b\,\Blame{}_{\ell, \,o}$ for some $\ell \in lables\left(a\right)$ but $\ell \notin lables\left(C[-]\right)$\footnote{
  Even here it is questionable which specific reduction rule to use (I suspect \cbv{} would make the most sense for the implementation) and if the context should be limited to terms that elaborate from the \slang{} or all well cast terms (I use all well cast terms for convenience).
 }.
@@ -115,7 +115,7 @@ Finally, throught this Chapter, we will use $!!$ as a short hand for some term t
 \begin{example}
   Empty Type
 
-The ``empty'' type ($\left(x:\star\right)\rightarrow x$) can be inhabited by the cast language term $\lambda x\Rightarrow\star::_{\ell }x$.
+The ``empty'' type ($\left(x:\star\right)\rightarrow x$) can be inhabited by the \clang{} term $\lambda x\Rightarrow\star::_{\ell }x$.
 According to the blame rules of \Ch{3} this term does not immediately produce blame without an input.
 We can observe blame by giving the function an argument, specifically by applying a function type as input.
 For instance, $(\lambda x\Rightarrow\star::_{\ell }x)(\star\rightarrow\star)\ \rightsquigarrow_{*}\ \star::_{\ell }(\star\rightarrow\star)$, which is blameable.
@@ -129,7 +129,7 @@ After normalizing it is easy to see that any $x$ of the shape $x\ \Rightarrow\ -
 Higher Order Functions
 
 Higher order functions can be handled similarly.
-For instance if we have the cast language term,
+For instance if we have the \clang{} term,
 \[
 \lambda f\Rightarrow\star::_{\ell }(f\star) \quad : \left(\star\rightarrow\star\right)\rightarrow\star
 \]
@@ -160,7 +160,7 @@ Here are some additional constraints that can be applied to test environments:
   \item Test paths are blameless.
   \item Observably different outputs must come from observably different inputs (in the case of dependent function types, the argument should be considered as an input).
   \item Test variables are always fresh.
-  For instance, $f:\mathtt{Nat}\rightarrow\mathtt{Nat},f2\Rightarrow x,f3\Rightarrow x$ would not be allowed since $f2=f3$ and is over specified.
+  For instance, $f:\Nat{}\rightarrow\Nat{},f2\Rightarrow x,f3\Rightarrow x$ would not be allowed since $f2=f3$ and is over specified.
 \end{itemize}
 We will call an environment where these constraints hold plausible.
 
@@ -180,11 +180,11 @@ For instance, the equations $f: \Nat{} \rightarrow \Nat{}$, $f\left(f\,0\right)\
  However even plausible environments can flag blame that is not observable,
  \begin{itemize}
  \item
- Since there is no way for a term within the cast language to ``observe'' a distinction between some type formers, plausible environments cannot always be realized back to a term that would witness the bad behavior.
+ Since there is no way for a term within the \clang{} to ``observe'' a distinction between some type formers, plausible environments cannot always be realized back to a term that would witness the bad behavior.
  For instance, the environment $F:\star\rightarrow\star,F\,\star \Rightarrow \star\rightarrow\star,F\,\left(\star\rightarrow\star\right) \Rightarrow \star$
   % , which might be needed to explore the term with casts like $\lambda F\Rightarrow...::\star::F\left(\star\rightarrow\star\right)......::\left(\star\rightarrow\star\right)::F\,\star\ :\left(\star\rightarrow\star\right)\rightarrow...$,
   will not correspond to an observable instance of blame, since there is no tem $F$ that can be constructed with those properties.
- In this way the test environment can make stronger observations than the cast language.
+ In this way the test environment can make stronger observations than the \clang{}.
  The environment reflects a term language that has a type case construct\todo{cite}.
  % \todo[inline]{add non termination as a source of unrealizability}
  % \item
@@ -202,7 +202,7 @@ Computer Science 5 (1977) 223\{255. as cited in https://alleystoughton.us/resear
  
 Formalizing a complete and efficient testing procedure along these lines is still future work.
 However there have been other attempts to automatically test functional code that are worth mentioning.
-% A fully formal account would deal with a formal semantics of the cast language.
+% A fully formal account would deal with a formal semantics of the \clang{}.
  
 \subsubsection{Testing}
  

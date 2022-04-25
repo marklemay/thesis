@@ -10,7 +10,7 @@ Type universes reduce away in the following three rules.
 Function types commute through $\sim$ and $\cup$ when their type annotations are the type universe.
 When the type position is resolved to function type, arguments can be applied under $::$ and into $\sim$ and $\cup$.
 This allows data types to be treated like functions.
-For instance, $(\lambda x \Rightarrow\mathtt{S} x) \sim\mathtt{S}$ will never cause a blameable error.
+For instance, $(\lambda x \Rightarrow\Suc{} x) \sim \Suc{}$ will never cause a blameable error.
  
 Finally, there are reductions to consolidate cast bookkeeping.
 In addition to the listed reductions, a reduction can happen recursively in any sub-position.
@@ -78,7 +78,7 @@ In addition to the listed reductions, a reduction can happen recursively in any 
 \[
 \frac{\ }{\left(\left(a::L\right)::L'\right)\rightsquigarrow a::\left(L\cup^{\star}L'\right)}
 \]
-\caption{Cast Language Small Step (select rules)}
+\caption{\CLang{} Small Step (select rules)}
 \label{fig:cast-data-step}
 \end{figure}
 
@@ -106,7 +106,7 @@ The important properties of reduction are
 \frac{
   \overline{a}\ \left(\overline{|\,\overline{patc\Rightarrow}b}\right)\ \mathbf{Match}\ b'
 }{
-  \mathsf{case}\,\overline{a,}\,\left\{ \overline{|\,\overline{patc\Rightarrow}b}\, \overline{?\,\overline{patc}} \right\} \rightsquigarrow b'
+  \case{} \,\overline{a,}\,\left\{ \overline{|\,\overline{patc\Rightarrow}b}\, \overline{?\,\overline{patc}} \right\} \rightsquigarrow b'
 }
 \]
 

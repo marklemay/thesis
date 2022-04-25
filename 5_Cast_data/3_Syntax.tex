@@ -2,7 +2,7 @@
 %% overview
 
 %% pre-syntax
-The syntax for the cast language can be seen in \Fref{cast-data-pre-syntax}.
+The syntax for the \clang{} can be seen in \Fref{cast-data-pre-syntax}.
 There are several differences to note from \ch{3}.
 
 \begin{figure}
@@ -25,7 +25,7 @@ There are several differences to note from \ch{3}.
     & $|$ & $!_{L}^{L'}$ & force blame\tabularnewline
     & $|$ & $D_{\Delta}$ & type cons.\tabularnewline
     & $|$ & $d_{\Delta\rightarrow D\overline{a}}$ & data cons.\tabularnewline
-    & $|$ & $\mathsf{case}\,\overline{a,}\,\left\{ \overline{|\,\overline{patc\Rightarrow}b}\ \overline{?_{\ell}\,\overline{patc}} \right\} $ & data elim.\tabularnewline
+    & $|$ & $\case{} \,\overline{a,}\,\left\{ \overline{|\,\overline{patc\Rightarrow}b}\ \overline{?_{\ell}\,\overline{patc}} \right\} $ & data elim.\tabularnewline
     & $|$ & $TCon_{i}\ L$ & \tabularnewline
     & $|$ & $DCon_{i}\ L$ & \tabularnewline
   \multicolumn{4}{l}{observations,}\tabularnewline
@@ -43,7 +43,7 @@ There are several differences to note from \ch{3}.
       & $|$ & $\Gamma,\mathsf{data}\,D\,:\,\Delta\rightarrow\star$ & abstract data\tabularnewline
   \end{tabular}
 % time permitting factor the location to where . is
-\caption{Cast Language Syntax}
+\caption{\CLang{} Syntax}
 \label{fig:cast-data-pre-syntax}
 \end{figure}
 
@@ -57,7 +57,7 @@ The cast operation will allow $1$ to be used as a \Bool{} by casting the assumpt
 These assertions are written $a\sim_{\ell,o}^{C}b$ and will evaluate $a$ and $b$ in parallel until a head constructor is reached on each branch.
 If the constructor is the same it will commute out of the term.
 If the head constructor is different the term will get stuck with the information for the final blame message.
-For instance, $\left(1 \sim_{\ell}^{\Nat{}} 2 \right)\rightsquigarrow_{*} \mathtt{S}\left(0 \sim_{\ell.DCon_{0}}^{\Nat{}} 1\right) $, \todo{recall 2=SSZ?}where $DCon_{0}$ records that the issue occurs in the 0th argument of the outer $\mathtt{S}$ constructor.
+For instance, $\left(1 \sim_{\ell}^{\Nat{}} 2 \right)\rightsquigarrow_{*} \Suc{} \left(0 \sim_{\ell.DCon_{0}}^{\Nat{}} 1\right) $, \todo{recall 2=SSZ?}where $DCon_{0}$ records that the issue occurs in the 0th argument of the outer \Suc constructor.
 \todo{address posissibility of misalighned types, 1~True?}
 
 % Since this equational construct is already needed for functions, we
@@ -82,15 +82,15 @@ The syntax allows data, though with some differences from \ch{4}.
 Data constructors and data type constructors now carry their explicit types, to emphasize that the type information will be needed for some reductions\footnote{
   This also reflects our implementation.
   A more efficient implementation would probably not include them in the term syntax}.
-Motives are no longer needed on $\mathsf{case}$ expressions, and type/cast tracking will be handled implicitly.
-In addition to the handled patterns, $\mathsf{case}$ expressions also will contain a covering of unhandled patterns, for use in warnings and errors.
+Motives are no longer needed on \case{} expressions, and type/cast tracking will be handled implicitly.
+In addition to the handled patterns, \case{} expressions also will contain a covering of unhandled patterns, for use in warnings and errors.
 Further, we allow two new observations, to observe the indices of data type constructors and term constructors respectively.
 These observations correspond directly to injectivity steps of the unification procedure.
  
 Pattern matching is extended with a new path variable position.
 These variables are bound from the extended notion of patterns, and contain evidence that the data expression has the expected type.
-% This is justified by the normal forms of data terms in the cast language.
-% While in the surface language a normal form of data must have the data constructor in head position (justifying the surface language pattern syntax), in the cast language the normal form of data may accumulate a cast.
+% This is justified by the normal forms of data terms in the \clang{}.
+% While in the \slang{} a normal form of data must have the data constructor in head position (justifying the \slang{} pattern syntax), in the \clang{} the normal form of data may accumulate a cast.
 
 Pattern matching across dependent data types will allow for observations that were not possible in \ch{3}.
 For instance, it is now possible to observe specific arguments in type constructors and term constructors.

@@ -1,4 +1,4 @@
-\section{Surface Language Type Assignment System}
+\section{\SLang{} Type Assignment System}
  
 When is an expression reasonable? The expression $\star\star\star\star$ is allowed by the grammar of the language, but seems dubious.
 %Since $\star$  is not a function,  it has no way of being given an input by application.
@@ -45,7 +45,7 @@ These issues will be addressed when the more practical, \bidir{} type system is 
 \frac{\Gamma\tasys m\,:\,M\quad M\equiv M'}{\Gamma\tasys m\,:\,M'}\,\rulename{ty-conv}
 \]
  
-\caption{Surface Language Type Assignment System}
+\caption{\SLang{} Type Assignment System}
 \label{fig:surface-TAS}
 \end{figure}
  
@@ -61,7 +61,7 @@ Finally, \rulename{ty-conv} allows type derivations to be \textbf{converted} to 
 % meta-theory type soundness From the programming language perspective
 The most important property of a type system is \textbf{type soundness}\footnote{also called \textbf{type safety}}.
 Type soundness is often motivated with the slogan, ``well typed programs don't get stuck''\cite{MILNER1978348}\footnote{in Milner's original paper, he used ``wrong'' instead of ``stuck''}.
-Given the syntax of the surface language, there is potential for a program to ``get stuck'' when an argument is applied to a non-function constructor.
+Given the syntax of the \slang{}, there is potential for a program to ``get stuck'' when an argument is applied to a non-function constructor.
 For example, $\star\ 1_{c}$ would be stuck since $\star$ is not a function, so it cannot compute when given the argument $1_{c}$.
 A good type system will make such unreasonable programs impossible.
  
@@ -153,7 +153,7 @@ For instance,
 \frac{m\Rrightarrow_{\ast}m'\quad m'\Rrightarrow m''}{m\Rrightarrow_{\ast}m''}\,\rulename{\Rrightarrow_{\ast}-trans}
 \]
  
-\caption{Surface Language Parallel Reductions}
+\caption{\SLang{} Parallel Reductions}
 \label{fig:surface-reduction}
 \end{figure}
 
@@ -619,7 +619,7 @@ We can choose a \cbv{} relation since this meets all the properties required, an
 v & $\Coloneqq$ & $\star$\tabularnewline
  & $|$ & $\left(x:M\right)\rightarrow N$\tabularnewline
  & $|$ & $\mathsf{fun}\,f\,x\Rightarrow m$\tabularnewline
-\end{tabular}\caption{Surface Language Value Syntax}
+\end{tabular}\caption{\SLang{} Value Syntax}
 \label{fig:surface-value-syntax}
 \end{figure}
  
@@ -648,7 +648,7 @@ Additionally the Type universe is a value, and function types are values.
 \frac{\,}{v::M\rightsquigarrow v}
 \]
  
-\caption{Surface Language Call-by-Value reductions}
+\caption{\SLang{} \CbV{} Reductions}
 \label{fig:surface-reduction-step}
 \end{figure}
  
@@ -736,7 +736,7 @@ An interpreter is always free to take any $\Rrightarrow$, but if it is unclear w
  
 \subsection{Type Soundness}
  
-The language has type soundness: well typed terms will never ``get stuck'' in the surface language.
+The language has type soundness: well typed terms will never ``get stuck'' in the \slang{}.
 This follows by iterating the progress and preservation lemmas.
  
 \todo{be explicit about the disconnect between type computation via par, and term level cbv}

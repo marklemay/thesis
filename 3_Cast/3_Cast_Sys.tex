@@ -1,10 +1,10 @@
-\section{Cast System}
+\section{\CSys{}}
  
 % why cast soundness?
 In a programming language, type soundness proves some undesirable behaviors are unreachable from a well typed term.
 % Recall that type soundness is the primary property for a typed programming language to exhibit.
-How should this apply to the cast language, where bad behaviors are intended to be reachable?
-The cast language allows the program to be stuck in a bad state, but requires that when that state is reached we have a good explanation to give the programmer that can blame the original faulty type assumption in their source code.
+How should this apply to the \clang{}, where bad behaviors are intended to be reachable?
+The \clang{} allows the program to be stuck in a bad state, but requires that when that state is reached we have a good explanation to give the programmer that can blame the original faulty type assumption in their source code.
 Where the slogan for type soundness is ``well typed terms don't get stuck'', the slogan for cast soundness is ``well cast terms don't get stuck without blame''.
 
 In \ch{2} we proved type soundness for a minimal dependently typed language, with a progress and preservation style proof given a suitable definition of term equivalence.
@@ -47,14 +47,14 @@ We can extend that proof to support cast soundness with only a few modifications
  
 \todo[inline]{review regularity stuff}
  
-\caption{Cast Language Type Assignment Rules}
+\caption{\CLang{} Type Assignment Rules}
 \label{fig:cast-tas-rules}
 \end{figure}
  
-The cast language supports its own type assignment system, defined in \Fref{cast-tas-rules}.
+The \clang{} supports its own type assignment system, defined in \Fref{cast-tas-rules}.
 This system ensures that computations will not get stuck without enough information for good runtime error messages.
 Specifically computations will not get stuck without a source location and a witness of inequality.
-The only rule that types differently than the surface language is the \rulename{cast-::} rule that allows runtime type assertions.
+The only rule that types differently than the \slang{} is the \rulename{cast-::} rule that allows runtime type assertions.
  
 As before we need a suitable reduction relation to generate our equivalence relation.
 \Fref{cast-reduction} shows that system of reductions.
@@ -138,7 +138,7 @@ Since observations embed expressions, they must also be given parallel reduction
 \rulename{\equiv-def}
 \]
  
-\caption{Cast Language Parallel Reductions}
+\caption{\CLang{} Parallel Reductions}
 \label{fig:cast-reduction}
 \end{figure}
  
@@ -146,7 +146,7 @@ Since observations embed expressions, they must also be given parallel reduction
  
 As in \ch{2}, we will define a suitable notion of deffinitionaltional equality to derive the other properties of the system.
 While it may seem counterintuitive to define a definitional equality in a system that is intended to avoid definitional equality, it is fine since programmers will never interact directly with cast checking.
-The cast system only exists to give theoretical assurances.
+The \csys{} only exists to give theoretical assurances.
  
 As before $\Rrightarrow_{*}$ can be shown to be confluent, and used to generate the equality relation.
 The proofs follow the same structure as \ch{2}, but since observations can contain terms, $\Rrightarrow$ and $\textbf{max}$ must be extended to observations.
@@ -427,9 +427,9 @@ The following rule is admissible
  
 Preservation alone isn't sufficient for a cast sound language.
 We also need to show that there is an evaluation that behaves appropriately in an empty typing context.
-Again this will broadly follow the outline of the surface language proof in \ch{2}, with a few substantial changes.
+Again this will broadly follow the outline of the \slang{} proof in \ch{2}, with a few substantial changes.
  
-Unlike the surface language, it is no longer practical to characterize values syntactically.
+Unlike the \slang{}, it is no longer practical to characterize values syntactically.
 Values are specified by judgments in \Fref{cast-val}.
 They are standard except for the \rulename{Val-::}, which states that a type ($\star$ or function type) under a cast is not a value.
  
@@ -454,12 +454,12 @@ a\cancel{=}\left(x:C\right)\rightarrow C'
 \end{array}}{a::_{A,\ell o}B\:\textbf{Val}}
 \rulename{Val-::}
 \]
-\caption{Cast Language Values}
+\caption{\CLang{} Values}
 \label{fig:cast-val}
 \end{figure}
  
 Small steps are listed in \Fref{cast-step}.
-They are standard for call-by-value except that casts can distribute over application, and casts can reduce when both types are $\star$.
+They are standard for \cbv{} except that casts can distribute over application, and casts can reduce when both types are $\star$.
  
 \begin{figure}
 \[
@@ -491,7 +491,7 @@ They are standard for call-by-value except that casts can distribute over applic
 \]
  
 \todo[inline]{name rules}
-\caption{Cast Language Small Step}
+\caption{\CLang{} Small Step}
 \label{fig:cast-step}
 \end{figure}
  
@@ -548,7 +548,7 @@ Limited observations makes the system in this Chapter simpler than the system in
 }
 \]
 \todo[inline]{name rules}
-\caption{Cast Language Blame}
+\caption{\CLang{} Blame}
 \label{fig:cast-blame}
 \end{figure}
  
@@ -710,11 +710,11 @@ Cast soundness follows from progress and preservation as expected.
 \todo{regularity encoding, along with the cast}
  
 Because of the conversion rule and non-termination, cast-checking is undecidable.
-This is fine since the cast system only exists to ensure theoretical properties. 
+This is fine since the \csys{} only exists to ensure theoretical properties. 
 The programmers will only use the system through the elaboration procedure described in the next section.
 Every term produced by elaboration will cast check, and the elaboration is decidable. % \footnote{As fomalized here, the assertimplemenation }.
  
-As in the surface languages, the cast language is logically unsound, by design.
+As in the \slang{}, the \clang{} is logically unsound, by design.
  
 Just as there are many different flavors of definitional equality that could have been used in \ch{2}, there are also many possible degrees that runtime equality can be enforced.
 The \Blame{} relation in \Fref{cast-blame} outlines a minimal checking strategy that supports cast soundness.
