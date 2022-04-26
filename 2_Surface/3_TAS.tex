@@ -300,8 +300,8 @@ If a relation is confluent, in a sense, specific reduction choices don't matter 
 
   Diamond Property
 
-  $\forall{\color{red}m},{\color{red}m'},{\color{red}m''}.\:{\color{red}m\Rrightarrow m'}\:\wedge\:{\color{red}m\Rrightarrow m''}\:\mathrm{implies}\:{\color{red}m'}{\color{blue}\Rrightarrow max\left(m\right)}$
-\todo[inline]{ missing m'' =>, in general this table should be rethought, and images re-rendered. perhaps the table should be based on an arbitrary relation and the proofs should have the details filled in and specialized?}
+  $\forall{\color{red}m},{\color{red}m'},{\color{red}m''}.\:{\color{red}m\Rrightarrow m'}\:\wedge\:{\color{red}m\Rrightarrow m''}\: \mathrm{implies}\: {\color{red}m'}{\color{blue}\Rrightarrow max\left(m\right)} \:\wedge\: {\color{red}m''}{\color{blue}\Rrightarrow max\left(m\right)}$
+\todo[inline]{in general this figure should be rethought, and images re-rendered. perhaps the table should be based on an arbitrary relation and the proofs should have the details filled in and specialized?}
   \begin{tikzcd}
                 & {\color{red}m} \tarrow[red]{rd} \tarrow[red]{ld} \arrow[lightgray]{dd} &                \\
   {\color{red}m'} \tarrow[blue]{rd} &                                       & {\color{red}m''} \tarrow[blue]{ld} \\
