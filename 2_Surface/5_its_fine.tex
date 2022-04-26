@@ -28,7 +28,7 @@ Every Type is Inhabited (by \tit{})
  
 \todo{full example}
  
-\todo{cite stuff (see https://stackoverflow.com/questions/18178999/do-agda-programs-necessarily-terminate), of course this happens in Girard's french thesis}
+\todo[inline]{cite stuff (see https://stackoverflow.com/questions/18178999/do-agda-programs-necessarily-terminate), of course this happens in Girard's french thesis}
 \end{example}
  
 A subtle form of recursive behavior can be built out of Gerard's paradox\cite{Reinhold89typecheckingis}, but this behavior is no worse than the unrestricted recursion already allowed.
@@ -59,9 +59,11 @@ While it is possible to make an error, this is true of much more popular proof m
  
 Finally by separating non-termination concerns from the core of the theory, this architecture is resilient to change.
 If the termination checker is updated in Coq, there is some chance older proof scripts will no longer type check.
-With the architecture proposed here, code will always have the same static and dynamic behavior, though our certainty of termination might change.
+With the architecture proposed here, code will always have the same static and dynamic behavior, though our understanding of termination might change.
  
 \subsubsection{Type Checking is Undecidable}
+\todo{lead in?}
+
 \begin{thm}
 Type Checking is Undecidable
 \end{thm}
@@ -81,7 +83,7 @@ Again this the root of the problem is the non-termination that results by allowi
 Luckily undecidability of type checking is not as bad as it sounds for several reasons.
 First, the pathological terms that cause non-terminating conversion are rarely created on purpose or even by accident.
 In the \bidir{} system, conversion checks will only happen at limited positions, and it is possible to use a counter to warn or give errors at code positions that do not convert because normalization takes too long.
-Heuristic methods of conversion checking have worked surprisingly well in our implementation.
+Heuristic methods of conversion checking have worked so surprisingly well in our prototypes, that implementing the counter limited equality was never a pressing concern.
 % well enough in practice even without a counter.
 % It is also possible to embed proofs of conversion directly into the syntax\cite{sjoberg2012irrelevance}.
  

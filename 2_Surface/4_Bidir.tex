@@ -17,32 +17,35 @@ Luckily there's a better way.
  
 \subsection{\Bidir{} Type Checking}
  
-\textbf{\Bidir{} type checking} is a popular form of lightweight type inference, which strikes a good compromise between the required type annotations and the simplicity of the procedure, allowing for localized errors\footnote{\cite{christiansen2013bidirectional} is a good tutorial, \cite{10.1145/3450952} is a survey of the technique}.
-In the usual \bidir{} typing schemes, annotations are only required at the top-level, or around a function that is directly applied to an argument\footnote{
+\textbf{\Bidir{} type checking} is a popular form of lightweight type inference, which strikes a good compromise between the required type annotations and the simplicity of the procedure, and allowing for localized errors\footnote{
+  \cite{christiansen2013bidirectional} is a good tutorial, \cite{10.1145/3450952} is a survey of the technique
+}.
+In the usual \bidir{} typing schemes, annotations are only needed at the top-level, or around a function that is directly applied to an argument\footnote{
   More generally when an elimination reduction is possible.
 }.
-For example $(\lambda x\Rightarrow x+x)7$ would need to be written $\left((\lambda x\Rightarrow x+x)::\mathbb{N}\rightarrow\mathbb{N}\right)7$.
+For example $(\lambda x\Rightarrow x+x)7$ would need to be written $\left((\lambda x\Rightarrow x+x)::\mathbb{N}\rightarrow\mathbb{N}\right)7$ to type check \bidir{}ly.
 Since programers rarely write functions that are immediately evaluated, this style of type checking usually only needs top level functions to be annotated\footnote{
   Even in Haskell, with full Hindley-Milner type inference, top level type annotations are encouraged.
 }\todo{ref style guide.
 the point was similarly made in Agda thesis.}.
-In fact, almost every example in \Fref{surface-examples} has enough annotations to type check \bidir{}{}ly without further information.
+In fact, almost every example in \Fref{surface-examples} has enough annotations to type check \bidir{}ly without further information.
  
 \todo{note popularity}
  
-This is accomplished by breaking the typing judgments into two mutual judgments:
+\Bidir{} type checking is accomplished by separating the \ac{TAS} typing judgments into two mutual judgments:
 \begin{itemize}
 \item \textbf{Type Inference} where type information propagates out of a term, $\overrightarrow{\,:\,}$ in our notation.
 \item \textbf{Type Checking} judgments where a term is checked against a type, $\overleftarrow{\,:\,}$ in our notation.
 \end{itemize}
 This allows typing information to flow from the ``outside in'' for type checking judgments and ``inside out'' for the type inference judgments.
-Check mode can be induced manually with a type annotation.
+Check mode can be induced by the programmer with a type annotation.
 When an inference meets a check, a conversion verifies that the types are definitionally equal.
 This has the advantage of precisely limiting where the $\rulename{ty-conv}$ rule can be used, since conversion checking is usually an inefficient part of dependent type checking.
  
 This enforced flow of information results in a system that localizes type errors.
-If a type was inferred, it was unique from the term, so it can be used freely.
+If a type was inferred, it was unique, so it can be used freely.
 Checking judgments force terms that could have multiple typings in the \ac{TAS} to have at most one type.
+\todo{and that localizes, how?}
  
 \begin{figure}
 \[
@@ -85,7 +88,7 @@ The rules are almost the same as before, except that typing direction is now exp
 As mentioned, \bidir{} type checking handles higher order functions very well.
 For instance, the expression $\vdash(\lambda x\Rightarrow x\,(\lambda y\Rightarrow y)\,2)\overleftarrow{\,:\,}\left(\left(\mathbb{N}\rightarrow\mathbb{N}\right)\rightarrow\mathbb{N}\rightarrow\mathbb{N}\right)\rightarrow\mathbb{N}$ checks because $\vdash(\lambda y\Rightarrow y)\overleftarrow{\,:\,}\left(\mathbb{N}\rightarrow\mathbb{N}\right)$ and $\vdash2\overleftarrow{\,:\,}\mathbb{N}$.
  
-Unlike the undirected judgments of the Type Assignment System, the inference rule of the \bidir{} system does not associate definitionally equivalent types.
+Unlike the undirected judgments of the type assignment system, the inference rule of the \bidir{} system does not associate definitionally equivalent types.
 The inference judgment is unique up to syntax!
 For example $x:Vec\,3\vdash x\overrightarrow{\,:\,}Vec\,3$, but $x:Vec\,3\, \cancel{\vdash}\, x\overrightarrow{\,:\,}Vec\,\left(1+2\right)$.
 This could cause unexpected behavior around function applications.
@@ -96,26 +99,29 @@ A similar issue exists with check rules around function definitions.
 For instance, $\vdash\left((\lambda x\Rightarrow x)::\mathbb{N}\rightarrow\mathbb{N}\right)\ \overrightarrow{\,:\,}\mathbb{N}\rightarrow\mathbb{N}$ will infer, but if computation blocks the $\rightarrow$ from being in the head position, inference will be impossible.
 As in the expression, $\left((\lambda x\Rightarrow x)::\left((\mathbb{N}\rightarrow\mathbb{N})\underline{::}\star\right)\right)$ which will not infer.
  
-For these reasons, many presentations of \bidir{} dependent typing will evaluate the types needed for $\overleftarrow{ty}-\mathsf{fun}$, and $\rulename{\overrightarrow{ty}-\mathsf{fun}-app}$ into weak head normal form\footnote{as in \cite{COQUAND1996167}}.
+For these reasons, many presentations of \bidir{} dependent typing will evaluate the types needed for $\overleftarrow{ty}-\mathsf{fun}$, and $\rulename{\overrightarrow{ty}-\mathsf{fun}-app}$ into \whnf{}\footnote{
+ as in \cite{COQUAND1996167}
+}.
 With that caveat, this document opts for an unevaluated version of the rules to make some properties easier to present and prove.
-Specifically, this will allow us to present a terminating elaboration procedure in Chapter 3\footnote{
-  The prototype uses the more conventional \whnf{} check up to some "time bound", which is easier in practice but more messy in theory.
+Specifically, this will allow us to present a terminating elaboration procedure in \ch{3}\footnote{
+ The prototype implementation uses the more conventional \whnf{} check up to some "time bound", which avoids the issues above from the programmer's perspective but is more messy in theory.
 }.
 % the simplest possible presentation of \bidir{} type checking.
- 
-\todo[inline]{alternative listed in appendix}
+
+\todo[inline]{alternative listed in appendix?}
 \todo[inline]{what else does the algorithm infer not listed here}
-\todo[inline]{More about extending the system so constraint solving can happen under a check judgment }
+% \todo[inline]{More about extending the system so constraint solving can happen under a check judgment }
 \todo[inline]{Clearly explain why this is needed for the \csys{}, annotating every var is cumbersome, constraint solving is iffy when things may be undecidable}
- 
-It is possible to take the ideas of \bidir{} typing very far.
+
+Though this chapter opts for a simple presentation of \bidir{} type checking, it is possible to take the ideas of \bidir{} typing very far.
 More advanced \bidir{} implementations such as Agda\cite{norell2007towards} even perform unification as part of their \bidir{} type checking.
+% There is nothing that prevents doning quite a lot more clever work inside the check judgment.
 % There will always be ways to make type inference more powerful, at the cost of complexity.
- 
+
 \subsection{The \Bidir{} System is Type Sound}
  
 It is possible to prove \bidir{} type systems are type sound directly\cite{nanevski2005dependent}.
-But it would be difficult for the system described here since type annotations evaluate away, contradicting the normal preservation lemma.
+But it would be difficult for the system described here since type annotations evaluate away, contradicting a potential preservation lemma.
 Alternatively we can show that a \bidir{} typing judgment implies a type assignment system typing judgment.
  
 \begin{thm}
@@ -131,9 +137,9 @@ by mutual induction on the \bidir{} typing derivations.
 \end{proof}
 Therefore the \bidir{} system is also type sound.
  
-\subsection{The \ac{TAS} System is weakly annotatable by the \Bidir{} System}
+\subsection{The \ac{TAS} System Is Weakly Annotatable by the \Bidir{} System}
  
-In \Bidir{} systems, \textbf{annotatability}\footnote{also called \textbf{completeness}} is the property that any expression that types in a \ac{TAS} will type in the \bidir{} system with only additional annotations.
+In \bidir{} systems, \textbf{annotatability}\footnote{also called \textbf{completeness}} is the property that any expression that types in a \ac{TAS} will type in the \bidir{} system with only additional annotations.
 This property doesn't exactly hold for the \bidir{} system presented here.
 For instance, $\vdash\left((\lambda x\Rightarrow x)::\left(\mathbb{N}\rightarrow\mathbb{N}::\star\right)\right)$ type checks in the \ac{TAS} system, but no amount of annotations will make it check in the \bidir{} system.
 Instead we can show that the \bidir{} system does not preclude any computation available in the \ac{TAS}, though annotations may need to be added (or removed).% no need to remove if properly \bidir{}).

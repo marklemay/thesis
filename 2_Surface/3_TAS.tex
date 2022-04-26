@@ -7,11 +7,11 @@ Type systems can disallow bad terms like these which in turn prevents bad runtim
 We will present our type system as a \textbf{type assignment system} (\ac{TAS}).
 Type assignment systems are convenient to study the theory of a dependently typed language, because terms do not need to contain information to help type checking, complicating the syntax. %type annotations. %and will be easier to work with than other styles of typing that require variables to be annotated.
 % For instance, $\mathsf{fun}\,f\,x\Rightarrow m$ does not require a type be given for $f$ or $a$.
-\todo{church/curry?}
+\todo{church/curry?}\todo{awk}
 Practically this means that the type assignment system may need to ``infer'' an unrealistic amount of information if used as a type checking algorithm.
 This also means that terms do not necessarily have unique typings.
 For instance $\tasys\lambda x\Rightarrow x:\mathbb{N}_{c}\rightarrow\mathbb{N}_{c}$, and $\tasys\lambda x\Rightarrow x:\mathbb{B}_{c}\rightarrow\mathbb{B}_{c}$.
-These issues will be addressed when the more practical, \bidir{} type system is introduced.
+These issues will be addressed when the more practical, \bidir{} type system is introduced in the next section.
 \todo{move negative stuff later?}
  
 \begin{figure}
@@ -60,10 +60,13 @@ Finally, \rulename{ty-conv} allows type derivations to be \textbf{converted} to 
  
 % meta-theory type soundness From the programming language perspective
 The most important property of a type system is \textbf{type soundness}\footnote{also called \textbf{type safety}}.
-Type soundness is often motivated with the slogan, ``well typed programs don't get stuck''\cite{MILNER1978348}\footnote{in Milner's original paper, he used ``wrong'' instead of ``stuck''}.
+Type soundness is often motivated with the slogan, ``well typed programs don't get stuck''\cite{MILNER1978348}\footnote{
+  In Milner's original paper, he used ``go wrong'' instead of ``get stuck''.
+}.
 Given the syntax of the \slang{}, there is potential for a program to ``get stuck'' when an argument is applied to a non-function constructor.
 For example, $\star\ 1_{c}$ would be stuck since $\star$ is not a function, so it cannot compute when given the argument $1_{c}$.
 A good type system will make such unreasonable programs impossible.
+\todo{WHY! talk about the incremenatal advantage of the construction}
  
 Type soundness can be shown with a \textbf{progress} and \textbf{preservation}\footnote{also called \textbf{Subject Reduction}} style proof\footnote{
  The first proof published in this style is \cite{WRIGHT199438} though their progress lemma is a bit different from modern presentations.
@@ -166,7 +169,7 @@ The other rules are entirely structural.
 Repeating parallel reductions zero or more times is written $\Rrightarrow_{\ast}$.
  
 While this is a sufficient presentation of definitional equality, other variants of the relation are possible.
-For instance it is possible to extend the relation with contextual information, type information, explicit proofs of equality (as in Extensional Type Theory), uncomputable relations (as in \cite{jia2010dependent}).
+For instance, it is possible to extend the relation with contextual information, type information, explicit proofs of equality (as in Extensional Type Theory), and uncomputable relations (as in \cite{jia2010dependent}).
 It is also common to assume the properties of $\equiv$ hold without proof.
  
 Some lemmas need to quantify over simultaneous substitutions.
@@ -274,7 +277,7 @@ By repeated $\rulename{\Rrightarrow_{\ast}-sub}$ and $\equiv\rulename{-Def}$.
  
 \subsubsection{Transitivity}
  
-To prove the transitivity of the $\equiv$, we will first need to prove that \textbf{$\Rrightarrow_{\ast}$ }is \textbf{confluent}.
+To prove the transitivity of the $\equiv$ relation, we will first need to prove that \textbf{$\Rrightarrow_{\ast}$ }is \textbf{confluent}.
 A relation $R$ is confluent\footnote{also called \textbf{Church-Rosser}} when, for all $m$, $n$, $n'$, if $mRn$ and $\:mRn'$ then exists exists $n''$ such that $nRn''$. % and $n'Rn''$.
 If a relation is confluent, in a sense, specific reduction choices don't matter since you can alway rejoin at a future destination.
  
@@ -292,7 +295,7 @@ If a relation is confluent, in a sense, specific reduction choices don't matter 
   Diamond Property
 
   $\forall{\color{red}m},{\color{red}m'},{\color{red}m''}.\:{\color{red}m\Rrightarrow m'}\:\wedge\:{\color{red}m\Rrightarrow m''}\:\mathrm{implies}\:{\color{red}m'}{\color{blue}\Rrightarrow max\left(m\right)}$
-
+\todo[inline]{ missing m'' =>, in general this table should be rethought, and images re-rendered. perhaps the table should be based on an arbitrary relation and the proofs should have the details filled in and specialized?}
   \begin{tikzcd}
                 & {\color{red}m} \tarrow[red]{rd} \tarrow[red]{ld} \arrow[lightgray]{dd} &                \\
   {\color{red}m'} \tarrow[blue]{rd} &                                       & {\color{red}m''} \tarrow[blue]{ld} \\
@@ -349,14 +352,13 @@ If $m\Rrightarrow\,m'$ then $m'\Rrightarrow \textbf{max}\left(m\right)$ .
 By induction on the derivation $m\Rrightarrow\,m'$, with the only interesting cases are where a reduction is not taken,
 \begin{casenv}
 \item In the case of \rulename{\Rrightarrow-::}, $m'\Rrightarrow \textbf{max}\left(m\right)$, by \rulename{\Rrightarrow-::-red}.
-\item In the case of \rulename{\Rrightarrow-\mathsf{fun}-app}, $m'\Rrightarrow \textbf{max}\left(m\right)$ by \rulename{\Rrightarrow-\mathsf{fun}-app-red} \todo{fix formatting}.
+\item In the case of \rulename{\Rrightarrow-\mathsf{fun}-app}, $m'\Rrightarrow \textbf{max}\left(m\right)$ by \rulename{\Rrightarrow-\mathsf{fun}-app-red}.
 \end{casenv}
 \end{proof}
 \begin{lem}
 Diamond Property of $\Rrightarrow$
  
-If $m\Rrightarrow\,m'$, $m\Rrightarrow\,m''$, implies $m'\Rrightarrow\,\textbf{max}\left(m\right)$
-,$m''\Rrightarrow\,\textbf{max}\left(m\right)$ .
+If $m\Rrightarrow\,m'$, $m\Rrightarrow\,m''$, implies $m'\Rrightarrow\,\textbf{max}\left(m\right)$, $m''\Rrightarrow\,\textbf{max}\left(m\right)$.
 \end{lem}
  
 \begin{proof}
@@ -366,9 +368,7 @@ By the triangle property.
 \begin{thm}
 Confluence of $\Rrightarrow_{\ast}$
  
-If $m\Rrightarrow_{\ast}\,n'$, $m\Rrightarrow_{\ast}\,n''$, then
-there exists $n'''$ such that $n'\Rrightarrow\,n'''$ ,$n''\Rrightarrow\,n'''$
-.
+If $m\Rrightarrow_{\ast}\,n'$, $m\Rrightarrow_{\ast}\,n''$, then there exists $n'''$ such that $n'\Rrightarrow\,n'''$ ,$n''\Rrightarrow\,n'''$.
 \end{thm}
  
 \begin{proof}
@@ -394,11 +394,12 @@ $\equiv$ is an equivalence relation.
  
  
 \subsubsection{Stability}
-Next we must confirm that type constructors are stable over parallel reduction.
+Next we confirm that type formers are never equated by definitional equality.
 Specifically, $\left(x:N\right)\rightarrow M\cancel{\equiv}\star$.
-If type constructors are associated, the entire $\equiv$ relation is degenerate.
+If type formers are associated, the entire $\equiv$ relation may degenerate. % it will how we have defined it, it is convievable a more comlicated def eq relation could allow this in the presence of say inconsitent contexts
 Since definitional equality is defined in terms of reduction, it is sufficient to show that $\left(x:N\right)\rightarrow M\cancel{\Rrightarrow}\star$.
 We will prove slightly stronger lemmas about reduction that confirms this fact.
+\todo{why? where is it used}
  
 \begin{lem}
 Stability of $\rightarrow$ over $\Rrightarrow_{\ast}$
@@ -473,8 +474,10 @@ By induction on typing derivations.
  \item All other cases follow directly or by induction
 \end{casenv}
 \end{proof}
-When contexts are convertible, typing judgments still hold.
+
 We extend the notion of definitional equality to contexts in \Fref{surface-Context-Equiv}.
+When contexts are convertible, typing judgments still hold.
+\todo[inline]{why? This is needed to support reasoning under a binder.}
  
 \begin{figure}
 \[
@@ -510,7 +513,7 @@ By induction over typing derivations,
  
 \subsubsection{Inversion Lemmas}
 In the preservation proof we will need to reason backwards about the typing judgments implied by a typing derivation of term syntax.
-However this induction does not go through directly, and the induction hypothesis must be extended to definitional equality.
+However this induction does not go through directly, and the induction hypothesis must be extended to definitional equality. \todo{awk}
  
 \begin{lem}
 $\mathsf{fun}$-Inversion (generalized)
@@ -528,7 +531,7 @@ By induction on typing derivations,
 \begin{casenv}
  \item \rulename{ty-\mathsf{fun}} follows by the stability of \rulename{ty-\mathsf{fun}} and preservation of contexts
  \item \rulename{ty-conv} follows by transitivity of $\equiv$ and induction
- \item All other cases impossible
+ \item All other cases are impossible.\todo{end impossible cases with !}
 \end{casenv}
  
 \end{proof}
@@ -605,13 +608,14 @@ By induction on the typing derivation $\Gamma\tasys m:M$, specializing on $m\Rri
  
 \subsection{Progress}
  
-The second key theorem to show is called progress.
+The second key theorem to show is called progress.\todo{awk, it's name is the least interasting thing}
 The progress theorem states: for a well typed term in an empty context, then a further step can be taken or computation is finished.
 For non-dependently typed programming languages, these steps are easy to characterize, but for dependent types there are issues.\todo{awk}
 If we characterize computation with the $\Rrightarrow$ relation, the progress lemma holds in a meaningless way since we can always take a reflexive step.
 Thus a less reflexive relation is needed.
 Ideally the relation should also be deterministic and a sub relation of $\Rrightarrow_{*}$.
-We can choose a \cbv{} relation since this meets all the properties required, and is a standard execution strategy that reflects actual implementations.
+We can choose a \cbv{} relation since% this meets all the properties required, and 
+  is a popular execution strategy that reflects actual prototype implementation.
  
 \begin{figure}
 \begin{tabular}{lcl}
@@ -625,7 +629,7 @@ v & $\Coloneqq$ & $\star$\tabularnewline
  
 Values are characterized by the sub-grammar in \Fref{surface-value-syntax}.
 As usual, functions with any body are values.
-Additionally the Type universe is a value, and function types are values.
+Additionally the type universe ($\star$) is a value, and function types are values.
  
 \begin{figure}
 \[
@@ -731,14 +735,18 @@ As usual this follows form induction on the typing derivation
  
 \end{proof}
 \todo{awk}
-Progress via \cbv{} can be seen as a specific sub-strategy of $\Rrightarrow$.
-An interpreter is always free to take any $\Rrightarrow$, but if it is unclear which $\Rrightarrow$ to take, either it is a value and no further steps are required, or can fall back on $\rightsquigarrow$ until the the outermost computation has completed.
- 
+Progress via \cbv{} can be seen as a specific sub-strategy of $\Rrightarrow_*$.
+An interpreter is always free to take any $\Rrightarrow_*$, but if it is unclear which $\Rrightarrow_*$ to take, either it is a value and no further steps are required, or can fall back on $\rightsquigarrow$ until the computation is a value.
+% (or optimizing compiler, or JIT) 
+
 \subsection{Type Soundness}
  
 The language has type soundness: well typed terms will never ``get stuck'' in the \slang{}.
 This follows by iterating the progress and preservation lemmas.
  
+\todo{Formally... in a theorem box}
+\todo{name thoerems, better case info}
+
 \todo{be explicit about the disconnect between type computation via par, and term level cbv}
  
 % \todo{other lemmas not needed for this proof, par max is par, inversions?}
@@ -849,11 +857,11 @@ This follows by iterating the progress and preservation lemmas.
 % % The proofs in this section can be done without forcing the context to be well formed, the additional constraints are omitted.
 % % \todo[inline]{regularity!}
  
-\subsection{Type checking is impractical}
+\subsection{Type Checking Is Impractical}
  
 This type system is inherently non-local.
 No type annotations are ever required to form a typing derivation.
-That means it would be up to a type checking algorithm to guess the types of intermediate terms.
+That means that a type checking algorithm that attempted to type check every well typed \ac{TAS} term would need to guess the types of intermediate terms.
 For instance,
  
 \begin{align*}

@@ -77,7 +77,7 @@ While $Unit_{c}$ can be interpreted as a trivially true proposition, since it ha
 
 Several of the church encoded data types we have seen can also be interpreted as logical predicates.
 For instance, the tuple type can be interpreted as logical $and$.
-Since $X\times_{c}Y$ can only be meaningully inhabited when both $X$ and $Y$ are inhabited.
+Since $X\times_{c}Y$ can only be meaningfully inhabited when both $X$ and $Y$ are inhabited.
 The $Either$ type can be interpreted as logical $or$.
 Since $Either_{c}\,X\,Y$ can be inhabited when either $X$ or $Y$ is inhabited.
 
@@ -145,8 +145,10 @@ Note that a proof of $\lnot1_{c}\doteq_{\mathbb{N}_{c}}0_{c}$ is not possible in
 
 \subsection{Recursion}
 
-The syntax of functions build in unrestricted recursion.
-Though not always necessary, recursion can be very helpful for writing programs.
+The syntax of functions contain a variable to perform in unrestricted recursion.
+Though not always necessary\footnote{
+  For instance, Church numerals have a limited form of recursive behavior built in.
+}, recursion can be very helpful for writing programs.
 For instance, here is (an inefficient) function that calculates Fibonacci numbers.
 
 $\mathsf{fun}\,f\,x\Rightarrow case_{c}\,x\,0_{c}\left(\lambda px\Rightarrow case_{c}\,px\,1_{c}\left(\lambda-\Rightarrow f\left(x-_{c}1\right)+_{c}f\left(x-_{c}2\right)\right)\right)$
@@ -155,4 +157,5 @@ Assuming appropriate definitions for $case_{c}$, and subtraction.
 
 Recursion can also be used to simulate induction. 
 We will not see much of recursion until \ch{4}, when data types are introduced and larger examples are easier to express.
+\todo[inline]{is predecessor a better example?}
 \todo[inline]{GCD, recursive types?}

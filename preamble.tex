@@ -42,8 +42,14 @@
 \usepackage{graphicx}
 \usepackage{appendix}
 
-% keep text from breaking the margins
+% keep text from breaking the margins (TODO add to BU template?)
 \sloppy
+
+% some voodoo from https://tex.stackexchange.com/questions/2651/should-i-use-center-or-centering-for-figures-and-tables
+\makeatletter
+\g@addto@macro\@floatboxreset\centering
+\makeatother
+
 
 \theoremstyle{plain}
 \newtheorem{thm}{\protect\theoremname}
