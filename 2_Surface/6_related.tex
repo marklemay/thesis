@@ -14,7 +14,9 @@ The first progress and preservation style proof of type soundness for a language
 At the time their language had several additional features not included in the \slang{} presented here.
 Additionally, the \slang{} uses a simpler notion of definitional equality resulting in a simpler proof of type soundness.
 Later work in the Trellys Project\cite{casinghino2014combining,casinghino2014combiningthesis} used modalities to separate terminating and non-terminating fragments of the language, to allow both general recursion and logically sound reasoning. %, though the annotation burden seems high in retrospect .
-In general, the \slang{} has been deeply informed by the Trellys project\cite{sjoberg2012irrelevance,casinghino2014combining,casinghino2014combiningthesis,sjoberg2015programming,sjoberg2015dependently} and the Zombie language\footnote{https://github.com/sweirich/trellys} it produced.
+In general, the \slang{} has been deeply informed by the Trellys project\cite{sjoberg2012irrelevance,casinghino2014combining,casinghino2014combiningthesis,sjoberg2015programming,sjoberg2015dependently} and the Zombie language\footnote{
+  \url{https://github.com/sweirich/trellys}
+} it produced.
  
 \todo[inline]{type in type as a well known shortcut, videos of Andraj, Conner MB saying it }
 \todo[inline]{section on \bidir{} dependent type systems, citing http://www.cse.chalmers.se/\textasciitilde nad/publications/altenkirch-et-al-flops2010.pdf https://www.seas.upenn.edu/\textasciitilde sweirich/papers/congruence-extended.pdf posibly https://arxiv.org/pdf/1203.4716.pdf https://drops.dagstuhl.de/opus/volltexte/2021/13919/pdf/LIPIcs-ITP-2021-24.pdf}
@@ -22,7 +24,9 @@ In general, the \slang{} has been deeply informed by the Trellys project\cite{sj
 \subsection{Implementations}
  
 Several programming language implementations support features of the \slang{} without a proof of type soundness.
-Pebble\cite{10.1007/3-540-13346-1_1} was a very early language with dependent types, though conversion did not associate types that differ only in variable naming\footnote{according to \cite{Reinhold89typecheckingis}}.
+Pebble\cite{10.1007/3-540-13346-1_1} was a very early language with dependent types, though conversion did not associate types that differ only in variable naming\footnote{
+  According to \cite{Reinhold89typecheckingis}.
+}.
 Coquand implemented an early \bidir{} algorithm to type-check a language with \tit{}\cite{COQUAND1996167}.
 Cayenne\cite{10.1145/289423.289451} is a Haskell-like language that combines dependent types with \tit{} and non-termination.
 $\Pi\Sigma$\cite{10.1007/978-3-642-12251-4_5} is a language with \tit{} and several features for a dependently typed core calculus outlined here.
@@ -38,7 +42,7 @@ There are many flavors of dependent type systems that are similar in spirit to t
 The Calculus of Constructions (\ac{CC}, CoC)\cite{10.1016/0890-5401(88)90005-3} is one of the first minimal dependent type systems.
 It contains shockingly few rules, but can express a wide variety of constructions via parametric encodings.
 The system does not allow \tit{}, instead $\star$\footnote{
-  called \textbf{prop}, for proposition
+  Called \textbf{prop}, for proposition.
 } lives in a larger universe  $\Square$ ($\star:\Square$), where $\Square$ is not itself a type.
 Even though the Calculus of Constructions does not allow \tit{} it is still \textbf{impredicative} in the sense that function types can quantify over $\star$ while still being in $\star$.
 For instance, the polymorphic identity $id:(X:\star)\rightarrow X\rightarrow X$ has type $\star$ so the polymorphic identity can be applied to itself, $id\,\left((X:\star)\rightarrow X\rightarrow X\right)\,id$.
@@ -58,9 +62,11 @@ The lambda cube\todo{cite!} is a system for relating 8 interesting typed lambda 
 Presuming terms should always depend on terms, there are 3 additional dimensions of dependency: term depending on types, types dependent on types, and types depending on terms.
 The simply typed lambda calculus has only term dependency.
 System F additionally allows types to depend on types.
-The Calculus of Constructions has all forms of dependency\footnote{Recommended reading Chapter 14 \cite{sorensen2006lectures}}.
+The Calculus of Constructions has all forms of dependency\footnote{Recommended reading \cite[Chapter 14]{sorensen2006lectures}.}.
  
-Pure Type Systems (\ac{PTS})\footnote{previously called \textbf{Generalized Type Systems}} generalizes the lambda cube to allow any number of type universes with any forms of dependency.
+Pure Type Systems (\ac{PTS})\footnote{
+  Previously called \textbf{Generalized Type Systems}.
+} generalizes the lambda cube to allow any number of type universes with any forms of dependency.
 Notably this includes the system with one type universe where \tit{}.
 Universe hierarchies can also be embedded in a \ac{PTS}.
 The system described in this Chapter is almost a \ac{PTS}, except that it contains unrestricted recursion and the method of type annotation is different.

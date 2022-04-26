@@ -18,7 +18,7 @@ Luckily there's a better way.
 \subsection{\Bidir{} Type Checking}
  
 \textbf{\Bidir{} type checking} is a popular form of lightweight type inference, which strikes a good compromise between the required type annotations and the simplicity of the procedure, and allowing for localized errors\footnote{
-  \cite{christiansen2013bidirectional} is a good tutorial, \cite{10.1145/3450952} is a survey of the technique
+  \cite{christiansen2013bidirectional} is a good tutorial, \cite{10.1145/3450952} is a survey of the technique.
 }.
 In the usual \bidir{} typing schemes, annotations are only needed at the top-level, or around a function that is directly applied to an argument\footnote{
   More generally when an elimination reduction is possible.
@@ -139,7 +139,9 @@ Therefore the \bidir{} system is also type sound.
  
 \subsection{The \ac{TAS} System Is Weakly Annotatable by the \Bidir{} System}
  
-In \bidir{} systems, \textbf{annotatability}\footnote{also called \textbf{completeness}} is the property that any expression that types in a \ac{TAS} will type in the \bidir{} system with only additional annotations.
+In \bidir{} systems, \textbf{annotatability}\footnote{
+  Also called \textbf{completeness}.
+} is the property that any expression that types in a \ac{TAS} will type in the \bidir{} system with only additional annotations.
 This property doesn't exactly hold for the \bidir{} system presented here.
 For instance, $\vdash\left((\lambda x\Rightarrow x)::\left(\mathbb{N}\rightarrow\mathbb{N}::\star\right)\right)$ type checks in the \ac{TAS} system, but no amount of annotations will make it check in the \bidir{} system.
 Instead we can show that the \bidir{} system does not preclude any computation available in the \ac{TAS}, though annotations may need to be added (or removed).% no need to remove if properly \bidir{}).

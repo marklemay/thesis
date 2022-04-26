@@ -148,7 +148,7 @@ To implement dependently typed pattern matching, a procedure is needed to resolv
 
 Since arbitrary computation can be embedded in the arguments of a type constructor\footnote{
   At least in a \fullSp{} theory, such as the one we study here.
-  }, the equational constraints are undecidable in general.
+}, the equational constraints are undecidable in general.
 Any approach to constraint solving will have to be an approximation that performs well enough in practice.
 Usually this procedure takes the form of a first order unification. 
 
@@ -271,7 +271,9 @@ The \bidir{} system can be extended with pattern matching with rules that look l
 Where $\Gamma\vdash\overline{pat}:_{E}?\Delta$ is shorthand for a set of equations that allow a list of patterns to type check under $\Delta$, 
   and $\Gamma\vdash\overline{\overline{pat}}:\Delta\ \mathbf{complete}$ is shorthand for the exhaustiveness check. 
 \begin{conjecture}
-There exists a suitable\footnote{supporting at least subject reduction, type soundness, and regularity} extension to the \slang{} \ac{TAS} that supports pattern matching style elimination
+There exists a suitable\footnote{
+  Supporting at least subject reduction, type soundness, and regularity.
+} extension to the \slang{} \ac{TAS} that supports pattern matching style elimination
 \end{conjecture}
 \begin{conjecture}
 The \bidir{} extension listed here is weakly annotatable with that extension to the \slang{}.

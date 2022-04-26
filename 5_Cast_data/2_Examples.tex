@@ -141,7 +141,8 @@ case x  {
 \end{lstlisting}
  
 Substitution can confirm that the explicit branch has exactly the type of the motive and does not need a cast\footnote{
-  While it is possible that blame was embedded in the $\mathtt{(S (S (Z :: -) :: -) :: -)}$ term, the \csys{} will allow $\mathtt{(S (S (Z :: -) :: -) :: -)}\equiv2$.}.
+  While it is possible that blame was embedded in the $\mathtt{(S (S (Z :: -) :: -) :: -)}$ term, the \csys{} will allow $\mathtt{(S (S (Z :: -) :: -) :: -)}\equiv2$.
+}.
 Additionally the elaborator will form a covering of implicit patterns that handle any possible constructor.
 Since the unifier cannot find a contradiction for any of these cases, the user will be warned of possible runtime errors.
  

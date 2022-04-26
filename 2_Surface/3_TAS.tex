@@ -59,7 +59,9 @@ Functions are typed with a variable for recursive reference along with a variabl
 Finally, \rulename{ty-conv} allows type derivations to be \textbf{converted} to an equivalent type.
  
 % meta-theory type soundness From the programming language perspective
-The most important property of a type system is \textbf{type soundness}\footnote{also called \textbf{type safety}}.
+The most important property of a type system is \textbf{type soundness}\footnote{
+  Also called \textbf{type safety}.
+}.
 Type soundness is often motivated with the slogan, ``well typed programs don't get stuck''\cite{MILNER1978348}\footnote{
   In Milner's original paper, he used ``go wrong'' instead of ``get stuck''.
 }.
@@ -68,12 +70,14 @@ For example, $\star\ 1_{c}$ would be stuck since $\star$ is not a function, so i
 A good type system will make such unreasonable programs impossible.
 \todo{WHY! talk about the incremenatal advantage of the construction}
  
-Type soundness can be shown with a \textbf{progress} and \textbf{preservation}\footnote{also called \textbf{Subject Reduction}} style proof\footnote{
- The first proof published in this style is \cite{WRIGHT199438} though their progress lemma is a bit different from modern presentations.
- Most relevant textbooks outline forms of this proof for non-dependent type systems.
- For instance, \cite[Part 2]{pierce2002types}, \cite{KOKKE2020102440}, and \cite[Chapter 11]{chlipala2017formal}.
- % Chapter 3 of \cite{sjoberg2015dependently} has a similar progress and preservation style proof for a dependently typed language.
- }.
+Type soundness can be shown with a \textbf{progress} and \textbf{preservation}\footnote{
+  Also called \textbf{Subject Reduction}.
+} style proof\footnote{
+  The first proof published in this style is \cite{WRIGHT199438} though their progress lemma is a bit different from modern presentations.
+  Most relevant textbooks outline forms of this proof for non-dependent type systems.
+  For instance, \cite[Part 2]{pierce2002types}, \cite{KOKKE2020102440}, and \cite[Chapter 11]{chlipala2017formal}.
+  % Chapter 3 of \cite{sjoberg2015dependently} has a similar progress and preservation style proof for a dependently typed language.
+}.
 \todo{TAPL cites Harper as a co-originator of progress-preservation.
 Maybe just email him?  it might be also good to get him for intractability (blum stuff).
 might want to review his book first}
@@ -84,8 +88,8 @@ For a progress and preservation style proof of a dependently typed language, eve
  
 The $\equiv$ relation characterizes when terms are ``obviously'' or ``automatically'' equal.
 Because the $\equiv$ relation is usually based on the definition of computation, rather than on observable properties, it is called \textbf{definitional equality}\todo{is that actually why?}\footnote{
-  also called \textbf{Judgmental Equality}, since it is defined via judgments
-}.
+  Also called \textbf{Judgmental Equality}, since it is defined via judgments.
+}.\todo{or it effects judgments? either way that is a real dumb name}
 Usually it is desirable to make the definitional equality relation as large as possible, since the programmer in the system will get more equalities ``for free''.
 This Chapter will opt for an easier (but less powerful) $\equiv$ relation, since Chapter 3 will propose a way to avoid definitional equality in general.
  
@@ -278,7 +282,9 @@ By repeated $\rulename{\Rrightarrow_{\ast}-sub}$ and $\equiv\rulename{-Def}$.
 \subsubsection{Transitivity}
  
 To prove the transitivity of the $\equiv$ relation, we will first need to prove that \textbf{$\Rrightarrow_{\ast}$ }is \textbf{confluent}.
-A relation $R$ is confluent\footnote{also called \textbf{Church-Rosser}} when, for all $m$, $n$, $n'$, if $mRn$ and $\:mRn'$ then exists exists $n''$ such that $nRn''$. % and $n'Rn''$.
+A relation $R$ is confluent\footnote{
+  Also called \textbf{Church-Rosser}.
+} when, for all $m$, $n$, $n'$, if $mRn$ and $\:mRn'$ then exists exists $n''$ such that $nRn''$. % and $n'Rn''$.
 If a relation is confluent, in a sense, specific reduction choices don't matter since you can alway rejoin at a future destination.
  
  
@@ -319,7 +325,9 @@ If a relation is confluent, in a sense, specific reduction choices don't matter 
   \label{fig:shape-diagrams}
 \end{figure}
  
-Since type equivalence is defined by parallel reductions we can show confluence following the proof in \cite{TAKAHASHI1995120}\footnote{also well presented in \cite{KOKKE2020102440}}.
+Since type equivalence is defined by parallel reductions we can show confluence following the proof in \cite{TAKAHASHI1995120}\footnote{
+  Also well presented in \cite{KOKKE2020102440}.
+}.
 The approach is motivated by the diagrams in \Fref{shape-diagrams}.
  
 First, we define a function $\textbf{max}$ in \Fref{surface-max-step}.

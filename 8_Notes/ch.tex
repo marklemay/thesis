@@ -10,7 +10,9 @@ This Chapter contains an idealized\footnote{
   Further, automated testing procedure has not yet been reimplemented on the current version of the prototype.
 } review of what was tried, and hopefully provide hints about how one might productively try again.
  
-The goal was always to make a dependently typed language as approachable as python\footnote{We have perhaps succeeded in making a dependently typed language as approachable as Haskell.}.
+The goal was always to make a dependently typed language as approachable as python\footnote{
+  We have perhaps succeeded in making a dependently typed language as approachable as Haskell.
+}.
 While I believe a \fullSp{} dependently typed language with runtime definitional equality checking, dependent pattern matching and with no restrictions on recursion are part of that practical language, there are still lingering usability issues.
 For those who share the dream of more reliable software through easier to use dependently typed languages, here are some lines of work for your consideration.
 
@@ -42,7 +44,7 @@ Programmers could justify these proofs as a way to remove runtime checks and mak
 Just as with \ac{ETT} many desirable properties such as function extensionality would still not be provable.
 We have pushed this to future work since there are already many explored strategies for dealing with equality proofs in an Intentional Type Theory that are suitable for avoiding warnings in the current implementation.
 
-Currently blame based errors aren't handled\footnote{or caught}.
+Currently blame based errors aren't handled\footnote{Or caught.}.
 Programmers may want to use the information from a bad cast to build the final output, it might even be possible to capture a well typed term that witnesses the inequality.
 For instance,
 \todo{fix example}
@@ -61,7 +63,9 @@ h x =
 
 Though additional research would be needed for exactly the form the contradictions should take if they are made available to the handler.
 
-Handling effects in a dependent type system is subtle\footnote{everything about dependent types is subtle} since the handling construct can observe differences that should not otherwise be apparent.
+Handling effects in a dependent type system is subtle\footnote{
+  Everything about dependent types is subtle.
+} since the handling construct can observe differences that should not otherwise be apparent.
 This is most clearly seen in the generalization of Herbelin's paradox\todo{independent cite} presented in \cite{pedrot2020fire}.
 The problem is that the value of a \Bool{} term may depend on effects that cause logical unsoundness (or worse).
 The paradox can be presented in our system with an additional handling construct,

@@ -16,11 +16,11 @@ Note that the location tags match exactly with the check annotations of the \bid
 For technical reasons the set of locations is nonempty, and a specific null location ($.$)\todo{- instead of . ?} is designated.
 That null location can be used when we need to generate fresh terms, but have no sensible location information available.
 All the meta theory from \ch{2} goes through assuming that all locations are equivalent and by generating null locations when needed\footnote{
-For instance, the parallel reduction relation will associate all locations,
-$\frac{M\Rrightarrow M'\quad N\Rrightarrow N'}{\left(x:M_{l}\right)\rightarrow N_{l'}\Rrightarrow\left(x:M'_{l''}\right)\rightarrow N'_{l'''}}\,\rulename{\Rrightarrow-fun-ty}$,
-so that the relation does not discriminate over syntaxes that come from different locations.
-While the $\textbf{max}$ function will map terms into the null location,
-$max\left(\left(x:M_{\ell}\right)\rightarrow N_{\ell'}\right)=\textbf{max}\left(\left(x:\textbf{max}\left(M\right)_{.}\right)\rightarrow \textbf{max}\left(N\right)_{.}\right)$
+  For instance, the parallel reduction relation will associate all locations,
+    $\frac{M\Rrightarrow M'\quad N\Rrightarrow N'}{\left(x:M_{l}\right)\rightarrow N_{l'}\Rrightarrow\left(x:M'_{l''}\right)\rightarrow N'_{l'''}}\,\rulename{\Rrightarrow-fun-ty}$,
+    so that the relation does not discriminate over syntaxes that come from different locations.
+  While the $\textbf{max}$ function will map terms into the null location,
+    $max\left(\left(x:M_{\ell}\right)\rightarrow N_{\ell'}\right)=\textbf{max}\left(\left(x:\textbf{max}\left(M\right)_{.}\right)\rightarrow \textbf{max}\left(N\right)_{.}\right)$.
 }.
 We will avoid writing these annotations when they are unneeded (explicitly in \Fref{surface-pre-syntax-loc-abrev}).
 

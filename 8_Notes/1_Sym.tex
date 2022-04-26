@@ -211,14 +211,14 @@ Property based testing involves writing functions that encode the properties of 
 It is only natural that some of that research has been extended to dependent types:
 \begin{itemize}
 \item
-QuickChick\footnote{https://github.com/QuickChick/QuickChick} \cite{denes2014quickchick,lampropoulos2017generating,lampropoulos2017beginner,lampropoulos2018random}
+QuickChick\footnote{\url{https://github.com/QuickChick/QuickChick}} \cite{denes2014quickchick,lampropoulos2017generating,lampropoulos2017beginner,lampropoulos2018random}
  uses type-level predicates to construct generators with soundness and completeness properties, but without support for higher order functions.
 However, testing requires building type classes that establish the properties needed by the testing framework such as decidable equality.
 This is presumably out of reach of novice Coq users.
 \begin{itemize}
 \item
 Current work in this area uses coverage guided techniques in \cite{lampropoulos2019coverage} like those in symbolic execution.
-More recently Benjamin Pierce has used Afl on compiled Coq code as a way to generate counter examples\footnote{https://www.youtube.com/watch?v=dfZ94N0hS4I}\todo{review this, maybe there's a paper or draft now?}.
+More recently Benjamin Pierce has used Afl on compiled Coq code as a way to generate counter examples\footnote{\url{https://www.youtube.com/watch?v=dfZ94N0hS4I}}\todo{review this, maybe there's a paper or draft now?}.
 \end{itemize}
 \item \cite{dybjer2003combining} added QuickCheck style testing to (version 1 of) Agda.
 \end{itemize}

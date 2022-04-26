@@ -81,7 +81,8 @@ Holding the type information in the superscript isn't absolutely needed, but all
 The syntax allows data, though with some differences from \ch{4}.
 Data constructors and data type constructors now carry their explicit types, to emphasize that the type information will be needed for some reductions\footnote{
   This also reflects our implementation.
-  A more efficient implementation would probably not include them in the term syntax}.
+  A more efficient implementation would probably not include them in the term syntax.
+}.
 Motives are no longer needed on \case{} expressions, and type/cast tracking will be handled implicitly.
 In addition to the handled patterns, \case{} expressions also will contain a covering of unhandled patterns, for use in warnings and errors.
 Further, we allow two new observations, to observe the indices of data type constructors and term constructors respectively.

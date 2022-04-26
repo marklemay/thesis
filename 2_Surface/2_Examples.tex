@@ -49,7 +49,9 @@ For instance, boolean data is eliminated against true and false, two tags with n
 This can also be recognized as the if-then-else construct, that is built into most programming languages.
 So $\mathbb{B}_{c}$ encodes the possibility of choice between two elements, $true_{c}$ picks the $then$ branch, and $false_{c}$ picks the $else$ branch.
 
-Natural numbers\footnote{called \textbf{church numerals} in this scheme.} are encodable with two tags, zero and successor.
+Natural numbers\footnote{
+  Called \textbf{church numerals} in this scheme.
+} are encodable with two tags, zero and successor.
 Where the successor tag also contains the result of processing the preceding number.
 So $\mathbb{N}_{c}$ encodes those two choices, $(X\rightarrow X)$ handles the recursive result of the prior number in the successor case, and the $X$ argument specifies how to handle the base case of $0$.
 This can be viewed as a looping construct with temporary storage that loops exactly as many times as the number it represents.
@@ -94,8 +96,8 @@ $0$ is clearly an even number, so our inhabitant could be $\lambda f\Rightarrow 
 One of the most interesting propositions is the proposition of equality.
 $\doteq$ is referred to as \textbf{Leibniz equality} since two terms are equal when they behave the same on all predicates\footnote{
   Originally, Leibniz assumed a metaphysical identification of ``substance'', not a mathematical notion of equality\cite[Section 9]{Leibniz1686}.
-  Over time the principle evolved into the current notion of ``the identification of indiscernibles'', and is referred to as \textbf{Leibniz's law}.}.
-  \todo{cite the ency of philosophy}
+  Over time the principle evolved into the current notion of ``the identification of indiscernibles'', and is referred to as \textbf{Leibniz's law}.
+}. \todo{cite the ency of philosophy}
 We can prove $\doteq$ is an equivalence within the system by proving it is reflexive, symmetric, and transitive.
 \todo{give example}
 % Additionally we can prove congruence.

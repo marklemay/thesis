@@ -95,8 +95,8 @@ For instance, $\left(\left(1\sim_{\ell,app_{1}}^{\Nat{} }0\right)+2\right)\ \mat
 
 There are two new sources of blame from the \case{} construct.
 The \clang{} records every ``unhandled'' branch and if a \scrut{} hits one of those branches the \case{} will be blamed for in-exhaustiveness\footnote{
-  This runtime error is conventional in ML style languages, and is even
-how Agda handles incomplete matches }.
+  This runtime error is conventional in ML style languages, and is even how Agda handles incomplete matches.
+}.
 If a \scrut{} list primitively contradicts the pattern coverage blame can be extracted from the \scrut{}. 
 Since our type system will ensure complete coverage (based only on constructors) if a \scrut{} escapes the complete pattern match, it must be that there was blamable a cast in the \scrut.
 % We have elided most of the structural rules that extract blame from terms, paths, and casts.

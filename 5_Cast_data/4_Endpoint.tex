@@ -208,7 +208,9 @@ Data type constructors and data term constructors have the function type implied
 
 The \rulename{\sqsupseteq-\case{}} states that a \case{} expression has a corresponding \case{} expression endpoint:
 \begin{itemize}
-  \item The endpoints of the \scruts{} correspond to an appropriate telescope that is compatible with the patterns\footnote{the endpoint and typing judgment can be extended to lists and telescopes}.
+  \item The endpoints of the \scruts{} correspond to an appropriate telescope that is compatible with the patterns\footnote{
+    The endpoint and typing judgment can be extended to lists and telescopes.
+  }.
   \item A motive $B'$ must exist under the context extended with that telescope.
   \item Every pattern must cast-check against the telescope.
   \item The body of every pattern must have an endpoint consistent with the motive and pattern.

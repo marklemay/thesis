@@ -3,7 +3,9 @@
 How should a program observe data?
 Since a term of a given data type can only be created with one of the constructors from its definition, we can completely handle a data expression if each possible constructor is accounted for.
 For instance, \Nat{} has the two constructors $\mathtt{Z}$ and \Suc (which holds the preceding number), so the expression $\mathsf{case}\,n\,\left\{ |\,Z\Rightarrow Z\,|\,S\,x\Rightarrow x\right\}$ will extract the proceeding number from $n$ (or $0$ if $n=0$).
-We will call the term being inspected the \textbf{\scrut{}}\footnote{also called a \textbf{discriminee}}, here $n$ is the \scrut{}.
+We will call the term being inspected the \textbf{\scrut{}}\footnote{
+  Also called a \textbf{discriminee}.
+}, here $n$ is the \scrut{}.
 % In this light, boolean case elimination corresponds to the if-then-else expression found in many mainstream languages.
  
 This \Nat{} elimination is type checkable since we know the intended output type of each branch (\Nat{} in the above example), and can check that they are compatible.
@@ -337,7 +339,9 @@ These rules make use of several convenient shorthands:
 
 Extensions to the parallel reduction rules are listed in Figure \ref{fig:surface-data-red}.
 They follow the scheme of parallel reductions laid out in \ch{2}.
-The \rulename{\Rrightarrow-\case{}-red} rule\footnote{Also called $\iota$, or Iota reduction}\todo{mention beta in footnote in CH2} reduces a \case{} expression by choosing the appropriate branch.
+The \rulename{\Rrightarrow-\case{}-red} rule\footnote{
+  Also called $\iota$, or Iota reduction.
+}\todo{mention beta in footnote in CH2} reduces a \case{} expression by choosing the appropriate branch.
 The \rulename{\Rrightarrow-\case{}<>-red} rule removes the motive annotation, much like the annotation rule in \ch{2}.
 The rules \rulename{\Rrightarrow-\case{}<>}, \rulename{\Rrightarrow-D}, and \rulename{\Rrightarrow -d} keep the $\Rrightarrow$ relation reflexive.
 The reduction relation is generalized to lists in the expected way.

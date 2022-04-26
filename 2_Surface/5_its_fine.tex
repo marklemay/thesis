@@ -2,7 +2,8 @@
  
 When type systems are used as logics, it is desirable that:
 \begin{itemize}
-\item There exists a type that is uninhabited in the empty context, so the system is \textbf{logically consistent}\footnote{also called \textbf{logically sound}}.
+\item There exists a type that is uninhabited in the empty context, so the system is \textbf{logically consistent}\footnote{
+  Also called \textbf{logically sound}.}.
 \item Type checking is decidable.
 \end{itemize}
 Neither the \ac{TAS} system or the \bidir{} systems have these properties\footnote{
@@ -102,7 +103,7 @@ If a language admits a sufficiently powerful macro or preprocessor system that c
   Apparently even the grammar of C++ is undecidable.
 }, Scala, and Rust undecidable).
 Unless type features are considered very carefully, they can often create undecidable type checking (Java generics, C++ templates, Scala implicit parameters\footnote{
-  without a maximum search depth
+  Without a maximum search depth.
 }\todo{sentence fragments in footnotes} and OCaml modules, make type checking undecidable in those languages).
 Haskell may be the most popular statically typed language with decidable type checking (and even then, popular GHC compiler flags make type checking undecidable).
 Even the Hindley-Milner type checking algorithm that underlies Haskell and ML, has a worst case complexity that is double exponential, which under normal circumstances would be considered intractable.

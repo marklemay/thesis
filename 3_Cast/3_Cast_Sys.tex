@@ -152,7 +152,9 @@ As before $\Rrightarrow_{*}$ can be shown to be confluent, and used to generate 
 The proofs follow the same structure as \ch{2}, but since observations can contain terms, $\Rrightarrow$ and $\textbf{max}$ must be extended to observations.
 Proofs must be extended to mutually induct on observations, since they can contain expressions that could also reduce.
  
-The explicit new rules for $\textbf{max}$ are given in \Fref{cast-sys-max} with the structural rules omitted\footnote{they are the same as \ch{2}}.
+The explicit new rules for $\textbf{max}$ are given in \Fref{cast-sys-max} with the structural rules omitted\footnote{
+  They are the same as \ch{2}.
+}.
  
  
 \begin{sidewaysfigure}
@@ -718,7 +720,9 @@ As in the \slang{}, the \clang{} is logically unsound, by design.
  
 Just as there are many different flavors of definitional equality that could have been used in \ch{2}, there are also many possible degrees that runtime equality can be enforced.
 The \Blame{} relation in \Fref{cast-blame} outlines a minimal checking strategy that supports cast soundness.
-For instance\footnote{assuming the data types of \ch{5}}, $\mathtt{head}\,\Bool{}\,1\,\left(\mathtt{rep}\,\Bool{}\,\True{}\,0\right)$ will result in blame since $1$ and $0$ have different head constructors.
+For instance\footnote{
+  Assuming the data types of \ch{5}.
+}, $\mathtt{head}\,\Bool{}\,1\,\left(\mathtt{rep}\,\Bool{}\,\True{}\,0\right)$ will result in blame since $1$ and $0$ have different head constructors.
 But $\mathtt{head}\,\Bool{}\,1\,\left(\mathtt{rep}\,\Bool{}\,\True{}\,9\right)$ will not result in blame since $1$ and $9$ have the same head constructor and the computation can reduce to \True{}.
  
 It is likely that more aggressive checking is preferable in practice, especially in the presence of data types.
