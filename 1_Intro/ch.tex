@@ -98,7 +98,7 @@ If it is the case that $\mathtt{add}\,1\,x\,=\,\mathtt{add}\,x\,1$ the program w
 However, if there is a mistake in the implementation of $\mathtt{add}$, then it is possible $\mathtt{add}\,1\,x\,\cancel{=}\,\mathtt{add}\,x\,1$ and the program might get stuck.
 For instance, if the $\mathtt{add}$ function incorrectly computes $\mathtt{add}\,8\,1=0$ the above function will ``get stuck'' on the input $8$.
 
-While the intent and properties of the $\mathtt{add}$ function are clear to programmers from its name and type, this information is unavailable to the type system.
+While the intent and properties of the $\mathtt{add}$ function are clear to programmers from its name and type, this information is unusable by the type system.
 If the programmer made a mistake in the definition of addition, such that for some $x$, $\mathtt{add}\,1\,x\,\cancel{=}\,\mathtt{add}\,x\,1$, the system will not provide hints on which $x$ witnesses this inequality.
 Worse, the type system may even make it difficult to experiment with the $\mathtt{add}$ function, which makes repairing an actual bug difficult.
 
@@ -177,7 +177,7 @@ always a subset of syntax, or changes the syntax}
 
 By switching to the proposed workflow, type errors become type warnings, and the programmer is free to run their program and experiment, while still presented with all the information they would have gotten from a type error (in the form of warnings).
 If there are no warnings, the programmer could call their program a proof along the lines of the Curry-Howard correspondence\footnote{
-  In the system presented here the programmer will need to manually verify termination.
+  In the system presented here, the programmer will need to argue all relevant constructions are well founded to claim that they have a proof.
 }\todo{cite?}.
 If there is value in a type error it comes from the message itself and not the inconvenience it causes programmers.
 
@@ -278,12 +278,12 @@ Here we can rest on the intuition that functions that act the same are the same.
 Finally it is perfectly possible that there is a bug in the code invalidating one of the assumptions.
 There are two options for the programmer:
 \begin{itemize}
-\item Reformulate the above code so that there are no warnings, formally proving all the required properties in the language (this is possible but would take prohibitive effort).
-\item Exercise the $step$ function using standard software testing techniques.
+\item Reformulate the above code so that there are no warnings, formally proving all the required properties as one might in a conventional dependently typed language (this is possible but would take a serious effort).
+\item Exercise the $\mathtt{step}$ function using standard software testing techniques.
 If the interpreter does not preserve types, then a concrete counter example can be found.
 \end{itemize}
 The programmer is free to choose how much effort should go into removing warnings.
-But even if the programmer wanted a fully formally correct interpreter, it would still be wise to test the functions first before attempting such a proof.
+But even if the programmer wanted a fully formally proven correct interpreter, it would still be wise to test the functions first before attempting such a proof.
 
 \todo[inline]{For instance, if the following error is introduced, }
 
@@ -380,8 +380,8 @@ Though the system is not original, the proof presented is the simplest complete 
 }.
 \item Chapter 3 describes a dependently typed language (without data) with embedded equality checks, called the \textbf{\clang{}}.
 The \clang{} has its own version of type soundness, called \textbf{cast soundness}.
-Cast soundness is proven for the language, using a similar strategy to the type soundness proof of Chapter 2.
-An Elaboration procedure takes most (untyped) terms of the surface syntax into terms in the \clang{}.
+Cast soundness is proven for the \clang{}, using a similar strategy to the type soundness proof of \ch{2}.
+Then an Elaboration procedure takes most (untyped) terms of the surface syntax into terms in the \clang{} is presented.
 Several desirable properties for elaboration are presented. % and conjectured.
 \item Chapter 4 reviews how dependent data and pattern matching can be added to the \slang{} and explores some of the issues of data in a dependent type system.
 \item Chapter 5 shows how to extend the \clang{} with dependent data and pattern matching.

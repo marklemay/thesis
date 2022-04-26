@@ -46,13 +46,13 @@ $X:\star,x:X$ & $\vdash refl_{x:X}$ & $\coloneqq\lambda-\,cx\Rightarrow cx$ & $:
 Data types are expressible using Church encodings, (in the style of System F).
 Church encodings embed the elimination principle of a data type into higher order functions.
 For instance, boolean data is eliminated against true and false, two tags with no additional data.
-This can also be recognized as the familiar if-then-else construct. \todo{awk}
+This can also be recognized as the if-then-else construct, that is built into most programming languages.
 So $\mathbb{B}_{c}$ encodes the possibility of choice between two elements, $true_{c}$ picks the $then$ branch, and $false_{c}$ picks the $else$ branch.
 
 Natural numbers\footnote{called \textbf{church numerals} in this scheme.} are encodable with two tags, zero and successor.
-Where the successor tag also contains the result of the preceding number.
+Where the successor tag also contains the result of processing the preceding number.
 So $\mathbb{N}_{c}$ encodes those two choices, $(X\rightarrow X)$ handles the recursive result of the prior number in the successor case, and the $X$ argument specifies how to handle the base case of $0$.
-This can be viewed as a simple looping construct with temporary storage.
+This can be viewed as a looping construct with temporary storage that loops exactly as many times as the number it represents.
 
 Parameterized data types such as pairs and the $Either$ type can also be encoded in this scheme.
 A pair type can be used in any way the two terms it contains can, so a pair is defined as the curried input to a function.
@@ -63,21 +63,23 @@ The $Either$ type is handled if both possibilities are handled, so it is defined
 % not necessarily convenient
 Church encodings provide a theoretically lightweight way of working with data in a minimal lambda calculus.
 However, they are inconvenient.
-For instance, the predecessor function on natural numbers is not as simple as it would seem.
-To make the system easier for programmers, data types will be added directly in Chapter 4.
+For instance, the predecessor function on natural numbers is not as simple as it would seem.\todo{note the pulling teeth anticdote?}
+To make the system easier for programmers, data types will be added directly in \ch{4}.
 
 \subsection{Proposition Encodings}
 
+\todo{make clear the destinction between bool and LOGIC?}
+
 In general we associate the truth value of a proposition with the inhabitation of a type by a meaningful value.
-This meaningful inhabitant corresponds to a proof.
+This meaningful term corresponds to a proof.
 So, $\perp_{c}$, the ``empty'' type, can be interpreted as a false proposition.
 While $Unit_{c}$ can be interpreted as a trivially true proposition, since it has only one good inhabitant.
 
 Several of the church encoded data types we have seen can also be interpreted as logical predicates.
 For instance, the tuple type can be interpreted as logical $and$.
-$X\times_{c}Y$ can be inhabited when both $X$ and $Y$ are inhabited.
+Since $X\times_{c}Y$ can only be meaningully inhabited when both $X$ and $Y$ are inhabited.
 The $Either$ type can be interpreted as logical $or$.
-$Either_{c}\,X\,Y$ can be inhabited when either $X$ or $Y$ is inhabited.
+Since $Either_{c}\,X\,Y$ can be inhabited when either $X$ or $Y$ is inhabited.
 
 With dependent types, more interesting logical predicates can be encoded.
 For instance, we can characterize when a number is even with $Even_{c}\,x$.
@@ -87,7 +89,7 @@ Other predicates are encodable in this style (See \cite{Martin-Lof-1971,cardelli
 For instance, we can encode the existential quantifier as $\exists_{c}$ as shown in \Fref{surface-examples}.
 Then we can show $\exists_{c}x:\mathbb{N}_{c}\Rightarrow\,Even_{c}\,x$ with a suitable inhabitant of that type.
 $0$ is clearly an even number, so our inhabitant could be $\lambda f\Rightarrow f\,0_{c}\,tt_{c}$.
-Note that the existential is equivalent to the tuple if $Y$ does not depend on the value of $X$.
+% Note that the existential is equivalent to the tuple if $Y$ does not depend on the value of $X$.
 
 One of the most interesting propositions is the proposition of equality.
 $\doteq$ is referred to as \textbf{Leibniz equality} since two terms are equal when they behave the same on all predicates\footnote{
@@ -125,10 +127,10 @@ Large eliminations can be used to prove inequalities that can be hard or impossi
 For instance, \todo{ramsy flaged something here, was it the page break?}
 
 \begin{tabular}{lcll}
-  $\lambda pr\Rightarrow pr\,\left(\lambda x\Rightarrow x\right)\,\perp_{c}$ & : & $\lnot_{c}(\star\doteq_{\star}\perp_{c})$ & \makecell{the type universe is distinct\\ from Logical False}\tabularnewline
+  $\lambda pr\Rightarrow pr\,\left(\lambda x\Rightarrow x\right)\,\perp_{c}$ & : & $\lnot_{c}(\star\doteq_{\star}\perp_{c})$ & \makecell{The type universe is distinct\\ from Logical False}\tabularnewline
   $\lambda pr\Rightarrow pr\,\left(\lambda x\Rightarrow x\right)\,tt_{c}$ & : & $\lnot_{c}(Unit_{c}\doteq_{\star}\perp_{c})$ &  \makecell{Logical True is distinct\\ from Logical False}\tabularnewline
-  $\lambda pr\Rightarrow pr\,toLogic\,tt_{c}$ & : & $\lnot true_{c}(\doteq_{\mathbb{B}_{c}}false_{c})$ &  \makecell{boolean true and false\\ are distinct}\tabularnewline
-  $\lambda pr\Rightarrow pr\,isPos\,tt_{c}$ & : & $\lnot1_{c}()\doteq_{\mathbb{N}_{c}}0_{c})$ & 1 and 0 are distinct\tabularnewline
+  $\lambda pr\Rightarrow pr\,toLogic\,tt_{c}$ & : & $\lnot (true_{c}\doteq_{\mathbb{B}_{c}}false_{c})$ &  \makecell{Boolean true and false\\ are distinct}\tabularnewline
+  $\lambda pr\Rightarrow pr\,isPos\,tt_{c}$ & : & $\lnot (1_{c}\doteq_{\mathbb{N}_{c}}0_{c})$ & 1 and 0 are distinct\tabularnewline
 \end{tabular}
   
 \todo[inline]{1st not sensible in CC}
