@@ -57,21 +57,28 @@ Send to people for review
 * Chapter 6.1, Fuzzing person 
 * internet
 * almost done Luara
-* Eric's friends
 * contact authors about https://arxiv.org/pdf/2107.04859.pdf, should probly invite to defence
   * address concern that this is novel
 * CH2/4 June
 * The thank EE guy for maintaining the latex (show off the modifications)
 
 editing:
-* go through every footnote ang make it a snetence or not
 * same for proof
+
+last batch of paperwork https://www.bu.edu/cas/academics/phd-and-mfa-academics/graduation-information/
+* does chris need a special appointment? https://www.bu.edu/cas/files/2019/12/Updated-SSA.pdf
+* "At least three weeks before your defense you must submit a draft of your dissertation as a .pdf to grsrec@bu.edu for a format review"
+* 
 
 defence 
 * 1 page cheatsheet
   * protocal (1 hour talk, questions, private meetings with candidate, private with comitte, ...) as opening slide
   * syntax, formulas
 * mic check remote people
+
+post defence paperwork
+* PhD Contact Information Form http://www.bu.edu/cas/academics/phd-and-mfa-academics/graduation-information/candidate-contact-information-form-for-phd-and-mfa-students/
+* BU Doctoral Exit Survey, Survey of Earned Doctorates
 
 Fun drinks owed to proof readers:
 * Ramsay
