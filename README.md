@@ -14,29 +14,14 @@ Ask me if you would like a pdf with custom formatting (for instance single space
   * name the programming language? `dDyamic`? `dTest`?
   * better name for the `surface language` and `cast language`?
   * `gradual correctness`?
-### What to Review
-* Abstract
-  * photo ready?
+* prior work is complete and well represented
+* proofs are correct
+* formalisms are well motivated
+### Specifically
 * Chapter 1
-  * is a plausible argument made
   * should be readable by a general audience
-  * spelling, grammar
 * Chapter 2
-  * proofs are correct
-  * formalisms are well motivated
   * formalisms are "standard"
-  * prior work is complete and well represented
-  * spelling, grammar
-* Chapter 3
-  * proofs correct
-  * formalisms are well motivated
-* Chapter 4
-  * formalisms are well motivated
-  * prior work is correct, and complete
-* Chapter 5
-  * examples
-* Conclusion
-  * photo ready?
  
 ## compile pdf
 get bibliography and fully build BU style pdf with
