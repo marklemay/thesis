@@ -86,7 +86,9 @@
     Rrightarrow/.code={\tikzcdset{triple line}\pgfsetarrows{tikzcd implies cap-tikzcd implies}},
     RRightarrow/.code={\tikzcdset{quadruple line}\pgfsetarrows{tikzcd implies cap-tikzcd implies}}
 }    
+
 \newcommand*{\tarrow}[2][]{\arrow[Rrightarrow, #1]{#2}\arrow[dash, shorten >= 0.5pt, #1]{#2}}
+\newcommand*{\tarrows}[2][]{\arrow[Rrightarrow, shorten >= 2.5pt, #1]{#2}\arrow[dash, shorten >= 3pt, #1]{#2}}
 \newcommand*{\qarrow}[2][]{\arrow[RRightarrow, #1]{#2}\arrow[equal, double distance = 0.25pt, shorten >= 1.28pt, #1]{#2}}
 
 \makeatother

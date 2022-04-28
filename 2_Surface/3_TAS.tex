@@ -1,6 +1,6 @@
 \section{\SLang{} Type Assignment System}
  
-When is an expression reasonable? The expression $\star\star\star\star$ is allowed by the grammar of the language, but seems dubious.
+When is an expression reasonable? The expression $\star\star\star\star$ is allowed by the syntax of the language, but seems dubious.
 %Since $\star$  is not a function,  it has no way of being given an input by application.
 Type systems can disallow bad terms like these which in turn prevents bad runtime behavior.
  
@@ -8,7 +8,7 @@ We will present our type system as a \textbf{type assignment system} (\ac{TAS}).
 Type assignment systems are convenient to study the theory of a dependently typed language, because terms do not need to contain information to help type checking, complicating the syntax. %type annotations. %and will be easier to work with than other styles of typing that require variables to be annotated.
 % For instance, $\mathsf{fun}\,f\,x\Rightarrow m$ does not require a type be given for $f$ or $a$.
 \todo{church/curry?}\todo{awk}
-Practically this means that the type assignment system may need to ``infer'' an unrealistic amount of information if used as a type checking algorithm.
+Practically this means that the type assignment system should not be used as a type checking algorithm since it may need to ``infer'' an unrealistic amounts.
 This also means that terms do not necessarily have unique typings.
 For instance $\tasys\lambda x\Rightarrow x:\mathbb{N}_{c}\rightarrow\mathbb{N}_{c}$, and $\tasys\lambda x\Rightarrow x:\mathbb{B}_{c}\rightarrow\mathbb{B}_{c}$.
 These issues will be addressed when the more practical, \bidir{} type system is introduced in the next section.
@@ -77,13 +77,13 @@ Type soundness can be shown with a \textbf{progress} and \textbf{preservation}\f
   Most relevant textbooks outline forms of this proof for non-dependent type systems.
   For instance, \cite[Part 2]{pierce2002types}, \cite{KOKKE2020102440}, and \cite[Chapter 11]{chlipala2017formal}.
   % Chapter 3 of \cite{sjoberg2015dependently} has a similar progress and preservation style proof for a dependently typed language.
-}.
+}. \todo{move bolding to definition}
 \todo{TAPL cites Harper as a co-originator of progress-preservation.
 Maybe just email him?  it might be also good to get him for intractability (blum stuff).
 might want to review his book first}
-The preservation lemma shows that typing information is invariant over evaluation.
-While the progress lemma shows that a single step of evaluation for a well typed term in an empty context will not ``get stuck''.
-By iterating these lemmas together, it is possible to show that the type system prevents a term from evaluating to the class of bad behavior described above.
+The preservation theorem shows that typing information is invariant over evaluation.
+While the progress theorem shows that a single step of evaluation for a well typed term in an empty context will not ``get stuck''.
+By iterating these theorems together, it is possible to show that the type system prevents a term from evaluating to the class of bad behavior described above.
 For a progress and preservation style proof of a dependently typed language, everything hinges on a suitable definition of the $\equiv$ relation.
  
 The $\equiv$ relation characterizes when terms are ``obviously'' or ``automatically'' equal.
@@ -96,11 +96,11 @@ This Chapter will opt for an easier (but less powerful) $\equiv$ relation, since
 In a progress and preservation style proof, the $\equiv$ relation should:
  
 \begin{itemize}
-\item Be reflexive, $m\equiv m$
-\item Be symmetric, if $m\equiv m'$ then $m'\equiv m$
-\item Be transitive, if $m\equiv m'$ and $m'\equiv m''$ then $m\equiv m''$
-\item Be closed under substitutions and evaluation, for instance if $m\equiv m'$ and $n\equiv n'$ then $m\left[x\coloneqq n\right]\equiv m'\left[x\coloneqq n'\right]$
-\item Distinguish between type formers, for instance $\star\cancel{\equiv}\left(x:N\right)\rightarrow M$
+\item Be reflexive, $m\equiv m$.
+\item Be symmetric, if $m\equiv m'$ then $m'\equiv m$. % since computation will be run in reverse
+\item Be transitive, if $m\equiv m'$ and $m'\equiv m''$ then $m\equiv m''$.
+\item Be closed under substitutions and evaluation, for instance if $m\equiv m'$ and $n\equiv n'$ then $m\left[x\coloneqq n\right]\equiv m'\left[x\coloneqq n'\right]$.
+\item Distinguish between type formers, for instance $\star\cancel{\equiv}\left(x:N\right)\rightarrow M$.
 \end{itemize}
 A particularly clean definition of $\equiv$ arises by equating any terms that share a reduct via a system of parallel reductions,
  
@@ -110,10 +110,10 @@ A particularly clean definition of $\equiv$ arises by equating any terms that sh
  
 This relation:
 \begin{itemize}
-\item Is reflexive, by definition
-\item Is symmetric, automatically
-\item Is transitive, if $\Rrightarrow_{\ast}$ is confluent
-\item Is closed under substitution if $\Rrightarrow_{\ast}$ is closed under substitution, closed under evaluation automatically
+\item Is reflexive, by definition.
+\item Is symmetric, automatically.
+\item Is transitive, if $\Rrightarrow_{\ast}$ is confluent.
+\item Is closed under substitution if $\Rrightarrow_{\ast}$ is closed under substitution, closed under evaluation automatically.
 \item Distinguishes type constructors, if they are stable under reduction.
 For instance,
 \begin{itemize}
@@ -169,7 +169,7 @@ The system of parallel reductions is defined in \Fref{surface-reduction}.
 The only interesting rules are \rulename{\Rrightarrow-\mathsf{fun}-app-red} and \rulename{\Rrightarrow-::-red} since they directly perform reductions.
 The \rulename{\Rrightarrow-\mathsf{fun}-app-red} rule recursively reduces a function given an argument.
 The \rulename{\Rrightarrow-::-red} rule removes a type annotation, making type annotations definitionally irrelevant.
-The other rules are entirely structural.
+The other rules are structural and allow parallel reductions in any subterms.
 Repeating parallel reductions zero or more times is written $\Rrightarrow_{\ast}$.
  
 While this is a sufficient presentation of definitional equality, other variants of the relation are possible.
@@ -219,22 +219,22 @@ since $\Rrightarrow_{\ast}$ is reflexive
 \end{proof}
  
 \subsubsection{Closure Lemmas}
+% \begin{lem}
+% $\Rrightarrow$ is closed under substitutions.
+ 
+% The following rule is admissible for every substitution $\sigma$
+% \[
+% \frac{m\Rrightarrow m'}{m\left[\sigma\right]\Rrightarrow m'\left[\sigma\right]}\,\rulename{\Rrightarrow-sub-\sigma}
+% \]
+% \end{lem}
+ 
+ 
+% \todo{is this lemma needed or is it just to accommodate stupid binding stuff in coq?}
+% \begin{proof}
+% By induction on the $\Rrightarrow$ relation, using \rulename{\Rrightarrow-refl} in the \rulename{\Rrightarrow-var} case.
+% \end{proof}
 \begin{lem}
-$\Rrightarrow$ is closed under substitutions.
- 
-The following rule is admissible for every substitution $\sigma$
-\[
-\frac{m\Rrightarrow m'}{m\left[\sigma\right]\Rrightarrow m'\left[\sigma\right]}\,\rulename{\Rrightarrow-sub-\sigma}
-\]
-\end{lem}
- 
- 
-\todo{is this lemma needed or is it just to accommodate stupid binding stuff in coq?}
-\begin{proof}
-By induction on the $\Rrightarrow$ relation, using \rulename{\Rrightarrow-refl} in the \rulename{\Rrightarrow-var} case.
-\end{proof}
-\begin{lem}
-$\Rrightarrow$ is closed under substitutions that step.
+$\Rrightarrow$ is closed under substitutions that step.\todo{step vs. par reduce}
  
 Where $\sigma$, $\tau$ is a substitution.
 Where $\sigma\Rrightarrow\tau$ means for every $x$, $\sigma\left(x\right)\Rrightarrow\tau\left(x\right)$.
@@ -245,7 +245,7 @@ The following rule is admissible
 \]
 \end{lem}
 \begin{proof}
-By induction on the $\Rrightarrow$ relation.
+By induction on the $\Rrightarrow$ relation, since the substituted term will reduce in the \rulename{\Rrightarrow-var} case
 \end{proof}
  
 \begin{lem}
@@ -289,40 +289,46 @@ If a relation is confluent, in a sense, specific reduction choices don't matter 
  
  
 \begin{figure}
- Triangle Property
+\subsubsection*{Triangle Property}
 
-  $\forall{\color{red}m},{\color{red}m'}.\:{\color{red}m\Rrightarrow m'}\:\mathrm{implies}\:{\color{red}m'}{\color{blue}\Rrightarrow max\left(m\right)}$
-  
- \begin{tikzcd}
- \mathbin{\color{red}m} \tarrow[red]{r} \arrow[lightgray]{d} & \mathbin{\color{red}m'} \tarrow[blue]{ld} \\
- \mathbin{\color{blue}max(m)}                  &             
- \end{tikzcd}
+$\forall{\color{red}m},{\color{red}m'}.\:{\color{red}m\Rrightarrow m'}\:\mathrm{implies}\:{\color{red}m'}{\color{blue}\Rrightarrow max\left(m\right)}$
 
-  Diamond Property
+\begin{tikzcd}
+\mathbin{\color{red}m} \tarrow[red]{r} \arrow[lightgray]{d} & \mathbin{\color{red}m'} \tarrow[blue]{ld} \\
+\mathbin{\color{blue}max(m)}                  &             
+\end{tikzcd}
 
-  $\forall{\color{red}m},{\color{red}m'},{\color{red}m''}.\:{\color{red}m\Rrightarrow m'}\:\wedge\:{\color{red}m\Rrightarrow m''}\: \mathrm{implies}\: {\color{red}m'}{\color{blue}\Rrightarrow max\left(m\right)} \:\wedge\: {\color{red}m''}{\color{blue}\Rrightarrow max\left(m\right)}$
+\subsubsection*{Diamond Property}
+
+$\forall{\color{red}m},{\color{red}m'},{\color{red}m''}.\:{\color{red}m\Rrightarrow m'}\:\wedge\:{\color{red}m\Rrightarrow m''}\: \mathrm{implies}\: {\color{red}m'}{\color{blue}\Rrightarrow max\left(m\right)} \:\wedge\: {\color{red}m''}{\color{blue}\Rrightarrow max\left(m\right)}$
 \todo[inline]{in general this figure should be rethought, and images re-rendered. perhaps the table should be based on an arbitrary relation and the proofs should have the details filled in and specialized?}
-  \begin{tikzcd}
-                & {\color{red}m} \tarrow[red]{rd} \tarrow[red]{ld} \arrow[lightgray]{dd} &                \\
-  {\color{red}m'} \tarrow[blue]{rd} &                                       & {\color{red}m''} \tarrow[blue]{ld} \\
-               & {\color{blue}max(m)}                                &              
-  \end{tikzcd}
+\begin{tikzcd}
+              & {\color{red}m} \tarrow[red]{rd} \tarrow[red]{ld} \arrow[lightgray]{dd} &                \\
+{\color{red}m'} \tarrow[blue]{rd} &                                       & {\color{red}m''} \tarrow[blue]{ld} \\
+              & {\color{blue}max(m)}                                &              
+\end{tikzcd}
 
-  Confluence
+\vspace{0.1in}
 
-  $\forall{\color{red}m},{\color{red}n},{\color{red}n'}.\:{\color{red}m\Rrightarrow_{\ast}n}\:\wedge\:{\color{red}m\Rrightarrow_{\ast}n'}\:\mathrm{implies}\:\exists{\color{blue}n'''}.\:{\color{red}n}{\color{blue}\Rrightarrow_{\ast}{\color{blue}n'''}}\:\wedge\:{\color{red}n'}{\color{blue}\Rrightarrow{\color{blue}n'''}}$
+\subsubsection*{Confluence}
 
-  \begin{tikzcd}
-  % TODO look into proper subscripting of arrow heads
-                & {\color{red}m} \tarrow[red]{rd}[label={[pos=1,inner sep=0,outer sep=0]0:${\ast}$}]{} \tarrow[red]{ld}[label={[pos=1,inner sep=0,outer sep=0]0:${\ast}$}]{} &              \\
-  {\color{red}n'}  \tarrow[blue]{rd}[label={[pos=1,inner sep=0,outer sep=0]0:${\ast}$}]{} &                         & {\color{red}n''} \tarrow[blue]{ld}[label={[pos=1,inner sep=0,outer sep=0]0:${\ast}$}]{} \\
-                & {\color{blue}{\color{blue}n'''}}                      &                             
-  \end{tikzcd}
+$\forall{\color{red}m},{\color{red}n},{\color{red}n'}.\:{\color{red}m\Rrightarrow_{\ast}n}\:\wedge\:{\color{red}m\Rrightarrow_{\ast}n'}\ 
+\mathrm{implies}\ 
+\exists{\color{blue}n'''}.\:{\color{red}n}{\color{blue}\Rrightarrow_{\ast}{\color{blue}n'''}}\:\wedge\:{\color{red}n'}{\color{blue}\Rrightarrow_{\ast}{\color{blue}n'''}}$
 
-  \todo[inline]{absorb these diagrams into the proofs}
+\begin{tikzcd}
+% TODO look into proper subscripting of arrow heads
+  & {\color{red}m} \tarrows[red]{rd}[label={[pos=1,inner sep=0,outer sep=0]200:${}_{\ast}$}]{} 
+      \tarrows[red]{ld}[label={[pos=1,inner sep=0,outer sep=0]340:${}_{\ast}$}]{} &              \\
+{\color{red}n'}  \tarrows[blue]{rd}[label={[pos=1,inner sep=0,outer sep=0]200:${}_{\ast}$}]{} & 
+  & {\color{red}n''} \tarrows[blue]{ld}[label={[pos=1,inner sep=0,outer sep=0]340:${}_{\ast}$}]{} \\
+  & {\color{blue}{\color{blue}n'''}}                      &                             
+\end{tikzcd}
 
-  \caption{Rewriting Diagrams}
-  \label{fig:shape-diagrams}
+\todo[inline]{absorb these diagrams into the proofs}
+
+\caption{Rewriting Diagrams}
+\label{fig:shape-diagrams}
 \end{figure}
  
 Since type equivalence is defined by parallel reductions we can show confluence following the proof in \cite{TAKAHASHI1995120}\footnote{

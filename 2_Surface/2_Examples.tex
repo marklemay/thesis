@@ -43,7 +43,7 @@ $X:\star,x:X$ & $\vdash refl_{x:X}$ & $\coloneqq\lambda-\,cx\Rightarrow cx$ & $:
 
 \subsection{Church Encodings}
 
-Data types are expressible using Church encodings, (in the style of System F).
+Data types are expressible using Church encodings (in the style of System F).
 Church encodings embed the elimination principle of a data type into higher order functions.
 For instance, boolean data is eliminated against true and false, two tags with no additional data.
 This can also be recognized as the if-then-else construct that is built into most programming languages.
@@ -56,9 +56,9 @@ Where the successor tag also contains the result of processing the preceding num
 So $\mathbb{N}_{c}$ encodes those two choices, $(X\rightarrow X)$ handles the recursive result of the prior number in the successor case, and the $X$ argument specifies how to handle the base case of $0$.
 This can be viewed as a looping construct with temporary storage that loops exactly as many times as the number it represents.
 
-Parameterized data types such as pairs and the $Either$ type can also be encoded in this scheme.
+Parameterized data types such as pairs and the $Either_c$ type can also be encoded in this scheme.
 A pair type can be used in any way the two terms it contains can, so a pair is defined as the curried input to a function.
-The $Either$ type is handled if both possibilities are handled, so it is defined as a higher order function that will return an output if both possibilities are handled for input.
+The $Either_c$ type is handled if both possibilities are handled, so it is defined as a higher order function that will return an output if both possibilities are handled for input.
 
 \todo{church encoding citation?}
 
@@ -78,11 +78,11 @@ So, $\perp_{c}$, the ``empty'' type, can be interpreted as a false proposition.
 While $Unit_{c}$ can be interpreted as a trivially true proposition, since it has only one good inhabitant\footnote{
   Remember to keep the the different notions of ``truth'' separate:
 
-  $\mathbb{B}$ is a collection of 2 tags $true$ and $false$, above we could have renamed the tags.
-  Nothing but convention informs the meaning.
+  $\mathbb{B}$ is a collection of 2 tags $true$ and $false$.
+  The names aer abitrary, nothing but convention informs their meaning.
   If-then-else constructs could be turned into if-else-then without changing anything essential.
 
-  In type theory the false proposition contains no proofs, if you ever get one, something has gone wrong and you have an excuse to do anything.
+  In type theory the $\perp$ proposition contains no proofs, if you ever get one, something has gone wrong and you have an excuse to do anything.
   Meanwhile the $Unit$ proposition contains just a single trivial proof.
   Nothing interesting can be done with it, just as nothing can be done with the identity function.
   
@@ -96,15 +96,15 @@ The $Either$ type can be interpreted as logical $or$.
 Since $Either_{c}\,X\,Y$ can be inhabited when either $X$ or $Y$ is inhabited.
 
 With dependent types, more interesting logical predicates can be encoded.
-For instance, we can characterize when a number is even with $Even_{c}\,x$.
+For instance, we can characterize when a number is even with $Even_{c}$.
 We can show that $2$ is even by showing that $Even_{c}\,2_{c}$ is inhabited with the term $\lambda s\Rightarrow s\,tt_{c}$.
-Since the definition of $Even_{c}\,2_{c}$ expands to $(Unit_{c} \rightarrow \perp_{c}) \rightarrow \perp_{c}$, since we have a function $s : (Unit_{c} \rightarrow \perp_{c})$ we only need to give it a member of $Unit_{c}$ to satisfy the type constraint.
+Since the definition of $Even_{c}\,2_{c}$ expands to $(Unit_{c} \rightarrow \perp_{c}) \rightarrow \perp_{c}$, given a function $s : (Unit_{c} \rightarrow \perp_{c})$ we only need to give it a member of $Unit_{c}$ to satisfy the type constraint.
 
 Other predicates are encodable in this style (See \cite{Martin-Lof-1971,cardelli1986polymorphic,10.1016/0890-5401(88)90005-3} for more examples).
 For instance, we can encode the existential quantifier as $\exists_{c}$ as shown in \Fref{surface-examples}.
 Then we can show $\exists_{c}x:\mathbb{N}_{c}\Rightarrow\,Even_{c}\,x$ with a suitable inhabitant of that type.
 $0$ is clearly an even number, so our inhabitant could be $\lambda-f\Rightarrow f\,0_{c}\,tt_{c}$.
-By the expansion of definitions $tt_{c}\ :\ Even_{c}\,0_{c}$.
+Since the $Even_{c}\,0_{c}$ expands to $Unit_{c}$ so $tt_{c}\ :\ Even_{c}\,0_{c}$.
 % Note that the existential is equivalent to the tuple if $Y$ does not depend on the value of $X$.
 
 One of the most interesting propositions is the proposition of equality.
