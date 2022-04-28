@@ -8,7 +8,7 @@ We will present our type system as a \textbf{type assignment system} (\ac{TAS}).
 Type assignment systems are convenient to study the theory of a dependently typed language, because terms do not need to contain information to help type checking, complicating the syntax. %type annotations. %and will be easier to work with than other styles of typing that require variables to be annotated.
 % For instance, $\mathsf{fun}\,f\,x\Rightarrow m$ does not require a type be given for $f$ or $a$.
 \todo{church/curry?}\todo{awk}
-Practically this means that the type assignment system should not be used as a type checking algorithm since it may need to ``infer'' an unrealistic amounts.
+Practically this means that the type assignment system should not be used as a type checking algorithm since it may need to ``infer'' an unrealistic amount of information.
 This also means that terms do not necessarily have unique typings.
 For instance $\tasys\lambda x\Rightarrow x:\mathbb{N}_{c}\rightarrow\mathbb{N}_{c}$, and $\tasys\lambda x\Rightarrow x:\mathbb{B}_{c}\rightarrow\mathbb{B}_{c}$.
 These issues will be addressed when the more practical, \bidir{} type system is introduced in the next section.
@@ -386,7 +386,17 @@ If $m\Rrightarrow_{\ast}\,n'$, $m\Rrightarrow_{\ast}\,n''$, then there exists $n
 \end{thm}
  
 \begin{proof}
-By repeated application of the diamond property.
+By repeated application of the diamond property, ``tiling'' the interior region.
+% % https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZAZgBoAGAXVJADcBDAGwFcYkQQBfU9TXfQigAspAIzU6TVuy48QGbHgJEArKQBMEhizaIO3XooFEAbKWJapu8AHIbsw-2Up1YyzpkH5fJYOSiNd2k9B28jZ2RycyDrMHsvBSc-NSEYzzlE3yIRFTSQhJ9jFADUmm1g-QzCiNdcsqt0xyyUMhM82ztQzKKSQPqPfKrwvxELfoqu6r9XMckByqaeslK5ic4JGCgAc3giUAAzACcIAFskKJAcCCQAkEYsMGsoCGYAI0Y2GgALGHooJDAzEYjBoOHoWEY7Egj1CR1ON1B10QrjuDyeL3enxAPz+AKBIMu4MhemhbC8cLOyMRSDIqJhemeOBwmxA31+-xJBDJcgp52piBEdPRbw+rOx7LxwNBRKhXNhx0pgquSDUQvYzxFWJxHMBUsJENlMPJCpV-LM4txnJhNHu9JAjOZ-2N8MQtOViAA7Da0eqMaK2ZbdQSwQardyDibPfyABzeu0azFi7WS4MysPyl3m90ATjjwsTAZ1+OlofAcudlNzlyRogutvz-otRb1IeJZaNPMjserN1u9d9TJZhcN4ZAvMQtf5oj7PoZEEH-2H6YrSCVNZR-bnmqTEsQQZLbdJGcpt3dog3s-tfq1u-3+sP5c7LvPU9pm6v26Xd9bI+PSBRZ5vpeCaNsme7Fvev4rogqpnoK74gTegYQT+y5PieAE1vBwHXjuyEtmm7ajuOohujWqoIbhX4oYRR7QaIa43BROGfk2KYHlB6E3GRSBemqc4LnhHJEX+E6MYgVaUYJS4ifRsE1jO8bzo6QlQZQnBAA
+% \begin{tikzcd}
+%   &                                                       &                                                       & {} \arrow[rd, Rightarrow] \arrow[ld, Rightarrow] &                                                       &                                                       &                            \\
+%   &                                                       & {} \arrow[ld, Rightarrow] \arrow[rd, Rightarrow]      &                                                  & {} \arrow[rd, Rightarrow] \arrow[ld, Rightarrow]      &                                                       &                            \\
+%   & {} \arrow[ld, no head, dotted] \arrow[rd, Rightarrow] &                                                       & {} \arrow[rd, Rightarrow] \arrow[ld, Rightarrow] &                                                       & {} \arrow[rd, no head, dotted] \arrow[ld, Rightarrow] &                            \\
+% n' \arrow[rd, Rightarrow] &                                                       & {} \arrow[rd, Rightarrow] \arrow[ld, no head, dotted] &                                                  & {} \arrow[ld, Rightarrow] \arrow[rd, no head, dotted] &                                                       & n'' \arrow[ld, Rightarrow] \\
+%   & {} \arrow[rd, Rightarrow]                             &                                                       & {} \arrow[dd, no head, dotted]                   &                                                       & {} \arrow[ld, Rightarrow]                             &                            \\
+%   &                                                       & {} \arrow[rd, no head, dotted]                        &                                                  & {} \arrow[ld, no head, dotted]                        &                                                       &                            \\
+%   &                                                       &                                                       & n'''                                             &                                                       &                                                       &                           
+% \end{tikzcd}
 \end{proof}
 It follows that
 \begin{thm}
@@ -400,6 +410,14 @@ Since if $m\equiv m'$ and $m'\equiv m''$ then by definition for some $n$, $n'$, 
 Then by confluence there exists some $p$ such that $n\Rrightarrow_{\ast}p$ and $n'\Rrightarrow_{\ast}p$.
 By transitivity $m\Rrightarrow_{\ast}p$ and $m''\Rrightarrow_{\ast}p$.
 So by definition $m\equiv m''$.
+
+% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBpiBdUkANwEMAbAVxiRAFsQBfU9TXfIRQAmclVqMWbdgHJuvEBmx4CRACxjq9Zq0QcZcnn2WCiARlJnx2qXsJHF-FUOQBmS9cm7whhUoGqIqTCnjpsaNziMFAA5vBEoABmAE4QnIhkIDgQSKIgAEYwYFBIrpkAFjB0JXYErA4paUiZ2UgWIJXVbJBg9QqN6e2tiHmdNeB18kmp6S05iO4gDFi9bFAQTPkMrNRjSGBMDAzUOHRYDN2TDTNtJ-OLy6t665vbILtVNQdHJ2cXtatrk1EEN5holitvC8tjsOp99odjlk-pdAf0biM7khwY8oRsYe84V1EN8kadzqi+tNgYthgBWai4tb4t4fYmk34UgFUkADbFYxAMiFPEDQ1lEr6Izn-CaAihcIA
+\begin{tikzcd}
+% m \deqs{rrrr}{bend left} \deqs{rr} \arrow[rd, Rightarrow] &                          & m' \arrow[rr, no head] \arrow[ld, Rightarrow] \arrow[rd, Rightarrow] &                           & m'' \arrow[ld, Rightarrow] \\
+m \deqs{rr} \tarrows{rd}[label={[pos=1,inner sep=0,outer sep=0]200:${}_{\ast}$}]{}  &  & m' \deqs{rr} \tarrows{ld}[label={[pos=1,inner sep=0,outer sep=0]340:${}_{\ast}$}]{} \tarrows{rd}[label={[pos=1,inner sep=0,outer sep=0]200:${}_{\ast}$}]{}  &   & m''  \tarrows{ld}[label={[pos=1,inner sep=0,outer sep=0]340:${}_{\ast}$}]{} \\
+                                                                                    & n \tarrows{rd}[label={[pos=1,inner sep=0,outer sep=0]200:${}_{\ast}$}]{}           &                                                                      & n'  \tarrows{ld}[label={[pos=1,inner sep=0,outer sep=0]340:${}_{\ast}$}]{} &                            \\
+                                                                                    &                          & p                                                                    &                           &                           
+\end{tikzcd}
 \todo{clean up, diagram}
 \end{proof}
 \begin{fact}
