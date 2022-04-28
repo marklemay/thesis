@@ -49,13 +49,17 @@
 % Bibliography
 \newpage
 \singlespace
+
+% latex voodoo https://tex.stackexchange.com/questions/8458/making-the-bibliography-appear-in-the-table-of-contents
+\phantomsection
+\addcontentsline{toc}{chapter}{Bibliography}
+
 % \bibliographystyle{apalike}
 % \bibliography{thesis}
 \bibliographystyle{alpha} %can get away with alpha style single spaced citations?
 \bibliography{bibliography/dtest}
 \cleardoublepage
 
-\doublespace
 % Curriculum Vitae
 \include{0_Prelim/cv} 
 

@@ -31,3 +31,6 @@ draft.out
 draft.dvi
 draft.bbl
 draft.synctex.gz
+
+**/*.agda~
+**/*.agdai

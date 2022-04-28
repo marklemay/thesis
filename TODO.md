@@ -60,7 +60,6 @@ Send to people for review
 * contact authors about https://arxiv.org/pdf/2107.04859.pdf, should probly invite to defence
   * address concern that this is novel
 * CH2/4 June
-* The thank EE guy for maintaining the latex (show off the modifications)
 
 editing:
 * same for proof
