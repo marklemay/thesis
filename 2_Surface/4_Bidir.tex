@@ -5,11 +5,17 @@ There are many possible ways to localize the type checking process.
 We could ask that all variables be annotated at binders.
 This is enticing from a theoretical perspective, since it matches how type contexts are built up.
  
-However note that, our proof of $\lnot1_{c}\doteq_{\mathbb{N}_{c}}0_{c}$ will look like
- 
-$\lambda pr\underline{:1_{c}\doteq_{\mathbb{N}_{c}}0_{c}}\Rightarrow pr$
-$\left(\lambda n:\underline{\left(C:\left(\mathbb{N}_{c}\rightarrow\star\right)\right)\rightarrow C\,1_{c}\rightarrow C\,0_{c}}\Rightarrow n\,\star\,(\lambda-:\underline{\star\Rightarrow Unit_{c}})\,\perp_{c}\right)\,tt_{c}:\underline{\lnot1_{c}\doteq_{\mathbb{N}_{c}}0_{c}}$
- 
+However note that, our proof of $\lnot1_{c}\doteq_{\mathbb{N}_{c}}0_{c}$ will look like:
+
+\[
+\lambda pr\underline{:1_{c}\doteq_{\mathbb{N}_{c}}0_{c}}\Rightarrow
+\]
+\[
+\left(\lambda n \underline{:\left(C:\left(\mathbb{N}_{c}\rightarrow\star\right)\right)\rightarrow C\,1_{c}\rightarrow C\,0_{c}}\Rightarrow n\,\star\,(\lambda - \underline{:\star\Rightarrow Unit_{c}})\,\perp_{c}\right)\,tt_{c}
+% : \lnot1_{c}\doteq_{\mathbb{N}_{c}}0_{c}
+\]
+\todo{better newlining}
+
 More than half of the term is type annotations!
 Annotating every binding site requires a lot of redundant information.
 % Further the theory would need to deal with all the binders evaluating
@@ -17,17 +23,16 @@ Luckily there's a better way.
  
 \subsection{\Bidir{} Type Checking}
  
-\textbf{\Bidir{} type checking} is a popular form of lightweight type inference, which strikes a good compromise between the required type annotations and the simplicity of the procedure, and allowing for localized errors\footnote{
+\textbf{\Bidir{} type checking} is a popular form of lightweight type inference, which strikes a good compromise between the required type annotations and the simplicity of the procedure, while allowing for localized errors\footnote{
   \cite{christiansen2013bidirectional} is a good tutorial, \cite{10.1145/3450952} is a survey of the technique.
 }.
 In the usual \bidir{} typing schemes, annotations are only needed at the top-level, or around a function that is directly applied to an argument\footnote{
   More generally when an elimination reduction is possible.
 }.
 For example $(\lambda x\Rightarrow x+x)7$ would need to be written $\left((\lambda x\Rightarrow x+x)::\mathbb{N}\rightarrow\mathbb{N}\right)7$ to type check \bidir{}ly.
-Since programers rarely write functions that are immediately evaluated, this style of type checking usually only needs top level functions to be annotated\footnote{
+Since programers rarely write functions that are immediately evaluated, this style of type checking usually only needs top-level functions to be annotated\footnote{
   Even in Haskell, with full Hindley-Milner type inference, top level type annotations are encouraged.
-}\todo{ref style guide.
-the point was similarly made in Agda thesis.}.
+}\todo{ref style guide. the point was similarly made in Agda thesis.}.
 In fact, almost every example in \Fref{surface-examples} has enough annotations to type check \bidir{}ly without further information.
  
 \todo{note popularity}
@@ -100,11 +105,11 @@ For instance, $\vdash\left((\lambda x\Rightarrow x)::\mathbb{N}\rightarrow\mathb
 As in the expression, $\left((\lambda x\Rightarrow x)::\left((\mathbb{N}\rightarrow\mathbb{N})\underline{::}\star\right)\right)$ which will not infer.
  
 For these reasons, many presentations of \bidir{} dependent typing will evaluate the types needed for $\overleftarrow{ty}-\mathsf{fun}$, and $\rulename{\overrightarrow{ty}-\mathsf{fun}-app}$ into \whnf{}\footnote{
- as in \cite{COQUAND1996167}
+  As in \cite{COQUAND1996167}.
 }.
 With that caveat, this document opts for an unevaluated version of the rules to make some properties easier to present and prove.
 Specifically, this will allow us to present a terminating elaboration procedure in \ch{3}\footnote{
- The prototype implementation uses the more conventional \whnf{} check up to some "time bound", which avoids the issues above from the programmer's perspective but is more messy in theory.
+ The prototype implementation uses the more conventional \whnf{} check up to some ``time bound'', which avoids the issues above from the programmer's perspective but is more messy in theory.
 }.
 % the simplest possible presentation of \bidir{} type checking.
 
@@ -124,12 +129,11 @@ It is possible to prove \bidir{} type systems are type sound directly\cite{nanev
 But it would be difficult for the system described here since type annotations evaluate away, contradicting a potential preservation lemma.
 Alternatively we can show that a \bidir{} typing judgment implies a type assignment system typing judgment.
  
-\begin{thm}
-\Bidir{} implies \ac{TAS}
+\begin{thm} \Bidir{} implies \ac{TAS}.
  
-if $\Gamma\vdash m\overrightarrow{\,:\,}M$ then $\Gamma\vdash m\,:\,M$
+If $\Gamma\vdash m\overrightarrow{\,:\,}M$ then $\Gamma\vdash m\,:\,M$.
  
-if $\Gamma\vdash m\overleftarrow{\,:\,}M$ then $\Gamma\vdash m\,:\,M$
+If $\Gamma\vdash m\overleftarrow{\,:\,}M$ then $\Gamma\vdash m\,:\,M$.
 \end{thm}
  
 \begin{proof}
@@ -141,20 +145,19 @@ Therefore the \bidir{} system is also type sound.
  
 In \bidir{} systems, \textbf{annotatability}\footnote{
   Also called \textbf{completeness}.
-} is the property that any expression that types in a \ac{TAS} will type in the \bidir{} system with only additional annotations.
-This property doesn't exactly hold for the \bidir{} system presented here.
-For instance, $\vdash\left((\lambda x\Rightarrow x)::\left(\mathbb{N}\rightarrow\mathbb{N}::\star\right)\right)$ type checks in the \ac{TAS} system, but no amount of annotations will make it check in the \bidir{} system.
-Instead we can show that the \bidir{} system does not preclude any computation available in the \ac{TAS}, though annotations may need to be added (or removed).% no need to remove if properly \bidir{}).
+} is the property that any expression that types in a \ac{TAS} will type in the \bidir{} system with only additional annotations. \todo{does this actually hold?}
+% This property doesn't exactly hold for the \bidir{} system presented here.\todo{it actually might}
+% For instance, $\vdash\left((\lambda x\Rightarrow x)::\left(\mathbb{N}\rightarrow\mathbb{N}::\star\right)\right)$ type checks in the \ac{TAS} system, but no amount of annotations will make it check in the \bidir{} system. % that is incorrect since you can wedge a cast under the cast
+To save space we can instead show that the \bidir{} system does not preclude any computation available in the \ac{TAS}, though annotations may need to be added (or removed).% no need to remove if properly \bidir{}).
 We will call this property \textbf{weak annotatability}.
-\begin{thm}
-weak annotatability.
+\begin{thm} Weak annotatability.
  
-if $\Gamma\vdash m\,:\,M$ then $\Gamma\vdash m'\overleftarrow{\,:\,}M'$, $m\equiv m'$ and $M\equiv M'$
+If $\Gamma\vdash m\,:\,M$ then $\Gamma\vdash m'\overleftarrow{\,:\,}M'$, $m\equiv m'$ and $M\equiv M'$.
  
-if $\Gamma\vdash m\,:\,M$ then $\Gamma\vdash m'\overrightarrow{\,:\,}M'$, $m\equiv m'$ and $M\equiv M'$
+If $\Gamma\vdash m\,:\,M$ then $\Gamma\vdash m'\overrightarrow{\,:\,}M'$, $m\equiv m'$ and $M\equiv M'$.
 \end{thm}
  
 \begin{proof}
-by induction on the typing derivation, adding and removing annotations at each step that are convertible with the original $m$
+By induction on the typing derivation, adding and removing annotations at each step that are convertible with the original term.
 \end{proof}
 \todo[inline]{slight changes have been made, double check this}

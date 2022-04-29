@@ -10,7 +10,7 @@ Type assignment systems are convenient to study the theory of a dependently type
 \todo{church/curry?}\todo{awk}
 Practically this means that the type assignment system should not be used as a type checking algorithm since it may need to ``infer'' an unrealistic amount of information.
 This also means that terms do not necessarily have unique typings.
-For instance $\tasys\lambda x\Rightarrow x:\mathbb{N}_{c}\rightarrow\mathbb{N}_{c}$, and $\tasys\lambda x\Rightarrow x:\mathbb{B}_{c}\rightarrow\mathbb{B}_{c}$.
+For instance, $\tasys\lambda x\Rightarrow x:\mathbb{N}_{c}\rightarrow\mathbb{N}_{c}$, and $\tasys\lambda x\Rightarrow x:\mathbb{B}_{c}\rightarrow\mathbb{B}_{c}$.
 These issues will be addressed when the more practical, \bidir{} type system is introduced in the next section.
 \todo{move negative stuff later?}
  
@@ -82,7 +82,7 @@ Type soundness can be shown with a \textbf{progress} and \textbf{preservation}\f
 Maybe just email him?  it might be also good to get him for intractability (blum stuff).
 might want to review his book first}
 The preservation theorem shows that typing information is invariant over evaluation.
-While the progress theorem shows that a single step of evaluation for a well typed term in an empty context will not ``get stuck''.
+While the progress theorem shows that a single computation for a well typed term in an empty context will not ``get stuck''.
 By iterating these theorems together, it is possible to show that the type system prevents a term from evaluating to the class of bad behavior described above.
 For a progress and preservation style proof of a dependently typed language, everything hinges on a suitable definition of the $\equiv$ relation.
  
@@ -113,7 +113,7 @@ This relation:
 \item Is reflexive, by definition.
 \item Is symmetric, automatically.
 \item Is transitive, if $\Rrightarrow_{\ast}$ is confluent.
-\item Is closed under substitution if $\Rrightarrow_{\ast}$ is closed under substitution, closed under evaluation automatically.
+\item Is closed under substitution if $\Rrightarrow_{\ast}$ is closed under substitution, and closed under evaluation automatically.
 \item Distinguishes type constructors, if they are stable under reduction.
 For instance,
 \begin{itemize}
@@ -185,37 +185,34 @@ For instance, if $\sigma(x) = \star$ and $\sigma(y) = 1_c$, then instead of writ
 \subsection{Definitional Equality}
  
 We now have enough information to prove the critical properties of definitional equality.
-\todo{index theorem by chapter}\todo{would like to combine these?}
+
+\todo[inline]{named proofs would be nice but it seems akward https://tex.stackexchange.com/questions/12913/customizing-theorem-name}
  
 \subsubsection{Reflexivity Lemmas}
 \begin{lem}
 $\Rrightarrow$ is reflexive.
- 
-The following rule is admissible,
- 
+
+The following rule is admissible:
 \[
 \frac{\,}{m\Rrightarrow\,m}\,\rulename{\Rrightarrow-refl}
 \]
 \end{lem}
- 
 \begin{proof}
 By induction on the syntax of $m$.
 \end{proof}
-\begin{fact}
-$\Rrightarrow_{\ast}$ is reflexive.
-\end{fact}
+
+\begin{fact} $\Rrightarrow_{\ast}$ is reflexive.
+\end{fact} \todo{distracting? remove?}
  
-\begin{lem}
-$\equiv$ is reflexive.
- 
-The following rule is admissible,
+\begin{lem}$\equiv$ is reflexive.
+
+The following rule is admissible:
 \[
 \frac{\,}{m\equiv m}\,\rulename{\equiv-refl}
 \]
 \end{lem}
- 
 \begin{proof}
-since $\Rrightarrow_{\ast}$ is reflexive
+Since $\Rrightarrow_{\ast}$ is reflexive.
 \end{proof}
  
 \subsubsection{Closure Lemmas}
@@ -233,34 +230,34 @@ since $\Rrightarrow_{\ast}$ is reflexive
 % \begin{proof}
 % By induction on the $\Rrightarrow$ relation, using \rulename{\Rrightarrow-refl} in the \rulename{\Rrightarrow-var} case.
 % \end{proof}
-\begin{lem}
-$\Rrightarrow$ is closed under substitutions that step.\todo{step vs. par reduce}
+\begin{lem} $\Rrightarrow$ is closed under substitutions that parallel reduce.
  
 Where $\sigma$, $\tau$ is a substitution.
 Where $\sigma\Rrightarrow\tau$ means for every $x$, $\sigma\left(x\right)\Rrightarrow\tau\left(x\right)$.
 \todo{awk}
-The following rule is admissible
+The following rule is admissible:
 \[
 \frac{m\Rrightarrow m'\quad\sigma\Rrightarrow\tau}{m\left[\sigma\right]\Rrightarrow m'\left[\tau\right]}\,\rulename{\Rrightarrow-sub}
 \]
 \end{lem}
 \begin{proof}
-By induction on the $\Rrightarrow$ relation, since the substituted term will reduce in the \rulename{\Rrightarrow-var} case
+By induction on the $\Rrightarrow$ relation, since the substituted term will reduce in the \rulename{\Rrightarrow-var} case.
 \end{proof}
  
-\begin{lem}
-$\Rrightarrow_{\ast}$ is closed under substitutions that step.
+\begin{lem} $\Rrightarrow_{\ast}$ is closed under substitutions that parallel reduce.
+
 \[
 \frac{m\Rrightarrow_{\ast}m'\quad\sigma\Rrightarrow\tau}{m\left[\sigma\right]\Rrightarrow_{\ast}\,m'\left[\tau\right]}\,\rulename{\Rrightarrow_{\ast}-sub}
 \]
-is admissible
+is admissible.
 \end{lem}
- 
 \begin{proof}
 By induction on the $\Rrightarrow_{\ast}$ relation.
 \end{proof}
+
 \begin{lem}
-$\equiv$ is closed under substitutions that step.
+$\equiv$ is closed under substitutions that parallel reduce.
+
 \[
 \frac{m\equiv m'\quad\sigma\Rrightarrow\tau}{m\left[\sigma\right]\equiv m'\left[\tau\right]}\,\rulename{\equiv-sub}
 \]
@@ -269,12 +266,11 @@ is admissible.
  
 \begin{cor}
 $\equiv$ is closed under substituted reduction.
-\end{cor}
- 
+
 \[
 \frac{n\Rrightarrow_{\ast}n'}{m\left[x\coloneqq n\right]\equiv m\left[x\coloneqq n'\right]}
 \]
- 
+\end{cor}
 \begin{proof}
 By repeated $\rulename{\Rrightarrow_{\ast}-sub}$ and $\equiv\rulename{-Def}$.
 \end{proof}
@@ -291,21 +287,21 @@ If a relation is confluent, in a sense, specific reduction choices don't matter 
 \begin{figure}
 \subsubsection*{Triangle Property}
 
-$\forall{\color{red}m},{\color{red}m'}.\:{\color{red}m\Rrightarrow m'}\:\mathrm{implies}\:{\color{red}m'}{\color{blue}\Rrightarrow max\left(m\right)}$
+$\forall{\color{red}m},{\color{red}m'}.\:{\color{red}m\Rrightarrow m'}\:\mathrm{implies}\:{\color{red}m'}{\color{blue}\Rrightarrow \textbf{max}\left(m\right)}$
 
 \begin{tikzcd}
 \mathbin{\color{red}m} \tarrow[red]{r} \arrow[lightgray]{d} & \mathbin{\color{red}m'} \tarrow[blue]{ld} \\
-\mathbin{\color{blue}max(m)}                  &             
+\mathbin{\color{blue} \textbf{max}(m)}                  &             
 \end{tikzcd}
 
 \subsubsection*{Diamond Property}
 
-$\forall{\color{red}m},{\color{red}m'},{\color{red}m''}.\:{\color{red}m\Rrightarrow m'}\:\wedge\:{\color{red}m\Rrightarrow m''}\: \mathrm{implies}\: {\color{red}m'}{\color{blue}\Rrightarrow max\left(m\right)} \:\wedge\: {\color{red}m''}{\color{blue}\Rrightarrow max\left(m\right)}$
+$\forall{\color{red}m},{\color{red}m'},{\color{red}m''}.\:{\color{red}m\Rrightarrow m'}\:\wedge\:{\color{red}m\Rrightarrow m''}\: \mathrm{implies}\: {\color{red}m'}{\color{blue}\Rrightarrow \textbf{max}\left(m\right)} \:\wedge\: {\color{red}m''}{\color{blue}\Rrightarrow \textbf{max}\left(m\right)}$
 \todo[inline]{in general this figure should be rethought, and images re-rendered. perhaps the table should be based on an arbitrary relation and the proofs should have the details filled in and specialized?}
 \begin{tikzcd}
               & {\color{red}m} \tarrow[red]{rd} \tarrow[red]{ld} \arrow[lightgray]{dd} &                \\
 {\color{red}m'} \tarrow[blue]{rd} &                                       & {\color{red}m''} \tarrow[blue]{ld} \\
-              & {\color{blue}max(m)}                                &              
+              & {\color{blue} \textbf{max}(m)}                                &              
 \end{tikzcd}
 
 \vspace{0.1in}
@@ -356,35 +352,31 @@ $\textbf{max}($ & $m\,n$ & $)=$ & $\textbf{max}\left(m\right)\,\textbf{max}\left
  
 \todo{for example}
  
-\begin{lem}
-Triangle Property of $\Rrightarrow$
+\begin{lem} Triangle Property of $\Rrightarrow$.
  
 If $m\Rrightarrow\,m'$ then $m'\Rrightarrow \textbf{max}\left(m\right)$ .
 \end{lem}
- 
 \begin{proof}
-By induction on the derivation $m\Rrightarrow\,m'$, with the only interesting cases are where a reduction is not taken,
+By induction on the derivation $m\Rrightarrow\,m'$, with the only interesting cases are where a reduction is not taken:
 \begin{casenv}
 \item In the case of \rulename{\Rrightarrow-::}, $m'\Rrightarrow \textbf{max}\left(m\right)$, by \rulename{\Rrightarrow-::-red}.
 \item In the case of \rulename{\Rrightarrow-\mathsf{fun}-app}, $m'\Rrightarrow \textbf{max}\left(m\right)$ by \rulename{\Rrightarrow-\mathsf{fun}-app-red}.
 \end{casenv}
 \end{proof}
-\begin{lem}
-Diamond Property of $\Rrightarrow$
+
+\begin{lem} Diamond Property of $\Rrightarrow$.
  
 If $m\Rrightarrow\,m'$, $m\Rrightarrow\,m''$, implies $m'\Rrightarrow\,\textbf{max}\left(m\right)$, $m''\Rrightarrow\,\textbf{max}\left(m\right)$.
 \end{lem}
- 
 \begin{proof}
 By the triangle property.
  % Since $\textbf{max}\left(m\right)=\textbf{max}\left(m\right)$ .
 \end{proof}
-\begin{thm}
-Confluence of $\Rrightarrow_{\ast}$
+
+\begin{thm} Confluence of $\Rrightarrow_{\ast}$.
  
 If $m\Rrightarrow_{\ast}\,n'$, $m\Rrightarrow_{\ast}\,n''$, then there exists $n'''$ such that $n'\Rrightarrow\,n'''$ ,$n''\Rrightarrow\,n'''$.
 \end{thm}
- 
 \begin{proof}
 By repeated application of the diamond property, ``tiling'' the interior region.
 % % https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZAZgBoAGAXVJADcBDAGwFcYkQQBfU9TXfQigAspAIzU6TVuy48QGbHgJEArKQBMEhizaIO3XooFEAbKWJapu8AHIbsw-2Up1YyzpkH5fJYOSiNd2k9B28jZ2RycyDrMHsvBSc-NSEYzzlE3yIRFTSQhJ9jFADUmm1g-QzCiNdcsqt0xyyUMhM82ztQzKKSQPqPfKrwvxELfoqu6r9XMckByqaeslK5ic4JGCgAc3giUAAzACcIAFskKJAcCCQAkEYsMGsoCGYAI0Y2GgALGHooJDAzEYjBoOHoWEY7Egj1CR1ON1B10QrjuDyeL3enxAPz+AKBIMu4MhemhbC8cLOyMRSDIqJhemeOBwmxA31+-xJBDJcgp52piBEdPRbw+rOx7LxwNBRKhXNhx0pgquSDUQvYzxFWJxHMBUsJENlMPJCpV-LM4txnJhNHu9JAjOZ-2N8MQtOViAA7Da0eqMaK2ZbdQSwQardyDibPfyABzeu0azFi7WS4MysPyl3m90ATjjwsTAZ1+OlofAcudlNzlyRogutvz-otRb1IeJZaNPMjserN1u9d9TJZhcN4ZAvMQtf5oj7PoZEEH-2H6YrSCVNZR-bnmqTEsQQZLbdJGcpt3dog3s-tfq1u-3+sP5c7LvPU9pm6v26Xd9bI+PSBRZ5vpeCaNsme7Fvev4rogqpnoK74gTegYQT+y5PieAE1vBwHXjuyEtmm7ajuOohujWqoIbhX4oYRR7QaIa43BROGfk2KYHlB6E3GRSBemqc4LnhHJEX+E6MYgVaUYJS4ifRsE1jO8bzo6QlQZQnBAA
@@ -398,13 +390,13 @@ By repeated application of the diamond property, ``tiling'' the interior region.
 %   &                                                       &                                                       & n'''                                             &                                                       &                                                       &                           
 % \end{tikzcd}
 \end{proof}
+
 It follows that
-\begin{thm}
-$\equiv$ is transitive
+
+\begin{thm} $\equiv$ is transitive.
  
 If $m\equiv m'$ and $m'\equiv m''$ then $m\equiv m''$
 \end{thm}
- 
 \begin{proof}
 Since if $m\equiv m'$ and $m'\equiv m''$ then by definition for some $n$, $n'$, $m\Rrightarrow_{\ast}n$, $m'\Rrightarrow_{\ast}n$ and $m'\Rrightarrow_{\ast}n'$, $m''\Rrightarrow_{\ast}n'$. If $m'\Rrightarrow_{\ast}n$ and $m'\Rrightarrow_{\ast}n'$.
 Then by confluence there exists some $p$ such that $n\Rrightarrow_{\ast}p$ and $n'\Rrightarrow_{\ast}p$.
@@ -418,96 +410,91 @@ m \deqs{rr} \tarrows{rd}[label={[pos=1,inner sep=0,outer sep=0]200:${}_{\ast}$}]
                                                                                     & n \tarrows{rd}[label={[pos=1,inner sep=0,outer sep=0]200:${}_{\ast}$}]{}           &                                                                      & n'  \tarrows{ld}[label={[pos=1,inner sep=0,outer sep=0]340:${}_{\ast}$}]{} &                            \\
                                                                                     &                          & p                                                                    &                           &                           
 \end{tikzcd}
+\newline
 \todo{clean up, diagram}
 \end{proof}
-\begin{fact}
-$\equiv$ is an equivalence relation.
+
+\begin{fact} $\equiv$ is an equivalence relation.
 \end{fact}
- 
  
 \subsubsection{Stability}
 Next we confirm that type formers are never equated by definitional equality.
 Specifically, $\left(x:N\right)\rightarrow M\cancel{\equiv}\star$.
 If type formers are associated, the entire $\equiv$ relation may degenerate. % it will how we have defined it, it is convievable a more comlicated def eq relation could allow this in the presence of say inconsitent contexts
 Since definitional equality is defined in terms of reduction, it is sufficient to show that $\left(x:N\right)\rightarrow M\cancel{\Rrightarrow}\star$.
-We will prove slightly stronger lemmas about reduction that confirms this fact.
+We will prove slightly stronger lemmas about reduction that confirms this fact since it will be useful later.
 \todo{why? where is it used}
  
-\begin{lem}
-Stability of $\rightarrow$ over $\Rrightarrow_{\ast}$
+\begin{lem} Stability of $\rightarrow$ over $\Rrightarrow_{\ast}$.
  
 $\forall N,M,P.\left(x:N\right)\rightarrow M\Rrightarrow_{\ast}P\:\mathrm{implies}\:\exists N',M'.P=\left(x:N'\right)\rightarrow M'\land N\Rrightarrow_{\ast}N'\land M\Rrightarrow_{\ast}M'$
 \end{lem}
- 
 \begin{proof}
-By induction on $\Rrightarrow_{\ast}$,
+By induction on $\Rrightarrow_{\ast}$:
 \begin{casenv}
  \item $\rulename{\Rrightarrow_{\ast}-refl}$ follows directly.
  \item $\rulename{\Rrightarrow_{\ast}-trans}$ follows via the induction hypothesis and noting only the $\rulename{\Rrightarrow-\mathsf{fun}-ty}$ rule is possible as a step.
 \end{casenv}
 \end{proof}
-Therefore the we can derive an important fact about $\equiv$
-\begin{cor}
-Stability of $\rightarrow$ over $\equiv$
-the following rule is admissible
+
+Therefore the we can derive an important fact about $\equiv$.
+
+\begin{cor} Stability of $\rightarrow$ over $\equiv$.
+
+The following rule is admissible:
 \[
 \frac{\left(x:N\right)\rightarrow M\equiv\left(x:N'\right)\rightarrow M'}{N\equiv N'\quad M\equiv M'}
 \]
 \end{cor}
- 
 \begin{proof}
 By the definition of $\equiv$ and the lemma above.
 \end{proof}
  
 \subsection{Preservation}
  
-A useful property of a type systems is that evaluation preserves type\footnote{
+A useful property of a type system is that reduction preserves type\footnote{
   Similar proofs for dependent type systems can be found in \cite[Chapter 3]{luo1994computation}, \cite[Section 3.1]{10.1007/3-540-45413-6_27}(including eta expansion in an implicit system), \cite[appendix]{sjoberg2012irrelevance}, and formalized in the the examples of Autosubst\cite{SchaeferEtAl:2015:Autosubst:-Reasoning}.
-  }.
+}.
 \todo{push this further up?}
  
 We need several more technical lemmas before we can prove that $\Rrightarrow_{\ast}$ is type preserving.
-The lemmas needed are almost always on induction by typing derivations.
+These lemmas will almost always be justified by induction on typing derivations.
 % this allows the context to grow under the inductive hypothesis while still being well founded by the tree structure of the derivation.
  
 \subsubsection{Structural Properties}
  
 % unneeded: In many cases lemmas will produce derivations that are equal or smaller in height to one of the derivations used in their input, so that inductions can be performed on the output of the lemma while still being well founded.
-\begin{thm}
-Context Weakening
+\begin{thm} Context Weakening.
  
-The following rule is admissible
+The following rule is admissible:
 \[
 \frac{\Gamma\tasys n:N}{\Gamma,\Gamma'\tasys n:N}
 \]
 \end{thm}
- 
 \begin{proof}
 By induction on typing derivations.
 \end{proof}
-\begin{lem}
-Substitution Preservation
+
+\begin{lem} Substitution preserves types.
  
-The following rule is admissible\footnote{
- This lemma is sufficient for our informal account of variable substitution and binding.
- A fully formal account will be sensitive to the specific binding strategy, and we may need to prove this lemma as a corollary from simultaneous substitutions.
-}
+The following rule is admissible: %\footnote{
+%  This lemma is sufficient for our informal account of variable substitution and binding.
+%  A fully formal account will be sensitive to the specific binding strategy, and we may need to prove this lemma as a corollary from simultaneous substitutions.
+% }
 \[
 \frac{\Gamma\tasys n:N\quad\Gamma,x:N,\Gamma'\tasys m:M}{\Gamma,\Gamma'\left[x\coloneqq n\right]\tasys m\left[x\coloneqq n\right]:M\left[x\coloneqq n\right]}
 \]
 \end{lem}
- 
 \begin{proof}
-By induction on typing derivations.
- 
+By induction on typing derivations:
 \begin{casenv}
- \item \rulename{ty-var} follows by weakening the substituted term
- \item \rulename{ty-conv} follows from $\equiv\rulename{-Def}$ and that $\Rrightarrow_{\ast}$ is closed under substitution
- \item All other cases follow directly or by induction
+ \item \rulename{ty-var} follows by weakening the substituted term.
+ \item \rulename{ty-conv} follows from $\equiv\rulename{-Def}$ and that $\Rrightarrow_{\ast}$ is closed under substitution.
+ \item All other cases follow directly or by induction.
 \end{casenv}
 \end{proof}
 
-We extend the notion of definitional equality to contexts in \Fref{surface-Context-Equiv}.
+We extend the notion of definitional equality to contexts in \Fref{surface-Context-Equiv} so that we can ignore reductions in the context.
 When contexts are convertible, typing judgments still hold.
 \todo[inline]{why? This is needed to support reasoning under a binder.}
  
@@ -525,17 +512,16 @@ When contexts are convertible, typing judgments still hold.
 \end{figure}
  
 \begin{lem}
-Context Preservation
+% Context Preservation
+Contexts that are equivalent preserve types.
  
-the following rule is admissible
+The following rule is admissible:
 \[
 \frac{\Gamma\tasys n:N\quad\Gamma\equiv\Gamma'}{\Gamma'\tasys n:N}
 \]
 \end{lem}
- 
 \begin{proof}
-By induction over typing derivations,
- 
+By induction over typing derivations:
 \begin{casenv}
  \item \rulename{ty-var} follows since $\equiv$ is symmetric.
 % \item \rulename{ty-\mathsf{fun}-ty} and \rulename{ty-\mathsf{fun}} ...
@@ -544,11 +530,16 @@ By induction over typing derivations,
 \end{proof}
  
 \subsubsection{Inversion Lemmas}
-In the preservation proof we will need to reason backwards about the typing judgments implied by a typing derivation of term syntax.
-However this induction does not go through directly, and the induction hypothesis must be extended to definitional equality. \todo{awk}
+In the preservation proof we will need to reason backwards about the typing judgments implied by a typing derivation of a term with specific syntax.
+These are conventionally called inversion lemmas since they mirror the typing judgments.
+But unlike typing derivations which take in typing derivations for subterms, inversion lemmas conclude typing derivations for subterms.
+For this Chapter we will only need to prove an inversion lemma for functions.
+ 
+In a dependently typed setting, inversion lemmas cannot be proven directly by induction.
+The induction hypothesis must be extended over definitional equality.
  
 \begin{lem}
-$\mathsf{fun}$-Inversion (generalized)
+$\mathsf{fun}$-Inversion (generalized).
  
 \[
 \frac{\Gamma\tasys\mathsf{fun}\,f\,x\Rightarrow m\,:\,P\quad P\equiv\left(x:N\right)\rightarrow M}{\Gamma,f:\left(x:N\right)\rightarrow M,x:N\tasys m:M}
@@ -556,46 +547,41 @@ $\mathsf{fun}$-Inversion (generalized)
  
 is admissible.
 \end{lem}
- 
 \begin{proof}
-By induction on typing derivations,
+By induction on typing derivations:
  
 \begin{casenv}
- \item \rulename{ty-\mathsf{fun}} follows by the stability of \rulename{ty-\mathsf{fun}} and preservation of contexts
- \item \rulename{ty-conv} follows by transitivity of $\equiv$ and induction
- \item All other cases are impossible.\todo{end impossible cases with !}
+ \item \rulename{ty-\mathsf{fun}} follows by the stability of \rulename{ty-\mathsf{fun}} and preservation of contexts.
+ \item \rulename{ty-conv} follows by transitivity of $\equiv$ and induction.
+ \item All other cases are impossible!
 \end{casenv}
- 
 \end{proof}
-This allows us to conclude the more straightforward corollary
-\begin{cor}
-$\mathsf{fun}$-Inversion
+
+This allows us to conclude the more straightforward corollary:
+
+\begin{cor} $\mathsf{fun}$-Inversion.
  
 \[
 \frac{\Gamma\tasys\mathsf{fun}\,f\,x\Rightarrow m\,:\,\left(x:N\right)\rightarrow M}{\Gamma,f:\left(x:N\right)\rightarrow M,x:N\tasys m:M}
 \]
 \end{cor}
- 
 \begin{proof}
 By noting that $\left(x:N\right)\rightarrow M\equiv\left(x:N\right)\rightarrow M$, by reflexivity.
 \end{proof}
-%TODO: Note that the result of this lemma will always produce derivations of equal or smaller height to the input typing derivation.
-% unneeded
-\begin{thm}
-$\Rrightarrow$-Preservation
+
+\begin{thm} $\Rrightarrow$ preserves types.
  
-The following rule is admissible
+The following rule is admissible:
 \[
 \frac{\Gamma\tasys m:M\quad m\Rrightarrow m'}{\Gamma\tasys m':M}
 \]
 \end{thm}
- 
 \begin{proof}
-By induction on the typing derivation $\Gamma\tasys m:M$, specializing on $m\Rrightarrow m'$,
+By induction on the typing derivation $\Gamma\tasys m:M$, specializing on $m\Rrightarrow m'$:
 \todo{formatting}
 \begin{casenv}
- \item \rulename{ty-::} when \rulename{\Rrightarrow-::}, we must show $\Gamma\tasys m'::M':\,M$ and $\Gamma\tasys M':\star$
-  from $m\Rrightarrow m'$, $M\Rrightarrow M'$, $\Gamma\tasys m'\,:\,M$, and $\Gamma\tasys M\,:\,\star$.
+ \item \rulename{ty-::} when \rulename{\Rrightarrow-::}, we must show $\Gamma\tasys m'::M':\,M$ % and $\Gamma\tasys M':\star$
+  from $\Gamma\tasys m\,:\,M$, $\Gamma\tasys M\,:\,\star$, $m\Rrightarrow m'$, and $M\Rrightarrow M'$ .
   \newline
   \begin{tabular}{ll}
    $\Gamma\tasys M':\star$ & by induction\tabularnewline
@@ -603,10 +589,10 @@ By induction on the typing derivation $\Gamma\tasys m:M$, specializing on $m\Rri
    $M\equiv M'$ & by $M\Rrightarrow M'$\tabularnewline
    $\Gamma\tasys m'\,:\,M'$ & by \rulename{ty-conv}\tabularnewline
    $\Gamma\tasys m'::M':\,M'$ & by \rulename{ty-::}\tabularnewline
-   $M'\equiv M$ & by symmetry\tabularnewline
+   $M'\equiv M$ & by symmetry of $\equiv$\tabularnewline
    $\Gamma\tasys m'::M':\,M$ & by \rulename{ty-conv}\tabularnewline
  \end{tabular}
- \item \rulename{ty-\mathsf{fun}-ty} when \rulename{\Rrightarrow-\mathsf{fun}-ty} by preservation of contexts
+ \item \rulename{ty-\mathsf{fun}-ty} when \rulename{\Rrightarrow-\mathsf{fun}-ty} can be shown with preservation of contexts
  \item \rulename{ty-\mathsf{fun}-app} when \rulename{\Rrightarrow-\mathsf{fun}-app-red}, we must show
    \newline
    $\Gamma\tasys m'\left[f\coloneqq\mathsf{fun}\,f\,x\Rightarrow m',x\coloneqq n'\right]:M\left[x\coloneqq n\right]$
@@ -619,19 +605,20 @@ By induction on the typing derivation $\Gamma\tasys m:M$, specializing on $m\Rri
    $\Gamma,f:\left(x:N\right)\rightarrow M,x:N\tasys m'$ & by fun-inversion\tabularnewline
    $\Gamma\tasys n'\,:\,N$ & by induction\tabularnewline
    \makecell[l]{$\Gamma\tasys m'\left[f\coloneqq\mathsf{fun}\,f\,x\Rightarrow m',x\coloneqq n'\right]$\\$\ :M\left[x\coloneqq n'\right]$} & by substitution preservation \tabularnewline
-   $M\left[x\coloneqq n'\right]\equiv M\left[x\coloneqq n\right]$ & by substitution by steps\tabularnewline
+   $M\left[x\coloneqq n\right] \equiv M\left[x\coloneqq n'\right]$ & by substitution by $\Rightarrow$\tabularnewline
    \makecell[l]{$\Gamma\tasys m'\left[f\coloneqq\mathsf{fun}\,f\,x\Rightarrow m',x\coloneqq n'\right]$\\$\ :M\left[x\coloneqq n\right]$} & by \rulename{ty-conv}\tabularnewline
  \end{tabular}
  \item \rulename{ty-\mathsf{fun}-app} when \rulename{\Rrightarrow-\mathsf{fun}-app}, we must show
  \newline
- $\Gamma\tasys m'\,n':\,M\left[x\coloneqq n\right]$ from $\Gamma\tasys n\,:\,N$, $\Gamma\tasys m\,:\,\left(x:N\right)\rightarrow M$, $m\Rrightarrow m'$, $n\Rrightarrow n'$
+ $\Gamma\tasys m'\,n':\,M\left[x\coloneqq n\right]$ 
+ from $\Gamma\tasys n\,:\,N$, $\Gamma\tasys m\,:\,\left(x:N\right)\rightarrow M$, $m\Rrightarrow m'$, $n\Rrightarrow n'$.
  \newline
  \begin{tabular}{ll}
    $n\Rrightarrow n'$ & \tabularnewline
    $\Gamma\tasys m'\,:\,\left(x:N\right)\rightarrow M$ & by induction\tabularnewline
    $\Gamma\tasys n'\,:\,N$ & by induction\tabularnewline
    $\Gamma\tasys m'\,n':\,M\left[x\coloneqq n'\right]$ & \rulename{ty-\mathsf{fun}-app}\tabularnewline
-   $M\left[x\coloneqq n'\right]\equiv M\left[x\coloneqq n\right]$ & by substitution by steps\tabularnewline
+   $M\left[x\coloneqq n\right] \equiv M\left[x\coloneqq n'\right]$ & by substitution by $\Rightarrow$\tabularnewline
    $\Gamma\tasys m'\,n':\,M\left[x\coloneqq n\right]$ & \rulename{ty-conv}\tabularnewline
  \end{tabular}
  \item All other cases follow directly or by induction
@@ -640,14 +627,14 @@ By induction on the typing derivation $\Gamma\tasys m:M$, specializing on $m\Rri
  
 \subsection{Progress}
  
-The second key theorem to show is called progress.\todo{awk, it's name is the least interasting thing}
+The second key theorem to show in this style of proof is called progress.\todo{awk, it's name is the least interasting thing}
 The progress theorem states: for a well typed term in an empty context, then a further step can be taken or computation is finished.
 For non-dependently typed programming languages, these steps are easy to characterize, but for dependent types there are issues.\todo{awk}
 If we characterize computation with the $\Rrightarrow$ relation, the progress lemma holds in a meaningless way since we can always take a reflexive step.
 Thus a less reflexive relation is needed.
 Ideally the relation should also be deterministic and a sub relation of $\Rrightarrow_{*}$.
 We can choose a \cbv{} relation since% this meets all the properties required, and 
-  is a popular execution strategy that reflects actual prototype implementation.
+  is a popular execution strategy that reflects the prototype implementation.
  
 \begin{figure}
 \begin{tabular}{lcl}
@@ -692,10 +679,9 @@ A \cbv{} relation is defined in \Fref{surface-reduction-step}.
 The reductions are standard for a \cbv{} lambda calculus, except that type annotations are only removed from values.
  
 \todo{explicitly define stuck}
-\begin{fact}
-$\rightsquigarrow$ implies $\Rrightarrow$
+\begin{fact} $\rightsquigarrow$ implies $\Rrightarrow$.
  
-the following rule is admissible
+The following rule is admissible:
  
 \[
 \frac{m\rightsquigarrow m'}{m\Rrightarrow m'}
@@ -708,9 +694,9 @@ We will need a technical lemma that determines the syntax of a value in an empty
 These lemmas are usually called canonical form lemmas.
 Since the language of this chapter is so minimal, we only need to characterize the canonical form of functions.
  
-\begin{lem}
- $\mathsf{fun}$-Canonical form (generalized)
- If $\tasys v\,:\,P$ and $P\equiv\left(x:N\right)\rightarrow M$ then $v=\mathsf{fun}\,f\,x\Rightarrow m$.
+\begin{lem} $\mathsf{fun}$-canonical form (generalized).
+
+If $\tasys v\,:\,P$ and $P\equiv\left(x:N\right)\rightarrow M$ then $v=\mathsf{fun}\,f\,x\Rightarrow m$.
 \end{lem}
 \begin{proof}
 By induction on the typing derivation,
@@ -722,38 +708,36 @@ By induction on the typing derivation,
 \item other rules  are impossible, since they do not type values
 \end{casenv}
 \end{proof}
-as a corollary,
-\begin{cor}
-$\mathsf{fun}$-Canonical form (generalized)
+
+As a corollary,
+
+\begin{cor} $\mathsf{fun}$-canonical form.
  
 If $\tasys v\,:\,\left(x:N\right)\rightarrow M$ then \textup{$v=\mathsf{fun}\,f\,x\Rightarrow m$.}
 \end{cor}
  
-\todo{note that by only considering values, we can avoid the problematic
-application case}
+\todo{note that by only considering values, we can avoid the problematic application case}
  
 Finally we can prove the progress theorem.
-\begin{thm}
-Progress
+\begin{thm} Progress.
  
 If $\tasys m\,:\,M$ then $m$ is a value or there exists $m'$ such that $m\rightsquigarrow m'$
 \end{thm}
- 
 \begin{proof}
 As usual this follows form induction on the typing derivation
  
 \begin{casenv}
- \item \rulename{ty-\star}, $\star$ is a value
- \item \rulename{ty-var}, impossible in an empty context
- \item \rulename{ty-conv}, by induction
+ \item \rulename{ty-\star}, $\star$ is a value.
+ \item \rulename{ty-var}, impossible in an empty context!
+ \item \rulename{ty-conv}, by induction.
  \item \rulename{ty-::}, we have a typing derivation concluding $\tasys m::M\,:\,M$.
- By induction, $m$ is a value or there exists $m'$ such that $m\rightsquigarrow m'$.
+ By induction, $m$ is a value or there exists $m'$ such that $m\rightsquigarrow m'$:
  \begin{casenv}
-   \item if $m$ is a value, then $m::M\rightsquigarrow m$
-   \item if $m\rightsquigarrow m'$,then $m::M\rightsquigarrow m'::M$
+   \item If $m$ is a value, then $m::M\rightsquigarrow m$.
+   \item If $m\rightsquigarrow m'$,then $m::M\rightsquigarrow m'::M$.
  \end{casenv}
- \item \rulename{ty-\mathsf{fun}-ty}, $\left(x:M\right)\rightarrow N$ is a value
- \item \rulename{ty-\mathsf{fun}}, $\mathsf{fun}\,f\,x\Rightarrow m$ is a value
+ \item \rulename{ty-\mathsf{fun}-ty}, $\left(x:M\right)\rightarrow N$ is a value.
+ \item \rulename{ty-\mathsf{fun}}, $\mathsf{fun}\,f\,x\Rightarrow m$ is a value.
  \item \rulename{ty-\mathsf{fun}-app}, we have a typing derivation concluding $\tasys m\,n\ :\ M\left[x\coloneqq n\right]$ with the premises $\tasys m\,:\,\left(x:N\right)\rightarrow M$, $\Gamma\tasys n\,:\,N$.
  By induction, $m$ is a value or there exists $m'$ such that $m\rightsquigarrow m'$.
  By induction, $n$ is a value or there exists $n'$ such that $n\rightsquigarrow n'$.
@@ -761,7 +745,7 @@ As usual this follows form induction on the typing derivation
    \item if $m\rightsquigarrow m'$, then $m\,n\rightsquigarrow m'\,n$
    \item if $m$ is a value, and $n\rightsquigarrow n'$,  then $m\,n\rightsquigarrow m\,n'$
    \item if $m$ is a value, and $n$ is a value, then $m=\mathsf{fun}\,f\,x\Rightarrow p$ by canonical forms of functions.
-     The term steps $\left(\mathsf{fun}\,f\,x\Rightarrow p\right)n\rightsquigarrow p\left[f\coloneqq\mathsf{fun}\,f\,x\Rightarrow p,x\coloneqq n\right]$
+     The term steps $\left(\mathsf{fun}\,f\,x\Rightarrow p\right)n\rightsquigarrow p\left[f\coloneqq\mathsf{fun}\,f\,x\Rightarrow p,x\coloneqq n\right]$.
  \end{casenv}
 \end{casenv}
  
@@ -774,9 +758,15 @@ An interpreter is always free to take any $\Rrightarrow_*$, but if it is unclear
 \subsection{Type Soundness}
  
 The language has type soundness: well typed terms will never ``get stuck'' in the \slang{}.
-This follows by iterating the progress and preservation lemmas.
+
+\begin{thm} Type Soundness.
  
-\todo{Formally... in a theorem box}
+If $\tasys m\,:\,M$ and $m\rightsquigarrow_\ast m'$ then $m'$ will not get stuck.
+\end{thm}
+\begin{proof}
+This follows by iterating the progress and preservation lemmas.
+\end{proof}
+
 \todo{name thoerems, better case info}
 
 \todo{be explicit about the disconnect between type computation via par, and term level cbv}
@@ -902,7 +892,7 @@ For instance,
 ... & f\,0_{c}\,1_{c}
 \end{align*}
 
-What should be deduced for the type of $f$? One possibility is $f:\left(n:\mathbb{N}\right)\rightarrow n\,\star\,\left(\lambda-\Rightarrow\mathbb{N}_{c}\right)\,\mathbb{B}_{c}\rightarrow...$.
-But there are infinitely other possibilities.
+What should be deduced for the type of $f$? One possibility is $f:\left(n:\mathbb{N}\right)\rightarrow n\,\star\,\left(\lambda-\Rightarrow\mathbb{N}_{c}\right)\,\mathbb{B}_{c}\rightarrow...$ .
+But there are many other possibilities.
 Worse, if there is an error, it may be impossible to localize to a specific region of code.
 To make a practical type checker we need to insist that the user include some type annotations.

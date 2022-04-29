@@ -16,17 +16,16 @@ Neither the \ac{TAS} system or the \bidir{} systems have these properties\footno
  
 The \slang{} is logically inconsistent, since every type is inhabited.
  
-\begin{example}
-Every Type is Inhabited (by recursion)
+\begin{example} Every Type is Inhabited (by recursion).
  
 $\mathsf{fun}\,f\,x\Rightarrow f\,x\,:\,\perp_{c}$
 \todo{make proofs?, quantify over all the types?}
 \end{example}
  
 It is also possible to encode Girard's paradox, producing another source of logical unsoundness.
-\begin{example}
-Every Type is Inhabited (by \tit{})
+\begin{example} Every Type is Inhabited (by \tit{}).
  
+\todo{cite girard}
 \todo{full example}
  
 \todo[inline]{cite stuff (see https://stackoverflow.com/questions/18178999/do-agda-programs-necessarily-terminate), of course this happens in Girard's french thesis}
@@ -34,11 +33,11 @@ Every Type is Inhabited (by \tit{})
  
 A subtle form of recursive behavior can be built out of Gerard's paradox\cite{Reinhold89typecheckingis}, but this behavior is no worse than the unrestricted recursion already allowed.
 While it is possible to ``prove'' logically incorrect theorems this way by accident, doing so seems rare in practice.
-% link or cite https://proofassistants.stackexchange.com/questions/1219/has-anyone-ever-accidentally-proven-a-false-theorem-with-type-in-type
+\todo[inline]{link or cite https://proofassistants.stackexchange.com/questions/1219/has-anyone-ever-accidentally-proven-a-false-theorem-with-type-in-type}
  
 Operationally, logical inconsistency will be recognized by programmers as non-termination.
 Non-termination seems not to matter for programming languages in practice.
-For instance, in ML the type $\mathtt{f:Int->Int}$ does not imply the termination of $\mathtt{f\,2}$.
+For instance, in ML the type $\mathtt{f:Int} \rightarrow \mathtt{Int}$ does not imply the termination of $\mathtt{f\,2}$.
 While unproductive non-termination is always a bug, it seems an easy bug to detect and fix when it occurs in programs.
 In mainstream languages, types help to communicate the intent of termination, even though termination is not guaranteed by the type system.
 Importantly, no computation is prevented in the \slang{} in order to preserve logical consistency.
@@ -63,12 +62,10 @@ If the termination checker is updated in Coq, there is some chance older proof s
 With the architecture proposed here, code will always have the same static and dynamic behavior, though our understanding of termination might change.
  
 \subsubsection{Type Checking is Undecidable}
-\todo{lead in?}
+\todo{lead in?why would you want this?}
 
-\begin{thm}
-Type Checking is Undecidable
+\begin{thm} Type checking is undecidable.
 \end{thm}
- 
 \begin{proof}
 Given a thunk $f:Unit$ defined in PCF, it can be encoded into the surface system as a thunk $f':Unit_{c}$, such that if $f$ reduces to the canonical $Unit$ then $f'\Rrightarrow_{\ast}\lambda A.\lambda a.a$
  
