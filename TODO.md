@@ -43,12 +43,7 @@ the design of CastCIC."
 Formatting
 * when polishing each chapter do a search to find and replace cruft with macros
 * nice looking multi tabbed proof format?
-* validity/regularity
-* note on equality
 * make rule names conistent, match fonts
-* Consider experemantal presentations
-  * coloerizing inductive hypothises?
-  * greying out wf conditions that can be hidden
 * listing the git location and hash
 * try to clean up the formalizms with https://users.cs.northwestern.edu/~jesse/code/latex/ottalt/ottalt.pdf
 * http://lists.seas.upenn.edu/pipermail/types-list/2019/002163.html
@@ -61,11 +56,7 @@ Send to people for review
   * address concern that this is novel
 * CH2/4 June
 
-editing:
-* same for proof
-
 last batch of paperwork https://www.bu.edu/cas/academics/phd-and-mfa-academics/graduation-information/
-* does chris need a special appointment? https://www.bu.edu/cas/files/2019/12/Updated-SSA.pdf
 * "At least three weeks before your defense you must submit a draft of your dissertation as a .pdf to grsrec@bu.edu for a format review"
 * 
 

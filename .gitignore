@@ -32,5 +32,19 @@ draft.dvi
 draft.bbl
 draft.synctex.gz
 
+abstract.pdf
+abstract.blg
+abstract.toc
+abstract.lot
+abstract.lof
+abstract.ps
+abstract.out
+abstract.dvi
+abstract.bbl
+abstract.synctex.gz
+
+
+
 **/*.agda~
 **/*.agdai
+**/#*.agda#
