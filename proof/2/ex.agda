@@ -2,7 +2,8 @@
 
 module ex where
 
-open import Data.Nat
+open import Data.Nat hiding (_+_)
+open import Relation.Binary.PropositionalEquality hiding ([_])
 
 * = Set
 
@@ -17,9 +18,22 @@ not x = x -> bot
 
 NatC = (X : *) -> (X -> X) -> X -> X
 
+-- to debug with arabic numerals
 toC : ℕ -> NatC
 toC zero = λ _ _ z → z
 toC (suc n) = λ X s z → s (toC n X s z)
+
+fromC : NatC -> ℕ
+fromC n = n ℕ suc zero
+
+toFromTest : fromC (toC 5) ≡ 5
+toFromTest = refl
+
+_+_ : NatC -> NatC -> NatC
+x + y = \ X s z -> x X s (y X s z)
+
+addtest : ((toC 2) + (toC 3)) ≡ (toC 5)
+addtest = refl
 
 Even : NatC -> *
 Even x = ((x *) not) Unit
@@ -44,4 +58,28 @@ anyeven : Exists NatC Even
 anyeven = λ C z → z (λ X _ z₁ → z₁) (λ X z₁ → z₁)
 
 anyeven' : Exists NatC Even
-anyeven' = \ _ f -> f (toC 0) {!tt!}
+anyeven' = \ _ f -> f (toC 0) tt
+
+
+-- check chapter 3 claim
+
+xp1Is1px : (x : NatC) -> (toC 1) + x ≡ x + (toC 1)
+xp1Is1px x = {!!}
+-- even with eta not a def eq 
+
+
+
+-- example from discord
+
+Bool = (A : *) -> A -> A -> A
+
+True : Bool
+True _ t f = t
+
+False : Bool
+False _ t f = f
+
+--indBool : (P : Bool -> * ) -> P True -> P False -> (b : Bool) -> P b
+--indBool P t f b = b (P b) t f
+
+

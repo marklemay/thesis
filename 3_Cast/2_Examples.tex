@@ -8,26 +8,31 @@ We can re-examine some of the example terms from \ch{2}, but this time with equa
 %% walkthrough
 Higher order functions are dealt with by distributing function casts around applications.
 If an application happens to a cast of function type, the argument and body cast is separated and the argument cast is swapped.
-For instance, in
+For instance:
 \begin{align*}
-\, & \left(\left(\lambda x\Rightarrow x\&\&x\right)::_{\mathbb{B}\rightarrow\mathbb{B},\ell,.}\mathbb{N}\rightarrow\mathbb{N}\right)7\\
-\rightsquigarrow & \left(\left(\lambda x\Rightarrow x\&\&x\right)\left(7::_{\mathbb{N},\ell,.arg}\mathbb{B}\right)\right)::_{\mathbb{B},\ell,.bod[7]}\mathbb{N}\\
-\rightsquigarrow & \left(\left(7::_{\mathbb{N},\ell,.arg}\mathbb{B}\right)\&\&\left(7::_{\mathbb{N},\ell,.arg}\mathbb{B}\right)\right) ::_{\mathbb{B},\ell,.bod[7]}\mathbb{N}
+\, & \left(\left(\lambda x\Rightarrow x\,\&\,x\right)::_{\mathbb{B}_c \rightarrow\mathbb{B}_c , \ell}\mathbb{N}_c \rightarrow\mathbb{N}_c \right) 7_c\\
+\rightsquigarrow & \left(\left(\lambda x\Rightarrow x\,\&\,x\right)\left(7::_{\mathbb{N}_c , \ell, Arg}\mathbb{B}_c \right)\right)::_{\mathbb{B}_c , \ell, Bod_{7_c}}\mathbb{N}_c \\
+\rightsquigarrow & \left(\left(7_c ::_{\mathbb{N}_c , \ell, Arg}\mathbb{B}_c \right)\,\&\,\left(7_c ::_{\mathbb{N}_c , \ell, Arg}\mathbb{B}_c \right)\right) ::_{\mathbb{B}_c , \ell, Bod_{7_c}}\mathbb{N}_c 
 \end{align*}
-If evaluation gets stuck on $\&\&$ we can blame the argument of the cast for equating $\mathbb{N}$ and $\mathbb{B}$.
-The body observation records the argument the function is called with.
-For instance, in the $.bod[7]$ observation.
+\todo{use church encodings? or use data from chapter 6}
+If evaluation gets stuck on $\&$ we can blame the argument of the cast for equating $\mathbb{N}_c$ and $\mathbb{B}_c$.
+The $Bod$y observation records the argument the function is called with.
+For instance, in the $Bod_{7_c}$ observation.
 In a dependently typed function the exact argument may be important to give a good error.
+
+\subsection{Type Universes}
+ 
 Because casts can be embedded inside of casts, types themselves need to normalize and casts need to simplify.
 Since our system has one universe of types, type casts only need to simplify themselves when a term of type $\star$ is cast to $\star$.
-For instance,
+For instance:
+\todo[inline]{better example}
 \begin{align*}
-\, & \left(\left(\lambda x\Rightarrow x\right)::_{\left(\mathbb{B}\rightarrow\mathbb{B}\right)::_{\star,\ell,.arg}\star,\ell,.}\mathbb{N}\rightarrow\mathbb{N}\right)7\\
-\rightsquigarrow & \left(\left(\lambda x\Rightarrow x\right)::_{\mathbb{B}\rightarrow\mathbb{B}}\mathbb{N}\rightarrow\mathbb{N}\right)7\\
-\rightsquigarrow & \left(\left(\lambda x\Rightarrow x\right)\left(7::_{\mathbb{N},\ell,.arg}\mathbb{B}\right)\right)::_{\mathbb{B},\ell,.bod[7]}\mathbb{N}\\
-\rightsquigarrow & \left(\left(7::_{\mathbb{N},\ell,.arg}\mathbb{B}\right)\right)::_{\mathbb{B},\ell,.bod[7]}\mathbb{N}
+\, & \left(\left(\lambda x\Rightarrow x\right)::_{\left(\mathbb{B}_c \rightarrow\mathbb{B}_c \right)::_{\star,\ell,Arg}\star, \ell'}\mathbb{N}_c \rightarrow\mathbb{N}_c \right) 7_c\\
+\rightsquigarrow & \left(\left(\lambda x\Rightarrow x\right)::_{\mathbb{B}_c \rightarrow\mathbb{B}_c, \ell'}\mathbb{N}_c \rightarrow\mathbb{N}_c \right) 7_c\\
+% \rightsquigarrow & \left(\left(\lambda x\Rightarrow x\right)\left(7::_{\mathbb{N}_c ,\ell,.arg}\mathbb{B}\right)\right)::_{\mathbb{B},\ell,.bod[7]}\mathbb{N}_c \\
+% \rightsquigarrow & \left(\left(7::_{\mathbb{N}_c ,\ell,.arg}\mathbb{B}\right)\right)::_{\mathbb{B},\ell,.bod[7]}\mathbb{N}_c 
 \end{align*}
- 
+
 \subsection{Pretending $true=false$}
  
 Recall that we proved $\lnot true_{c}\doteq_{\mathbb{B}_{c}}false_{c}$ in \ch{2}.
@@ -35,7 +40,16 @@ What happens if it is assumed anyway?
 Every type equality assumption needs an underlying term, here we can choose $refl_{true_{c}:\mathbb{B}_{c}}:true_{c}\doteq_{\mathbb{B}_{c}}true_{c}$, and cast that term to $true_{c}\doteq_{\mathbb{B}_{c}}false_{c}$ resulting in $refl_{true_{c}:\mathbb{B}_{c}}::_{true_{c}\doteq_{\mathbb{B}_{c}}true_{c}}true_{c}\doteq_{\mathbb{B}_{c}}false_{c}$.
 Recall that $\lnot true_{c}\doteq_{\mathbb{B}_{c}}false_{c}$ is a shorthand for $true_{c}\doteq_{\mathbb{B}_{c}}false_{c}\rightarrow\perp_{c}$.
 What if we try to use our term of type $true_{c}\doteq_{\mathbb{B}_{c}}false_{c}$ to get a term of type $\perp_{c}$?
- 
+
+There is enough static information to generate a warning like:
+
+$\left(C:\left(\mathbb{B}_{c}\rightarrow\star\right)\right)\rightarrow C\,true_{c}\rightarrow\underline{C\,true_{c}}
+\overset{?}{=}
+\left(C:\left(\mathbb{B}_{c}\rightarrow\star\right)\right) \rightarrow C\,true_{c}\rightarrow\underline{C\,false_{c}}$
+
+To let the programmer know they are not doing something safe.
+But the program can still be run, the reductions are presented in \Fref{cast-ex-tf}.
+
 \begin{sidewaysfigure}
 \begin{tabular}{ll}
   % \makecell[l]{Void, ``empty'' type,\\ logical false}
@@ -69,11 +83,11 @@ $\rightsquigarrow\rightsquigarrow\rightsquigarrow$ & $tt_{c}::_{Unit_{c}}false_{
 
 $\rightsquigarrow\rightsquigarrow\rightsquigarrow$ & $tt_{c}::_{Unit_{c}}false_{c}\,\star\,Unit_{c}\,\perp_{c}$\tabularnewline
 
-$false_{c}\coloneqq\lambda-\,-\,y\Rightarrow y$ & $tt_{c}::_{Unit_{c}}\left(\lambda-\,-\,y\right)\,\star\,Unit_{c}\,\perp_{c}$\tabularnewline
+$false_{c}\coloneqq\lambda-\,-\,y\Rightarrow y$ & $tt_{c}::_{Unit_{c}}\left(\lambda-\,-\,y \Rightarrow y\right)\,\star\,Unit_{c}\,\perp_{c}$\tabularnewline
 
 $\rightsquigarrow\rightsquigarrow\rightsquigarrow$ & $tt_{c}::_{Unit_{c}}\perp_{c}$\tabularnewline
 
-\multicolumn{2}{l}{using this term will discover the error}\tabularnewline
+\multicolumn{2}{l}{Applying $\star$ to this term will discover an error.}\tabularnewline
 
 & $\left(tt_{c}::_{Unit_{c}}\perp_{c}\right)\star$\tabularnewline
 $\perp_{c}\coloneqq\left(X:\star\right)\rightarrow X$ & $\left( tt_{c}::_{Unit_{c}}\left(X:\star\right)\rightarrow X\right)  \star$\tabularnewline
@@ -89,19 +103,20 @@ Blame! & $\left(tt_{c}\star\right)::_{\star\underline{\rightarrow}\star}\underli
 \label{fig:cast-ex-tf}
 \end{sidewaysfigure}
  
-The example is worked in \Fref{cast-ex-tf}.
-As in the previous examples, the term $tt_{c}::_{Unit_{c}}\perp_{c}$ has not yet ``gotten stuck''.
-Applying any type will uncover the error.
 
-If \Fref{cast-ex-tf} explicitly tracked the location and observation information ane error message could be generated:
+The term reduces to $tt_{c}::_{Unit_{c}}\perp_{c}$, but has not yet ``gotten stuck''.
+Applying any type will uncover the error, so we can inspect the term with $\star$.
+
+If \Fref{cast-ex-tf} explicitly tracked the location and observation information an error message could be generated:
  
-$\left(C:\left(\mathbb{B}_{c}\rightarrow\star\right)\right)\rightarrow C\,true_{c}\rightarrow\underline{C\,true_{c}}\neq\left(C:\left(\mathbb{B}_{c}\rightarrow\star\right)\right) \rightarrow C\,true_{c}\rightarrow\underline{C\,false_{c}}$
+$\left(C:\left(\mathbb{B}_{c}\rightarrow\star\right)\right)\rightarrow C\,true_{c}\rightarrow\underline{C\,true_{c}}
+\neq
+\left(C:\left(\mathbb{B}_{c}\rightarrow\star\right)\right) \rightarrow C\,true_{c}\rightarrow\underline{C\,false_{c}}$
  
 when
  
-$C\coloneqq\lambda b:\mathbb{B}_{c}.b\,\star\,\star\,\perp$
+$C\coloneqq\lambda b \Rightarrow b\,\star\,\star\,\perp_c$
  
-$C\,true_{c}=\perp\neq\star=C\,false_{c}$
-
-\todo{statically enough infor for a wrning}
-Reminding the programmer that they should not confuse true with false.
+$C\, true_c = \perp_c \neq \star = C\, false_c$
+ 
+Reminding the programmer not to confuse true with false.

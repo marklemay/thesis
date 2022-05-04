@@ -57,8 +57,7 @@ Send to people for review
 * CH2/4 June
 
 last batch of paperwork https://www.bu.edu/cas/academics/phd-and-mfa-academics/graduation-information/
-* "At least three weeks before your defense you must submit a draft of your dissertation as a .pdf to grsrec@bu.edu for a format review"
-* 
+* Exit survey
 
 defence 
 * 1 page cheatsheet

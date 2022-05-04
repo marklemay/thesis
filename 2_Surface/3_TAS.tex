@@ -427,7 +427,7 @@ We will prove slightly stronger lemmas about reduction that confirms this fact s
  
 \begin{lem} Stability of $\rightarrow$ over $\Rrightarrow_{\ast}$.
  
-$\forall N,M,P.\left(x:N\right)\rightarrow M\Rrightarrow_{\ast}P\:\mathrm{implies}\:\exists N',M'.P=\left(x:N'\right)\rightarrow M'\land N\Rrightarrow_{\ast}N'\land M\Rrightarrow_{\ast}M'$
+$\forall N,M,P.\left(x:N\right)\rightarrow M\Rrightarrow_{\ast}P$ implies $\exists N',M'.P=\left(x:N'\right)\rightarrow M'\land N\Rrightarrow_{\ast}N'\land M\Rrightarrow_{\ast}M'$.
 \end{lem}
 \begin{proof}
 By induction on $\Rrightarrow_{\ast}$:
@@ -538,8 +538,7 @@ For this Chapter we will only need to prove an inversion lemma for functions.
 In a dependently typed setting, inversion lemmas cannot be proven directly by induction.
 The induction hypothesis must be extended over definitional equality.
  
-\begin{lem}
-$\mathsf{fun}$-Inversion (generalized).
+\begin{lem} $\mathsf{fun}$-Inversion (generalized).
  
 \[
 \frac{\Gamma\tasys\mathsf{fun}\,f\,x\Rightarrow m\,:\,P\quad P\equiv\left(x:N\right)\rightarrow M}{\Gamma,f:\left(x:N\right)\rightarrow M,x:N\tasys m:M}
@@ -569,7 +568,7 @@ This allows us to conclude the more straightforward corollary:
 By noting that $\left(x:N\right)\rightarrow M\equiv\left(x:N\right)\rightarrow M$, by reflexivity.
 \end{proof}
 
-\begin{thm} $\Rrightarrow$ preserves types.
+\begin{thm} $\Rrightarrow$ Preserves types.
  
 The following rule is admissible:
 \[
@@ -694,7 +693,7 @@ We will need a technical lemma that determines the syntax of a value in an empty
 These lemmas are usually called canonical form lemmas.
 Since the language of this chapter is so minimal, we only need to characterize the canonical form of functions.
  
-\begin{lem} $\mathsf{fun}$-canonical form (generalized).
+\begin{lem} $\mathsf{fun}$-Canonical form (generalized).
 
 If $\tasys v\,:\,P$ and $P\equiv\left(x:N\right)\rightarrow M$ then $v=\mathsf{fun}\,f\,x\Rightarrow m$.
 \end{lem}
@@ -711,7 +710,7 @@ By induction on the typing derivation,
 
 As a corollary,
 
-\begin{cor} $\mathsf{fun}$-canonical form.
+\begin{cor} $\mathsf{fun}$-Canonical form.
  
 If $\tasys v\,:\,\left(x:N\right)\rightarrow M$ then \textup{$v=\mathsf{fun}\,f\,x\Rightarrow m$.}
 \end{cor}

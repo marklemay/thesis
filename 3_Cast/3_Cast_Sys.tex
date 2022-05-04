@@ -54,7 +54,7 @@ We can extend that proof to support cast soundness with only a few modifications
 The \clang{} supports its own type assignment system, defined in \Fref{cast-tas-rules}.
 This system ensures that computations will not get stuck without enough information for good runtime error messages.
 Specifically computations will not get stuck without a source location and a witness of inequality.
-The only rule that types differently than the \slang{} is the \rulename{cast-::} rule that allows runtime type assertions.
+The only rule that works differently than the \slang{} is the \rulename{cast-::} rule that allows runtime type assertions.
  
 As before we need a suitable reduction relation to generate our equivalence relation.
 \Fref{cast-reduction} shows that system of reductions.
@@ -71,7 +71,7 @@ Since observations embed expressions, they must also be given parallel reduction
 \[
 \frac{b\Rrightarrow b'\quad a\Rrightarrow a'\quad A_{1}\Rrightarrow A_{1}'\quad A_{2}\Rrightarrow A_{2}'\quad B_{1}\Rrightarrow B_{1}'\quad B_{2}\Rrightarrow B_{2}'\quad o\Rrightarrow o'}{\begin{array}{c}
 \left(b::_{\left(x:A_{1}\right)\rightarrow B_{1},\ell ,o}\left(x:A_{2}\right)\rightarrow B_{2}\right)a\Rrightarrow\\
-\left(b'\,a'::_{A_{2}',\ell,o.arg}A_{1}'\right)::_{B_{1}'\left[x\coloneqq a'::_{A_{2}',\ell,o.arg}A_{1}'\right],\ell ,o'.bod[a']}B_{2}'\left[x\coloneqq a'\right]
+\left(b'\,a'::_{A_{2}',\ell,o.Arg}A_{1}'\right)::_{B_{1}'\left[x\coloneqq a'::_{A_{2}',\ell,o'.Arg}A_{1}'\right],\ell ,o'.Bod_{a'} }B_{2}'\left[x\coloneqq a'\right]
 \end{array}}
 \rulename{\Rrightarrow-fun-::-red}
 \]
@@ -80,82 +80,66 @@ Since observations embed expressions, they must also be given parallel reduction
 \frac{a\Rrightarrow a'}{a::_{\star,\ell,o}\star\Rrightarrow a'}
 \rulename{\Rrightarrow-::-red}
 \]
- 
-\[
-\frac{\,}{x\Rrightarrow x}
-\rulename{\Rrightarrow-var}
-\]
+
 \[
 \frac{a\Rrightarrow a'\quad A_{1}\Rrightarrow A_{1}'\quad A_{2}\Rrightarrow A_{2}'\quad o\Rrightarrow o'}{a::_{A_{1},\ell ,o}A_{2}\Rrightarrow a'::_{A_{1}',\ell ,o'}A_{2}'}
 \rulename{\Rrightarrow-::}
 \]
- 
-\[
-\frac{\,}{\star\Rrightarrow\star}
-\rulename{\Rrightarrow-}\star
-\]
- 
-\[
+
+\begin{align*}
+\frac{\,}{x\Rrightarrow x}
+\rulename{\Rrightarrow-var} \quad \quad \quad & \quad \quad \quad \frac{\,}{\star\Rrightarrow\star}
+\rulename{\Rrightarrow-\star}\\
+\end{align*}
+
+\begin{align*}
 \frac{A\Rrightarrow A'\quad B\Rrightarrow B'}{\left(x:A\right)\rightarrow B\Rrightarrow\left(x:A'\right)\rightarrow B'}
-\rulename{\Rrightarrow-\mathsf{fun}-ty}
-\]
- 
-\[
-\frac{b\Rrightarrow b'}{\mathsf{fun}\,f\,x\Rightarrow b\,\Rrightarrow\,\mathsf{fun}\,f\,x\Rightarrow b'}
-\rulename{\Rrightarrow-\mathsf{fun}}
-\]
- 
+\rulename{\Rrightarrow-\mathsf{fun}-ty} \quad & \quad \frac{b\Rrightarrow b'}{\mathsf{fun}\,f\,x\Rightarrow b\,\Rrightarrow\,\mathsf{fun}\,f\,x\Rightarrow b'}
+\rulename{\Rrightarrow-\mathsf{fun}}\\
+\end{align*}
+
 \[
 \frac{b\Rrightarrow b'\quad a\Rrightarrow a'}{b\,a\Rrightarrow b'\,a'}
 \rulename{\Rrightarrow-\mathsf{fun}-app}
 \]
  
-\[
-\frac{\,}{.\Rrightarrow.}
-\rulename{\Rrightarrow-obs-emp}
-\]
- 
-\[
-\frac{o\Rrightarrow o'}{o.arg\Rrightarrow o'.arg}
-\rulename{\Rrightarrow-obs-arg}
-\]
- 
-\[
-\frac{o\Rrightarrow o'\quad a\Rrightarrow a'}{o.bod[a]\Rrightarrow o'.bod[a']}
-\rulename{\Rrightarrow-obs-bod}
-\]
- 
-\[
-\frac{\,}{a\Rrightarrow_{\ast}a}
-\rulename{\Rrightarrow_{\ast}-refl}
-\]
-\[
-\frac{a\Rrightarrow_{\ast}a'\quad a'\Rrightarrow a''}{a\Rrightarrow_{\ast}a''}
-\rulename{\Rrightarrow_{\ast}-trans}
-\]
+\begin{align*}
+  \frac{\,}{.\Rrightarrow.}
+\rulename{\Rrightarrow-obs-emp} &  \quad  \frac{o\Rrightarrow o'}{o.Arg\Rrightarrow o'.Arg}
+\rulename{\Rrightarrow-obs-Arg} \quad  &  \frac{o\Rrightarrow o'\quad a\Rrightarrow a'}{o.Bod_a \Rrightarrow o'.Bod_{a'}}
+\rulename{\Rrightarrow-obs-Bod}  \\
+\end{align*}
+
+% \[
+% \frac{\,}{a\Rrightarrow_{\ast}a}
+% \rulename{\Rrightarrow_{\ast}-refl}
+% \]
+% \[
+% \frac{a\Rrightarrow_{\ast}a'\quad a'\Rrightarrow a''}{a\Rrightarrow_{\ast}a''}
+% \rulename{\Rrightarrow_{\ast}-trans}
+% \]
+
 \[
 \frac{a\Rrightarrow_{\ast}a''\quad a'\Rrightarrow_{\ast}a''}{a\equiv a'}
 \rulename{\equiv-def}
 \]
- 
+\todo[inline]{better layout}
 \caption{\CLang{} Parallel Reductions}
 \label{fig:cast-reduction}
 \end{figure}
  
 \subsection{Definitional Equality}
  
-As in \ch{2}, we will define a suitable notion of deffinitionaltional equality to derive the other properties of the system.
-While it may seem counterintuitive to define a definitional equality in a system that is intended to avoid definitional equality, it is fine since programmers will never interact directly with cast checking.
+As in \ch{2}, we will define a suitable notion of definitional equality to derive the other properties of the system.
+While it may seem counterintuitive to define a definitional equality in a system that is intended to avoid definitional equality, this is fine since programmers will never interact directly with cast checking.
+Programmers will only interact with elaboration, and elaboration will only result in well cast terms.
 The \csys{} only exists to give theoretical assurances.
  
 As before $\Rrightarrow_{*}$ can be shown to be confluent, and used to generate the equality relation.
 The proofs follow the same structure as \ch{2}, but since observations can contain terms, $\Rrightarrow$ and $\textbf{max}$ must be extended to observations.
 Proofs must be extended to mutually induct on observations, since they can contain expressions that could also reduce.
  
-The explicit new rules for $\textbf{max}$ are given in \Fref{cast-sys-max} with the structural rules omitted\footnote{
-  They are the same as \ch{2}.
-}.
- 
+The explicit new rules for $\textbf{max}$ are given in \Fref{cast-sys-max} with the structural rules omitted since they are the same as \ch{2}.
  
 \begin{sidewaysfigure}
 \begin{tabular}{cccll}
@@ -163,18 +147,22 @@ $\textbf{max}($ & $\left(\mathsf{fun}\,f\,x\Rightarrow b\right)\,a$ & $)=$ & $\t
 $\textbf{max}($ &
 $\left(b::_{\left(x:A_{1}\right)\rightarrow B_{1},\ell ,o}\left(x:A_{2}\right)\rightarrow B_{2}\right)a$ & $)=$ &
 \makecell[l]{
- $\left(\textbf{max}\left(b\right)\,\left(\textbf{max}\left(a\right)::_{\textbf{max}\left(A_{2}\right),\ell,\textbf{max}\left(o\right).arg}\textbf{max}\left(A_{1}\right)\right)\right)$ \\
- $::_{\textbf{max}\left(B_{2}\right)\left[x\coloneqq \textbf{max}\left(a\right)::_{\textbf{max}\left(A_{2}\right),\ell,\textbf{max}\left(o\right).arg}\textbf{max}\left(A_{1}\right)\right],\ell ,\textbf{max}\left(o\right).bod[\textbf{max}\left(a\right)]}$ \\
+ $\left(\textbf{max}\left(b\right)\,\left(\textbf{max}\left(a\right)::_{\textbf{max}\left(A_{2}\right),\ell,\textbf{max}\left(o\right).Arg}\textbf{max}\left(A_{1}\right)\right)\right)$ \\
+ $::_{\textbf{max}\left(B_{2}\right)\left[x\coloneqq \textbf{max}\left(a\right)::_{\textbf{max}\left(A_{2}\right),\ell,\textbf{max}\left(o\right).Arg}\textbf{max}\left(A_{1}\right)\right],\ell ,\textbf{max}\left(o\right).Bod_{\textbf{max}\left(a\right)}}$ \\
  $\textbf{max}\left(B_{2}\right)\left[x\coloneqq \textbf{max}\left(a\right)\right]$
 } & \tabularnewline
+
+$\textbf{max}($ & $b::_{\star,\ell,o}\star$ & $)=$ & $\textbf{max}\left(b\right)$ \tabularnewline
+ 
+
 & & & otherwise \tabularnewline
 $\textbf{max}($ & $b::_{B_{1},\ell ,o}B_{2}$ & $)=$ & $\textbf{max}\left(b\right)::_{\textbf{max}\left(B_{1}\right),\ell ,\textbf{max}\left(o\right)}\textbf{max}\left(B_{2}\right)$ \tabularnewline
  
 $\textbf{max}($ & ... & $)=$ & ... % corresponds to the definition in chapter 2
 \tabularnewline
-% $\textbf{max}($ & $.$ & $)=$ & $.$ & \tabularnewline
-$\textbf{max}($ & $o.arg$ & $)=$ & $\textbf{max}\left(o\right).arg$ \tabularnewline
-$\textbf{max}($ & $o.bod[a]$ & $)=$ & $\textbf{max}\left(o\right).bod[\textbf{max}\left(a\right)]$ \tabularnewline
+$\textbf{max}($ & $.$ & $)=$ & $.$ & \tabularnewline
+$\textbf{max}($ & $o.Arg$ & $)=$ & $\textbf{max}\left(o\right).Arg$ \tabularnewline
+$\textbf{max}($ & $o.Bod_a$ & $)=$ & $\textbf{max}\left(o\right).Bod_{\textbf{max}\left(a\right)}$ \tabularnewline
 \end{tabular}
 \todo[inline]{actually have all the rules but gray out the redundant ones}
 \caption{$\textbf{max}$}
@@ -183,67 +171,72 @@ $\textbf{max}($ & $o.bod[a]$ & $)=$ & $\textbf{max}\left(o\right).bod[\textbf{ma
 
 The expected lemas hold.
  
-\begin{lem}
-Triangle properties
+\begin{lem} Triangle Properties of $\Rrightarrow$.
  
-If $a\Rrightarrow a'$ then $a'\Rrightarrow max\left(a\right)$
-If $o\Rrightarrow o'$ then $o'\Rrightarrow max\left(o\right)$
+If $a\Rrightarrow a'$ then $a'\Rrightarrow \maxRed{} \left(a\right)$.
+
+If $o\Rrightarrow o'$ then $o'\Rrightarrow \maxRed{} \left(o\right)$.
 \end{lem}
- 
 \begin{proof}
-by mutual induction on the derivations of $m\Rrightarrow\,m'$ and
-$o\Rrightarrow o'$.
+By mutual induction on the derivations of $m\Rrightarrow\,m'$ and $o\Rrightarrow o'$.
 \end{proof}
 \todo{check this}
-\begin{lem}
-Diamond property
+
+\begin{lem} Diamond Property of $\Rrightarrow$.
  
-If $a\Rrightarrow a'$, $a\Rrightarrow a''$, implies $a'\Rrightarrow\,max\left(a\right)$, $a''\Rrightarrow\,max\left(a\right)$
+If $a\Rrightarrow a'$ and $a\Rrightarrow a''$ implies $a'\Rrightarrow\, \maxRed{} \left(a\right)$ and $a''\Rrightarrow\, \maxRed{} \left(a\right)$.
 \end{lem}
- 
 \begin{proof}
-Follows directly from triangle property
+  This follows directly from the triangle property.
 \end{proof}
  
+\begin{lem} Confluence of $\Rrightarrow_{\ast}$.
+\end{lem}
+\begin{proof}
+By repeated application of the diamond property.
+\end{proof}
+   
 \subsubsection{$\equiv$ is an equivalence}
+As before, this allows us to prove $\equiv$ is transitive, and therefore $\equiv$ is an equivalence.
+
+\begin{thm} $\equiv$ is transitive.
  
-\todo{more connective tissue?}
-\begin{thm}
-$\equiv$ is transitive
- 
-If $a\equiv a'$, $a'\equiv a''$, implies $a\equiv a''$
+If $a\equiv a'$ and $a'\equiv a''$ implies $a\equiv a''$.
 \end{thm}
- 
 \begin{proof}
 The diamond property implies the confluence of $\Rrightarrow_{\ast}$.
 \end{proof}
  
 \subsubsection{Stability}
 Similar to \ch{2} we need to prove that equality is stable over type constructors.
-\begin{lem}
-Stability (generalized)
+\begin{lem} Stability of $\rightarrow$ over $\Rrightarrow_{\ast}$.
  
-$\forall A,B,C.\left(x:A\right)\rightarrow B\Rrightarrow_{\ast}C\:\Rightarrow\:\exists A',B'.C=\left(x:A'\right)\rightarrow B'\land A\Rrightarrow_{\ast}A'\land B\Rrightarrow_{\ast}B'$
+$\forall A,B,C.$ $\left(x:A\right)\rightarrow B\Rrightarrow_{\ast}C$ implies $\exists A',B'.C=\left(x:A'\right)\rightarrow B'\land A\Rrightarrow_{\ast}A'\land B\Rrightarrow_{\ast}B'$.
 \end{lem}
- 
 \begin{proof}
-by induction on $\Rrightarrow_{\ast}$
+By induction on $\Rrightarrow_{\ast}$.
 \end{proof}
-\begin{cor}
-Stability
+
+\begin{cor} Stability of $\rightarrow$ over $\equiv$.
  
-The following rule is admissible
+The following rule is admissible:
 \[
 \frac{\left(x:A\right)\rightarrow B\equiv\left(x:A'\right)\rightarrow B'}{A\equiv A'\quad B\equiv B'}
 \]
 \end{cor}
  
+With these properties proving $\equiv$ is suitable as a definitional equivalence, we can now tackle the progress and preservation lemmas.
  
 \subsection{Preservation}
-\begin{lem}
-Context Weakening
  
-The following rule is admissible
+As in \ch{2}, $\Rrightarrow$ preserves types.
+The argument is similar to that of \ch{2} though more inversion lemmas are needed.
+ 
+\subsubsection{Structural Properties}
+We begin by proving the structural properties:
+\begin{lem} Context Weakening.
+ 
+The following rule is admissible:
  
 \[
 \frac{\Gamma \vdash a:A}{\Gamma ,\Gamma' \vdash a:A}
@@ -251,21 +244,21 @@ The following rule is admissible
 \end{lem}
  
 \begin{proof}
-by induction on cast derivations
+By induction on cast derivations.
 \end{proof}
-\begin{lem}
-Substitution Preservation
+
+\begin{lem} Substitution preserves types.
  
-The following rule is admissible
+The following rule is admissible:
  
 \[
 \frac{\Gamma \vdash c:C \quad \Gamma, x:C, \Gamma' \vdash a:A}{\Gamma, \Gamma' \left[x\coloneqq c\right]\vdash a\left[x\coloneqq c\right]:A\left[x\coloneqq c\right]}
 \]
 \end{lem}
- 
 \begin{proof}
-by induction over cast derivations
+By induction on cast derivations.
 \end{proof}
+
 As before the notion of definitional equality can be extended to cast contexts in \Fref{cast-Context-Equiv}.
  
 \begin{figure}
@@ -280,56 +273,55 @@ As before the notion of definitional equality can be extended to cast contexts i
 \label{fig:cast-Context-Equiv}
 \end{figure}
  
-\begin{lem}
-Context Preservation
+\begin{lem}Contexts that are equivalent preserve types.
  
-the following rule is admissible
+The following rule is admissible:
  
 \[
 \frac{\Gamma\vdash n:N\quad\Gamma\equiv\Gamma'}{\Gamma'\vdash n:N}
 \]
 \end{lem}
- 
 \begin{proof}
-by induction over cast derivations
+By induction over cast derivations.
 \end{proof}
-As before we show inversions on the term syntaxes, generalizing the induction hypothesis up to equality, when needed.
-\begin{lem}
-$\mathsf{fun}$-Inversion (generalized)
+
+As before we show inversions on the term syntaxes, generalizing the induction hypothesis up to equality when needed.
+
+\begin{lem} $\mathsf{fun}$-Inversion (generalized).
  
 \[
 \frac{\Gamma \vdash\mathsf{fun}\,f\,x\Rightarrow a\,:\,C\quad C\equiv\left(x:A\right)\rightarrow B}{\Gamma, f:\left(x:A\right)\rightarrow B,x:A\vdash b:B}
 \]
 \end{lem}
- 
 \begin{proof}
 by induction on the cast derivations
 \end{proof}
  
 This allows us to conclude the corollary
-\begin{cor}
-$\mathsf{fun}$-Inversion
+
+\begin{cor} $\mathsf{fun}$-Inversion.
  
 \[
 \frac{\Gamma \vdash\mathsf{fun}\,f\,x\Rightarrow a\,:\,\left(x:A\right)\rightarrow B}{\Gamma, f:\left(x:A\right)\rightarrow B,x:A\vdash b:B}
 \]
 \end{cor}
- 
-\begin{lem}
-$\rightarrow$-Inversion (generalized)
+
+Unlike \ch{2}, we also need an inversion for function types.
+
+\begin{lem} $\rightarrow$-Inversion (generalized).
  
 The following rule is admissible
 \[
 \frac{\Gamma \vdash\left(x:A\right)\rightarrow B\,:\,C\quad C\equiv\star}{\Gamma \vdash A:\star\quad \Gamma, x:A \vdash B:\star}
 \]
 \end{lem}
- 
 \begin{proof}
 By induction on the typing derivations
 \end{proof}
-leading to the corollary
-\begin{cor}
-$\rightarrow$-Inversion
+
+Which allows the expected corollary:
+
+\begin{cor} $\rightarrow$-Inversion.
 \[
 \frac{\Gamma \vdash\left(x:A\right)\rightarrow B\,:\,\star}{\Gamma \vdash A:\star\quad \Gamma, x:A\vdash B:\star}
 \]
@@ -339,58 +331,53 @@ We also need a lemma that will invert the typing information out of the cast ope
 This can be proven directly without generalizing over definitional equality.
  
 \todo{fun font after}
-\begin{lem}
-$::$-Inversion
+\begin{lem} $::$-Inversion.
  
-The following rule is admissible
-\end{lem}
- 
+The following rule is admissible:
 \[
 \frac{\Gamma \vdash a::_{A,\ell ,o}B\::\:C}{\Gamma \vdash a:A\quad \Gamma \vdash A:\star\quad \Gamma \vdash B:\star}
 \]
+\end{lem}
  
 \todo{remove conditions for regularity?}
 \begin{proof}
-By induction on the typing derivations
- 
+By induction on the typing derivations:
 \begin{casenv}
- \item \rulename{cast-::} follows directly
- \item \rulename{cast-conv} by induction
- \item All other cases impossible
+ \item \rulename{cast-::} follows directly.
+ \item \rulename{cast-conv} by induction.
+ \item All other cases impossible!
 \end{casenv}
 \end{proof}
  
 Note that the derivations of the conclusion of this theorem can alway be made smaller than the derivation from the premise.
 This allows other proofs to use induction on the output of this lemma while still being well founded.
  
-\begin{thm}
-$\Rrightarrow$-Preservation
+\begin{thm} $\Rrightarrow$ Preserves types.
  
-The following rule is admissible
- 
+The following rule is admissible:
 \[
 \frac{a\Rrightarrow a'\quad \Gamma \vdash a:A}{\Gamma \vdash a':A}
 \]
 \end{thm}
  
 \begin{proof}
- by induction on the cast derivation $\Gamma \vdash m:M$, specializing on $m\Rrightarrow m'$,
+By induction on the cast derivation $\Gamma \vdash m:M$, specializing on $m\Rrightarrow m'$:
  
 \begin{casenv}
- \item if typed with \rulename{cast-::}
+ \item If the term typed with \rulename{cast-::}:
  \begin{casenv}
-   \item if the a trivial type universe cast reduces with \rulename{\Rrightarrow-::-red} then preservation follows by induction
-   \item if reduced with \rulename{\Rrightarrow-::} then follows by induction and conversion
+   \item If the term reduced with \rulename{\Rrightarrow-::-red} then preservation follows by induction.
+   \item If the term reduced with \rulename{\Rrightarrow-::} then preservation follows by induction and conversion.
  \end{casenv}
- \item \rulename{cast-fun-app}
+ \item If the term typed with \rulename{cast-fun-app}:
  \begin{casenv}
-   \item if the term reduces with \rulename{\Rrightarrow-fun-::-red} then we have
+   \item If the term reduced with \rulename{\Rrightarrow-fun-::-red} then we have
    $\Gamma \vdash\left(b::_{\left(x:A_{1}\right)\rightarrow B_{1},\ell ,o}\left(x:A_{2}\right)\rightarrow B_{2}\right):\left(x:A_{2}\right)\rightarrow B_{2}$,
    $\Gamma \vdash a:A_{2}$,
    $b\Rrightarrow b'$, $a\Rrightarrow a'$, $A_{1}\Rrightarrow A_{1}'$,
    $A_{2}\Rrightarrow A_{2}'$, $B_{1}\Rrightarrow B_{1}'$,  $B_{2}\Rrightarrow B_{2}'$,
    and $o\Rrightarrow o'$.
-   We must show $\Gamma \vdash\left(b'\ ac\right)::_{B_{1}'\left[x\coloneqq ac\right],\ell ,o'.bod[a']}B_{2}'\left[x\coloneqq a'\right]$, where $ac=a'::_{A_{2}',\ell,o'.arg}A_{1}'$.
+   We must show $\Gamma \vdash\left(b'\ ac\right)::_{B_{1}'\left[x\coloneqq ac\right],\ell ,o'.Bod_{a'}}B_{2}'\left[x\coloneqq a'\right]$, where $ac=a'::_{A_{2}',\ell,o'.Arg}A_{1}'$.
   
    With cast-inversion we can show $\Gamma \vdash b:\left(x:A_{1}\right)\rightarrow B_{1}$, $\Gamma \vdash\left(x:A_{1}\right)\rightarrow B_{1}:\star$,
    $\Gamma \vdash\left(x:A_{2}\right)\rightarrow B_{2}:\star$.
@@ -398,29 +385,27 @@ The following rule is admissible
  
    \begin{tabular}{llll}
      $\Gamma \vdash a':A_{2}'$ & $\rulename{cast-conv}$\tabularnewline
-     $\left(x:A_{2}\right)\rightarrow B_{2}\Rrightarrow\left(x:A_{2}'\right)\rightarrow B_{2}'$ & by $\rulename{\Rrightarrow -fun-ty}$\tabularnewline
+     $\left(x:A_{2}\right)\rightarrow B_{2}\Rrightarrow\left(x:A_{2}'\right)\rightarrow B_{2}'$ & by \rulename{\Rrightarrow-fun-ty}\tabularnewline
      $\Gamma \vdash\left(x:A_{2}'\right)\rightarrow B_{2}':\star$ & \makecell[l]{by induction with \\ $\Gamma \vdash\left(x:A_{2}\right)\rightarrow B_{2}:\star$} \tabularnewline
      $\Gamma \vdash A_{2}':\star$, $\Gamma, x:A_{2}'\vdash B_{2}':\star$ & fun-ty-inversion \tabularnewline
-     $\left(x:A_{1}\right)\rightarrow B_{1}\Rrightarrow\left(x:A_{1}'\right)\rightarrow B_{1}'$ & $\rulename{\Rrightarrow -fun-ty}$ \tabularnewline
+     $\left(x:A_{1}\right)\rightarrow B_{1}\Rrightarrow\left(x:A_{1}'\right)\rightarrow B_{1}'$ & \rulename{\Rrightarrow-fun-ty} \tabularnewline
      $\Gamma \vdash\left(x:A_{1}'\right)\rightarrow B_{1}':\star$ & \makecell[l]{by induction with \\ $\Gamma \vdash\left(x:A_{1}\right)\rightarrow B_{1}:\star$} \tabularnewline
      $\Gamma \vdash A_{1}':\star$, $\Gamma, x:A_{1}'\vdash B_{1}':\star$ & fun-ty-inversion\tabularnewline
-     % let $ac=a'::_{A_{2}',\ell,o'.arg}A_{1}'$ & \tabularnewline
+     % let $ac=a'::_{A_{2}',\ell,o'.Arg}A_{1}'$ & \tabularnewline
      $\Gamma \vdash ac:A_{1}'$ & by $\rulename{cast-::}$\tabularnewline
      $\Gamma \vdash b':\left(x:A_{1}\right)\rightarrow B_{1}$ & \makecell[l]{by induction with \\ $\Gamma \vdash b:\left(x:A_{1}\right)\rightarrow B_{1}$} \tabularnewline
-     $\Gamma \vdash b':\left(x:A_{1}'\right)\rightarrow B_{1}'$ & by $\rulename{cast-conv}$\tabularnewline
-     $\Gamma \vdash b'\ ac:B_{1}'\left[x\coloneqq ac\right]$ & by $\rulename{cast-fun-app}$\tabularnewline
+     $\Gamma \vdash b':\left(x:A_{1}'\right)\rightarrow B_{1}'$ & by \rulename{cast-conv}\tabularnewline
+     $\Gamma \vdash b'\ ac:B_{1}'\left[x\coloneqq ac\right]$ & by \rulename{cast-fun-app}\tabularnewline
      $\Gamma \vdash B_{1}'\left[x\coloneqq ac\right]:\star$ & by substitution preservation\tabularnewline
      $\Gamma \vdash B_{2}'\left[x\coloneqq a'\right]:\star$ & by substitution preservation\tabularnewline
-     % \makecell[l]{$\Gamma \vdash$ \\ $\left(b'\ ac\right)::_{B_{1}'\left[x\coloneqq ac\right],\ell ,o'.bod[a']}B_{2}'\left[x\coloneqq a'\right]$} & by \rulename{cast-::} \tabularnewline
+     % \makecell[l]{$\Gamma \vdash$ \\ $\left(b'\ ac\right)::_{B_{1}'\left[x\coloneqq ac\right],\ell ,o'.Bod_{a'}}B_{2}'\left[x\coloneqq a'\right]$} & by \rulename{cast-::} \tabularnewline
      \end{tabular}
-     Which allows us to conclude $\Gamma \vdash\left(b'\ ac\right)::_{B_{1}'\left[x\coloneqq ac\right],\ell ,o'.bod[a']}B_{2}'\left[x\coloneqq a'\right]$ by \rulename{cast-::}.
+     Which allows us to conclude $\Gamma \vdash\left(b'\ ac\right)::_{B_{1}'\left[x\coloneqq ac\right],\ell ,o'.Bod_{a'}}B_{2}'\left[x\coloneqq a'\right]$ by \rulename{cast-::}.
  
-   \item other reductions along the lines of \ch{2}
+   \item All other reductions are similar to \ch{2}.
  \end{casenv}
- \item All other cases follow along the lines of \ch{2}
+ \item All other cases follow along the lines of \ch{2}.
 \end{casenv}
- 
- 
 \end{proof}
  
 \todo{highlight the -fun-::-red case}
@@ -453,7 +438,7 @@ They are standard except for the \rulename{Val-::}, which states that a type ($\
 a\:\textbf{Val}\quad A\:\textbf{Val}\quad B\:\textbf{Val}\\
 a\cancel{=}\star\\
 a\cancel{=}\left(x:C\right)\rightarrow C'
-\end{array}}{a::_{A,\ell o}B\:\textbf{Val}}
+\end{array}}{a::_{A,\ell, o}B\:\textbf{Val}}
 \rulename{Val-::}
 \]
 \caption{\CLang{} Values}
@@ -470,7 +455,7 @@ They are standard for \cbv{} except that casts can distribute over application, 
 \[
 \frac{b\,\textbf{Val}\quad a\,\textbf{Val}}{\begin{array}{c}
 \left(b::_{\left(x:A_{1}\right)\rightarrow B_{1},\ell ,o}\left(x:A_{2}\right)\rightarrow B_{2}\right)a\rightsquigarrow\\
-\left(b\,a::_{A_{2},\ell,o.arg}A_{1}\right)::_{B_{1}\left[x\coloneqq a::_{A_{2},\ell,o.arg}A_{1}\right],\ell ,o.bod[a]}B_{2}\left[x\coloneqq a\right]
+\left(b\,a::_{A_{2},\ell,o.Arg}A_{1}\right)::_{B_{1}\left[x\coloneqq a::_{A_{2},\ell,o.Arg}A_{1}\right],\ell ,o.Bod_a}B_{2}\left[x\coloneqq a\right]
 \end{array}}
 \]
 \[
@@ -500,11 +485,11 @@ They are standard for \cbv{} except that casts can distribute over application, 
 %% walk through blame
 In addition to small step and values we also specify blame judgments in \Fref{cast-blame}.
 Blame tracks the information needed to create a good error message and is inspired by the many systems that use blame tracking \cite{10.1145/581478.581484,10.1007/978-3-642-00590-9_1,wadler:LIPIcs:2015:5033}.
-Specifically the judgment \blame{a}{\ell}{o} means that $a$ witnesses an a contradiction in the source code at location $\ell$ under the observations $o$.
+Specifically the judgment \blame{a}{\ell}{o} means that $a$ witnesses a contradiction in the source code at location $\ell$ under the observations $o$.
 With only dependent functions and universes, only inequalities of the form $*\,\cancel{=}\,A\rightarrow B$ can be witnessed.
 The first 2 rules of the blame judgment witness these concrete type inequalities.
 The rest of the blame rules will recursively extract concrete witnesses from larger terms.
-Limited observations makes the system in this Chapter simpler than the system in \ch{5} where more observations are possible.
+Limiting the observations to the form $*\,\cancel{=}\,A\rightarrow B$ makes the system in this Chapter simpler than the system in \ch{5} where more observations are possible because of the addition of data.
 % "self evidently correct" since it is clear to only extract inequalities. like step and val? one of several possible contradiction extraction relations
  
 \begin{figure}
@@ -556,83 +541,76 @@ Limited observations makes the system in this Chapter simpler than the system in
  
 As before we have that $\rightsquigarrow$ preserves types.
  
-\begin{fact}
-$\rightsquigarrow$ preserves types
+\begin{fact} $\rightsquigarrow$ preserves types.
  
-since the following rule is admissible
-\end{fact}
- 
+Since the following rule is admissible:
 \[
 \frac{m\rightsquigarrow m'}{m\Rrightarrow m'}
 \]
+\end{fact}
  
-As in \ch{2} we will need technical lemmas that determine the form of a value of a type in the empty context.
+As in \ch{2} we will need technical lemmas that determine the syntax of a value of a given type in the empty context.
 However, canonical function values look different because they must account for the possibility of blame arising from a stuck term.
-\begin{lem}
-$\star$-Canonical forms (generalized)
+
+\begin{lem} $\star$-Canonical forms (generalized).
  
-If $\vdash a\,:\,A$ , $a\,\textbf{Val}$, and $A\equiv\star$ then
-either
- 
+If $\vdash a\,:\,A$ , $a\,\textbf{Val}$, and $A\equiv\star$ then either
+
 \textup{$a=\star$ ,}
- 
-\textup{or there exists $C$, $B$, such that $a=\left(x:C\right)\rightarrow B$}
+
+\textup{or there exists $C$, $B$, such that $a=\left(x:C\right)\rightarrow B$.}
 \end{lem}
- 
 \todo{alternatively produce the blame judgment}
 \begin{proof}
-by induction on the cast derivation
- 
+By induction on the cast derivation:
 \begin{casenv}
- \item \rulename{cast-\star} and \rulename{cast-fun-ty} follow directly
- \item \rulename{ty-conv} follows by induction and that $\equiv$ is an equivalence
- \item \rulename{cast-fun} is impossible since $\left(x:A\right)\rightarrow B\cancel{\equiv}\star$
- \item \rulename{cast-::} is impossible.
+ \item \rulename{cast-\star} and \rulename{cast-fun-ty} follow directly.
+ \item \rulename{ty-conv} follows by induction and that $\equiv$ is an equivalence.
+ \item \rulename{cast-fun} is impossible since $\left(x:A\right)\rightarrow B\cancel{\equiv}\star$!
+ \item \rulename{cast-::} is impossible!
    Inductively the underlying term must be $\star$, or $\left(x:C\right)\rightarrow B$.
-   Which contradicts the side condition of \rulename{cast-::}.
- \item other rules are impossible, since they do not type values in an empty context
+   Which contradicts the side conditions of \rulename{Val-::}.
+ \item Other rules are impossible, since they do not type values in an empty context!
 \end{casenv}
 \end{proof}
-Leading to the corollary,
-\begin{cor}
-$\star$-Canonical forms
+
+Leading to the corollary:
+
+\begin{cor} $\star$-Canonical forms.
  
 If $\vdash A:\star$, and $A\,\textbf{Val}$ then either
- 
+
 \textup{$A=\star$ , }
- 
-\textup{or there exists $C$, $B$, such that $A=\left(x:C\right)\rightarrow B$}
+
+\textup{or there exists $C$, $B$, such that $A=\left(x:C\right)\rightarrow B$.}
 \end{cor}
  
-Likewise
-\begin{lem}
-$\rightarrow$-Canonical forms (generalized)
+Likewise:
+
+\begin{lem} $\rightarrow$-Canonical forms (generalized).
  
-If $\vdash a\,:\,A$ , $a\,\textbf{Val}$, and $A\equiv\left(x:C\right)\rightarrow B$
-then either
+If $\vdash a\,:\,A$ , $a\,\textbf{Val}$, and $A\equiv\left(x:C\right)\rightarrow B$ then either
  
 $a=\mathsf{fun}\,f\,x\Rightarrow b$
  
 or $a=d::_{D,\ell ,o}\left(x:C'\right)\rightarrow B'$, $d\,\textbf{Val}$, $D\,\textbf{Val}$, $C'\equiv C$, $B'\equiv B$
 \end{lem}
- 
 \todo{alternatively produce the blame judgment}
- 
 \begin{proof}
-by induction on the cast derivation
- 
+By induction on the cast derivation:
 \begin{casenv}
- \item \rulename{cast-fun} follows directly
- \item \rulename{cast-::} then it must be a value from \rulename{Val-::} satisfying the 2nd conclusion
- \item \rulename{ty-conv} follows by induction and the transitivity of $\equiv$
+ \item \rulename{cast-fun} follows directly.
+ \item \rulename{cast-::} then it must be a value from \rulename{Val-::} satisfying the 2nd conclusion.
+ \item \rulename{ty-conv} follows by induction and the transitivity of $\equiv$.
  
- \item \rulename{cast-\star} and \rulename{cast-fun-ty} are impossible by the by the stability of $\equiv$
- \item other rules are impossible, since they do not type values in an empty context
+ \item \rulename{cast-\star} and \rulename{cast-fun-ty} are impossible by the stability of $\equiv$!
+ \item Other rules are impossible, since they do not type values in an empty context!
 \end{casenv}
 \end{proof}
-As a corollary
-\begin{cor}
-$\rightarrow$-Canonical forms
+
+As a corollary:
+
+\begin{cor} $\rightarrow$-Canonical forms.
  
 If $\vdash a:\left(x:C\right)\rightarrow B$ , and $a\,\textbf{Val}$
  
@@ -641,12 +619,11 @@ $a=\mathsf{fun}\,f\,x\Rightarrow b$
 or $a=d::_{D,\ell ,o}\left(x:C'\right)\rightarrow B'$, $d\,\textbf{Val}$, $D\,\textbf{Val}$, $C'\equiv C$, $B'\equiv B$
 \end{cor}
  
-This further means if $\vdash a:\left(x:C\right)\rightarrow B$, and $a\,\textbf{Val}$ then $a$ is not a type, $a\cancel{=}\star,a\cancel{=}\left(x:C\right)\rightarrow C'$
+This further means if $\vdash a:\left(x:C\right)\rightarrow B$, and $a\,\textbf{Val}$ then $a$ is not a type, $a\cancel{=}\star,a\cancel{=}\left(x:C\right)\rightarrow C'$.
  
 We can now prove the progress lemma.
  
-\begin{thm}
-Progress
+\begin{thm} Progress.
  
 If $\vdash a\,:\,A$ then either
  
@@ -656,39 +633,37 @@ there exists $a'$ such that $a\rightsquigarrow a'$
  
 or there exists $\ell$, $o$ such that $\blame{a}{\ell}{o}$
 \end{thm}
- 
 \begin{proof}
-As usual this follows form induction on the typing derivation
- 
+As usual this follows form induction on the typing derivation:
 \begin{casenv}
- \item \rulename{cast-\star}, \rulename{cast-fun-ty}, and \rulename{cast-fun} follow directly
- \item \rulename{cast-var}, impossible in an empty context
- \item \rulename{cast-conv}, by induction
- \item \rulename{cast-::}, then the term is $a::_{A,\ell ,o}B\::\:B$
- Each of $a$, $A$, and $B$ can be blamed, can step, or is a value (By induction).
+ \item \rulename{cast-\star}, \rulename{cast-fun-ty}, and \rulename{cast-fun} follow directly.
+ \item \rulename{cast-var}, impossible in an empty context!
+ \item \rulename{cast-conv}, by induction.
+ \item \rulename{cast-::}, then the term is $a::_{A,\ell ,o}B\::\:B$.
+ Each of $a$, $A$, and $B$ can be blamed, can step, or is a value (By induction):
  \begin{casenv}
-   \item If any of $a$, $A$, or $B$, step then the entire term can step
-   \item If any of $a$, $A$, or $B$, can be blamed then the entire term can be blamed
-   \item If all of $a$, $A$, and $B$, are values then $A$ and $B$ are types of canonical form
+   \item If any of $a$, $A$, or $B$, step then the entire term can step.
+   \item If any of $a$, $A$, or $B$, can be blamed then the entire term can be blamed.
+   \item If all of $a$, $A$, and $B$, are values then $A$ and $B$ are types of canonical form.
    \begin{casenv}
-     \item If both $A$, and $B$, is $\star$ then step
-     \item If one of $A$, and $B$, is $\star$ and the other is $\left(x:C_{A}\right)\rightarrow D_{A}$ then blame
+     \item If both $A$, and $B$, is $\star$ then step.
+     \item If one of $A$, and $B$, is $\star$ and the other is $\left(x:C_{A}\right)\rightarrow D_{A}$ then blame.
     
-     \item otherwise the term is a value by the canonical forms
+     \item Otherwise the term is a value by the canonical forms.
    \end{casenv}
  \end{casenv}
- \item \rulename{cast-fun-app}, then the term is $b\,a$.
-  Each of $a$, and $b$ can be blamed, can step, or is a value (By induction).
+ \item \rulename{cast-fun-app}, then the term is $(b\,a)$.
+  Each of $a$, and $b$ can be blamed, can step, or is a value (By induction):
   \begin{casenv}
     \item If any of $b$, or $a$, step then the entire term can step
     \item If any of $b$, or $a$, can be blamed then the entire term can be blamed
-    \item if $b\,\textbf{Val}$, $a\,\textbf{Val}$ by canonical forms
+    \item If $b\,\textbf{Val}$, $a\,\textbf{Val}$ by canonical forms:
     \begin{casenv}
-      \item $b=\mathsf{fun}\,f\,x\Rightarrow c$ the term steps
-      \item $b=d_{b}::_{D_{b},\ell _{b}\,o_{b}}\left(x:A'\right)\rightarrow B'$ we have by canonical forms and induction that
+      \item $b=\mathsf{fun}\,f\,x\Rightarrow c$ the term steps.
+      \item $b=d_{b}::_{D_{b},\ell _{b}\,o_{b}}\left(x:A'\right)\rightarrow B'$ we have by canonical forms and induction that:
       \begin{casenv}
-        \item $D_{b}=\star$ and blame can be generated
-        \item otherwise $D_{b}=\left(x:A_{D_{b}}\right)\rightarrow B_{D_{b}}$ and a step is possible
+        \item $D_{b}=\star$ and blame can be generated.
+        \item Otherwise $D_{b}=\left(x:A_{D_{b}}\right)\rightarrow B_{D_{b}}$ and a step is possible.
       \end{casenv}
     \end{casenv}
   \end{casenv}
@@ -713,7 +688,7 @@ Cast soundness follows from progress and preservation as expected.
  
 Because of the conversion rule and non-termination, cast-checking is undecidable.
 This is fine since the \csys{} only exists to ensure theoretical properties. 
-The programmers will only use the system through the elaboration procedure described in the next section.
+Programmers will only use the system through the elaboration procedure described in the next section.
 Every term produced by elaboration will cast check, and the elaboration is decidable. % \footnote{As fomalized here, the assertimplemenation }.
  
 As in the \slang{}, the \clang{} is logically unsound, by design.
@@ -726,7 +701,7 @@ For instance\footnote{
 But $\mathtt{head}\,\Bool{}\,1\,\left(\mathtt{rep}\,\Bool{}\,\True{}\,9\right)$ will not result in blame since $1$ and $9$ have the same head constructor and the computation can reduce to \True{}.
  
 It is likely that more aggressive checking is preferable in practice, especially in the presence of data types.
-That is why in our implementation we check equalities up to binders. 
+That is why our implementation checks equalities up to binders. 
 This corresponds better to the \cbv{} behavior of the implemented interpreter.
 For this reason we call this strategy \textbf{check-by-value}.
  
@@ -736,5 +711,6 @@ This behavior is consistent with the conjectured partial correctness of logicall
  
 Unlike static type-checking, these runtime checks have runtime costs.
 Since the language allows nontermination, checks can take forever to resolve at runtime.
-We don't expect this to be an issue in practice, since we could limit the number of steps allowed.
-Additionally, the implementation avoids casts when it knows that blame is impossible.
+We don't expect this to be a large issue in practice, at least any more than is usual in mainstream languages that allow many other sources of nontermination are possible.
+The implementation avoids casts when it knows that blame is impossible.
+Additionally, we could limit the number of steps allowed in cast normalization and blame slow code and nonterminating.

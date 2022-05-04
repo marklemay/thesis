@@ -11,11 +11,12 @@ Terms with unproven equality in types are mapped to a cast with enough informati
 Elaboration serves a similar role as the \bidir{} type system did in \ch{2}, and uses a similar methodology.
 Instead of performing a static equality check when the inference mode and the check mode meet, a runtime cast is inserted asserting the types are equal.
 
-First we enrich the \slang{} with location information, $\ell$, at every position that could result in a type mismatch in \Fref{surface-pre-syntax-loc}.
+In order to perform elaboration, we first need to enrich the \slang{} with location information, $\ell$, at every position that could result in a type mismatch.
+This is done in \Fref{surface-pre-syntax-loc}.
 Note that the location tags match exactly with the check annotations of the \bidir{} system.
 For technical reasons the set of locations is nonempty, and a specific null location ($.$)\todo{- instead of . ?} is designated.
 That null location can be used when we need to generate fresh terms, but have no sensible location information available.
-All the meta theory from \ch{2} goes through assuming that all locations are equivalent and by generating null locations when needed\footnote{
+All the meta theory from \ch{2} goes through assuming that all locations are indistinguishable and by generating null locations when needed\footnote{
   For instance, the parallel reduction relation will associate all locations,
     $\frac{M\Rrightarrow M'\quad N\Rrightarrow N'}{\left(x:M_{l}\right)\rightarrow N_{l'}\Rrightarrow\left(x:M'_{l''}\right)\rightarrow N'_{l'''}}\,\rulename{\Rrightarrow-fun-ty}$,
     so that the relation does not discriminate over syntaxes that come from different locations.
@@ -36,7 +37,7 @@ $m,n,M,N$ & $\Coloneqq$ & $x$ & variable\tabularnewline
 & $|$ & $\left(x:M_{\ell}\right)\rightarrow N_{\ell'}$ & function type\tabularnewline
 & $|$ & $\mathsf{fun}\,f\,x\Rightarrow m$ & function\tabularnewline
 & $|$ & $m_{\ell}\,n$ & application\tabularnewline
-\end{tabular}\caption{\SLang{} Syntax, With Locations}
+\end{tabular}\caption{\SLang{} Syntax with Locations}
 \label{fig:surface-pre-syntax-loc}
 \end{figure}
 
@@ -55,22 +56,22 @@ $m_{\ell}\,n$ & written & $m_{\ensuremath{}}\,n$ & when & $\ell$ is irrelevant\t
 \subsection{Examples}
 
 Functions will elaborate the expected types to their arguments when they are applied.
-For example,
+% For example,
 \begin{example}
-$f:\mathbb{B}\rightarrow\mathbb{B}\vdash f_{\ell}7\ :\mathbb{B}$ elaborates to $f:\mathbb{B}\rightarrow\mathbb{B}\vdash f\left(7::_{\mathbb{N},\ell,.arg}\mathbb{B}\right)\ :\mathbb{B}$
+$f:\mathbb{B}_c \rightarrow\mathbb{B}_c \vdash f_{\ell}7_c \ :\mathbb{B}_c $ elaborates to $f:\mathbb{B}_c \rightarrow\mathbb{B}_c \vdash f\left(7_c ::_{\mathbb{N}_c ,\ell,.Arg}\mathbb{B}_c \right)\ :\mathbb{B}_c $.
 \end{example}
  
 \todo{arg is there because f may not be a function type}
  
 As with \bidir{} type checking, variable types will be inferred from the typing environment.
-For example,
+% For example,
 \begin{example}
-$\vdash(\lambda x\Rightarrow7)::_{\ell}\mathbb{B}\rightarrow\mathbb{B}$ elaborates to $\vdash(\lambda x\Rightarrow7::_{\mathbb{N}.\ell,.bod[x]}\mathbb{B})$
+$\vdash(\lambda x\Rightarrow 7_c)::_{\ell}\mathbb{B}_c \rightarrow\mathbb{B}_c$ elaborates to $\vdash(\lambda x\Rightarrow7::_{\mathbb{N}_c,\ell,Bod_x}\mathbb{B}_c )$.
 \end{example}
 
 To keep the theory simple, we allow vacuous casts to be created,
 \begin{example}
-$f:\mathbb{N}\rightarrow\mathbb{B}\rightarrow\mathbb{B}\vdash f_{\ell}7_{\ell'}3\ :\mathbb{B}$ elaborates to $f:\mathbb{N}\rightarrow\mathbb{B}\rightarrow\mathbb{B}\vdash f\left(7::_{\mathbb{N}.\ell,.arg}\mathbb{N}\right)\left(3::_{\mathbb{N}.\ell',.arg}\mathbb{B}\right)\ :\mathbb{B}$
+$f:\mathbb{N}_c \rightarrow\mathbb{B}_c \rightarrow\mathbb{B}_c \vdash f_{\ell}7_{c\ell'}3_c \ :\mathbb{B}_c $ elaborates to $f:\mathbb{N}_c \rightarrow\mathbb{B}_c \rightarrow\mathbb{B}_c \vdash f\left(7_c ::_{\mathbb{N}_c,\ell,Arg}\mathbb{N}_c \right)\left(3_c ::_{\mathbb{N}_c,\ell',Arg}\mathbb{B}_c \right)\ :\mathbb{B}_c$.
 \end{example}
 
 \todo{dependent type example where cast muddles type}
@@ -78,7 +79,7 @@ $f:\mathbb{N}\rightarrow\mathbb{B}\rightarrow\mathbb{B}\vdash f_{\ell}7_{\ell'}3
 Unlike in gradual typing, we cannot elaborate arbitrary untyped syntax.
 The underlying type of a cast needs to be known so that a function type can swap its argument type at application.
 For instance, $\lambda x\Rightarrow x$ will not elaborate since the intended type is not known.
-Fortunately, our experimental testing suggests that a majority of randomly generated terms can be elaborated, while only a small minority of terms would type check in the \slang{}.
+Fortunately, our experimental testing suggests that a majority of randomly generated terms can be elaborated, compared to the \slang{} where only a small minority of terms would type check.
 The programmer can make any term elaborate if they annotate the intended type.
 For instance, $\left(\lambda x\Rightarrow x\right)::*\rightarrow*$ will elaborate.
 
@@ -110,7 +111,7 @@ For instance, $\left(\lambda x\Rightarrow x\right)::*\rightarrow*$ will elaborat
 \]
 
 \[
-\frac{H\vdash m\,\textbf{Elab}\ b\overrightarrow{\,:\,}\left(x:A\right)\rightarrow B\quad H\vdash n\overleftarrow{\,:_{\ell,.arg}\,}A\,\textbf{Elab}\,a}{H\vdash\left(m_{\ell}\,n\right)\textbf{Elab}\left(b\,a\right)\overrightarrow{\,:\,}B\left[x\coloneqq a\right]}\rulename{\overrightarrow{\textbf{Elab}}-fun-app}
+\frac{H\vdash m\,\textbf{Elab}\ b\overrightarrow{\,:\,}\left(x:A\right)\rightarrow B\quad H\vdash n\overleftarrow{\,:_{\ell,Arg}\,}A\,\textbf{Elab}\,a}{H\vdash\left(m_{\ell}\,n\right)\textbf{Elab}\left(b\,a\right)\overrightarrow{\,:\,}B\left[x\coloneqq a\right]}\rulename{\overrightarrow{\textbf{Elab}}-fun-app}
 \]
 
 \[
@@ -118,7 +119,7 @@ For instance, $\left(\lambda x\Rightarrow x\right)::*\rightarrow*$ will elaborat
 \]
 
 \[
-\frac{H,f:\left(x:A\right)\rightarrow B,x:A\vdash m\overleftarrow{\,:_{\ell,o.bod[x]}\,}B\,\textbf{Elab}\ b}{H\vdash\left(\mathsf{fun}\,f\,x\Rightarrow m\right)\overleftarrow{\,:_{\ell,o}\,}\left(x:A\right)\rightarrow B\,\textbf{Elab}\left(\mathsf{fun}\,f\,x\Rightarrow b\right)}\rulename{\overleftarrow{\textbf{Elab}}-fun}
+\frac{H,f:\left(x:A\right)\rightarrow B,x:A\vdash m\overleftarrow{\,:_{\ell,o.Bod_x}\,}B\,\textbf{Elab}\ b}{H\vdash\left(\mathsf{fun}\,f\,x\Rightarrow m\right)\overleftarrow{\,:_{\ell,o}\,}\left(x:A\right)\rightarrow B\,\textbf{Elab}\left(\mathsf{fun}\,f\,x\Rightarrow b\right)}\rulename{\overleftarrow{\textbf{Elab}}-fun}
 \]
 
 \[
@@ -138,10 +139,10 @@ For instance, $\left(\lambda x\Rightarrow x\right)::*\rightarrow*$ will elaborat
 \end{figure}
 
 % rules
-Like the \bidir{} rules, the rules for elaboration are broken into two judgments,
+Like the \bidir{} rules, the rules for elaboration are broken into two judgments:
 \begin{itemize}
-\item $H\vdash m\overleftarrow{\,:_{\ell,o}\,}A\,\textbf{Elab}\ a$, that generates a cast term $a$ from a surface term $m$ given its expected type $A$ along with a location $\ell$ and observation $o$ that made that assertion
-\item $H\vdash m\,\textbf{Elab}\ a\overrightarrow{\,:\,}A$, that generates a cast term $a$ and its type $A$ from a surface term $m$
+\item $H\vdash m\overleftarrow{\,:_{\ell,o}\,}A\,\textbf{Elab}\ a$, that generates a cast term $a$ from a surface term $m$ given its expected type $A$ along with a location $\ell$ and observation $o$ that made that assertion.
+\item $H\vdash m\,\textbf{Elab}\ a\overrightarrow{\,:\,}A$, that generates a cast term $a$ and its type $A$ from a surface term $m$.
 \end{itemize}
 The rules for elaboration are presented in \Fref{elaboration}.
 Elaboration rules are written in a style of \bidir{} type checking, with arrows pointing in the direction information flows.
@@ -169,58 +170,53 @@ $|\mathsf{fun}\,f\,x\Rightarrow b|$ & = & $\mathsf{fun}\,f\,x\Rightarrow|b|$\tab
 $|b\,a|$ & = & $|b|\,|a|$\tabularnewline
 $|H,x:M|$ & = & $|H|,x:|M|$\tabularnewline
 \end{tabular}
-\todo[inline]{center this tab}
 \caption{Erasure}
 \label{fig:erasure}
 \end{figure}
 
-\begin{thm}
-Elaborated terms preserve the erasure.
+\begin{thm} Elaborated terms preserve erasure.
  
-if $H\vdash m\,\textbf{Elab}\ a\overrightarrow{\,:\,}A$ then $|m|=|a|$
+If $H\vdash m\,\textbf{Elab}\ a\overrightarrow{\,:\,}A$ then $|m|=|a|$.
  
-if $H\vdash m\,a\overleftarrow{\,:_{\ell,o}\,}A\,\textbf{Elab}\,a$ then $|m|=|a|$
+If $H\vdash m\,a\overleftarrow{\,:_{\ell,o}\,}A\,\textbf{Elab}\,a$ then $|m|=|a|$.
 \end{thm}
- 
 \begin{proof}
-by mutual induction on the $\textbf{Elab}$ derivations
+By mutual induction on the $\textbf{Elab}$ derivations.
 \end{proof}
 
 It follows that whenever an elaborated cast term evaluates, the corresponding surface term evaluates consistently.
 Explicitly,
-\begin{thm}
-\Slang{} and \clang{} have consistent evaluation
+\begin{thm} \Slang{} and \clang{} have consistent evaluation.
  
-if $H\vdash m\,\textbf{Elab}\ a\overrightarrow{\,:\,}A$, and $a\rightsquigarrow_{*}\star$ then $m\rightsquigarrow_{*}\star$
+If $H\vdash m\,\textbf{Elab}\ a\overrightarrow{\,:\,}A$, and $a\rightsquigarrow_{*}\star$ then $m\rightsquigarrow_{*}\star$.
  
-if $H\vdash\textbf{Elab}\ m\,a\overrightarrow{\,:\,}A$, and $a\rightsquigarrow_{*}(x:A)\rightarrow B$ then there exists $N$ and $M$ such that $m\rightsquigarrow_{*}(x:N)\rightarrow M$
+If $H\vdash m\overleftarrow{\,:_{\ell,o}\,}A\,\textbf{Elab}\ a$, and $a\rightsquigarrow_{*}(x:A)\rightarrow B$ then there exists $N$ and $M$ such that $m\rightsquigarrow_{*}(x:N)\rightarrow M$.
 \end{thm}
-
-\todo{define "ok"}
 
 \begin{proof}
 Since $a\rightsquigarrow_{*}a'$ implies $|a|\rightsquigarrow_{*}|a'|$ and $m\rightsquigarrow_{*}m'$ implies $|m|\rightsquigarrow_{*}|m'|$.
 \end{proof}
-elaborated terms are well-cast in a well formed context \todo{need to define and state H ok}
-\begin{thm}
-elaborated terms are well-cast
- 
-for any $H\,\textbf{ok}$, $H\vdash a\,\textbf{Elab}\,m\overrightarrow{\,:\,}A$ then $H\vdash a:A$, $H\vdash A:\star$
- 
-for any $H\,\textbf{ok}$, $H\vdash A:\star$ , $H\vdash a\overleftarrow{\,:_{\ell,o}\,}A\,\textbf{Elab}\,m$ then $H\vdash a:A$
-\end{thm}
- 
-\begin{proof}
-by mutual induction on $\textbf{Elab}$ derivations
- 
-\todo{double check}
 
-\end{proof}
-Some additional properties are conjectured to hold, though they have not yet been proven.
-\begin{conjecture}
-Every term well typed in the \bidir{} \slang{} elaborates
+Elaborated terms are well-cast in a well formed context.
+We will use $H \textbf{ok}$ to mean for all $x$ in $x : A \in H$ then $H \vdash A : \star$.
+
+\begin{thm} Elaborated terms are well-cast.
  
-if $\Gamma\vdash$, then there exists $H$ such that $\Gamma\,\textbf{Elab}\,H$
+For any $H\,\textbf{ok}$, $H\vdash a\,\textbf{Elab}\,m\overrightarrow{\,:\,}A$ then $H\vdash a:A$, $H\vdash A:\star$.
+ 
+For any $H\,\textbf{ok}$, $H\vdash A:\star$ , $H\vdash a\overleftarrow{\,:_{\ell,o}\,}A\,\textbf{Elab}\,m$ then $H\vdash a:A$.
+\end{thm}
+\begin{proof}
+By mutual induction on $\textbf{Elab}$ derivations.
+\todo{double check}
+\end{proof}
+
+Some additional properties are conjectured to hold, though they have not yet been proven.
+
+\begin{conjecture}
+Every term well typed in the \bidir{} \slang{} elaborates.
+ 
+If $\Gamma\vdash$, then there exists $H$ such that $\Gamma\,\textbf{Elab}\,H$
  
 $\Gamma\vdash m\overrightarrow{\,:\,}M$ then there exists $H$, $a$ and $A$ such that $\Gamma\,\textbf{Elab}\,H$, $H\vdash m\,\textbf{Elab}\ a\overrightarrow{\,:\,}A$
  
@@ -229,11 +225,11 @@ $\Gamma\vdash m\overleftarrow{\,:\,}M$ and given $\ell$, $o$ then there exists $
  
 Which if true would lead to the corollary
 \begin{conjecture}
-blame never points to something that checked in the \bidir{} system
+Blame never points to something that checked in the \bidir{} system.
  
-if $\vdash m\overrightarrow{\,:\,}M$, and $\vdash\textbf{Elab}\ m\,a\overrightarrow{\,:\,}A$, then for no $a\rightsquigarrow_{*}a'$ will \blame{a'}{\ell}{o} occur.
+If $\vdash m\overrightarrow{\,:\,}M$, and $\vdash\textbf{Elab}\ m\,a\overrightarrow{\,:\,}A$, then for no $a\rightsquigarrow_{*}a'$ will \blame{a'}{\ell}{o} occur.
  
 \todo{revise precisely with labels}
 \end{conjecture}
  
-These properties are similar to the gradual guarantee\cite{siek_et_al:LIPIcs:2015:5031} for gradual typing.
+These properties are inspired by the gradual guarantee\cite{siek_et_al:LIPIcs:2015:5031} for gradual typing.

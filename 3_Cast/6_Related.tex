@@ -34,13 +34,13 @@ Often type information can be inferred using standard techniques, allowing progr
 % TODO first paper, DLS2008
  
 Gradual type systems usually achieve this by adding a $?$ meta character into the type language to denote imprecise typing information.
-The first popular account of gradual type semantics appeared in \cite{siek_et_al:LIPIcs:2015:5031} with the alliterative ``gradual guarantee'' which has inspired some of the properties in this chapter.
+The first popular account of gradual type semantics appeared in \cite{siek_et_al:LIPIcs:2015:5031} with the alliterative ``gradual guarantee'' which has inspired some of the properties in this Chapter.
  
 % , which informally asserts that "runtime checks will not change the expected behavior", "runtime checks will not change the expected behavior" and "well typed code won't be blamed"
  
 % and then like an endless back and forth over criteria
  
-Additionally some of the formalism from this chapter was inspired by the ``Abstracting gradual typing'' methodology \cite{10.1145/2837614.2837670}, where static evidence annotations become runtime checks.
+Additionally some of the formalism from this Chapter were inspired by the ``Abstracting gradual typing'' methodology \cite{10.1145/2837614.2837670}, where static evidence annotations become runtime checks.
 % Unlike some impressive attempts to gradualize the polymorphic lambda calculus \cite{10.1145/3110283}, our system does not attempt to enforce any parametric properties of the base language. %example?
 % It is unclear if such a restriction would be desirable for a dependently typed language in practice.
  
@@ -51,25 +51,25 @@ That paper is largely concerned with establishing decidable type checking via an
 However, that system retains the intentional style of definitional equality, so that it is possible, in principle, to get $\Vect{}\,(1+x)\neq \Vect{}\,(x+1)$ as a runtime error.
 Additionally it is unclear if adding the $?$ meta-symbol into an already very complicated type theory is easier or harder from the programmer's perspective.
  
-The common motivation for gradual type systems to gradually convert a code base from untyped to (usually simply) typed code.
-This chapter has a much tighter scope than the other work cited here, dealing only with equational assumptions.
-Anyone using a dependent type system has already bought into the usefulness of types in general and will probably not want fragments of completely untyped code.
-Converting untyped code to dependent typed is far less plausible than gradually converting an untyped code base to use simple types\footnote{
- Especially considering that most real-life codebases will use effects, while dependent types and effects are a complicated area of ongoing research.
-}.
+The common motivation for gradual type systems is to gradually convert a code base from untyped to (usually simply) typed code.
+% This chapter has a much tighter scope than the other work cited here, dealing only with equational assumptions.
+However, anyone using a dependent type system has already bought into the usefulness of types in general and will probably not want fragments of completely untyped code.
+Converting untyped code to dependent typed is far less plausible than gradually converting an untyped code base to use simple types.
+Especially considering that most real-life codebases will use effects, while mixing dependent types and effects are a complicated area of ongoing research.
  
 While the gradual typing goals of mixing static certainty with runtime checks are similar to our work here, the approach and details are different.
 Instead of trying to strengthen untyped languages by adding types, we take a dependent type system and weaken it with a cast operator.
 This leads to different trade-offs in the design space.
 For instance, we cannot support completely unannotated code, but we do not need to complicate the type language with wildcards for uncertainty.
-However, one could characterize this work in this Chapter as gradualizing the definitional equality relation.
+
+One could however characterize this work in this Chapter as gradualizing the definitional equality relation.
  
 \subsubsection{Blame}
  
 Blame is one of the key ideas explored in the contract type and gradual types literature\cite{10.1007/978-3-642-00590-9_1,wadler:LIPIcs:2015:5033,10.1145/3110283}.
 Often the reasonableness of a system can be judged by the way blame is handled\cite{wadler:LIPIcs:2015:5033}.
 % Blame is treated in \cite{wadler:LIPIcs:2015:5033} very similarly to the presentation in this chapter.
-This chapter goes beyond blaming a source location and also tracks a witnessing observation thak can also be made.
+This Chapter goes beyond blaming a source location and also tracks a witnessing observation that can also be made.
  
 \subsection{Refinement Style Approaches}
  
