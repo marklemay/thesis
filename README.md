@@ -1,7 +1,20 @@
-# thesis
+# Mark Lemay's Thesis
 [![Build LaTeX document](https://github.com/marklemay/thesis/actions/workflows/build-thesis.yml/badge.svg)](https://github.com/marklemay/thesis/actions/workflows/build-thesis.yml)
  
 [Latest draft](https://github.com/marklemay/thesis/releases/download/thesis/thesis.pdf)
+
+## Defence
+(this is open to the public, but if you plan to attend in person it would be good to reach out so I can book a bigger room if needed)
+ 
+(contact me if you want a zoom link)
+ 
+The defense is scheduled for:
+ 
+* May 24th at 11:00 am(EST) in BU's MCS B21
+ 
+Practice Defenses:
+ 
+* May 17th at 7:00 pm (EST) online only
 
 ## How to Review
 Printed draft chapters are in the draft folder by my desk.
@@ -83,3 +96,7 @@ latexmk draft.tex -pdf
   * https://github.com/marklemay/dDynamic
   * https://github.com/marklemay/dtest-coq2
   * https://github.com/qcfu-bu/dtest-coq
+
+
+## Admin
+* https://docs.google.com/spreadsheets/d/19Mxe4p4qDgGDf7lBmWTGsI0m9lmP4FuxVyHD_kRM7-g/edit#gid=0
