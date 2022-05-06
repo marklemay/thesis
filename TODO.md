@@ -1,14 +1,13 @@
 library request
 * ~~https://link.springer.com/book/10.1007/978-1-4471-0963-1~~
 * print https://link-springer-com.ezproxy.bu.edu/content/pdf/10.1007%2FBFb0037116.pdf
+* https://arxiv.org/abs/2205.01241
 
 Review/add citations
 * "Saïbi [20] describes an elaboration mechanism inserting coercions between types."
   * Amokrane Saïbi. Typing algorithm in type theory with inheritance. Proceedings of the 24th ACM SIGPLAN-SIGACT Symposium on Principles of Programming Languages - POPL ’97, 1997. doi:10.1145/263699.263742.
 * https://arxiv.org/pdf/2011.10618.pdf
-  * "Hybrid typing. [Ou et al. 2004] present a programming language with separate dependently- and
-simply-typed fragments, using arbitrary runtime checks at the boundary. Knowles and Flanagan
-[2010] support runtime checking of refinements. In a similar manner, [Tanter and Tabareau 2015]
+  * "Hybrid typing... In a similar manner, [Tanter and Tabareau 2015]
 introduce casts for subset types with decidable properties in Coq. They use an axiom to denote
 failure, which breaks weak canonicity. Dependent interoperability [Dagand et al. 2018; Osera et al.
 2012] supports the combination of dependent and non-dependent typing through deep conversions.
@@ -55,15 +54,15 @@ Send to people for review
 * contact authors about https://arxiv.org/pdf/2107.04859.pdf, should probly invite to defence
   * address concern that this is novel
 * CH2/4 June
+* Have J. E. review his work cited
 
 last batch of paperwork https://www.bu.edu/cas/academics/phd-and-mfa-academics/graduation-information/
 * Exit survey
 
 defence 
 * 1 page cheatsheet
-  * protocal (1 hour talk, questions, private meetings with candidate, private with comitte, ...) as opening slide
   * syntax, formulas
-* mic check remote people
+* protocol (mic check remote people, 1 hour talk, questions, private meetings with candidate, private with committee, ...) as opening slide
 
 post defence paperwork
 * PhD Contact Information Form http://www.bu.edu/cas/academics/phd-and-mfa-academics/graduation-information/candidate-contact-information-form-for-phd-and-mfa-students/
