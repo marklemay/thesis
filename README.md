@@ -4,17 +4,18 @@
 [Latest draft](https://github.com/marklemay/thesis/releases/download/thesis/thesis.pdf)
 
 ## Defence
-(this is open to the public, but if you plan to attend in person it would be good to reach out so I can book a bigger room if needed)
- 
-(contact me if you want a zoom link)
+
+(All presentations will be streamed, contact me if you want a zoom link)
  
 The defense is scheduled for:
  
-* May 24th at 11:00 am(EST) in BU's MCS B21
+* May 24th at 10:00 am (EST) in BU's MCS B39
  
 Practice Defenses:
  
-* May 17th at 7:00 pm (EST) online only
+* May 13th at 10:00 am (EST) in BU's MCS B39
+
+* May 17th at 7:00 pm (EST) online only (best enjoyed with a drink)
 
 ## How to Review
 Printed draft chapters are in the draft folder by my desk.
