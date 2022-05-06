@@ -9,35 +9,52 @@
 % Further, since program equivalence is undecidable in general, no system will be able to statically verify every ``obvious'' equality for arbitrary user defined data types and functions.
 % In the meantime systems should trust the programmer when they use an unverified equality, and use that advanced research to suppress warnings.
  
+\subsection{\Bidir Placement of Casts}
+\todo{better title}
+ 
+This is not the first work to use \bidir{} type checking to place errors.
+The Haskell compiler, GHC, supplements Hindley-Minler style type checking with bidirectionality to localize error messages.
+This approach was extended in \cite{10.1145/2364527.2364554} which weakens the regular type checking to allow runtime casts\footnote{
+ Available with the $\mathtt{-fdefer-type-errors}$ compiler flag.}.
+The casts themselves are different from the ones described here since they do not optimistically compute, they will only give errors when reached.
+Though more restrictive than our casts, that system enforces parametricity, which makes sense in the context of Haskell.
+ 
+% The only other work we are aware of
+\todo{talk about the java paper it cites}
+ 
+\todo[inline]{talk about dependent haskell?}
+
 \subsection{Contract Systems}
  
 Several of the tricks and notations in this Chapter find their basis in the large amount of work on higher order contracts and gradual types.
 Higher order contracts were introduced in \cite{10.1145/581478.581484} as a way to dynamically enforce invariants of software interfaces, specifically higher order functions.
 % contracts go back to the 70s apparently, but this seems a reasonable place to start the story, though Bigloo Scheme [28] is cited there.
-The notion of blame dates at least that far back. Swapping the type cast of the input argument can be traced directly to that paper's use of blame contravariance, though it is presented in a much different way.
+The notion of blame dates at least that far back.
+Swapping the type cast of the input argument can be traced directly to that paper's use of blame contravariance, though it is presented in a much different way.
 % However the contract language of that paper was somewhat limited.
  
 Contract semantics were revisited in \cite{10.1145/1925844.1926410,10.1007/978-3-642-28869-2_11} where a more specific correctness criteria based on blame is presented.
- 
-Contract systems still generally rely on users annotating their invariants explicitly.
+
+Contract systems still generally rely on users annotating their intentions explicitly.
 Similar to how programmers might include $\mathtt{assert}$s in an imperative language.
-In this thesis annotations are added automatically though elaboration.
+In this thesis annotations are added automatically though elaboration based on type annotations.
  
 While there are similarities between contract systems and the \csys{} outlined here, the \csys{} is designed to address only issues with definitional equality in a dependent type theory.
 Since contract systems are generally used in untyped languages with contracts written in the host language, definitional equality simply isn't applicable in the vast majority of contract systems.
- 
+
+\todo[inline]{discuss why contracts are a bad fit for this problem}
+
 \subsubsection{Gradual Types}
  
-Types can be viewed as a very specific form of contracts.
-Gradual type systems allow for a mixing of the static view of data and dynamic checking.
+Types can be viewed as a very specific form of contracts that are usually enforced statically.
+Gradual type systems allow for a mixing of the static types and dynamic checking.
 Often type information can be inferred using standard techniques, allowing programmers to write fewer contract annotations.
-% TODO first paper, DLS2008
+\todo[inline]{cite first paper, DLS2008?}
  
 Gradual type systems usually achieve this by adding a $?$ meta character into the type language to denote imprecise typing information.
 The first popular account of gradual type semantics appeared in \cite{siek_et_al:LIPIcs:2015:5031} with the alliterative ``gradual guarantee'' which has inspired some of the properties in this Chapter.
  
 % , which informally asserts that "runtime checks will not change the expected behavior", "runtime checks will not change the expected behavior" and "well typed code won't be blamed"
- 
 % and then like an endless back and forth over criteria
  
 Additionally some of the formalism from this Chapter were inspired by the ``Abstracting gradual typing'' methodology \cite{10.1145/2837614.2837670}, where static evidence annotations become runtime checks.
@@ -48,21 +65,21 @@ This thesis borrows some notational conventions from gradual typing such as the 
  
 A system for gradual dependent types has been proposed in \cite{10.1145/3341692}.
 That paper is largely concerned with establishing decidable type checking via an approximate term normalization.
-However, that system retains the intentional style of definitional equality, so that it is possible, in principle, to get $\Vect{}\,(1+x)\neq \Vect{}\,(x+1)$ as a runtime error.
+However, that system retains the conventional style of definitional equality, so that it is possible, in principle, to get $\Vect{}\,(1+x)\neq \Vect{}\,(x+1)$ as a runtime error.
 Additionally it is unclear if adding the $?$ meta-symbol into an already very complicated type theory is easier or harder from the programmer's perspective.
  
 The common motivation for gradual type systems is to gradually convert a code base from untyped to (usually simply) typed code.
 % This chapter has a much tighter scope than the other work cited here, dealing only with equational assumptions.
-However, anyone using a dependent type system has already bought into the usefulness of types in general and will probably not want fragments of completely untyped code.
+However, anyone choosing to use a dependent type system has already bought into the usefulness of types in general and will probably not want fragments of completely untyped code.
 Converting untyped code to dependent typed is far less plausible than gradually converting an untyped code base to use simple types.
 Especially considering that most real-life codebases will use effects, while mixing dependent types and effects are a complicated area of ongoing research.
  
 While the gradual typing goals of mixing static certainty with runtime checks are similar to our work here, the approach and details are different.
 Instead of trying to strengthen untyped languages by adding types, we take a dependent type system and weaken it with a cast operator.
 This leads to different trade-offs in the design space.
-For instance, we cannot support completely unannotated code, but we do not need to complicate the type language with wildcards for uncertainty.
+For instance, we cannot support completely unannotated code, but we do not need to complicate the type language with a $?$ meta-symbol for uncertainty.
 
-One could however characterize this work in this Chapter as gradualizing the definitional equality relation.
+One might characterize this work in this Chapter as gradualizing only the definitional equality relation with a degenerate notion of imprecision.
  
 \subsubsection{Blame}
  
@@ -78,8 +95,19 @@ This means computation can appear uniformly in both term and type position.
 An alternative approach to dependent types is found in \textbf{refinement type systems}.
  
 Refinement type systems restrict type dependency, possibly to specific base types such as $\mathtt{int}$ or $\mathtt{bool}$.
-Under this restriction, it is straightforward to check these decidable equalities and additional properties hold at runtime.
-One specific approach is called \textbf{hybrid type checking} \cite{10.1145/1111037.1111059}\todo{more}.
+Under this restriction, it is straightforward to check type level equalities and additional properties hold at runtime.
+ 
+One approach which explores this is \textbf{hybrid type checking} \cite{10.1145/1111037.1111059,10.1145/1667048.1667051} which preforms "static analysis where possible, ... dynamic checks where necessary".
+% This is a very similar goal to what has been proposed in this Chapter.
+However, there are several differences in that work: they have a simply typed system, static warnings for programmers are not considered, and type checking can reject "clearly ill-typed programs".
+Since in our setting there is no clear boundary between clearly ill-typed programs and subtly ill-typed programs we treat all potential inequalities uniformly with a static warning and a runtime check.
+
+\todo{need to talk about soft typeing?}
+% 'Hybrid type checking is inspired by prior work on soft typing [Fagan 1990;
+% Wright and Catwright 1994; Aiken et al. 1994; Flanagan et al. 1996], but it
+% extends soft typing by rejecting many ill-typed programs, in the spirit of static
+% type checkers.'
+
 Another notable example is \cite{10.1007/1-4020-8141-3_34} which describes a refinement system that limits predicates to base types.
 Another example is \cite{10.1145/3093333.3009856}, a refinement system treated in a specifically gradual way.
 A refinement type system with higher order features is gradualized in \cite{c4be73a0daf74c9aa4d13483a2c4dd0e}.
