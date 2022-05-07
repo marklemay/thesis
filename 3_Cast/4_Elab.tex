@@ -11,9 +11,9 @@ Terms with unproven equality in types are mapped to a cast with enough informati
 Elaboration serves a similar role as the \bidir{} type system did in \ch{2}, and uses a similar methodology.
 Instead of performing a static equality check when the inference mode and the check mode meet, a runtime cast is inserted asserting the types are equal.
 
-In order to perform elaboration, we first need to enrich the \slang{} with location information, $\ell$, at every position that could result in a type mismatch.
+In order to perform elaboration, the \slang{} needs to be enriched with location information, $\ell$, at every position that could result in a type mismatch.
 This is done in \Fref{surface-pre-syntax-loc}.
-Note that the location tags match exactly with the check annotations of the \bidir{} system.
+Note that the location tags correspond with the check annotations of the \bidir{} system.
 For technical reasons the set of locations is nonempty, and a specific null location ($.$)\todo{- instead of . ?} is designated.
 That null location can be used when we need to generate fresh terms, but have no sensible location information available.
 All the meta theory from \ch{2} goes through assuming that all locations are indistinguishable and by generating null locations when needed\footnote{
@@ -21,8 +21,8 @@ All the meta theory from \ch{2} goes through assuming that all locations are ind
     $\frac{M\Rrightarrow M'\quad N\Rrightarrow N'}{\left(x:M_{l}\right)\rightarrow N_{l'}\Rrightarrow\left(x:M'_{l''}\right)\rightarrow N'_{l'''}}\,\rulename{\Rrightarrow-fun-ty}$,
     so that the relation does not discriminate over syntaxes that come from different locations.
   While the $\textbf{max}$ function will map terms into the null location,
-    $max\left(\left(x:M_{\ell}\right)\rightarrow N_{\ell'}\right)=\textbf{max}\left(\left(x:\textbf{max}\left(M\right)_{.}\right)\rightarrow \textbf{max}\left(N\right)_{.}\right)$.
-}.
+    $\textbf{max}\left(\left(x:M_{\ell}\right)\rightarrow N_{\ell'}\right)=\textbf{max}\left(\left(x:\textbf{max}\left(M\right)_{.}\right)\rightarrow \textbf{max}\left(N\right)_{.}\right)$.
+}.\todo{more explanation on this note? why set max up that way?}
 We will avoid writing these annotations when they are unneeded (explicitly in \Fref{surface-pre-syntax-loc-abrev}).
 
 \begin{figure}
@@ -68,6 +68,7 @@ As with \bidir{} type checking, variable types will be inferred from the typing 
 \begin{example}
 $\vdash(\lambda x\Rightarrow 7_c)::_{\ell}\mathbb{B}_c \rightarrow\mathbb{B}_c$ elaborates to $\vdash(\lambda x\Rightarrow7::_{\mathbb{N}_c,\ell,Bod_x}\mathbb{B}_c )$.
 \end{example}
+\todo{these examples aer only precisly correct if the church terms infer their type}
 
 To keep the theory simple, we allow vacuous casts to be created,
 \begin{example}
@@ -86,12 +87,26 @@ For instance, $\left(\lambda x\Rightarrow x\right)::*\rightarrow*$ will elaborat
 \subsection{Elaboration Procedure}
 \todo{review location placment in light of the implementation}
 
+% rules
+Like the \bidir{} rules, the rules for elaboration are broken into two judgments:
+\begin{itemize}
+\item $H\vdash m\overleftarrow{\,:_{\ell,o}\,}A\,\textbf{Elab}\ a$\todo{fix spacing to right of : under arrow}, that generates a cast term $a$ from a surface term $m$ given its expected type $A$ along with a location $\ell$ and observation $o$ that made that assertion.
+\item $H\vdash m\,\textbf{Elab}\ a\overrightarrow{\,:\,}A$, that generates a cast term $a$ and its type $A$ from a surface term $m$.
+\end{itemize}
+The rules for elaboration are presented in \Fref{elaboration}.
+Elaboration rules are written in a style of \bidir{} type checking, with arrows pointing in the direction information flows.
+However, unlike \bidir{} type checking, when checking an inference in \rulename{\overleftarrow{\textbf{Elab}}-cast}, elaboration adds a cast assertion that the two types are equal.
+Thus any conversion checking can be suspended until runtime.
+Additionally we will allow the mode to change at the type universe with the \rulename{\overleftarrow{\textbf{Elab}}-conv-\star} rule, to avoid unneeded checks on the type universe.\todo{i belive this rule is no longer needed? but it is convient}
+% Without the \rulename{\overleftarrow{\textbf{Elab}}-conv-\star} rule, the \slang{} term $1_c :: \mathbb{N}_c$ could not elaborate becouse runtime checks required to cherck teh well formedness of $\mathbb{N}_c$ would result in a term $\mathbb{N}_c :: \star$.
+As formulated here, the elaboration procedure is terminating.
+
 \begin{figure}
 \[
 \frac{
- x:A\in H
+  x:A\in H
 }{
- H\vdash x\,\textbf{Elab}\,x\overrightarrow{\,:\,}A
+  H\vdash x\,\textbf{Elab}\,x\overrightarrow{\,:\,}A
 }
 \rulename{\overrightarrow{\textbf{Elab}}-var}
 \]
@@ -103,9 +118,9 @@ For instance, $\left(\lambda x\Rightarrow x\right)::*\rightarrow*$ will elaborat
 
 \[
 \frac{
- H\vdash M\overleftarrow{\,:_{\ell,.}\,}\star\textbf{Elab}\ A\quad H,x:A\vdash N\overleftarrow{\,:_{\ell',.}\,}\star\textbf{Elab}\ B
+  H\vdash M\overleftarrow{\,:_{\ell,.}\,}\star\textbf{Elab}\ A\quad H,x:A\vdash N\overleftarrow{\,:_{\ell',.}\,}\star\textbf{Elab}\ B
 }{
- H\vdash\left(\left(x:M_{\ell}\right)\rightarrow N_{\ell'}\right)\textbf{Elab}\left(\left(x:A\right)\rightarrow B\right)\overrightarrow{\,:\,}\star
+  H\vdash\left(\left(x:M_{\ell}\right)\rightarrow N_{\ell'}\right)\textbf{Elab}\left(\left(x:A\right)\rightarrow B\right)\overrightarrow{\,:\,}\star
 }
 \rulename{\overrightarrow{\textbf{Elab}}-fun-ty}
 \]
@@ -115,7 +130,8 @@ For instance, $\left(\lambda x\Rightarrow x\right)::*\rightarrow*$ will elaborat
 \]
 
 \[
-\frac{H\vdash M\overleftarrow{\,:_{\ell',.}\,}\star\,\textbf{Elab}\ A\quad H\vdash m\overleftarrow{\,:_{\ell,.}\,}A\,\textbf{Elab}\ a}{H\vdash\left(m::_{\ell}M^{\ell'}\right)\textbf{Elab}\,a\overrightarrow{\,:\,}A}\rulename{\overrightarrow{\textbf{Elab}}-::}
+\frac{H\vdash M\overleftarrow{\,:_{\ell',.}\,}\star\,\textbf{Elab}\ A\quad H\vdash m\overleftarrow{\,:_{\ell,.}\,}A\,\textbf{Elab}\ a}{H\vdash\left(m::_{\ell}M^{\ell'}\right)\textbf{Elab}\,a\overrightarrow{\,:\,}A}
+\rulename{\overrightarrow{\textbf{Elab}}-::}
 \]
 
 \[
@@ -138,18 +154,7 @@ For instance, $\left(\lambda x\Rightarrow x\right)::*\rightarrow*$ will elaborat
 \label{fig:elaboration}
 \end{figure}
 
-% rules
-Like the \bidir{} rules, the rules for elaboration are broken into two judgments:
-\begin{itemize}
-\item $H\vdash m\overleftarrow{\,:_{\ell,o}\,}A\,\textbf{Elab}\ a$, that generates a cast term $a$ from a surface term $m$ given its expected type $A$ along with a location $\ell$ and observation $o$ that made that assertion.
-\item $H\vdash m\,\textbf{Elab}\ a\overrightarrow{\,:\,}A$, that generates a cast term $a$ and its type $A$ from a surface term $m$.
-\end{itemize}
-The rules for elaboration are presented in \Fref{elaboration}.
-Elaboration rules are written in a style of \bidir{} type checking, with arrows pointing in the direction information flows.
-However, unlike \bidir{} type checking, when checking an inference, elaboration adds a cast assertion that the two types are equal.
-Thus any conversion checking can be suspended until runtime.
-Additionally we will allow the mode to change at the type universe with the \rulename{\overleftarrow{\textbf{Elab}}-conv-\star} rule, this is required to avoid stuck casts at $\star$.
-As formulated here, the elaboration procedure is terminating.
+
 
 There are several desirable properties of elaboration that can be shown with the help of an erasure function (defined in \ref{fig:erasure}).
 Erasure is defined over all syntactic forms, removing annotations, locations, and casts.
@@ -198,13 +203,15 @@ Since $a\rightsquigarrow_{*}a'$ implies $|a|\rightsquigarrow_{*}|a'|$ and $m\rig
 \end{proof}
 
 Elaborated terms are well-cast in a well formed context.
-We will use $H \textbf{ok}$ to mean for all $x$ in $x : A \in H$ then $H \vdash A : \star$.
+We will use $H\ \textbf{ok}$ to mean for all $x$, $x : A \in H$ then $H \vdash A : \star$.
 
 \begin{thm} Elaborated terms are well-cast.
  
 For any $H\,\textbf{ok}$, $H\vdash a\,\textbf{Elab}\,m\overrightarrow{\,:\,}A$ then $H\vdash a:A$, $H\vdash A:\star$.
  
-For any $H\,\textbf{ok}$, $H\vdash A:\star$ , $H\vdash a\overleftarrow{\,:_{\ell,o}\,}A\,\textbf{Elab}\,m$ then $H\vdash a:A$.
+For any $H\,\textbf{ok}$, $H\vdash A:\star$, $H\vdash m\overleftarrow{\,:_{\ell,o}\,}A\,\textbf{Elab}\,a$ then $H\vdash a:A$.
+
+For any $H\,\textbf{ok}$, $H\vdash M\overleftarrow{\,:_{\ell,o}\,}\star\,\textbf{Elab}\,A$ then $H\vdash A:\star$.
 \end{thm}
 \begin{proof}
 By mutual induction on $\textbf{Elab}$ derivations.

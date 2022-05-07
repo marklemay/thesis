@@ -54,12 +54,13 @@ CtxOK Γ = (v : _) -> (ty : _ ) -> In Γ v ty -> Γ |- ty :: pTyU
 
 data _|-_::_ {n} Γ where
   Var : (v : Fin n) -> {ty : _} -> In Γ v ty -> Γ |- pVar v :: ty
-  TyU : Γ |- pTyU :: pTyU
   Cast : {b uty ty : PreSyntax }
     -> Γ |-  b :: uty
     -> Γ |-  uty :: pTyU
     -> Γ |-  ty :: pTyU
     -> Γ |-  pCast b uty ty :: ty
+    
+  TyU : Γ |- pTyU :: pTyU
     
   Pi : {aty : PreSyntax } -> {bodty : PreSyntax }
     -> (aTy : Γ |- aty :: pTyU)
@@ -82,5 +83,3 @@ data _|-_::_ {n} Γ where
     -> m ~~ m'
     -> Γ |-  a  :: m'
 
-postulate
-  reg :  {n : ℕ} -> {Γ : Ctx {n}} -> CtxOK Γ -> {a aty : PreSyntax } -> Γ |- a :: aty -> Γ |- aty :: pTyU
