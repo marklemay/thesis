@@ -124,7 +124,7 @@ elabCast-> Γok (App x yy) = c.App (elabCast-> Γok x) (elabCast<- Γok {!!} yy)
 
 
 CtxMappedOK : {n : ℕ} -> (Γ : pCtx {n}) -> (H : c.Ctx {n}) -> Set
-CtxMappedOK Γ H = (v : _) -> (M : _ ) -> In Γ v M -> Σ _ λ A → (c.In H v A) × (H |- M ELAB A :<-: c.pTyU)
+CtxMappedOK Γ H = (v : _) -> (M : _ ) -> In Γ v M -> Σ _ λ A → (c.In H v A) × ( Γ |- M :<-: pTyU) × (H |- M ELAB A :<-: c.pTyU)
 -- -> c.In H v A -> H |- M ELAB A :<-: c.pTyU
 
 -- record
@@ -137,41 +137,54 @@ bidirElab<- : {n : ℕ} {Γ : pCtx {n}} {H : c.Ctx {n}}  {m : _} {M : _} {A : _}
 bidirElab<- ΓHok (Fun x x₁ x₂) ok = {!!}
 bidirElab<- ΓHok (Conv x x₁) ok = {!!}
 
-bidirElab-> : {n : ℕ} {Γ : pCtx {n}} {H : c.Ctx {n}}  {m : _} {M : _} -- {a : _} {A : _}
+bidirElab-> : {n : ℕ} {Γ : pCtx {n}} {H : c.Ctx {n}}  {m : _} {M : _}
     -> (ΓHok : CtxMappedOK Γ H)
     -> Γ |- m :->: M
 --    -> H |- M ELAB a :-> A
-    -> Σ _ (λ a → Σ _ (λ A → (H |- m ELAB a :->: A) × (H |- M ELAB A :<-: c.pTyU)))
-bidirElab-> ΓHok (Var x v x₁) = {!!}
-bidirElab-> ΓHok (TyU x) = {!!}
-bidirElab-> ΓHok (Ann x x₁) = {!!}
+    -> Σ _ (λ a → Σ _ (λ A → (H |- m ELAB a :->: A) × (H |- M ELAB A :->: c.pTyU)))
+bidirElab-> ΓHok (Var x v x₁) = {!!} --ok
+bidirElab-> ΓHok (TyU x) = c.pTyU , c.pTyU , TyU , TyU
+bidirElab-> ΓHok (Ann x xx) with bidirElab<- ΓHok x (Conv-* TyU)
+... | A , Aelab with bidirElab<- ΓHok xx Aelab
+... | a , aelab = a , (A , (Ann Aelab aelab) , {!!})
 bidirElab-> ΓHok (Pi aTy bodTy) = {!!}
 bidirElab-> ΓHok (App fd ad) with bidirElab-> ΓHok fd
-... | f , F , fst , snd = {!!}
--- at this point would need an inversion to say
--- H |- pPi aTy bodTy ELAB F :<-: c.pTyU implies F = c.pPi aTy' bodT', but htis is contrecticted ... :: *
+... | f , .(c.pPi _ _) , felab , Pi Aelab Belab  with bidirElab<- ΓHok ad Aelab
+... | a , aelab = (c.pApp f a) , (_ , ((App felab aelab) , {!!})) -- this would go through eith a substitution argumanet, but substitution does not stictly hold for elaboration?
 
+
+
+CtxMappedOK1 : {n : ℕ} -> (Γ : pCtx {n}) -> (H : c.Ctx {n}) -> Set
+CtxMappedOK1 Γ H = (v : _) -> (M : _ ) -> In Γ v M -> Σ _ λ A → (c.In H v A) × (H |- M ELAB A :<-: c.pTyU)
+
+bidirElab2<- : {n : ℕ} {Γ : pCtx {n}} {H : c.Ctx {n}}  {m : _} {M : _} {A : _}
+    -> (ΓHok : CtxMappedOK1 Γ H)
+    -> Γ |- m :<-: M
+    -> H |- M ELAB A :<-: c.pTyU
+    -> Σ _ (λ a → (H |- m ELAB a :<-: A))
+bidirElab2<- ΓHok (Fun x x₁ x₂) ok = {!!}
+bidirElab2<- ΓHok (Conv x x₁) ok = {!!}
 
 
 bidirElab2-> : {n : ℕ} {Γ : pCtx {n}} {H : c.Ctx {n}}  {m : _} {M : _} -- {a : _} {A : _}
-    -> (ΓHok : CtxMappedOK Γ H)
+    -> (ΓHok : CtxMappedOK1 Γ H)
     -> Γ |- m :->: M
 --    -> H |- M ELAB a :-> A
     -> Σ _ (λ a → Σ _ (λ A → (H |- m ELAB a :->: A)))
 bidirElab2-> ΓHok (Var x v x₁) = {!!} , ({!!} , Var v {!!}) -- ok, this works
 bidirElab2-> ΓHok (TyU x) = c.pTyU , (c.pTyU , TyU)
-bidirElab2-> ΓHok (Ann x xx) with bidirElab<- ΓHok x (Conv-* TyU)
-... | A , Aelab with bidirElab<- ΓHok xx Aelab
+bidirElab2-> ΓHok (Ann x xx) with bidirElab2<- ΓHok x (Conv-* TyU)
+... | A , Aelab with bidirElab2<- ΓHok xx Aelab
 ... | a , aelab = a , (A , (Ann Aelab aelab))
-bidirElab2-> ΓHok (Pi aTy bodTy) with bidirElab<- ΓHok aTy (Conv-* TyU)
-... | A , Aelab with bidirElab<- {!!} bodTy (Conv-* TyU) -- ok
+bidirElab2-> ΓHok (Pi aTy bodTy) with bidirElab2<- ΓHok aTy (Conv-* TyU)
+... | A , Aelab with bidirElab2<- {!!} bodTy (Conv-* TyU) -- ok
 ... | B , Belab = (c.pPi A B) , c.pTyU , Pi Aelab Belab
-bidirElab2-> ΓHok (App fd ad) with bidirElab-> ΓHok fd
+bidirElab2-> ΓHok (App fd ad) with bidirElab2-> ΓHok fd
 ... | f , xxx = {!!}
 
 
 bidirElab1<- : {n : ℕ} {Γ : pCtx {n}} {H : c.Ctx {n}}  {m : _} {M : _}
-    -> (ΓHok : CtxMappedOK Γ H)
+    -> (ΓHok : CtxMappedOK1 Γ H)
     -> Γ |- m :<-: M
 --    -> H |- M ELAB a :-> A
     -> Σ _ (λ a → Σ _ (λ A → (H |- m ELAB a :<-: A)))
@@ -179,7 +192,7 @@ bidirElab1<- : {n : ℕ} {Γ : pCtx {n}} {H : c.Ctx {n}}  {m : _} {M : _}
 bidirElab1<- ΓHok (Fun x x₁ x₂) = {!!} , ({!!} , Fun {!!})
 bidirElab1<- ΓHok (Conv x x₁) = {!!} , ({!!} , Cast {!!}) -- ok this leaves some info on the table, M~A
   where
-  xx = bidirElab-> ΓHok x
+  xx = bidirElab2-> ΓHok x
 
 
 {-

@@ -218,25 +218,32 @@ By mutual induction on $\textbf{Elab}$ derivations.
 \todo{double check}
 \end{proof}
 
-Some additional properties are conjectured to hold, though they have not yet been proven.
+Some additional properties likely hold, though they have not yet been proven. 
+\todo[inline]{
+  explain the annoying bits that make this hard to prove\dots
+  you would probably have to define an undirected elaboration procedure that sends all TAS surface terms to the cast lang, to get good subst properties, and then you wouldn't need to work with the bidir system directly.
+  which honestly sounds distracting at this point.
+}
 
-\begin{conjecture}
+\begin{claim}
 Every term well typed in the \bidir{} \slang{} elaborates.
  
-If $\Gamma\vdash$, then there exists $H$ such that $\Gamma\,\textbf{Elab}\,H$
+% If $\Gamma\vdash$, then there exists $H$ such that $\Gamma\,\textbf{Elab}\,H$
  
-$\Gamma\vdash m\overrightarrow{\,:\,}M$ then there exists $H$, $a$ and $A$ such that $\Gamma\,\textbf{Elab}\,H$, $H\vdash m\,\textbf{Elab}\ a\overrightarrow{\,:\,}A$
+If $\vdash m\overrightarrow{\,:\,}M$ then there exists $a$ and $A$ such that $\vdash m\,\textbf{Elab}\ a\overrightarrow{\,:\,}A$.
  
-$\Gamma\vdash m\overleftarrow{\,:\,}M$ and given $\ell$, $o$ then there exists $H$, $a$and $A$ such that $\Gamma\,\textbf{Elab}\,H$, $H\vdash\textbf{Elab}\,a\,m\overleftarrow{\,:_{\ell o}\,}A$
-\end{conjecture}
+If $\vdash m\overleftarrow{\,:\,}M$ and given $\ell$, $o$ then there exists $a$ and $A$ such that $\vdash m \overleftarrow{\,:_{\ell, o}\,}A\,\textbf{Elab}\,a$.
+\end{claim}
  
-Which if true would lead to the corollary
-\begin{conjecture}
+Which would lead to the corollary:
+
+\begin{claim}
 Blame never points to something that checked in the \bidir{} system.
  
-If $\vdash m\overrightarrow{\,:\,}M$, and $\vdash\textbf{Elab}\ m\,a\overrightarrow{\,:\,}A$, then for no $a\rightsquigarrow_{*}a'$ will \blame{a'}{\ell}{o} occur.
+If $\vdash m\overrightarrow{\,:\,}M$, and $\vdash m\,\textbf{Elab}\ a\overrightarrow{\,:\,}A$, then for no $a\rightsquigarrow_{*}a'$ will \blame{a'}{\ell}{o} occur.
  
-\todo{revise precisely with labels}
-\end{conjecture}
+If  $\vdash m\overleftarrow{\,:\,}M$, and $\vdash m \overleftarrow{\,:\,}A\,\textbf{Elab}\,a$, then for no $a\rightsquigarrow_{*}a'$ will \blame{a'}{\ell}{o} occur.
+\todo{revise precisely with labels?}
+\end{claim}
  
 These properties are inspired by the gradual guarantee\cite{siek_et_al:LIPIcs:2015:5031} for gradual typing.
