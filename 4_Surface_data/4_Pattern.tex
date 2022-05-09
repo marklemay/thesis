@@ -169,7 +169,8 @@ Type checking by unification
 
 The pattern $\Cons{}\,x\,\left(\Suc{}\,y\right)\,2\,z$ could be checked against the type $\Vect{}\,\Nat{}\,w$.
 
-This implies the typings $x:\star$, $y:\Nat{}$, $\left(S\,y\right):x$, $2:\Nat{}$, $z:\Vect{}\,x\,2,\left(\Cons{}\,x\,\left(\Suc{}\,y\right)\,2\,z\right):\Vect{}\,\Nat{}\,w$.
+This implies the typings $x:\star$, $y:\Nat{}$, $\left(\Suc{}\,y\right):x$, $2:\Nat{}$, $z:\Vect{}\,x\,2,\left(\Cons{}\,x\,\left(\Suc{}\,y\right)\,2\,z\right):\Vect{}\,\Nat{}\,w$.
+\todo{non breaking space}
 
 Which in turn imply the equalities $x=\Nat{}$,$w=3$
 \end{example}
@@ -253,8 +254,8 @@ The \bidir{} system can be extended with pattern matching with rules that look l
 \forall\:i\,\left(\Gamma\vdash\overline{pat}_{i}:_{E}?\Delta\quad U\left(E,\sigma\right)\quad\sigma\left(\Gamma,|\overline{pat}_{i}|\right)\vdash\sigma m\overleftarrow{\,:\,}\sigma\left(M\left[\Delta\coloneqq\overline{pat}_{i}\right]\right)\right)\\
 \Gamma\vdash\overline{\overline{pat}}:\Delta\ \mathbf{complete}
 \end{array}}{\begin{array}{c}
-\Gamma\vdash \case{} \,\overline{n,}\,\left\langle \Delta_{?}\Rightarrow M\right\rangle \left\{ \overline{|\,\overline{pat\Rightarrow}m}\right\} \\
-\overrightarrow{\,:\,}M\left[\Delta_{?}\coloneqq\overline{n}\right]
+\Gamma\vdash \case{} \,\overline{n,}\,\left\langle \Delta \Rightarrow M\right\rangle \left\{ \overline{|\,\overline{pat\Rightarrow}m}\right\} \\
+\overrightarrow{\,:\,}M\left[\Delta \coloneqq\overline{n}\right]
 \end{array}}
 \]
 
@@ -272,18 +273,19 @@ Where $\Gamma\vdash\overline{pat}:_{E}?\Delta$ is shorthand for a set of equatio
   and $\Gamma\vdash\overline{\overline{pat}}:\Delta\ \mathbf{complete}$ is shorthand for the exhaustiveness check. 
 \begin{conjecture}
 There exists a suitable\footnote{
-  Supporting at least subject reduction, type soundness, and regularity.
+  Supporting at least subject reduction and type soundness. % ,  regularity.
 } extension to the \slang{} \ac{TAS} that supports pattern matching style elimination
 \end{conjecture}
+
 \begin{conjecture}
 The \bidir{} extension listed here is weakly annotatable with that extension to the \slang{}.
 \end{conjecture}
  
 These conjectures are not obvious since pattern matching's unification is not necessarily preserved under reduction, or even well typed substitution.
-These properties could be recovered by limiting the flexible(assignable) variables of unification to those that appear in the pattern.
+These properties could likely be recovered by limiting the flexible (assignable) variables of unification to those that appear in the pattern.
 Though doing so seems a little arbitrary, and is limiting to the programmer.
 For instance, in $\mathtt{mapVec}$ the programmer will need to add the length of the \Vect{} to the pattern match so that $n$ is flexible.
-Another way to formalize a \ac{TAS} is to use explicit contextual equalities as in \cite{sjoberg2015dependently}.
+Another possible way to formalize a \ac{TAS} is to use explicit contextual equalities as in \cite{sjoberg2015dependently}.
  
 The prototype implementation goes further than what is outlined here.
 For instance, the prototype allows some additional type annotations in the motive and for these annotations to switch the type inference of the \scrut{} into a type-check.
