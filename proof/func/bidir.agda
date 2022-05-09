@@ -94,7 +94,7 @@ data _|-_:<-:_ {n} Γ  where
   Conv : {a m m' : PreSyntax }
     -> Γ |- a :->: m
     -> m ~~ m'
-    -> Γ |- m' :<-: pTyU
+    -- -> Γ |- m' :<-: pTyU
     -> Γ |- a :<-: m'
 
 
@@ -115,11 +115,11 @@ inv<- : {n : ℕ} {Γ : pCtx {n}} {m M : PreSyntax }
     -> Γ |- m :<-: M
     -> B-Inv<- m M
 inv<- (Fun x x₁ Bod) = Fun-Inv (inv<- Bod)
-inv<- (Conv (Var x v x₃) x₁ x₂) = RestVar
-inv<- (Conv (TyU x) x₁ x₂) = RestTyU
-inv<- (Conv (Ann x x₃) x₁ x₂) = RestAnn
-inv<- (Conv (Pi aTy bodTy) x₁ x₂) = RestPi
-inv<- (Conv (App x x₃) x₁ x₂) = RestApp
+inv<- (Conv (Var x v x₃) x₁ ) = RestVar
+inv<- (Conv (TyU x) x₁ ) = RestTyU
+inv<- (Conv (Ann x x₃) x₁ ) = RestAnn
+inv<- (Conv (Pi aTy bodTy) x₁) = RestPi
+inv<- (Conv (App x x₃) x₁ ) = RestApp
 
 
 

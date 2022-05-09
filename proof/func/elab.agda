@@ -123,6 +123,63 @@ elabCast-> Γok (Pi x yy) = c.Pi (elabCast<-ty Γok x) (elabCast<-ty {!!} yy) --
 elabCast-> Γok (App x yy) = c.App (elabCast-> Γok x) (elabCast<- Γok {!!} yy) -- ok since, A : * by Pi inversion
 
 
+CtxMappedOK : {n : ℕ} -> (Γ : pCtx {n}) -> (H : c.Ctx {n}) -> Set
+CtxMappedOK Γ H = (v : _) -> (M : _ ) -> In Γ v M -> Σ _ λ A → (c.In H v A) × (H |- M ELAB A :<-: c.pTyU)
+-- -> c.In H v A -> H |- M ELAB A :<-: c.pTyU
+
+-- record
+
+bidirElab<- : {n : ℕ} {Γ : pCtx {n}} {H : c.Ctx {n}}  {m : _} {M : _} {A : _}
+    -> (ΓHok : CtxMappedOK Γ H)
+    -> Γ |- m :<-: M
+    -> H |- M ELAB A :<-: c.pTyU
+    -> Σ _ (λ a → (H |- m ELAB a :<-: A))
+bidirElab<- ΓHok (Fun x x₁ x₂) ok = {!!}
+bidirElab<- ΓHok (Conv x x₁) ok = {!!}
+
+bidirElab-> : {n : ℕ} {Γ : pCtx {n}} {H : c.Ctx {n}}  {m : _} {M : _} -- {a : _} {A : _}
+    -> (ΓHok : CtxMappedOK Γ H)
+    -> Γ |- m :->: M
+--    -> H |- M ELAB a :-> A
+    -> Σ _ (λ a → Σ _ (λ A → (H |- m ELAB a :->: A) × (H |- M ELAB A :<-: c.pTyU)))
+bidirElab-> ΓHok (Var x v x₁) = {!!}
+bidirElab-> ΓHok (TyU x) = {!!}
+bidirElab-> ΓHok (Ann x x₁) = {!!}
+bidirElab-> ΓHok (Pi aTy bodTy) = {!!}
+bidirElab-> ΓHok (App fd ad) with bidirElab-> ΓHok fd
+... | f , F , fst , snd = {!!}
+-- at this point would need an inversion to say
+-- H |- pPi aTy bodTy ELAB F :<-: c.pTyU implies F = c.pPi aTy' bodT', but htis is contrecticted ... :: *
+
+
+
+bidirElab2-> : {n : ℕ} {Γ : pCtx {n}} {H : c.Ctx {n}}  {m : _} {M : _} -- {a : _} {A : _}
+    -> (ΓHok : CtxMappedOK Γ H)
+    -> Γ |- m :->: M
+--    -> H |- M ELAB a :-> A
+    -> Σ _ (λ a → Σ _ (λ A → (H |- m ELAB a :->: A)))
+bidirElab2-> ΓHok (Var x v x₁) = {!!} , ({!!} , Var v {!!}) -- ok, this works
+bidirElab2-> ΓHok (TyU x) = c.pTyU , (c.pTyU , TyU)
+bidirElab2-> ΓHok (Ann x xx) with bidirElab<- ΓHok x (Conv-* TyU)
+... | A , Aelab with bidirElab<- ΓHok xx Aelab
+... | a , aelab = a , (A , (Ann Aelab aelab))
+bidirElab2-> ΓHok (Pi aTy bodTy) with bidirElab<- ΓHok aTy (Conv-* TyU)
+... | A , Aelab with bidirElab<- {!!} bodTy (Conv-* TyU) -- ok
+... | B , Belab = (c.pPi A B) , c.pTyU , Pi Aelab Belab
+bidirElab2-> ΓHok (App fd ad) with bidirElab-> ΓHok fd
+... | f , xxx = {!!}
+
+
+bidirElab1<- : {n : ℕ} {Γ : pCtx {n}} {H : c.Ctx {n}}  {m : _} {M : _}
+    -> (ΓHok : CtxMappedOK Γ H)
+    -> Γ |- m :<-: M
+--    -> H |- M ELAB a :-> A
+    -> Σ _ (λ a → Σ _ (λ A → (H |- m ELAB a :<-: A)))
+
+bidirElab1<- ΓHok (Fun x x₁ x₂) = {!!} , ({!!} , Fun {!!})
+bidirElab1<- ΓHok (Conv x x₁) = {!!} , ({!!} , Cast {!!}) -- ok this leaves some info on the table, M~A
+  where
+  xx = bidirElab-> ΓHok x
 
 
 {-
@@ -132,7 +189,7 @@ CtxOK Γ
 elabCastty-> : {!{m : _} {a : _} {A : _} {B : _}
     -> Γ |- m ELAB a :->: A!}
 elabCastty-> = {!!}
-
+ar
 data _|-ELAB_ : {n : ℕ} (Γ : pCtx {n}) -> c.Ctx {n} -> Set where
   emp-ELAB : pEmp |-ELAB c.Emp
   ext-ELAB : {n : ℕ} {Γ : pCtx {n}} {H : c.Ctx {n}} {M : _}
