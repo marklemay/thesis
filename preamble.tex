@@ -182,8 +182,12 @@
 % \newcommand{\Refl}{\ensuremath{\mathtt{Refl}}}
 % TODO could use texttt
 
-
-
+% https://tex.stackexchange.com/questions/102483/subscript-and-superscript-in-lstlisting
+\lstset{
+  mathescape,         
+  literate={=>}{$\Rightarrow$}{3}
+           {->}{$\rightarrow$}{2}
+}
 
 
 % jargon
