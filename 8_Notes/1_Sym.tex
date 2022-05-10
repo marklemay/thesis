@@ -38,19 +38,19 @@ We can say that blame is observable if $\vdash a:A$ and $\vdash C[a]:B$ and $C[a
 }.
  
 This error observability is semi-decidable in general (by enumerating all well typed syntax).
-But testing every context is infeasibly inefficient, especially if we try to synthesize open ended types, like functions.
+But testing every context is infeasibly inefficient, especially if we try to synthesize terms of open ended types, like functions.
 An approximate approach can build partial testing contexts based on fixing observations to test variables.
  
 % These contexts are correct up to some constraint.\todo{??}
  
 \subsection{Test Environment}
 The syntax for a test environment is listed in \Fref{sym-env-obs}.
-The clause allows a cast context that is intended to contain data definitions for the term under test.
+The first clause allows a cast context that is intended to contain data definitions for the term under test.
 We can declare test variables of type ($\star$) of partial function type and partial data type.
 We call them partial because they immediately defer to other test variables.
 The syntax allows functions to assign an output test variable to any input.
 The last 3 rules support data which as usual complicates things far more than you might expect.
-Since we use endpoints to handle data, we will need to handle them symbolically, they turn out to act like constraints that the testing environment should respect.
+Since we use endpoints to handle data, we will need to handle them symbolically, they turn out to act like constraints that the testing environment should respect (where $q$ represents evidence that the types of $a$ and $b$ are the same).
 
 \begin{figure}
 \begin{tabular}{lcll}
@@ -76,44 +76,43 @@ $I$ & $\Coloneqq$ & $\varGamma$ & context (to hold data definitions)\tabularnewl
 
 Some abbreviations are listed in \Fref{sym-env-obs-abbiv}.
 The syntax is presented to encourage the use of fresh variables, but these variables will be collapsed into more readable examples.
+Additionally, throught this Chapter, we will use $!!$ as a short hand for some term that contains obvous blame.
 
 \begin{figure}
-  \begin{tabular}{lcl}
-  $fa\Rightarrow g,ga'\Rightarrow h$ & written & $f\,a\,a'=h$\tabularnewline
-  $X\Rightarrow\left(x:Y\right)\rightarrow\star,Y\Rightarrow a$ & written & $X\Rightarrow\left(x:a\right)\rightarrow\star$\tabularnewline
-  $X\Rightarrow\left(x:Y\right)\rightarrow Fx,Y\Rightarrow a$ & written & $X\Rightarrow\left(x:a\right)\rightarrow Fx$\tabularnewline
-  $f:\left(x:Y\right)\rightarrow Fx,Y\Rightarrow a$ & written & $f:\left(x:a\right)\rightarrow Fx$\tabularnewline
-  ... &  & \tabularnewline
-  any blamable term & written & !!\tabularnewline
-  \end{tabular}\caption{Environments and Observations}
-  \label{fig:sym-env-obs-abbiv}
-  \end{figure}
+\begin{tabular}{lcl}
+$fa\Rightarrow g,ga'\Rightarrow h$ & written & $f\,a\,a'=h$\tabularnewline
+$X\Rightarrow\left(x:Y\right)\rightarrow\star,Y\Rightarrow a$ & written & $X\Rightarrow\left(x:a\right)\rightarrow\star$\tabularnewline
+$X\Rightarrow\left(x:Y\right)\rightarrow Fx,Y\Rightarrow a$ & written & $X\Rightarrow\left(x:a\right)\rightarrow Fx$\tabularnewline
+$f:\left(x:Y\right)\rightarrow Fx,Y\Rightarrow a$ & written & $f:\left(x:a\right)\rightarrow Fx$\tabularnewline
+... &  & \tabularnewline
+any blamable term & written & !!\tabularnewline
+\end{tabular}\caption{Environment and Observation Abbreviations}
+\label{fig:sym-env-obs-abbiv}
+\end{figure}
 
   
-
 These testing contexts are used with the symbolic reductions rules listed in \Fref{sym-env-Sym-red} to simplify terms under test.\todo{note the funky substitution?}
-Additionally, environments can shift focus into subterm positions and apply test variables to functions (these rules are unlisted).
-Finally, throught this Chapter, we will use $!!$ as a short hand for some term that contains obvous blame.
+Finally, environments can shift focus into subterm positions and apply test variables to functions (these rules are unlisted).
+
 
 \begin{figure}
-  \[
-  \frac{I\vdash  c:C\vartriangleright a:A\quad x\Rightarrow b\in I}{I\vdash  c:C\vartriangleright a\left[x\coloneqq b\right]:A\left[x\coloneqq b\right]}
-  \]
-  
-  \[
-  \frac{I\vdash  c:C\vartriangleright a:A\quad xb\Rightarrow y\in I}{I\vdash  c:C\vartriangleright a\left[xb\coloneqq y\right]:A\left[xb\coloneqq y\right]}
-  \]
-  
-  \[
-  \frac{I\vdash  c:C\vartriangleright a:A\quad a\rightsquigarrow a'}{I\vdash  c:C\vartriangleright a':A}
-  \]
+\[
+\frac{I\vdash  c:C\vartriangleright a:A\quad x\Rightarrow b\in I}{I\vdash  c:C\vartriangleright a\left[x\coloneqq b\right]:A\left[x\coloneqq b\right]}
+\]
+
+\[
+\frac{I\vdash  c:C\vartriangleright a:A\quad xb\Rightarrow y\in I}{I\vdash  c:C\vartriangleright a\left[xb\coloneqq y\right]:A\left[xb\coloneqq y\right]}
+\]
+
+\[
+\frac{I\vdash  c:C\vartriangleright a:A\quad a\rightsquigarrow a'}{I\vdash  c:C\vartriangleright a':A}
+\]
 \caption{Symbolic reduction}
 \label{fig:sym-env-Sym-red}
 \end{figure}
  
  
-\begin{example}
-  Empty Type
+\begin{example} Empty Type.
 
 The ``empty'' type ($\left(x:\star\right)\rightarrow x$) can be inhabited by the \clang{} term $\lambda x\Rightarrow\star::_{\ell }x$.
 According to the blame rules of \Ch{3} this term does not immediately produce blame without an input.
@@ -124,27 +123,24 @@ Our symbolic execution procedure would be able to discover that example by notin
 After normalizing it is easy to see that any $x$ of the shape $x\ \Rightarrow\ -\rightarrow-$, would cause visible blame.
 \end{example}
 
-
-\begin{example}
-Higher Order Functions
+\begin{example} Higher Order Functions.
 
 Higher order functions can be handled similarly.
-For instance if we have the \clang{} term,
+For instance, if we have the \clang{} term
 \[
-\lambda f\Rightarrow\star::_{\ell }(f\star) \quad : \left(\star\rightarrow\star\right)\rightarrow\star
+\lambda f\Rightarrow\star::((f\star) \sim_{\ell}\star) \quad : \left(\star\rightarrow\star\right)\rightarrow\star
 \]
 \todo{perhaps explicitly condone the retroactive ch3 syntax in ch5}
-  Our symbolic execution procedure would apply a test variable $f$ of type $f:\star\rightarrow\star$.
+  our symbolic execution procedure would apply a test variable $f$ of type $f:\star\rightarrow\star$.
 Then to observe a blamable term, symbolic execution would partially define the behavior of $f$, $f\star\ \Rightarrow\ -\rightarrow-$.
 \end{example}
 
-  
- \begin{example}
- Dependent types, function argument
-  
- In the presence of dependent types, we must also consider blameable terms embedded in type formers.
- For instance, $!!\rightarrow\star\quad:\star$, can observe an error by inspecting its input, which would correspond to the context $\left(\left(\lambda x\Rightarrow x::\star\right)::[!!\rightarrow\star]::\left(\star\rightarrow\star\right)\right)\star\rightsquigarrow_{*}\star::[!!]::\star$.
- Which is blamable by the rules of \ch{3}.
+\begin{example} Dependent types.
+
+In the presence of dependent types, we must also consider blameable terms embedded in type formers.
+For instance, $!!\rightarrow\star\quad:\star$, can observe an error by inspecting its input, which would correspond to the filled context
+  $\left(\left(\lambda x\Rightarrow x::\star\right)::\left([!!\rightarrow\star] \sim_{\ell} \left(\star\rightarrow\star\right)\right)\right)\star\ \rightsquigarrow_{*}\ \star::(!! \sim_{\ell} \star)$.
+Which is blamable. % by the rules of \ch{3}.
 \end{example}
 \todo{Some examples of data}
 
@@ -162,20 +158,18 @@ Here are some additional constraints that can be applied to test environments:
   \item Test variables are always fresh.
   For instance, $f:\Nat{}\rightarrow\Nat{},f2\Rightarrow x,f3\Rightarrow x$ would not be allowed since $f2=f3$ and is over specified.
 \end{itemize}
-We will call an environment where these constraints hold plausible.
+We will call an environment where these constraints hold \textbf{plausible}.
 
 Together these constraints comprise a decent testing procedure because:
 \begin{itemize}
-\item Can guide toward the labels of interest.
+\item Testing can guide toward the labels of interest.
 For instance, we can move to labels that have not yet observed a concrete error.
 Terms without labels can be skipped entirely.
-\item Can choose assignments strategically avoiding or activating blame as desired.
+\item Testing can choose assignments strategically avoiding or activating blame as desired.
 \item Since examples are built up partially the partial contexts can avoid introducing their own blame by construction.
-\item Handle higher order functions, recursions, and self reference gracefully.
+\item Testing can handle higher order functions, recursions, and self reference gracefully.
 For instance, the equations $f: \Nat{} \rightarrow \Nat{}$, $f\left(f\,0\right)\Rightarrow 1$ and $f\left(3\right)\Rightarrow 3$ can be in the context if there is an assignment that implies $f\,0\neq3$
 \end{itemize}
-  
-  
   
  However even plausible environments can flag blame that is not observable,
  \begin{itemize}
@@ -218,7 +212,8 @@ This is presumably out of reach of novice Coq users.
 \begin{itemize}
 \item
 Current work in this area uses coverage guided techniques in \cite{lampropoulos2019coverage} like those in symbolic execution.
-More recently Benjamin Pierce has used Afl on compiled Coq code as a way to generate counter examples\footnote{\url{https://www.youtube.com/watch?v=dfZ94N0hS4I}}\todo{review this, maybe there's a paper or draft now?}.
+\item
+More recently Benjamin Pierce has used american fuzzy lop, a binary fuzzer, on compiled Coq code as a way to generate counter examples\footnote{\url{https://www.youtube.com/watch?v=dfZ94N0hS4I}}\todo{review this, maybe there's a paper or draft now?}.
 \end{itemize}
 \item \cite{dybjer2003combining} added QuickCheck style testing to (version 1 of) Agda.
 \end{itemize}

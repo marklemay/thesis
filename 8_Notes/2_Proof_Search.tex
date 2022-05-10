@@ -4,7 +4,7 @@ Just as ``obvious'' equalities are missing from the definitional relation, ``obv
 For instance, in Agda it is possible to write a sorting function quickly using simple types.
 With effort is it possible to prove that sorting procedure correct by rewriting it with the necessarily dependently typed invariants.
 However, very little is offered in between.
-The problem is magnified if module boundaries hide the implementation details of a function, since those details are exactly what is needed to make a proof!
+The problem is magnified if module boundaries hide the implementation details of a function, since those details are often exactly what is needed to make a proof!
 This is especially important for larger scale software where a library may require proof terms that while true are not provable from the exports of other libraries.
 
 The solution proposed here is additional syntax that will search for a term of the type when resolved at runtime.
@@ -44,7 +44,7 @@ can be used to prototype
 \]
 
 % The symbolic execution described above can precompute many of these solutions in advance.
-Symbolic execution could precompute many of these solutions in advance.
+The testing system in the last section could direct the computation of these solutions in advance.
 In some cases it is possible to find and report a contradiction. 
 
 Experiments along these lines have been limited to ground data types, and fix an arbitrary solution for every type problem.
