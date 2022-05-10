@@ -83,7 +83,7 @@ This relation can be restricted further to be more like a conventional value jud
 
 
 The $a\ \mathbf{Blame}_{\ell,o}$ judgment means a witness of error can be extracted from the term $a$ pointing to the original source location $\ell$ with observation $o$.
-The most important rule is,
+The most important rule is
 
 \[
 \frac{\mathbf{head}\ a\neq\mathbf{head}\ b\quad}{a\sim_{\ell,o}^{L}b\ \mathbf{Blame}_{\ell,o}}
@@ -94,7 +94,7 @@ For instance, $\left(\left(1\sim_{\ell,app_{1}}^{\Nat{} }0\right)+2\right)\ \mat
 % In the implementation type errors are preferred.
 
 There are two new sources of blame from the \case{} construct.
-The \clang{} records every ``unhandled'' branch and if a \scrut{} hits one of those branches the \case{} will be blamed for in-exhaustiveness\footnote{
+The \clang{} records every unhandled branch and if a \scrut{} hits one of those branches the \case{} will be blamed for in-exhaustiveness\footnote{
   This runtime error is conventional in ML style languages, and is even how Agda handles incomplete matches.
 }.
 If a \scrut{} list primitively contradicts the pattern coverage blame can be extracted from the \scrut{}. 

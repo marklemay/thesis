@@ -39,7 +39,7 @@ Quantifying over evidence of equality allows blame to be redirected, so if the p
 
 To account for ``unreachable patterns'' that are not stated in the \slang, we can record the proof of inequality for use at runtime.
 Since in the \clang{}, it is possible for a \case{} expression to reduce into one of those ``unreachable'' branches.
-If this happens blame will be reflected back onto a specific problematic assumption of the input.
+If this happens blame will be reflected back onto a specific problematic assumption of the \scrut{}.
 This will involve extending the \clang{} with operations to manipulate equality evidence directly.
 Proofs of inequality will be able to appear in terms.
  
@@ -70,6 +70,9 @@ Proofs of inequality will be able to appear in terms.
 \todo{still some worthwhile stuff to extract from the defunct version of this chapter}
 \todo[inline]{technically speaking, telescopes should generalize to the different syntactic classes}
 
+
+\todo[inline]{gCiC}
+
 \section{Future Work}
 \todo[inline]{flex vars, refining elaborated patterns, elaborating more \scruts{} into the scrut list}
 
@@ -82,7 +85,7 @@ It may be more efficient (and cleaner) to have a term that would correspond to r
 \todo[inline]{Coq proofs}
 
 % Make equalities visible in the surface syntax
-The system here has some simple inspiration that could be extended into pattern matching syntax more generally. 
+The system here hints at an extension to pattern matching syntax that could be explored more generally. 
 It seems useful to be able to read equational information out of patterns, especially in settings with rich treatment of equality.
 Matching equalities directly could be a useful feature in Agda, or in univalent type theories where manipulating equations is more critical.% such as CTT.
 % \todo[inline]{CTT data is related?}

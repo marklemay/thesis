@@ -13,7 +13,7 @@ This allows data types to be treated like functions.
 For instance, $(\lambda x \Rightarrow\Suc{} x) \sim \Suc{}$ will never cause a blameable error.
  
 Finally, there are reductions to consolidate cast bookkeeping.
-In addition to the listed reductions, a reduction can happen recursively in any sub-position.
+In addition to the listed reductions, a reduction can happen in any sub-position.
 
 % \todo{these reductions are listed?}
 % In this thesis we have taken an extremely extensional perspective, terms are only different if an observation recognizes a difference.
@@ -29,13 +29,9 @@ In addition to the listed reductions, a reduction can happen recursively in any 
 
 \[
 \frac{\ }{A::\star\rightsquigarrow A}
-\]
-
-\[
+\quad \quad
 \frac{\ }{\star\sim_{\ell,o}^{\star}\star\rightsquigarrow\star}
-\]
-
-\[
+\quad \quad
 \frac{\ }{\star\cup^{\star}\star\rightsquigarrow\star}
 \]
 
@@ -61,17 +57,13 @@ In addition to the listed reductions, a reduction can happen recursively in any 
 
 \[
 \frac{\ }{\left(a::L'\right)\sim_{\ell,o}^{L}b\rightsquigarrow a\sim_{\ell,o}^{L'\cup^{\star}L}b}
-\]
-
-\[
+\quad \quad
 \frac{\ }{a\sim_{\ell,o}^{L}\left(b::L'\right)\rightsquigarrow a\sim_{\ell,o}^{L\cup^{\star}L'}b}
 \]
 
 \[
 \frac{\ }{\left(a::L'\right)\cup^{L}b\rightsquigarrow a\cup^{L'\cup^{\star}L}b}
-\]
-
-\[
+\quad \quad
 \frac{\ }{a\cup^{L}\left(b::L'\right)\rightsquigarrow a\cup^{L\cup^{\star}L'}b}
 \]
 
@@ -93,8 +85,8 @@ This is why the telescope annotation is explicit in the formalism (so reductions
 The important properties of reduction are 
 \begin{itemize}
 % \item Paths reduce into a stack of zero or more $Assert_{k\Rightarrow A}$s
-\item Assertions emit observably consistent constructors, and record the needed observations
-\item Sameness assertions will get stuck on inconsistent constructors
+\item Assertions emit observably consistent constructors, and record the needed observations.
+\item Sameness assertions will get stuck on inconsistent constructors.
 % \item Casts can commute out of sameness assertions with proper index tracking
 % \item function application can commute around $kcasts$ , similar to Chapter 3, but will keep $k$ assumptions properly indexed
 \end{itemize}

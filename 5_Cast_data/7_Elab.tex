@@ -58,8 +58,6 @@ For instance, $x\coloneqq_{C} 3$ means $x$ will be assigned $3$ because of $C$.
 \label{fig:cast-data-unification}
 \end{figure}
 
-\todo{backport notation}
-
 When terms are substituted over equations, $E$, the terms are substituted into terms and causes are substituted into causes.
 For instance, 
   $\left(x \approx_{TCon_{1}x}^{\Nat{}}x+x\right) \left[x\coloneqq_{p} 3\right]$ $=$ $3 \sim_{TCon_{1}p}^{\Nat{}}3+3$,
@@ -80,4 +78,4 @@ Without data, elaboration can be extended from \ch{3} by asserting a cast where 
 However the situation becomes more complicated with pattern matched data.
 With the information extracted from unification, terms can be elaborated with blameless casts that mimic the behavior of pattern matching in \ch{4}.
 The information can also be used to redirect blame from ``impossible'' branches.
-However the elaboration procedure als needs to be extended with a scope of assignments to cast into and out of making a formal presentation difficult.
+However the elaboration procedure also needs to be extended with a scope of assignments to cast into and out of making a formal presentation difficult.

@@ -18,7 +18,7 @@ The rules for non-data terms are listed in \Fref{cast-endpoint-rules}.
 \[
 \frac{
 \varGamma\vdash A\sqsupseteq A':\star \quad
-\varGamma,A'\vdash B\sqsupseteq B':\star
+\varGamma,x:A'\vdash B\sqsupseteq B':\star
 }{
   \varGamma\vdash\left(x:A\right)\rightarrow B\sqsupseteq\left(x:A'\right)\rightarrow B':\star
 }\rulename{\sqsupseteq-\mathsf{fun}-ty}
@@ -26,8 +26,8 @@ The rules for non-data terms are listed in \Fref{cast-endpoint-rules}.
 
 \[
 \frac{
-\varGamma\vdash A:\star\quad\varGamma,A\vdash B:\star \quad
-\varGamma,A\vdash b\sqsupseteq b':B
+\varGamma\vdash A:\star\quad\varGamma,x:A\vdash B:\star \quad
+\varGamma,x:A\vdash b\sqsupseteq b':B
 }{
   \varGamma\ \vdash\ \mathsf{fun}\,f\,x\Rightarrow b\ \sqsupseteq\ \mathsf{fun}\,f\,x\Rightarrow b\ :\ \left(x:A\right)\rightarrow B
 }\rulename{\sqsupseteq-\mathsf{fun}}

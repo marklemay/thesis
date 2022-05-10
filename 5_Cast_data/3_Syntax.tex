@@ -57,7 +57,7 @@ The cast operation will allow $1$ to be used as a \Bool{} by casting the assumpt
 These assertions are written $a\sim_{\ell,o}^{C}b$ and will evaluate $a$ and $b$ in parallel until a head constructor is reached on each branch.
 If the constructor is the same it will commute out of the term.
 If the head constructor is different the term will get stuck with the information for the final blame message.
-For instance, $\left(1 \sim_{\ell}^{\Nat{}} 2 \right)\rightsquigarrow_{*} \Suc{} \left(0 \sim_{\ell.DCon_{0}}^{\Nat{}} 1\right) $, \todo{recall 2=SSZ?}where $DCon_{0}$ records that the issue occurs in the 0th argument of the outer \Suc constructor.
+For instance, $\left(1 \sim_{\ell}^{\Nat{}} 2 \right)\rightsquigarrow_{*} \Suc{} \left(0 \sim_{\ell.DCon_{0}}^{\Nat{}} 1\right) $, \todo{recall 2=SSZ?}where $DCon_{0}$ records that the issue occurs in the 0th argument of the outer \Suc{} constructor.
 \todo{address posissibility of misalighned types, 1~True?}
 
 % Since this equational construct is already needed for functions, we
@@ -70,7 +70,7 @@ For instance, $\left(1 \sim_{\ell}^{\Nat{}} 2 \right)$, can be interpreted as $1
 We call the concrete interpretations \textbf{endpoint}s, and they will be formalized in the next section.
 
 Assertions can be chained together with $\cup$ when two expressions share an endpoint. % , and evidence that the types are the same.
-For instance, if we have $\Nat{} \sim_{\ell}^{\star}\Bool{}$ and $\Bool{} \sim_{\ell'}^{\star}String$, then we can associate \Nat{} and $String$, with $\left(\Nat{} \sim_{\ell}^{\star}\Bool{} \right)\cup^{\star}\left(\Bool{} \sim_{\ell'}^{\star}String\right)$.
+For instance, if we have $\Nat{} \sim_{\ell}^{\star}\Bool{}$ and $\Bool{} \sim_{\ell'}^{\star}\mathtt{Unit}$, then we can associate \Nat{} and $\mathtt{Unit}$, with $\left(\Nat{} \sim_{\ell}^{\star}\Bool{} \right)\cup^{\star}\left(\Bool{} \sim_{\ell'}^{\star}\mathtt{Unit}\right)$.
 % This chaining is needed for when multiple equalities are chained together by unification.
 
 Additionally, the syntax needs a way to point out that when a pattern is un-unifiable.

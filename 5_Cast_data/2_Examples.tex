@@ -31,8 +31,8 @@ To handle these issues, elaboration can generate the following cast langngae ter
  
 \begin{lstlisting}[basicstyle={\ttfamily\small}]
 case x {
-| (Cons A a y _) :: p => a::(TCon_0(p))
-| (Nil A) :: p => !TCon_1(p)
+| (Cons A a y _) :: p => a::(TCon$_0$p)
+| (Nil A) :: p => !TCon$_1$p
 }
 \end{lstlisting}
 \todo{subscripts in listings}
@@ -47,13 +47,13 @@ The body of the branch casts $a$ along $TCon_{0}\,p$ to $\mathtt{Bool}$.
 Casts will need to be generalized from \ch{3} to contain evidence of equality.
  
 In the the second branch, the pattern match gives $A:\star$, $p:\mathtt{Vec}\ A\ \mathtt{Z}\approx\mathtt{Vec}\,\mathtt{Bool}\,(\Suc{}\,y)$.
-The body of that branch encodes the contradiction using explicit blame syntax by observing $\mathtt{Z}\neq\Suc{}\,y$ with $TCon_{1}p$.
+The body of that branch encodes the contradiction using explicit blame syntax ($!$) by observing $\mathtt{Z}\neq\Suc{}\,y$ with $TCon_{1}p$.
 Any match in that branch must be blameable.
  
 Since there is no assertion made in either branch, no warnings will be reported for this elaborated \case{} term.
 Any failure that arises will be redirected to the \scrut{}, which must have made a blameable assertion.
  
-Again consider the ways $x$ could go wrong,
+Again consider the ways $x$ could go wrong:
 \begin{itemize}
 \item
 If the user tries to eliminate $x=\mathtt{True}::\mathtt{Vec}\,\mathtt{Bool}\,3$, the type constructor is not matched so the faulty assumption can be blamed automatically.
@@ -63,7 +63,7 @@ If the \scrut{} is an empty \Vect{}, we will fall into the $\mathtt{Nil}$ branch
 If the \Vect{} is inhabited by an incorrect type, such as $\mathtt{Cons}\,\Nat{}\,3\,...\,...::_{\ell}\mathtt{Vec}\,\mathtt{Bool}\,5$, the \case{} will return $3::_{\ell,...}\mathtt{Bool}$\todo{fill in ..., typeing jusdment and undeline the other?} with a cast that rests on the blamable assertion of $\mathtt{Vec}\,\Nat{}\,5\approx\mathtt{Vec}\,\mathtt{Bool}\,\,5$.
 When exactly this blame will surface depends on the evaluation and checking strategies.
 In the implemented language \cbv{} and check-by-value are used at runtime and the blame will surface before the pattern match.
-Using a \whnf{} strategy the blame will be embedded in the resulting term and discovered whenever that term is eliminated. % , as in the implemented elaborator, 
+Using a \whnf{} strategy the blame will be embedded in the resulting term and discovered whenever the ``\Bool{}'' is eliminated. % , as in the implemented elaborator, 
 \end{itemize}
  
 \subsection{Sum}
@@ -82,11 +82,11 @@ The elaboration procedure will produce
 \begin{lstlisting}[basicstyle={\ttfamily\small}]
 case x {
 | (Cons Nat' i n' (Cons Nat'' j n'' rest):: p1):: p2 =>
-  i::(TCon_0(p2)) + j::(TCon_0(p1) U TCon_0(p2))
+  i::(TCon$_0$p2) + j::(TCon$_0$p1 $\cup$ TCon$_0$p2)
 | (Nil Nat') :: p =>
-  !TCon_1(p)
+  !TCon$_1$p
 | (Cons Nat' i n' (Nil Nat''):: p1):: p2 =>
-  !(TCon_1(p1) U DCon_0(TCon_1(p2)))
+  !(TCon$_1$p1 $\cup$ DCon$_0$(TCon$_1$p2))
 }
 \end{lstlisting}
  
@@ -99,20 +99,20 @@ In the first branch we have the variables in scope, $Nat':\star$, $Nat'':\star$,
 This means the elaborator can construct $TCon_0(p2):Nat'\approx\Nat{}$, and $TCon_0(p1):Nat''\approx Nat'$.
 Thes facts can be combined to show $TCon_0(p1) \cup TCon_0(p2):Nat''\approx\Nat{}$.
 \item
-The elaborator knows what the type of every sub expression is supposed to be, so casts can be injected using evidence from the pattern.
+The elaborator knows what the type of every sub expression is supposed to be, so casts can be injected onto the $i$ and $j$ terms using evidence from the pattern.
 \end{itemize}
 \item
 In the 2nd branch we have, $p:\mathtt{Vec}\ Nat''\ 0\approx\mathtt{Vec}\ Nat'\ 2$.
 \begin{itemize}
 \item
-Which is contradictory, by $TCon_1(p):0\approx2$.
+Which is contradictory, by $TCon_1p\ :\ 0\ \approx\ 2$.
 \end{itemize}
 \item
 \todo{note that Dcon needs to eat the S constructor}
 In the 3rd branch, $p1:\mathtt{Vec}\ Nat''\ 0\approx\mathtt{Vec}\ Nat'\ n'$, $p2:\mathtt{Vec}\ Nat'\ (\Suc{}\ n')\approx\mathtt{Vec}\ \Nat{}\ 2$.
 \begin{itemize}
 \item
-Which is unsatisfiable by $TCon_1(p1) \cup DCon_0(TCon_1(p2)):0\approx1$.
+Which is unsatisfiable by $TCon_1(p1) \cup DCon_0(TCon_1\,p2)\ :\ 0\approx1$.
 We don't need to know which sub path is problematic beforehand, only that the combination causes trouble.
 If this branch is reached, we can observe a problem in at least one path.
 \end{itemize}
@@ -160,9 +160,9 @@ This will elaborate to
  
 \begin{lstlisting}[basicstyle={\ttfamily\small}]
 case x {
-| (refl N a)::p =>
- (rep Bool True (a :: (TCon_0(p)))) 
-   :: Vec Bool (TCon_1(p))
+| (refl $N$ $a$)::$p$ =>
+ (rep Bool True ($a$ :: ($TCon_0\ p$)))
+   :: Vec Bool ($TCon_1\ p$)
 }
 \end{lstlisting}
 \todo{standardize on the associativity of pat-match}
