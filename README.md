@@ -51,9 +51,8 @@ latexmk draft.tex -pdf
 ```
  
 ## Complete
-* 6/16/2021 thesis proposal
 - [x] June
-  - [x] Propose
+  - [x] Propose 6/16/2021
   - [x] extended abstract submission
 - [x] July
   - [x] reworked data
@@ -80,13 +79,14 @@ latexmk draft.tex -pdf
 - [x] March
   - [x] ICFP submission
   - [x] reimplement
-## Plan
 - [x] April
   - [x] bug fixing/ testing
   - [x] rewrite Data chapter
-  - [ ] revise final 3 chapters
-  - [ ] re-apply for an extention
-  - [ ] schedual defense
+  - [x] revise final 3 chapters
+  - [x] re-apply for an extention
+## Plan
+- [ ] May
+  - [x] schedual defense
   - [ ] Practice defense
   - [ ] Defend
 
