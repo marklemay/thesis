@@ -70,17 +70,45 @@ Proofs of inequality will be able to appear in terms.
 \todo{still some worthwhile stuff to extract from the defunct version of this chapter}
 \todo[inline]{technically speaking, telescopes should generalize to the different syntactic classes}
 
-
-\todo[inline]{gCiC}
+\section{Prior Work}
+% The work in this Chapter is original, and th
+There is very little prior work that can be cited for this Chapter.
+ 
+While univalent type theories are interested in tracking (possibly unique) equalities over data, those systems tend to make users deal with equalities explicitly.
+Since the goal here is an easy to use language, their approach did not seem applicable.
+% The theory of those systems also
+ 
+The most relevant work to this Chapter is \cite{10.1145/3495528}, which uses a gradual typing methodology to gradualize a version of the \ac{Cic}.
+Their are a number of relevant differences between these works:
+That work needs to support a term level wildcard $?$, where this chapter maintains the surface syntax.
+This Chapter supports fully indexed data, that work only supported parameterized data.
 
 \section{Future Work}
-\todo[inline]{flex vars, refining elaborated patterns, elaborating more \scruts{} into the scrut list}
 
 The system presented here improves on several earlier systems and implementation experiments.
 There is reason to believe things could be improved further.
 For instance, when pattern matching an uncast data the pattern must have a cast variable (so one is synthesized).
 It may be more efficient (and cleaner) to have a term that would correspond to reflexivity, as some of our earlier experimental systems had.
 % \todo[inline]{Nullery ops}
+
+Currently the implementation is fairly consevative with pattern matches.
+Only variables that appear in \case{} patterns are used as flexible variables for unification.
+This results in some unintuitive behavior, such as needing to pattern match on the length of the list in $\mathtt{append}$.
+\begin{lstlisting}[basicstyle={\ttfamily\small}]
+append : (A : *) -> (n : Nat) -> Vec A n
+ -> (m : Nat) -> Vec A m
+ -> Vec A (add n m) ;
+append A n vn m vm =
+ case n, vn < n' => _ : Vec A n' => Vec A (add n' m) >{
+   | (Z)   => (Nil _) => vm
+   | (S _) => (Cons _ a pn pvn)
+     => Cons A a (add pn m) (append A pn pvn m vm)
+ };
+\end{lstlisting}
+% For now this seems sensible since if $n$ is not on the scrutinee list, we will not even know if it is a \Nat{}.
+In \ch{4} we noted that there are different ways one could handle flexible variables in type checking.
+But elaboration opens up new possibilities.
+For instance, we have enough information that the elaborator could add $n$ to the scrutinee list, and refine the pattern appropriately.
 
 \todo[inline]{Coq proofs}
 
