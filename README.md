@@ -3,7 +3,7 @@
  
 [Latest draft](https://github.com/marklemay/thesis/releases/download/thesis/thesis.pdf)
 
-## Defence
+## Defense
 
 (All presentations will be streamed, contact me if you want a zoom link)
  

@@ -50,19 +50,23 @@ Formatting
 Send to people for review
 * Chapter 6.1, Fuzzing person 
 * internet
-* almost done Luara
 * contact authors about https://arxiv.org/pdf/2107.04859.pdf, should probly invite to defence
   * address concern that this is novel
-* CH2/4 June
-* Have J. E. review his work cited
 
-last batch of paperwork https://www.bu.edu/cas/academics/phd-and-mfa-academics/graduation-information/
-* Exit survey
+invite to practice:
+* above 
+*  J. E.,  M.
+* Zach
 
 defence 
+* invite W.S., A.A.
+* backup slide about bi-directional type checking
 * 1 page cheatsheet
   * syntax, formulas
 * protocol (mic check remote people, 1 hour talk, questions, private meetings with candidate, private with committee, ...) as opening slide
+
+last last batch of paperwork https://www.bu.edu/cas/academics/phd-and-mfa-academics/graduation-information/
+* Exit survey
 
 post defence paperwork
 * PhD Contact Information Form http://www.bu.edu/cas/academics/phd-and-mfa-academics/graduation-information/candidate-contact-information-form-for-phd-and-mfa-students/
