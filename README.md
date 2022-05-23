@@ -5,17 +5,15 @@
 
 ## Defense
 
-(All presentations will be streamed, contact me if you want a zoom link)
- 
+[slides](https://docs.google.com/presentation/d/1Wu5-xCrxIq7K_Z7SwQQCLUdGMcU2h0LRNY-4iHMU-uo/edit#slide=id.g12865f7e845_0_194)
+
 The defense is scheduled for:
  
 * May 24th at 10:00 am (EST) in BU's MCS B39
- 
-Practice Defenses:
- 
-* May 13th at 10:00 am (EST) in BU's MCS B39
 
-* May 17th at 7:00 pm (EST) online only (best enjoyed with a drink)
+I have had some Covid exposure, if you feel concerned join through the zoom link.
+
+(contact me if you want a zoom link)
 
 ## How to Review
 Printed draft chapters are in the draft folder by my desk.
@@ -87,7 +85,7 @@ latexmk draft.tex -pdf
 ## Plan
 - [ ] May
   - [x] schedual defense
-  - [ ] Practice defense
+  - [x] Practice defense
   - [ ] Defend
 
 ## Related

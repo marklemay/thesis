@@ -28,12 +28,8 @@ base types, where the refinement is an arbitrary term, as in hybrid type checkin
 Flanagan 2010]. It however lacks the dependent function types found in other works. Lehmann
 and Tanter [2017] exploit the Abstracting Gradual Typing (AGT) methodology [Garcia et al. 2016]
 to design a language with imprecise formulas and implication. They support dependent function
-types, but gradual refinements are only on base types refined with decidable logical predicates.
-Eremondi et al. [2019] also use AGT to develop approximate normalization and GDTL. While being
-a clear initial inspiration for this work, the technique of approximate normalization cannot yield a
-computationally-relevant gradual type theory (nor was its intent, as clearly stated by the authors).
-We hope that the results in our work can prove useful in the design and formalization of such
-gradual dependently-typed programming languages. Eremondi et al. [2019] study the dynamic
+types, but gradual refinements are only on base types refined with decidable logical predicates."
+"[Eremondi et al. 2019]... study the dynamic
 gradual guarantee, but not its reformulation as graduality [New and Ahmed 2018], which as we
 explain is strictly stronger in the full dependent setting. Finally, while AGT provided valuable
 intuitions for this work, graduality as embedding-projection pairs was the key technical driver in
@@ -49,21 +45,16 @@ Formatting
 
 Send to people for review
 * Chapter 6.1, Fuzzing person 
-* internet
-* contact authors about https://arxiv.org/pdf/2107.04859.pdf, should probly invite to defence
-  * address concern that this is novel
 
 invite to practice:
 * above 
-*  J. E.,  M.
-* Zach
 
-defence 
-* invite W.S., A.A.
-* backup slide about bi-directional type checking
-* 1 page cheatsheet
-  * syntax, formulas
-* protocol (mic check remote people, 1 hour talk, questions, private meetings with candidate, private with committee, ...) as opening slide
+## defence 
+* Notify on slack
+
+## After Defence
+* Else corrections
+* double check hotcrp for any follow up feedback that should be incorperated into the final thesis
 
 last last batch of paperwork https://www.bu.edu/cas/academics/phd-and-mfa-academics/graduation-information/
 * Exit survey
