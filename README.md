@@ -5,7 +5,7 @@
 
 ## Defense
 
-[slides](https://docs.google.com/presentation/d/1Wu5-xCrxIq7K_Z7SwQQCLUdGMcU2h0LRNY-4iHMU-uo/edit#slide=id.g12865f7e845_0_194)
+[slides](https://docs.google.com/presentation/d/1Wu5-xCrxIq7K_Z7SwQQCLUdGMcU2h0LRNY-4iHMU-uo/edit?usp=sharing)
 
 The defense is scheduled for:
  
