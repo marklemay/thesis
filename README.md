@@ -7,13 +7,8 @@
 
 [slides](https://docs.google.com/presentation/d/1Wu5-xCrxIq7K_Z7SwQQCLUdGMcU2h0LRNY-4iHMU-uo/edit?usp=sharing)
 
-The defense is scheduled for:
- 
-* May 24th at 10:00 am (EST) in BU's MCS B39
-
-I have had some Covid exposure, if you feel concerned join through the zoom link.
-
-(contact me if you want a zoom link)
+Successfully defended May 24th. 
+I am interested in doing an encore presentation that I could record, contact me if you are interested.
 
 ## How to Review
 Printed draft chapters are in the draft folder by my desk.
@@ -47,46 +42,6 @@ build draft pdf, with margin notes and single spaced lines
 git submodule foreach git pull origin master
 latexmk draft.tex -pdf
 ```
- 
-## Complete
-- [x] June
-  - [x] Propose 6/16/2021
-  - [x] extended abstract submission
-- [x] July
-  - [x] reworked data
-- [x] August
-  - [x] Begin a submission to [CPP](https://popl22.sigplan.org/home/CPP-2022)
-- [x] September
-  - [x] Submit to [CPP](https://popl22.sigplan.org/home/CPP-2022)
-  - [x] Produce some larger examples
-- [x] October
-  - [x] draft Surface Language chapter
-- [x] November
-  - [x] draft Cast Language chapter
-  - [x] draft Surface Data chapter
-- [x] December
-  - [x] draft introduction
-  - [x] draft conclusion
-- [x] Jan
-  - [x] discovered mistake in handling of data
-- [x] Feb
-  - [x] redo data
-  - [x] revise introduction
-  - [x] revise Surface Language chapter, Cast Language chapter
-  - [x] send draft to committee
-- [x] March
-  - [x] ICFP submission
-  - [x] reimplement
-- [x] April
-  - [x] bug fixing/ testing
-  - [x] rewrite Data chapter
-  - [x] revise final 3 chapters
-  - [x] re-apply for an extention
-## Plan
-- [ ] May
-  - [x] schedual defense
-  - [x] Practice defense
-  - [ ] Defend
 
 ## Related
 * https://github.com/marklemay/boston-university-thesis-template

@@ -46,12 +46,6 @@ Formatting
 Send to people for review
 * Chapter 6.1, Fuzzing person 
 
-invite to practice:
-* above 
-
-## defence 
-* Notify on slack
-
 ## After Defence
 * Else corrections
 * double check hotcrp for any follow up feedback that should be incorperated into the final thesis
@@ -65,3 +59,4 @@ post defence paperwork
 
 Fun drinks owed to proof readers:
 * Ramsay
+* Elise

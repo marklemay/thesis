@@ -6,18 +6,15 @@
 
 %% why dependent types?
 Writing correct programs is difficult.
-While many formal methods approaches make some errors rare or impossible, they often require programmers to learn additional syntax and semantics.
+While formal methods can make some errors rare or impossible, they often require programmers to learn additional syntax and semantics.
 Dependent type systems can offer a simpler approach.
 In dependent type systems, proofs and properties use the same language and meaning already familiar to functional programmers.
 
-While the type systems of mainstream programming languages allow tracking simple properties, like $\mathtt{7:int}$ or $\mathtt{not(x):bool}$.
-Dependent types allow complicated properties to be assumed and verified, such as a provably correct sorting function
-
+While the type systems of mainstream programming languages allow tracking simple properties, like $\mathtt{7:int}$ or $\mathtt{not(x):bool}$, dependent types allow complicated properties to be assumed and verified, such as a provably correct sorting function
 \[
 % sort\,:\,\left(input:List\,\Nat\right)\rightarrow\Sigma ls:List\,\mathbb{N}.IsSorted\,input\,ls
 sort\ :\ \left(input:\mathtt{List}\ \Nat{}\right)\rightarrow\Sigma ls:\mathtt{List}\ \Nat{}.\mathtt{IsSorted}\ input\ ls
 \]
-
 by providing an appropriate definition of $sort$ at that type.
 From the programmer's perspective, the function arrow and the implication arrow are the same.
 The proof $\mathtt{IsSorted}$ is no different than any other term of a datatype like $\mathtt{List}$ or $\Nat{}$.
@@ -57,7 +54,7 @@ A version of the following type checks in virtually all dependent type systems:
 \mathtt{head} & :\left(A:\star\right)\rightarrow\left(x:\Nat{} \right)\rightarrow\mathtt{Vec}\,A\,\left(\mathtt{add}\,1\,x\right)\rightarrow A
 \end{align*}
 \[
-\vdash\lambda x.\mathtt{head}\,\mathtt{Bool}\,x\,\left(\mathtt{rep}\,\mathtt{Bool}\,\mathtt{true}\,\left(\mathtt{add}\,1\,x\right)\right)\,:\,\Nat{} \rightarrow\mathtt{Bool}
+\vdash\lambda x\Rightarrow\mathtt{head}\,\mathtt{Bool}\,x\,\left(\mathtt{rep}\,\mathtt{Bool}\,\mathtt{true}\,\left(\mathtt{add}\,1\,x\right)\right)\,:\,\Nat{} \rightarrow\mathtt{Bool}
 \]
 
 \todo[inline]{make this a ``code'' example?}
@@ -67,11 +64,11 @@ $\mathtt{Vec}$ is a list indexed by the type of element it contains and its leng
   Definitions of these types and functions can be found in \Ch{5}.
 }.
 $\mathtt{Vec}$ is a dependent type since it is a type of list that depends on its length.
-$\mathtt{rep}$ is a dependent function that produces a list containing a type with a given length by repeating its input that number of times.
+$\mathtt{rep}$ is a dependent function that produces a list with a given length by repeating its input that number of times.
 $\mathtt{head}$ is a dependent function that expects a list of length $\mathtt{add}\,1\,x$, returning the first element of that non-empty list.
 
 There is no risk that $\mathtt{head}$ inspects an empty list.
-Luckily in the example the $\mathtt{\mathtt{rep}\,\mathtt{Bool}\,\mathtt{true}\,\left(\mathtt{add}\,1\,x\right)}$ function will return a list of length $\mathtt{add}\,1\,x$, exactly the type that is required.
+Luckily, in the example, $\mathtt{\mathtt{rep}\,\mathtt{Bool}\,\mathtt{true}\,\left(\mathtt{add}\,1\,x\right)}$ will result in a list of length $\mathtt{add}\,1\,x$, exactly the type that is required.
 
 %% This example only scratches the surface of what is possible with dependent types.
 
@@ -79,20 +76,21 @@ Unfortunately, programmers often find dependent type systems difficult to learn 
 This resistance has limited the ability of dependent types to reach their full potential to help eliminate the bugs that pervade software systems.
 One of the deepest underlying reasons for this frustration is the way dependent type systems handle equality.
 
-For example, the following will not type check in any conventional dependent type system with user defined addition,
-
+For example, the following will not type check in any existing dependent type system\footnote{ % As far as I am aware, excepting this work (sort of) . assing bsixic safty properties hold.
+  At least without additional formal information about the $\mathtt{add}$ function that has been purposely withheld from this example.
+  },
 \[
-\cancel{\vdash}\lambda x.\mathtt{head}\,\mathtt{Bool}\,x\,\left(\mathtt{rep}\,\mathtt{Bool}\,\mathtt{true}\,\left(\mathtt{add}\,x\,1\right)\right)\,:\,\Nat{} \rightarrow\mathtt{Bool}
+\cancel{\vdash}\lambda x\Rightarrow\mathtt{head}\,\mathtt{Bool}\,x\,\left(\mathtt{rep}\,\mathtt{Bool}\,\mathtt{true}\,\left(\mathtt{add}\,x\,1\right)\right)\,:\,\Nat{} \rightarrow\mathtt{Bool}
 \]
 
-While ``obviously'' $1+x=x+1$, in the majority of dependently typed languages, $\mathtt{add}\,1\,x\equiv\mathtt{add}\,x\,1$ is not a definitional equality.
-\textbf{Definitional equality} is the name for the conservative approximation of equality used by dependent type systems for when two types are clearly the same.
+While ``obviously'' $1+x=x+1$, in current dependently typed languages, $\mathtt{add}\,1\,x$ and $\mathtt{add}\,x\,1$ are not definitionally equal.
+\textbf{Definitional equality} is the name for the conservative approximation of equality used by dependent type systems for when two expressions are clearly the same.
 This prevents the use of a term of type
-$\mathtt{Vec}\,\mathtt{Bool}\,\left(\underline{\mathtt{add}\,1\,x}\right)$
-where a term of type
-$\mathtt{Vec}\,\mathtt{Bool}\,\left(\underline{\mathtt{add}\,x\,1}\right)$
-is expected.
-Usually when dependent type systems encounter situations like this, they will give an error message and prevent the programmer from doing more work until the ``mistake'' is resolved.
+  $\mathtt{Vec}\,\mathtt{Bool}\,\left(\underline{\mathtt{add}\,1\,x}\right)$
+  where a term of type
+  $\mathtt{Vec}\,\mathtt{Bool}\,\left(\underline{\mathtt{add}\,x\,1}\right)$
+  is expected.
+Usually when dependent type systems encounter situations like this, the type checker will give an error message and prevent the programmer from doing more work until the ``mistake'' is resolved.
 
 In programming, types are used to avoid bad behavior.
 For instance, they are often used to avoid ``stuck'' terms.
@@ -102,21 +100,21 @@ For instance, if the $\mathtt{add}$ function incorrectly computes $\mathtt{add}\
 
 While the intent and properties of the $\mathtt{add}$ function are clear to programmers from its name and type, this information is unusable by the type system.
 If the programmer made a mistake in the definition of addition, such that for some $x$, $\mathtt{add}\,1\,x\,\cancel{=}\,\mathtt{add}\,x\,1$, the system will not provide hints on which $x$ witnesses this inequality.
-Worse, the type system may even make it difficult to experiment with the $\mathtt{add}$ function, which makes repairing an actual bug difficult.
+Worse, the type system may even make it difficult to experiment with the $\mathtt{add}$ function by disallowing evaluation in an ``untyped'' file, which makes repairing an actual bug difficult.
 
-Why stop programmers when there is a definitional equality ``error''? \todo{Awk, in HM it makes sense to block}
+Why \emph{stop} programmers when there is a definitional equality ``error''? \todo{Awk, in HM it makes sense to block}
 
-There appears to be no reason! Alternatively, we can track unclear equalities and if the program ``gets stuck'', we are able to stop the program execution and provide a concrete witness for the inequality at runtime.
+There appears to be no reason!\ccnote{I am trying to emphasize that the user interruption as the key issue, which is mostly separate from existing work. I want to leave this in for dramatic effect.}
+Alternatively, we can track unclear equalities and if the program ``gets stuck'', we are able to stop the program execution and provide a concrete witness for the inequality at runtime.
 If the buggy $\mathtt{add}$ function above is encountered at runtime, we can give a runtime error stating $\mathtt{add}\,1\,8=9\,\neq\,0=\mathtt{add}\,8\,1$.
-Which is exactly the kind of specific feedback programers want when fixing bugs.
+Which is exactly the kind of specific feedback programmers want when fixing bugs.
 
 \section{A Different Workflow}
 
-This thesis advocates an alternative usage of types. In most types systems a programmer can't run programs until the type system is convinced of their correctness\footnote{
- This often requires a graduate degree and uncommon patience.
-}.
-Where this thesis argues ``the programmer is always right (until proven wrong)''.
-This philosophy will likely go over better with programmers.
+This thesis advocates an alternative usage of types. In most types systems a programmer can't run programs until the type system is convinced of their correctness\ccnote{I don't want to use type safety yet, i think correctness might be better across all type systems that have differing correctness properties}\footnote{
+ In dependent type systems this often requires advanced study and uncommon patience.
+}, whereas this thesis argues ``the programmer is always right (until proven wrong)''.
+This philosophy might go over better with programmers.\ccnote{humorously weakened the statement}
 
 More concretely, whenever possible, static errors should be replaced with:
 \begin{itemize}
@@ -169,8 +167,7 @@ These diagrams make it clear why there is so much pressure for type errors to be
 Type errors block programmers from running programs! However complaints about the type errors are probably better addressed by resolving the mismatch between the expectations of the programmer and the design of the underlying type theory.
 Better worded error messages are unlikely to bridge this gap when the type system doubts $x+1=1+x$.
 
-The standard workflow seems sufficient for type systems in many mainstream typed programming languages. \todo{Ramsy flagged something around here but can't see the message}
-Though there is experimental evidence that even OCaml can be easier to learn and use with the proposed workflow\cite{10.1145/2951913.2951915}.
+The standard workflow seems sufficient for type systems in many mainstream typed programming languages, though there is experimental evidence that even OCaml can be easier to learn and use with the proposed workflow\cite{10.1145/2951913.2951915}.
 In the presence of dependent types the standard workflow is challenging for both beginners and experts, making a new approach much more critical.
 
 \todo[inline]{
@@ -179,35 +176,35 @@ always a subset of syntax, or changes the syntax}
 
 By switching to the proposed workflow, type errors become type warnings, and the programmer is free to run their program and experiment, while still presented with all the information they would have received from a type error (in the form of warnings).
 If there are no warnings, the programmer could call their program a proof along the lines of the Curry-Howard correspondence\footnote{
-  In the system presented here, the programmer will need to argue all relevant constructions are well founded to claim that they have a proof.
+  In the system presented here, the programmer should informally argue all relevant constructions are well founded to claim they have a proof.
 }\todo{cite?}.
 If there is value in a type error it comes from the message itself and not the inconvenience it causes programmers.
 
-The proposed workflow is necessary, since often the type system is too conservative and the programmer is correct in implicitly asserting an equality that is not provable within the system.
-That the programmer may need to go outside the conservative bounds of definitional equality has been recognized since the earliest dependent type theories \cite{Martin-Lof-1972} and difficulties in dependently typed equality have motivated many research projects \cite{HoTTbook,sjoberg2015programming,cockx2021taming}.
-However, these impressive efforts are still only usable by experts, since they frequently require the programmer prove their equalities explicitly\cite{HoTTbook,sjoberg2015programming}, or add custom rules into the type system \cite{cockx2021taming}.
+The proposed workflow is necessary, since often the type system is too conservative and the programmer is correct in implicitly asserting an equality that is not provable\ccnote{I stand by this for Godel reasons there will always be unprovabel facts, in additional to the mundane things that programmars are more likely to build} within the system.
+That the programmer may need to go outside the conservative bounds of definitional equality has been recognized since the earliest dependent type theories \cite{Martin-Lof-1972}, and difficulties in dependently typed equality have motivated many research projects \cite{HoTTbook,sjoberg2015programming,cockx2021taming}.
+However, these impressive efforts are still only usable by experts\ccnote{It depends on the specific definition of expert, personally I would consider anyone who knows what defintional equality is an expert}, since they frequently require the programmer prove their equalities explicitly\cite{HoTTbook,sjoberg2015programming}, or add custom rules into the type system \cite{cockx2021taming}.
 Further, since program equivalence is undecidable in general, no system will be able to statically verify every ``obvious'' equality for arbitrary user defined data types and functions.
-In practice, every dependently typed language has a way to assume equalities, even though these assumptions will result in computationally bad behavior (the program may ``get stuck'').
+In practice, every dependently typed language has a way to assume equalities, even though these assumptions will result in computationally bad behavior\footnote{The program may ``get stuck''.}.
 
 The proposed workflow presented in this thesis is justified by:
 \begin{itemize}
 \item The strict relation between warnings and runtime errors.
 A runtime error will always correspond exactly to a reported warning, always validating the warning with a specific example.
-\item A form of type soundness holds, programs will never ``get stuck'' unless a concrete witness that corresponds to the warning is found.
-\item Programs that type check against a model type system will not have warnings, and therefore cannot have errors.
+\item A form of type soundness holds, programs will never ``get stuck'' unless a concrete witness that corresponds to a warning is found.
+\item Programs that type check against a conventional type system should not have warnings, and therefore cannot have errors.
 \item Other than warnings and errors the runtime behavior is similar to other conventional dependently typed languages.
 % this is actually true, even in a normalizing theory, the runtime behavior is standard
 \end{itemize}
 
 \section{Example: System F Interpreter}
 
-While the primary benefit of this system is the ability to experiment more freely with dependent types, while still getting the full feedback of a dependent type system, it is also possible to encode examples that would be unfeasible in existing systems.
+While the primary benefit of this system is the ability to experiment more freely with dependent types while still getting the full feedback of a dependent type system, it is also possible to encode examples that would be unfeasible in existing systems.
 This comes from accepting warnings that are justified with external mathematical or programmatic intuition, even while being theoretically thorny in dependent type theory.
 
 For instance, here is part of an interpreter for System F\todo{cite?}\footnote{
  System F is one of the foundational systems used to study programming languages.
- It is possible to fully encode evaluation and proofs into Agda, but it is difficult if computation, like substitution, happens in a type.
- In teh system described in this thesis, it is possible to start with the ideal type indexed encoding and build an interpreter, without proving any properties of substitution.
+ It is possible to fully encode evaluation and proofs into Agda, but it is difficult if computation like substitution happens in a type.
+ In the system described in this thesis, it is possible to start with a type indexed encoding and build an interpreter, without proving any properties of substitution.
 } that encodes the type of the term at the type level.
 The step function asserts type preservation of the interpreter in its function signature.
 It will generate warnings like the following:
@@ -231,53 +228,52 @@ data Ty : * {
 };
 
 data Term : Ctx -> Ty -> * {
-| V : (ctx : (Var -> Ty)) -> (x : Var) ->
-Term ctx (ctx x)
-| lam : (ctx : Ctx) ->
-(targ : Ty) -> (tbod : Ty) ->
-Term (ext ctx targ) tbod ->
-Term ctx (arr targ tbod)
-| app : (ctx : Ctx) ->
-(arg : Ty) -> (bod : Ty) ->
-Term ctx (arr arg bod) ->
-Term ctx arg ->
-Term ctx bod
-| tlam : (ctx : Ctx) ->
-(bod : Ty) ->
-Term ctx bod ->
-Term ctx (forall bod)
-| tapp : (ctx : Ctx) ->
-(targ : Ty) -> (tbod : Ty) ->
-Term ctx (forall tbod) ->
-Term (tSubCtx targ ctx) (tSubt targ tbod)
+| V :    (ctx : Ctx) -> 
+         (x : Var) -> 
+         Term ctx (ctx x)
+| lam :  (ctx : Ctx) -> (targ : Ty) -> (tbod : Ty) ->
+         (bod : Term (ext ctx targ) tbod) ->
+         Term ctx (arr targ tbod)
+| app :  (ctx : Ctx) -> (targ : Ty) -> (tbod : Ty) ->
+         (func : Term ctx (arr targ tbod)) ->
+         (arg : Term ctx targ) ->
+         Term ctx tbod
+| tlam : (ctx : Ctx) -> (tbod : Ty) ->
+         (bod : Term ctx tbod) ->
+         Term ctx (forall tbod)
+| tapp : (ctx : Ctx) -> (targ : Ty) -> (tbod : Ty) ->
+         (bod : Term ctx (forall tbod)) ->
+         Term (tSubCtx targ ctx) (tSubt targ tbod)
 };
 
-step : (ctx : Ctx) -> (ty : Ty) -> Term ctx ty ->
-Term ctx ty ;
-step ctx ty trm =
-case trm <_ => Term ctx ty > {
-| (app _ targ tbod (lam _ _ _ bod) a) =>
-  sub ctx targ a tbod bod
-| x => x
+step : (ctx : Ctx) -> (ty : Ty) ->
+       (term : Term ctx ty) -> 
+       Term ctx ty ;
+step ctx ty trm = case trm {
+  | (app _ targ tbod (lam _ _ _ bod) a) 
+    => sub ctx targ a tbod bod
+  | (tapp _ targ tbod (tlam _ _ bod))   
+    => subt ctx targ tbod bod
+  | x => x
 };
 \end{lstlisting}
 
-\todo[inline]{clean up, write out sub?}\caption{System F}
+\todo[inline]{clean up, write out sub?}\caption{System F Interperter in the Proposed Language}
 \label{fig:ex-sysf}
 \end{figure}
 
 First, note that the program has assumed several of the standard properties of substitution.
-Informally substitution and binding is usually considered obvious and uninteresting, and little explanation is usually given\footnote{
+Informally, substitution and binding is usually considered obvious and uninteresting, and little explanation is usually given\footnote{
   A convention that will be followed in this thesis.
 }.
-However formalizing substitution in a dependent type theory is usually a substantial task\cite{10.1145/3293880.3294101}.
+However, formalizing substitution in a dependent type theory is usually a substantial task\cite{10.1145/3293880.3294101}.
 
 Second, the type contexts have been encoded as functions.
 This would be a reasonable encoding in a mainstream functional language since it hides the uninteresting lookup information.
-This encoding would be inadvisable in other dependently typed languages since equality over functions is so fraught.
+This encoding would be inadvisable in other dependently typed languages since functions that act the same may not be definitionally equal.\ccnote{I think this understates things a bit, there is also Fun-ext, and undecidability} % equality over functions is so fraught.
 Here we can rest on the intuition that functions that act the same are the same.
 
-Finally it is perfectly possible that there is a bug in the code invalidating one of the assumptions.
+Finally, it is perfectly possible that there is a bug in the code invalidating one of the assumptions.
 There are two options for the programmer:
 \begin{itemize}
 \item Reformulate the above code so that there are no warnings, formally proving all the required properties as one might in a conventional dependently typed language (this is possible but would take a serious effort).
@@ -313,11 +309,11 @@ While there is some dispute about how essential general recursion is,
 there is no mainstream general purpose programming language that restricts termination.
 Allowing nontermination weakens the system when considered as a logic (any proposition can be given a nonterminating inhabitant).
 This removes any justification for a type universe hierarchy, so the system will support \tit{}.
-Similarly non-strict data definitions are allowed.
+Similarly, non-positive data type definitions are allowed.
 \item Aside from the non-termination and runtime errors mentioned above, effects will not be allowed.
 Even though effects seem essential to mainstream programing, they are a very complicated area of active research that will not be considered here.
 The language studied is a ``pure'' (in the sense of Haskell) functional language.
-As in Haskell, effects can be simulated with other language constructs.
+As in Haskell, effects\ccnote{printf can be simulated with a writer} can be simulated with other language constructs.
 \end{itemize}
 It is possible to imagine a system where a wide range of properties are held optimistically and tested at runtime.
 However the bulk of this thesis will only deal with equality, since that relation is uniquely fundamental to dependent type systems.
@@ -328,21 +324,24 @@ It would be premature to deal with any other properties until definitional equal
 
 Inserting runtime equality checks into a dependent types system is easier said than done.
 \begin{itemize}
-\item In the presence of dependent types, equality checks may drift into types.
-What does it mean when a term is a list of length $\mathtt{Bool}$?
-\item Terms can ``get stuck'' in new ways. 
+\item Since the system is a \fullSp{} dependent type system, checks will appear in types.
+What does it mean when a term is a list of length \True{}?
+\item Terms might ``get stuck'' in new ways. \ccnote{this is indeed hard to follow... not sure how to present it without having to introduce new things that need to come after this summery}
 What happens when an equality check is used as a function by being applied with an argument?
 What happens when a check blocks a pattern match?
 \item Equality is not decidable at many types, even in the empty context.
 For instance, functions of type $\Nat{} \rightarrow \Nat{}$ do not have decidable equality.
 Therefore the types that embed functions of type $\Nat{} \rightarrow \Nat{}$ do not have decidable equality.
 \end{itemize}
-These problems are solved by extending dependent type theory with a cast checking operator.
+
+These problems are solved by extending dependent type theory with operational semantics for the cast checking operator.
 This cast operator will ``get stuck'' if there is a discrepancy, and we can show that a program will always resolve to a value or get stuck in such a way that a counterexample can be reported.
+\todo{this is abrupt}
+
 \begin{itemize}
 \item A system is needed to localize casts, these can be generated by extending a \textbf{\bidir{}} typing procedure to insert checks when it would statically check equality.
 Without a reasonable way to localize checks, the work in this thesis would be infeasible.
-\item When an argument is applied to a cast operator, new casts can be computed. % using similar logic to that of contracts and monitors\cite{10.1145/581478.581484}.
+% \item When an argument is applied to a cast operator, new casts can be computed. % using similar logic to that of contracts and monitors\cite{10.1145/581478.581484}.
 \item Once the casts are inserted, evaluations are possible.
 Lazy evaluation means checking only has to happen up to the outermost type constructor, avoiding issues of undecidable equality.
 \item Pattern matching can be extended to support equality evidence.
@@ -384,15 +383,15 @@ Though the system is not original, the proof presented is the simplest complete 
 \item Chapter 3 describes a dependently typed language (without data) with embedded equality checks, called the \textbf{\clang{}}.
 The \clang{} has its own version of type soundness, called \textbf{cast soundness}.
 Cast soundness is proven for the \clang{}, using a similar strategy to the type soundness proof of \ch{2}.
-Then an Elaboration procedure takes most (untyped) terms of the surface syntax into terms in the \clang{} is presented.
+Then an elaboration procedure that takes most (untyped) terms of the surface syntax into terms in the \clang{} is presented.
 Several desirable properties for elaboration are presented. % and conjectured.
-\item Chapter 4 reviews how dependent data and pattern matching can be added to the \slang{} and explores some of the issues of data in a dependent type system.
-\item Chapter 5 shows how to extend the \clang{} with dependent data and pattern matching.
-Surprisingly the inclusion of dependent data requires several changes to the system in \Ch{3}, since finer observations are observable.
+\item Chapter 4 reviews how dependent data types and pattern matching can be added to the \slang{} and explores some of the issues of data types in a dependent type system.
+\item Chapter 5 shows how to extend the \clang{} with dependent data types and pattern matching.
+Surprisingly the inclusion of dependent data types requires several changes to the system in \Ch{3}, since finer observations are possible.
 \item Chapter 6 discusses other ideas related to usability and future work, such as automated testing and runtime proof search.
 These systems are made feasible given the more flexible approach to equality addressed in the rest of the thesis.
 \end{itemize}
-Versions of the proof of type soundness in Chapter 2, and the cast soundness in Chapter 3 have been formally proven in Coq.
+Versions of the proof of type soundness in \ch{2} and the cast soundness in \ch{3} have been formally proven in Coq.
 % Properties in chapter 4 and 5 are only conjectured correct.
 
 Those interested in exploring the type soundness and type checking of a ``standard'' dependent type theory can read Chapters 2 and 4 which can serve as a self contained tutorial.

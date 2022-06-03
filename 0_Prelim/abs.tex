@@ -9,7 +9,7 @@ Programmers are given warnings that contain the same information as the type err
 Programmers can run these programs optimistically, and they will behave appropriately unless a direct contradiction confirming the warning is found.
 
 This is achieved by localizing equality constraints using a new form of elaboration based on \bidir{} type inference.
-These local checks, or casts, are given a runtime behavior (similar to those of contract and monitors).
+These local checks, or casts, are given a runtime behavior (similar to those of contracts and monitors).
 The elaborated terms have a weakened form of type soundness: they will not get stuck without an explicit counter example.
 
 The language explored in this thesis will be a Calculus of Constructions like language with recursion, \tit{}, data types with dependent indexing and pattern matching.
