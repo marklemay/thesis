@@ -76,22 +76,22 @@ Since checking if a PCF function halts is undecidable, type checking is undecida
  
 \end{proof}
  
-Again this the root of the problem is the non-termination that results by allowing as many computations as possible, which seem necessary in a realistic programming language.
+Again the root of the problem is the non-termination that results by allowing as many computations as possible, which seem necessary in a realistic programming language.
  
-Luckily undecidability of type checking is not as bad as it sounds for several reasons.
+Luckily, undecidability of type checking is not as bad as it sounds for several reasons.
 First, the pathological terms that cause non-terminating conversion are rarely created on purpose or even by accident.
 In the \bidir{} system, conversion checks will only happen at limited positions, and it is possible to use a counter to warn or give errors at code positions that do not convert because normalization takes too long.
-Heuristic methods of conversion checking have worked so surprisingly well in our prototypes, that implementing the counter limited equality was never a pressing concern.
+Heuristic methods of conversion checking have worked so surprisingly well in our prototypes that implementing the counter limited equality was never a pressing concern.
 % well enough in practice even without a counter.
 % It is also possible to embed proofs of conversion directly into the syntax\cite{sjoberg2012irrelevance}.
  
 Many dependent type systems, such as Agda, Coq, and Lean, aspire to decidable type checking.
-However these systems allow extremely fast growing functions to be encoded (such as Ackerman's function).
+However, these systems allow extremely fast growing functions to be encoded (such as Ackerman's function).
 A fast growing function can generate a very large index that can be used to check some concrete but unpredictable property, (how many Turing machines whose code is smaller then $n$ halt in $n$ steps?).
 When this kind of computation is lifted to the type level, type checking is computationally infeasible, to say the least.
  
 Decidability of type checking is often used as a proxy for efficiency of type checking.
-However it may be a poor measure of efficiency of for the kinds of programs and proofs that are likely to occur.
+However, it may be a poor measure of efficiency of for the kinds of programs and proofs that are likely to occur.
  
 \todo{make sure I'm not missing any langs, C\#...?}
  

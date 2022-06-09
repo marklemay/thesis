@@ -23,15 +23,15 @@ As much as possible, the syntax uses standard modern notation\footnote{
 The surface type system will serve both as a foundation for later chapters and a self contained technical introduction to dependent types.
 Even when using the full system described in later chapters, programmers will only need to think about the surface system.
 By design, the machinery that deals with equality addressed in later chapters will be invisible to programmers.
-Everything presented in later chapters is designed to reinforce an understanding of the surface type system, and make it easier to use.
+Everything presented in later chapters is designed to reinforce an understanding of the surface type system and make it easier to use.
  
 % overview, What
 The \slang{} deviates from a standard dependent type theory to include features for programming at the expense of logical correctness.
-Specifically the language allows general recursion, since general recursion is useful for programmers.
-\Tit{} is also supported since it simplifies the system, and makes the meta-theory slightly easier.
+Specifically, the language allows general recursion, since general recursion is useful for programmers.
+\Tit{} is also supported since it simplifies the system and makes the meta-theory slightly easier.
 Despite this, type soundness is achievable, and a practical type checking system is given.
  
-Though similar systems have been studied over the last few decades this chapter aims to give a self contained presentation, along with examples.
+Though similar systems have been studied over the last few decades, this chapter aims to give a self contained presentation, along with examples.
 The \slang{} has been a good platform to conduct research into \fullSp{} dependent type theory, and hopefully this exposition will be a helpful introduction for other researchers.
  
 \section{\SLang{} Syntax}
@@ -44,7 +44,8 @@ In the implemented language a user of the programming language would use a singl
  
 There is no distinction between types and terms in the syntax\footnote{
   Terms and types are usually syntactically separated, except in the syntax of \fullSp{} dependent type systems where separating them would require many redundant rules.
-}, both are referred to as expressions.
+}.
+Both are referred to as expressions.
 However, capital meta variables are used in positions that are intended as types, and lowercase meta variables are used when an expression may be a term.
 For instance, in annotation syntax where $m::M$ means $m$ can be a term and $M$ should be a type.
 % Meta variables that intend to quantify equivalent terms will be noted with primes or subscripts,

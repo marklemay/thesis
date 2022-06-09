@@ -52,7 +52,7 @@ So $\mathbb{B}_{c}$ encodes the possibility of choice between two elements, $tru
 Natural numbers\footnote{
   Called \textbf{church numerals} in this scheme.
 } are encodable with two tags, zero and successor.
-Where the successor tag also contains the result of processing the preceding number.
+In this encoding, the successor tag also contains the result of processing the preceding number.
 So $\mathbb{N}_{c}$ encodes those two choices, $(X\rightarrow X)$ handles the recursive result of the prior number in the successor case, and the $X$ argument specifies how to handle the base case of $0$.
 This can be viewed as a looping construct with temporary storage that loops exactly as many times as the number it represents.
 
@@ -74,26 +74,24 @@ To make the system easier for programmers, data types will be added directly in 
 
 In general we associate the truth value of a proposition with the inhabitation of a type by a meaningful value.
 This meaningful term corresponds to a proof.
-So, $\perp_{c}$, the ``empty'' type, can be interpreted as a false proposition.
-While $Unit_{c}$ can be interpreted as a trivially true proposition, since it has only one good inhabitant\footnote{
+So, $\perp_{c}$, the ``empty'' type, can be interpreted as a false proposition, while $Unit_{c}$ can be interpreted as a trivially true proposition, since it has only one good inhabitant\footnote{
   Remember to keep the the different notions of ``truth'' separate:
 
   $\mathbb{B}$ is a collection of 2 tags $true$ and $false$.
-  The names aer abitrary, nothing but convention informs their meaning.
-  If-then-else constructs could be turned into if-else-then without changing anything essential.
+  The names are abitrary, nothing but convention informs their meaning.
+  Just as if-then-else constructs could be reordered into if-else-then without changing anything essential.
 
-  In type theory the $\perp$ proposition contains no proofs, if you ever get one, something has gone wrong and you have an excuse to do anything.
+  In type theory the $\perp$ proposition contains no proofs.
+  If you ever get one, something has gone wrong and you have an excuse to do anything.
   Meanwhile the $Unit$ proposition contains just a single trivial proof.
-  Nothing interesting can be done with it, just as nothing can be done with the identity function.
+  Nothing interesting can be done with it, just as nothing interesting can be done with the identity function.
   
-  Finally these are distinct from the meta theoretic implications that will be presented later.
+  Finally, these notions of ``truth'' are distinct from the meta theoretic properties that will be presented later.
 }.
 
 Several of the church encoded data types we have seen can also be interpreted as logical predicates.
-For instance, the tuple type can be interpreted as logical $and$.
-Since $X\times_{c}Y$ can only be meaningfully inhabited when both $X$ and $Y$ are inhabited.
-The $Either$ type can be interpreted as logical $or$.
-Since $Either_{c}\,X\,Y$ can be inhabited when either $X$ or $Y$ is inhabited.
+For instance, the tuple type can be interpreted as logical $and$ since $X\times_{c}Y$ can only be meaningfully inhabited when both $X$ and $Y$ are inhabited.
+The $Either$ type can be interpreted as logical $or$ since $Either_{c}\,X\,Y$ can be inhabited when either $X$ or $Y$ is inhabited.
 
 With dependent types, more interesting logical predicates can be encoded.
 For instance, we can characterize when a number is even with $Even_{c}$.
@@ -103,8 +101,7 @@ Since the definition of $Even_{c}\,2_{c}$ expands to $(Unit_{c} \rightarrow \per
 Other predicates are encodable in this style (See \cite{Martin-Lof-1971,cardelli1986polymorphic,10.1016/0890-5401(88)90005-3} for more examples).
 For instance, we can encode the existential quantifier as $\exists_{c}$ as shown in \Fref{surface-examples}.
 Then we can show $\exists_{c}x:\mathbb{N}_{c}\Rightarrow\,Even_{c}\,x$ with a suitable inhabitant of that type.
-$0$ is clearly an even number, so our inhabitant could be $\lambda-f\Rightarrow f\,0_{c}\,tt_{c}$.
-Since the $Even_{c}\,0_{c}$ expands to $Unit_{c}$ so $tt_{c}\ :\ Even_{c}\,0_{c}$.
+$0$ is clearly an even number, so our inhabitant could be $\lambda-f\Rightarrow f\,0_{c}\,tt_{c}$, since the $Even_{c}\,0_{c}$ expands to $Unit_{c}$ so $tt_{c}\ :\ Even_{c}\,0_{c}$.
 % Note that the existential is equivalent to the tuple if $Y$ does not depend on the value of $X$.
 
 One of the most interesting propositions is the proposition of equality.

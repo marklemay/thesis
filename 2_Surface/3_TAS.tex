@@ -5,7 +5,7 @@ When is an expression reasonable? The expression $\star\star\star\star$ is allow
 Type systems can disallow bad terms like these which in turn prevents bad runtime behavior.
  
 We will present our type system as a \textbf{type assignment system} (\ac{TAS}).
-Type assignment systems are convenient to study the theory of a dependently typed language, because terms do not need to contain information to help type checking, complicating the syntax. %type annotations. %and will be easier to work with than other styles of typing that require variables to be annotated.
+Type assignment systems are convenient to study the theory of a dependently typed language because terms do not need to contain information to help type checking, complicating the syntax. %type annotations. %and will be easier to work with than other styles of typing that require variables to be annotated.
 % For instance, $\mathsf{fun}\,f\,x\Rightarrow m$ does not require a type be given for $f$ or $a$.
 \todo{church/curry?}\todo{awk}
 Practically this means that the type assignment system should not be used as a type checking algorithm since it may need to ``infer'' an unrealistic amount of information.
@@ -82,7 +82,7 @@ Type soundness can be shown with a \textbf{progress} and \textbf{preservation}\f
 Maybe just email him?  it might be also good to get him for intractability (blum stuff).
 might want to review his book first}
 The preservation theorem shows that typing information is invariant over evaluation.
-While the progress theorem shows that a single computation for a well typed term in an empty context will not ``get stuck''.
+The progress theorem shows that a single computation for a well typed term in an empty context will not ``get stuck''.
 By iterating these theorems together, it is possible to show that the type system prevents a term from evaluating to the class of bad behavior described above.
 For a progress and preservation style proof of a dependently typed language, everything hinges on a suitable definition of the $\equiv$ relation.
  
@@ -437,7 +437,7 @@ By induction on $\Rrightarrow_{\ast}$:
 \end{casenv}
 \end{proof}
 
-Therefore the we can derive an important fact about $\equiv$.
+Therefore, the we can derive an important fact about $\equiv$.
 
 \begin{cor} Stability of $\rightarrow$ over $\equiv$.
 
@@ -647,7 +647,7 @@ v & $\Coloneqq$ & $\star$\tabularnewline
  
 Values are characterized by the sub-grammar in \Fref{surface-value-syntax}.
 As usual, functions with any body are values.
-Additionally the type universe ($\star$) is a value, and function types are values.
+Additionally, the type universe ($\star$) is a value, and function types are values.
  
 \begin{figure}
 \[

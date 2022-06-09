@@ -2,7 +2,7 @@
  
 \subsection{Bad Logics, ok Programming Languages?}
  
-Unsound logical systems that work as programming languages go back to at least Church's lambda calculus which was originally intended to be part of a foundation for mathematics\footnote{
+Unsound logical systems that work as programming languages go back to at least Church's lambda calculus which, was originally intended to be part of a foundation for mathematics\footnote{
   ``There may, indeed, be other applications of the system than its use as a logic.''\cite[p.349]{10.2307/1968337}
 }.
 In the 1970s, \MartinL{} proposed a system with \tit{}\cite{Martin-Lof-1971} that was shown logically unsound by Girard (as described in the introduction of \cite{Martin-Lof-1972}).
@@ -11,7 +11,7 @@ Independently, Viggo and Stoltenberg-Hansen\cite{PALMGREN1990135} explored the d
 \todo{Per Martin-L{\"o}f anticipated this work in unpublished lectures and an Abstract.}
 
 The first progress and preservation style proof of type soundness for a language with general recursive dependent functions and \tit{} seem to come from the Trellys Project\cite{sjoberg2012irrelevance}.
-At the time their language had several additional features not included in the \slang{} presented here.
+At the time, their language had several additional features not included in the \slang{} presented here.
 Additionally, the \slang{} uses a simpler notion of definitional equality resulting in a simpler proof of type soundness.
 Later work in the Trellys Project\cite{casinghino2014combining,casinghino2014combiningthesis} used modalities to separate terminating and non-terminating fragments of the language, to allow both general recursion and logically sound reasoning. %, though the annotation burden seems high in retrospect .
 In general, the \slang{} has been deeply informed by the Trellys project\cite{sjoberg2012irrelevance,casinghino2014combining,casinghino2014combiningthesis,sjoberg2015programming,sjoberg2015dependently} and the Zombie language\footnote{
@@ -37,18 +37,18 @@ Idris supports similar ``unsafe'' features.
  
 \subsection{Other Dependent Type Systems}
  
-There are many flavors of dependent type systems that are similar in spirit to the language presented here, but maintain logical soundness at the expense of computation.
+There are many flavors of dependent type systems that are similar in spirit to the language presented here but maintain logical soundness at the expense of computation.
  
 The Calculus of Constructions (\ac{CC}, CoC)\cite{10.1016/0890-5401(88)90005-3} is one of the first minimal dependent type systems.
-It contains shockingly few rules, but can express a wide variety of constructions via parametric encodings.
+It contains shockingly few rules but can express a wide variety of constructions via parametric encodings.
 The system does not allow \tit{}, instead $\star$\footnote{
   Called \textbf{prop}, for proposition.
 } lives in a larger universe  $\Square$ ($\star:\Square$), where $\Square$ is not itself a type.
-Even though the Calculus of Constructions does not allow \tit{} it is still \textbf{impredicative} in the sense that function types can quantify over $\star$ while still being in $\star$.
+Even though the Calculus of Constructions does not allow \tit{}, it is still \textbf{impredicative} in the sense that function types can quantify over $\star$ while still being in $\star$.
 For instance, the polymorphic identity $id:(X:\star)\rightarrow X\rightarrow X$ has type $\star$ so the polymorphic identity can be applied to itself, $id\,\left((X:\star)\rightarrow X\rightarrow X\right)\,id$.
 From the perspective of the \slang{} this impredictivity is modest\footnote{
   As in \cite{10.1007/978-3-642-12251-4_5}, we can say ``the \slang{} is very impredictive''. 
-}, but still causes issues in the presence of classical logical assumptions. \todo{Cite}
+} but still causes issues in the presence of classical logical assumptions. \todo{Cite}
  
 Several other systems were developed that directly extended or modified the Calculus of Constructions.
 The Extended Calculus of Constructions (\ac{ECC})\cite{luo1990extended,luo1994computation}, extends the Calculus of Constructions with a predicative hierarchy of universes and dependent pair types.
@@ -70,14 +70,14 @@ Pure Type Systems (\ac{PTS})\footnote{
 Notably this includes the system with one type universe where \tit{}.
 Universe hierarchies can also be embedded in a \ac{PTS}.
 The system described in this Chapter is almost a \ac{PTS}, except that it contains unrestricted recursion and the method of type annotation is different.
-All pure type systems such as System F and the Calculus of Constructions have corresponding terms in the \slang{}, by collapsing their type universes into the \slang{} type universe.
+All pure type systems such as System F and the Calculus of Constructions have corresponding terms in the \slang{} by collapsing their type universes into the \slang{} type universe.
  
 \todo[inline]{citations for PTS: (Terlouw, 1989; Berardi, 1988; Barendregt, 1991, 1992; Jutting, McKinna, and Pollack, 1994; McKinna and Pollack, 1993; Pollack, 1994).
 According to TAPL}
  
-As previously mentioned \MartinL{} Type Theory (\ac{MLTT})\cite{Martin-Lof-1972} is one of the oldest frameworks for dependent type systems.
-\ac{MLTT} is designed to be open, so that new constructs can be added with the appropriate introduction, elimination, computation, and typing rules.
-The base system comes with a predicative hierarchy of universes, and at least dependently typed functions and a propositional equality type.
+As previously mentioned, \MartinL{} Type Theory (\ac{MLTT})\cite{Martin-Lof-1972} is one of the oldest frameworks for dependent type systems.
+\ac{MLTT} is designed to be open so that new constructs can be added with the appropriate introduction, elimination, computation, and typing rules.
+The base system comes with a predicative hierarchy of universes and at least dependently typed functions and a propositional equality type.
 The system has two flavors characterized by its handling of definitional equality.
 If types are only identified by computation (as the system described in this Chapter) it is called Intentional Type Theory (\ac{ITT}).
 If the system allows proofs of equality to associate types, it is called Extensional Type Theory (\ac{ETT}).
