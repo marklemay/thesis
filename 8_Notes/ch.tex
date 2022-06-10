@@ -42,14 +42,14 @@ Ideally we could allow users to provide proofs of equality to remove warnings by
 This would allow the language to act more like an Extensional Type Theory.
 Programmers could justify these proofs as a way to remove runtime checks and make code (and testing) faster.
 Just as with \ac{ETT} many desirable properties such as function extensionality would still not be provable.
-We have pushed this to future work since there are already many explored strategies for dealing with equality proofs in an Intentional Type Theory that are suitable for avoiding warnings in the current implementation.
+We have pushed this to future work since there are already many explored strategies for dealing with equality proofs in an Intensional Type Theory that are suitable for avoiding warnings in the current implementation.
 
 Currently blame based errors aren't handled\footnote{Or caught.}.
 Programmers may want to use the information from a bad cast to build the final output, it might even be possible to capture a well typed term that witnesses the inequality.
 For instance,
 \todo{fix example}
 \begin{lstlisting}
-f : Vec String 1 -> String;
+f : Vec String 1 -> String;0
 f x = case x {
   Cons _ a _ _ => a
 }

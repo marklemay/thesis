@@ -3,7 +3,7 @@
 The surface system is extremely expressive.
 Several example \slang{} constructions can be found in \Fref{surface-examples}.
 Turnstile notion is abused slightly so that examples can be indexed by other expressions that obey type rules.
-For instance, we can say $refl_{2_{c}:\mathbb{N}_{c}}\ :\ 2_{c}\doteq_{\mathbb{N}_{c}}2_{c}$ since $\mathbb{N}_{c}:\star$ and $2_{c}:\mathbb{N}_{c}$.
+For instance, given the definition of $+_{c}$ in \Fref{surface-examples}, we can say $2_{c}+_{c}2_{c}\ :\ \mathbb{N}_{c}$ since $2_{c}:\mathbb{N}_{c}$.
 
 \begin{sidewaysfigure}
 \begin{tabular}{lllll}
@@ -20,21 +20,17 @@ $x:\mathbb{B}_{c},y:\mathbb{B}_{c}$ & $\vdash x\,\&_{c}\,y$ & $\coloneqq x\,\mat
   & $\vdash1_{c}$ & $\coloneqq\lambda-\,s\,z\Rightarrow s\,z$ & $:\mathbb{N}_{c}$ & \tabularnewline
   & $\vdash2_{c}$ & $\coloneqq\lambda-\,s\,z\Rightarrow s\left(s\,z\right)$ & $:\mathbb{N}_{c}$ & \tabularnewline
   & $\vdash n_{c}$ & $\coloneqq\lambda-\,s\,z\Rightarrow s^{n}\,z$ & $:\mathbb{N}_{c}$ & \tabularnewline
-$x:\mathbb{N}_{c},y:\mathbb{N}_{c}$ & $\vdash x+_{c}y$ & $\coloneqq\lambda X\,s\,z\Rightarrow x\,X\,s\,\left(y\,X\,s\,z\right)$ & $:\mathbb{N}_{c}$ & \tabularnewline
+$x:\mathbb{N}_{c},y:\mathbb{N}_{c}$ & $\vdash x+_{c}y$ & $\coloneqq\lambda X\,s\,z\Rightarrow x\,X\,s\,\left(y\,X\,s\,z\right)$ & $:\mathbb{N}_{c}$ & addition\tabularnewline
 $X:\star,Y:\star$ & $\vdash X\times_{c}Y$ & $\coloneqq\left(Z:\star\right)\rightarrow(X\rightarrow Y\rightarrow Z)\rightarrow Z$ & $:\star$ & pair, logical and\tabularnewline
 $X:\star,Y:\star$ & $\vdash Either_{c}\,X\,Y$ & $\coloneqq\left(Z:\star\right)\rightarrow(X\rightarrow Z)\rightarrow(Y\rightarrow Z)\rightarrow Z$ & $:\star$ & either, logical or\tabularnewline
 $X:\star$ & $\vdash\lnot_{c}X$ & $\coloneqq X\rightarrow\perp_{c}$ & $:\star$ & logical negation\tabularnewline
 $x:\mathbb{N}_{c}$ & $\vdash Even_{c}\,x$ & $\coloneqq x\,\star\,\left(\lambda x\Rightarrow\lnot_{c}x\right)\,Unit_{c}$ & $:\star$ & $x$ is an even number\tabularnewline
 $X:\star,Y:X\rightarrow\star$ & $\vdash\exists_{c}x:X\Rightarrow Y\,x$ & $\coloneqq\left(C:\star\right)\rightarrow\left((x:X)\rightarrow Y\,x\rightarrow C\right)\rightarrow C$ & $:\star$ & \makecell[l]{dependent pair,\\ logical exists}\tabularnewline
 $X:\star,x_{1}:X,x_{2}:X$ & $\vdash x_{1}\doteq_{X}x_{2}$ & $\coloneqq\left(C:\left(X\rightarrow\star\right)\right)\rightarrow C\,x_{1}\rightarrow C\,x_{2}$ & $:\star$ & Leibniz equality\tabularnewline
-$X:\star,x:X$ & $\vdash refl_{x:X}$ & $\coloneqq\lambda-\,cx\Rightarrow cx$ & $:x\doteq_{X}x$ & reflexivity\tabularnewline
-% $X:\star,x_{1}:X,x_{2}:X$ & $\vdash sym_{x_{1},x_{2}:X}$ & $\coloneqq\lambda p\,C\Rightarrow p\left(\lambda x\Rightarrow C\,x\rightarrow C\,x_{1}\right)\,\left(\lambda x\Rightarrow x\right)$ & $:x_{1}\doteq_{X}x_{2}\rightarrow x_{2}\doteq_{X}x_{1}$ & symmetry\tabularnewline
 \end{tabular}
 
 \todo[inline]{use tagged union notation}
-\todo[inline]{break out eq for a better table}
 \todo[inline]{suc, pred as an example of an unpleasant encoding, also citation}
-\todo[inline]{trans, cong}
 \todo[inline]{list, vec, singleton}
 
 \caption{Example \SLang{} Expressions}
@@ -45,14 +41,14 @@ $X:\star,x:X$ & $\vdash refl_{x:X}$ & $\coloneqq\lambda-\,cx\Rightarrow cx$ & $:
 
 Data types are expressible using Church encodings (in the style of System F).
 Church encodings embed the elimination principle of a data type into higher order functions.
-For instance, boolean data is eliminated against true and false, two tags with no additional data.
+For instance, boolean data is eliminated against true and false, two constructors with no additional data.
 This can also be recognized as the if-then-else construct that is built into most programming languages.
-So $\mathbb{B}_{c}$ encodes the possibility of choice between two elements, $true_{c}$ picks the $then$ branch, and $false_{c}$ picks the $else$ branch.
+As defined in \Fref{surface-examples}, $\mathbb{B}_{c}$ encodes the possibility of choice between two elements, $true_{c}$ picks the $then$ branch, and $false_{c}$ picks the $else$ branch.
 
 Natural numbers\footnote{
   Called \textbf{church numerals} in this scheme.
-} are encodable with two tags, zero and successor.
-In this encoding, the successor tag also contains the result of processing the preceding number.
+} are encodable with two constructors, zero and successor.
+In this encoding, the successor constructor also contains the result of processing the preceding number.
 So $\mathbb{N}_{c}$ encodes those two choices, $(X\rightarrow X)$ handles the recursive result of the prior number in the successor case, and the $X$ argument specifies how to handle the base case of $0$.
 This can be viewed as a looping construct with temporary storage that loops exactly as many times as the number it represents.
 
@@ -70,18 +66,16 @@ To make the system easier for programmers, data types will be added directly in 
 
 \subsection{Proposition Encodings}
 
-\todo{make clear the destinction between bool and LOGIC?}
-
 In general we associate the truth value of a proposition with the inhabitation of a type by a meaningful value.
 This meaningful term corresponds to a proof.
 So, $\perp_{c}$, the ``empty'' type, can be interpreted as a false proposition, while $Unit_{c}$ can be interpreted as a trivially true proposition, since it has only one good inhabitant\footnote{
   Remember to keep the the different notions of ``truth'' separate:
 
-  $\mathbb{B}$ is a collection of 2 tags $true$ and $false$.
-  The names are abitrary, nothing but convention informs their meaning.
+  $\mathbb{B}$ is a collection of two constructors $true$ and $false$.
+  The names are arbitrary, nothing but convention informs their meaning.
   Just as if-then-else constructs could be reordered into if-else-then without changing anything essential.
 
-  In type theory the $\perp$ proposition contains no proofs.
+  In type theory the $\perp$ proposition has no proofs.
   If you ever get one, something has gone wrong and you have an excuse to do anything.
   Meanwhile the $Unit$ proposition contains just a single trivial proof.
   Nothing interesting can be done with it, just as nothing interesting can be done with the identity function.
@@ -89,7 +83,7 @@ So, $\perp_{c}$, the ``empty'' type, can be interpreted as a false proposition, 
   Finally, these notions are distinct from the meta theoretic properties that will be presented later.
 }.
 
-Several of the church encoded data types we have seen can also be interpreted as logical predicates.
+Several of the Church encoded data types we have seen can also be interpreted as logical predicates.
 For instance, the tuple type can be interpreted as logical $and$ since $X\times_{c}Y$ can only be meaningfully inhabited when both $X$ and $Y$ are inhabited.
 The $Either$ type can be interpreted as logical $or$ since $Either_{c}\,X\,Y$ can be inhabited when either $X$ or $Y$ is inhabited.
 
@@ -110,6 +104,32 @@ $\doteq$ is referred to as \textbf{Leibniz equality} since two terms are equal w
   Over time the principle evolved into the current notion of ``the identification of indiscernibles'', and is referred to as \textbf{Leibniz's law}.
 }. \todo{cite the ency of philosophy}
 We can prove $\doteq$ is an equivalence within the system by proving it is reflexive, symmetric, and transitive.
+These proof expressions are listed in \Fref{surface-examples-eq}.
+
+\begin{figure}
+\begin{tabular}{lllr}
+
+  \multicolumn{4}{l}{$X:\star,x:X$} \tabularnewline
+  & $\vdash refl_{x:X}$ & \multicolumn{2}{l}{$\coloneqq\lambda-\ cx\Rightarrow cx$}  \tabularnewline % & reflexivity\tabularnewline
+  & & & $:x\doteq_{X}x$ \tabularnewline
+  % \multicolumn{4}{l}{} \tabularnewline
+  \multicolumn{4}{l}{$X:\star,x_{1}:X,x_{2}:X$} \tabularnewline
+ & $\vdash sym_{x_{1},x_{2}:X}$ & \multicolumn{2}{l}{$\coloneqq\lambda p\ C\Rightarrow p\left(\lambda x\Rightarrow C\,x\rightarrow C\,x_{1}\right)\,\left(\lambda x\Rightarrow x\right)$} \tabularnewline % & symmetry\tabularnewline
+ & & & $:x_{1}\doteq_{X}x_{2}\rightarrow x_{2}\doteq_{X}x_{1}$ \tabularnewline
+
+ \multicolumn{4}{l}{$X:\star,x_{1}:X,x_{2}:X,x_{3}:X$} \tabularnewline
+& $\vdash trans_{x_{1},x_{2},x_{3}:X}$ & \multicolumn{2}{l}{$\coloneqq\lambda p_{12}\ p_{23}\ C\ cx\ \Rightarrow p_{23}\,C\,\left(p_{12}\,C\,cx\right)$
+} \tabularnewline % & symmetry\tabularnewline
+& & & $:x_{1}\doteq_{X}x_{2}\rightarrow x_{2}\doteq_{X}x_{3}\rightarrow x_{1}\doteq_{X}x_{3}$ \tabularnewline
+\end{tabular}
+% $:$ \makecell[l]{$x_{1}\doteq_{X}x_{2}$\\$\rightarrow x_{2}\doteq_{X}x_{1}$}
+
+\todo[inline]{cong}
+
+\caption{Leibniz Equality Properties Proven in the \SLang{}}
+\label{fig:surface-examples-eq}
+\end{figure}
+
 \todo{give example}
 % Additionally we can prove congruence.
 \todo[inline]{talk more about congruence}
@@ -121,7 +141,7 @@ We can prove $\doteq$ is an equivalence within the system by proving it is refle
 consistent with the notes % https://github.com/RobertHarper/hott-notes/blob/5339576f55a4b7f5d04734370a5117491c44b1fe/notes_week5.tex#L155 .
 would like better explanation}
 
-It is useful for a type to depend specifically on term level data, this is called \textbf{large elimination}.
+It is useful for a type to depend specifically\ccnote{I think specifically covers this, without having to explain what elimination is} on term level data, this is called \textbf{large elimination}.
 Large elimination can be simulated with \tit{}.
 
 \begin{tabular}{llll}
@@ -132,7 +152,7 @@ Large elimination can be simulated with \tit{}.
 For instance, $toLogic$ can convert a $\mathbb{B}_{c}$ term into its corresponding logical type, $toLogic\ true_{c}\,\equiv\, Unit_{c}$ while $toLogic\ false_{c}\, \equiv\, \perp_{c}$.
 The expression $isPos$ has similar behavior, going to $\perp_{c}$ at $0_{c}$ and $Unit_{c}$ otherwise.
 
-Note that such functions are not possible in the Calculus of Constructions.
+Note that such functions are not possible in the Calculus of Constructions.\ccnote{type:type is the easiest way to correct this, but there are other ways like CIC or building it in specifically}
 
 \subsection{Inequalities}
 
@@ -158,15 +178,13 @@ Note that a proof of $\lnot1_{c}\doteq_{\mathbb{N}_{c}}0_{c}$ is not possible in
 
 \subsection{Recursion}
 
-The syntax of functions contain a variable to perform in unrestricted recursion.
+The syntax of functions contain a variable to perform unrestricted recursion.
 Though not always necessary\footnote{
   For instance, Church numerals have a limited form of recursive behavior built in.
 }, recursion can be very helpful for writing programs.
-For instance, here is (an inefficient) function that calculates Fibonacci numbers.
-
+For instance, here is an (inefficient) function that calculates Fibonacci numbers
 $\mathsf{fun}\,f\,x\Rightarrow case_{c}\,x\,0_{c}\left(\lambda px\Rightarrow case_{c}\,px\,1_{c}\left(\lambda-\Rightarrow f\left(x-_{c}1\right)+_{c}f\left(x-_{c}2\right)\right)\right)$
-
-Assuming appropriate definitions for $case_{c}$, and subtraction.
+assuming appropriate definitions for $case_{c}$, and subtraction.
 
 Recursion can also be used to simulate induction. 
 We will not see much of recursion until \ch{4}, when data types are introduced and larger examples are easier to express.

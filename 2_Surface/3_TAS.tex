@@ -2,14 +2,14 @@
  
 When is an expression reasonable? The expression $\star\star\star\star$ is allowed by the syntax of the language, but seems dubious.
 %Since $\star$  is not a function,  it has no way of being given an input by application.
-Type systems can disallow bad terms like these which in turn prevents bad runtime behavior.
+Type systems can disallow bad terms like these, which in turn prevents bad runtime behavior.
  
 We will present our type system as a \textbf{type assignment system} (\ac{TAS}).
-Type assignment systems are convenient to study the theory of a dependently typed language because terms do not need to contain information to help type checking, complicating the syntax. %type annotations. %and will be easier to work with than other styles of typing that require variables to be annotated.
+Type assignment systems are convenient to study the theory of a dependently typed language because terms do not need to contain information to help type checking, allowing simpler syntax. %type annotations. %and will be easier to work with than other styles of typing that require variables to be annotated.
 % For instance, $\mathsf{fun}\,f\,x\Rightarrow m$ does not require a type be given for $f$ or $a$.
-\todo{church/curry?}\todo{awk}
-Practically this means that the type assignment system should not be used as a type checking algorithm since it may need to ``infer'' an unrealistic amount of information.
-This also means that terms do not necessarily have unique typings.
+\todo{church/curry?}
+Practically this means that the type assignment system should\ccnote{keeping as should since you can use the rules as an inefficient procedure} not be used as a type checking algorithm since it may need to ``infer'' an unrealistic amount of information.
+This also means that terms do not necessarily have unique typings.\ccnote{don't think the uniqueness is salient here}
 For instance, $\tasys\lambda x\Rightarrow x:\mathbb{N}_{c}\rightarrow\mathbb{N}_{c}$, and $\tasys\lambda x\Rightarrow x:\mathbb{B}_{c}\rightarrow\mathbb{B}_{c}$.
 These issues will be addressed when the more practical, \bidir{} type system is introduced in the next section.
 \todo{move negative stuff later?}
@@ -57,6 +57,8 @@ The \rulename{ty-\mathsf{fun}-ty} rule forms dependent function types.
 The \rulename{ty-\mathsf{fun}-app} rule shows how to type function application, by substituting the argument term directly into the dependent function type.
 Functions are typed with a variable for recursive reference along with a variable for the argument in \rulename{ty-\mathsf{fun}}.
 Finally, \rulename{ty-conv} allows type derivations to be \textbf{converted} to an equivalent type.
+% The $\equiv$ relation will be defined later. 
+\ccnote{I don't think a forward reference for $\equiv$ here is helpful, since a discussion is only 2 paragraphs away}
  
 % meta-theory type soundness From the programming language perspective
 The most important property of a type system is \textbf{type soundness}\footnote{
@@ -64,6 +66,8 @@ The most important property of a type system is \textbf{type soundness}\footnote
 }.
 Type soundness is often motivated with the slogan, ``well typed programs don't get stuck''\cite{MILNER1978348}\footnote{
   In Milner's original paper, he used ``go wrong'' instead of ``get stuck''.
+  In that paper he defined "wrong" as a semantic notion that behaves like a runtime type error.
+  % The presentation here can be simplified by only considering "stuck" terms.
 }.
 Given the syntax of the \slang{}, there is potential for a program to ``get stuck'' when an argument is applied to a non-function constructor.
 For example, $\star\ 1_{c}$ would be stuck since $\star$ is not a function, so it cannot compute when given the argument $1_{c}$.
@@ -79,11 +83,11 @@ Type soundness can be shown with a \textbf{progress} and \textbf{preservation}\f
   % Chapter 3 of \cite{sjoberg2015dependently} has a similar progress and preservation style proof for a dependently typed language.
 }. \todo{move bolding to definition}
 \todo{TAPL cites Harper as a co-originator of progress-preservation.
-Maybe just email him?  it might be also good to get him for intractability (blum stuff).
-might want to review his book first}
-The preservation theorem shows that typing information is invariant over evaluation.
-The progress theorem shows that a single computation for a well typed term in an empty context will not ``get stuck''.
-By iterating these theorems together, it is possible to show that the type system prevents a term from evaluating to the class of bad behavior described above.
+  Maybe just email him?  it might be also good to get him for intractability (blum stuff).
+  might want to review his book first}
+The preservation theorem shows that typing information is invariant over evaluation.\ccnote{I'm using evaluation since this can apply to a number of computation relations}
+The progress theorem shows that a step of computation for a well typed term in an empty context will not ``get stuck''.
+By iterating these theorems together, it is possible to show that the type system prevents a well typed term from ever reaching a stuck state.
 For a progress and preservation style proof of a dependently typed language, everything hinges on a suitable definition of the $\equiv$ relation.
  
 The $\equiv$ relation characterizes when terms are ``obviously'' or ``automatically'' equal.
@@ -102,23 +106,23 @@ In a progress and preservation style proof, the $\equiv$ relation should:
 \item Be closed under substitutions and evaluation, for instance if $m\equiv m'$ and $n\equiv n'$ then $m\left[x\coloneqq n\right]\equiv m'\left[x\coloneqq n'\right]$.
 \item Distinguish between type formers, for instance $\star\cancel{\equiv}\left(x:N\right)\rightarrow M$.
 \end{itemize}
-A particularly clean definition of $\equiv$ arises by equating any terms that share a reduct via a system of parallel reductions,
+A particularly clean definition of $\equiv$ arises by equating any terms that share a reduct via a system of parallel reductions ($\Rrightarrow$),
  
 \[
 \frac{m\Rrightarrow_{\ast}\,n\quad m'\Rrightarrow_{\ast}\,n}{m\equiv m'}\,\rulename{\equiv-Def}
 \]
  
-This relation:
+This relation:\ccnote{this bit is meant to be an outline to motivate things, I have included explicit forward references}
 \begin{itemize}
-\item Is reflexive, by definition.
+\item Is reflexive, by the definition of $\Rrightarrow_{\ast}$.
 \item Is symmetric, automatically.
-\item Is transitive, if $\Rrightarrow_{\ast}$ is confluent.
-\item Is closed under substitution if $\Rrightarrow_{\ast}$ is closed under substitution, and closed under evaluation automatically.
+\item Is transitive, if $\Rrightarrow_{\ast}$ is confluent (Theorem \ref{thm:conf-par-red}).
+\item Is closed under substitution if $\Rrightarrow_{\ast}$ is closed under substitution (Lemma \ref{lem:sub-par-red}), and closed under evaluation automatically.
 \item Distinguishes type constructors, if they are stable under reduction.
 For instance,
 \begin{itemize}
-\item if $\forall NM.\left(x:N\right)\rightarrow M\Rrightarrow P$ implies $P=\left(x:N'\right)\rightarrow M'$
-\item and $\star\Rrightarrow P$ implies $P=\star$
+\item for any $N$, $M$, $\left(x:N\right)\rightarrow M\Rrightarrow P$ implies $P=\left(x:N'\right)\rightarrow M'$ (Lemma \ref{lem:pi-stability})
+\item and $\star\Rrightarrow P$ implies $P=\star$ (by the definition of $\Rrightarrow$)
 \item then $\left(x:N\right)\rightarrow M\cancel{\equiv}\star$
 \end{itemize}
 \end{itemize}
@@ -164,8 +168,8 @@ For instance,
 \label{fig:surface-reduction}
 \end{figure}
 
- Parallel reductions are defined to make confluence easy to prove, by allowing the simultaneous evaluation of any available reduction.
-The system of parallel reductions is defined in \Fref{surface-reduction}.
+The system of parallel reductions is defined in \Fref{surface-reduction}.\ccnote{I mentioned briefly in the intro that substitution would be taken informally, otherwise things become far too bureaucratic. Note that our Coq proof uses De Bruijn indices, while the implementation is "locally nameless".  I could say this presentation is "capture avoiding" but I don't think that really clarifies anything.}
+Parallel reductions are defined to make confluence easy to prove, by allowing the simultaneous evaluation of any available reduction.
 The only interesting rules are \rulename{\Rrightarrow-\mathsf{fun}-app-red} and \rulename{\Rrightarrow-::-red} since they directly perform reductions.
 The \rulename{\Rrightarrow-\mathsf{fun}-app-red} rule recursively reduces a function given an argument.
 The \rulename{\Rrightarrow-::-red} rule removes a type annotation, making type annotations definitionally irrelevant.
@@ -232,7 +236,7 @@ Since $\Rrightarrow_{\ast}$ is reflexive.
 % \end{proof}
 \begin{lem} $\Rrightarrow$ is closed under substitutions that parallel reduce.
  
-Where $\sigma$, $\tau$ is a substitution.
+Where $\sigma$, $\tau$ are a substitutions.
 Where $\sigma\Rrightarrow\tau$ means for every $x$, $\sigma\left(x\right)\Rrightarrow\tau\left(x\right)$.
 \todo{awk}
 The following rule is admissible:
@@ -245,6 +249,7 @@ By induction on the $\Rrightarrow$ relation, since the substituted term will red
 \end{proof}
  
 \begin{lem} $\Rrightarrow_{\ast}$ is closed under substitutions that parallel reduce.
+\label{lem:sub-par-red}
 
 \[
 \frac{m\Rrightarrow_{\ast}m'\quad\sigma\Rrightarrow\tau}{m\left[\sigma\right]\Rrightarrow_{\ast}\,m'\left[\tau\right]}\,\rulename{\Rrightarrow_{\ast}-sub}
@@ -255,8 +260,7 @@ is admissible.
 By induction on the $\Rrightarrow_{\ast}$ relation.
 \end{proof}
 
-\begin{lem}
-$\equiv$ is closed under substitutions that parallel reduce.
+\begin{lem} $\equiv$ is closed under substitutions that parallel reduce.
 
 \[
 \frac{m\equiv m'\quad\sigma\Rrightarrow\tau}{m\left[\sigma\right]\equiv m'\left[\tau\right]}\,\rulename{\equiv-sub}
@@ -264,8 +268,7 @@ $\equiv$ is closed under substitutions that parallel reduce.
 is admissible.
 \end{lem}
  
-\begin{cor}
-$\equiv$ is closed under substituted reduction.
+\begin{cor} $\equiv$ is closed under substituted reduction.
 
 \[
 \frac{n\Rrightarrow_{\ast}n'}{m\left[x\coloneqq n\right]\equiv m\left[x\coloneqq n'\right]}
@@ -280,9 +283,8 @@ By repeated $\rulename{\Rrightarrow_{\ast}-sub}$ and $\equiv\rulename{-Def}$.
 To prove the transitivity of the $\equiv$ relation, we will first need to prove that \textbf{$\Rrightarrow_{\ast}$ }is \textbf{confluent}.
 A relation $R$ is confluent\footnote{
   Also called \textbf{Church-Rosser}.
-} when, for all $m$, $n$, $n'$, if $mRn$ and $\:mRn'$ then exists exists $n''$ such that $nRn''$. % and $n'Rn''$.
+} when, for all $m$, $n$, $n'$, if $mRn$ and $\:mRn'$ then exists exists $n''$ such that $nRn''$ and $n'Rn''$.
 If a relation is confluent, in a sense, specific reduction choices don't matter since you can alway rejoin at a future destination.
- 
  
 \begin{figure}
 \subsubsection*{Triangle Property}
@@ -332,18 +334,20 @@ Since type equivalence is defined by parallel reductions we can show confluence 
 }.
 The approach is motivated by the diagrams in \Fref{shape-diagrams}.
  
-First, we define a function $\textbf{max}$ in \Fref{surface-max-step}.
+First, we define a function $\textbf{max}$ in \Fref{surface-max-step}.\ccnote{keeping the order so that max stays motivated}
 $\textbf{max}$ takes the maximum possible parallel step, such that if $m\Rrightarrow\,m'$ then $m'\Rrightarrow\,\textbf{max}\left(m\right)$. % and $m\Rrightarrow\,max\left(m\right)$.
  
 \begin{figure}
 \begin{tabular}{cccc}
-$\textbf{max}($ & $\left(\mathsf{fun}\,f\,x\Rightarrow m\right)\,n$ & $)=$ & $\textbf{max}\left(m\right)\left[f\coloneqq\mathsf{fun}\,f\,x\Rightarrow \textbf{max}\left(m\right),x\coloneqq \textbf{max}\left(n\right)\right]$ \tabularnewline
- &   &   &  otherwise\tabularnewline
 $\textbf{max}($ & $x$ & $)=$ & $x$ \tabularnewline
 $\textbf{max}($ & $m::M$ & $)=$ & $\textbf{max}\left(m\right)$ \tabularnewline
 $\textbf{max}($ & $\star$ & $)=$ & $\star$ \tabularnewline
 $\textbf{max}($ & $\left(x:M\right)\rightarrow N$ & $)=$ & $\left(x:\textbf{max}\left(M\right)\right)\rightarrow \textbf{max}\left(N\right)$ \tabularnewline
 $\textbf{max}($ & $\mathsf{fun}\,f\,x\Rightarrow m$ & $)=$ & $\mathsf{fun}\,f\,x\Rightarrow \textbf{max}\left(m\right)$ \tabularnewline
+$\textbf{max}($ & $\left(\mathsf{fun}\,f\,x\Rightarrow m\right)\,n$ & $)=$ & $\textbf{max}\left(m\right)\left[f\coloneqq\mathsf{fun}\,f\,x\Rightarrow \textbf{max}\left(m\right),x\coloneqq \textbf{max}\left(n\right)\right]$ \tabularnewline
+%  &   &   &  otherwise\tabularnewline
+% \multicolumn{4}{c}{otherwise}\tabularnewline
+&   &   &  \multicolumn{1}{l}{otherwise}\tabularnewline
 $\textbf{max}($ & $m\,n$ & $)=$ & $\textbf{max}\left(m\right)\,\textbf{max}\left(n\right)$ \tabularnewline
 \end{tabular}
 \caption{The $\textbf{max}$ Function}
@@ -374,6 +378,7 @@ By the triangle property.
 \end{proof}
 
 \begin{thm} Confluence of $\Rrightarrow_{\ast}$.
+\label{thm:conf-par-red}
  
 If $m\Rrightarrow_{\ast}\,n'$, $m\Rrightarrow_{\ast}\,n''$, then there exists $n'''$ such that $n'\Rrightarrow\,n'''$ ,$n''\Rrightarrow\,n'''$.
 \end{thm}
@@ -426,7 +431,8 @@ We will prove slightly stronger lemmas about reduction that confirms this fact s
 \todo{why? where is it used}
  
 \begin{lem} Stability of $\rightarrow$ over $\Rrightarrow_{\ast}$.
- 
+\label{lem:pi-stability}
+
 $\forall N,M,P.\left(x:N\right)\rightarrow M\Rrightarrow_{\ast}P$ implies $\exists N',M'.P=\left(x:N'\right)\rightarrow M'\land N\Rrightarrow_{\ast}N'\land M\Rrightarrow_{\ast}M'$.
 \end{lem}
 \begin{proof}
