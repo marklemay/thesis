@@ -6,7 +6,7 @@ When type systems are used as logics, it is desirable that:
   Also called \textbf{logically sound}.}.
 \item Type checking is decidable.
 \end{itemize}
-Neither the \ac{TAS} system or the \bidir{} systems have these properties\footnote{
+Neither the \ac{TAS} system nor the \bidir{} systems have these properties\footnote{
  These properties are usually shown by showing that the computation that generates definitional equality is normalizing.
  A proof for a logically consistent system can be found in \cite[Chapter 4]{luo1994computation}.
  Another excellent tutorial can be found in \cite[Chapter 2]{casinghino2014combiningthesis}}.
@@ -67,13 +67,16 @@ With the architecture proposed here, code will always have the same static and d
 \begin{thm} Type checking is undecidable.
 \end{thm}
 \begin{proof}
-Given a thunk $f:Unit$ defined in PCF, it can be encoded into the surface system as a thunk $f':Unit_{c}$, such that if $f$ reduces to the canonical $Unit$ then $f'\Rrightarrow_{\ast}\lambda A.\lambda a.a$
- 
-$\vdash\star:f'\,\star\,\star$ type-checks by conversion exactly when $f$ halts.
- 
-If there is a procedure to decide type checking we can decide exactly when any PCF function halts.
-Since checking if a PCF function halts is undecidable, type checking is undecidable.
- 
+Given an expression of type $q:Unit$ defined in PCF\footnote{
+  The system PCF is a simply typed lambda calculus with recursion and a few built in data types.
+  Formal definitions can be found in many textbooks, such as\cite{streicher2006domain}.
+}, that expression can be encoded into the surface system as $m_q:Unit_{c}$, such that if $q$ reduces to the canonical $Unit$ then $m_q\Rrightarrow_{\ast}\lambda A.\lambda a.a$
+
+$\vdash\star:m_q\,\star\,\star$ type-checks by conversion exactly when $q$ halts.
+
+If there is a procedure to decide type checking then we can decide exactly when a PCF expression of type $Unit$ halts.
+Since checking if a PCF expression halts is undecidable, type checking is undecidable.
+
 \end{proof}
  
 Again the root of the problem is the non-termination that results by allowing as many computations as possible, which seem necessary in a realistic programming language.
@@ -94,15 +97,11 @@ Decidability of type checking is often used as a proxy for efficiency of type ch
 However, it may be a poor measure of efficiency of for the kinds of programs and proofs that are likely to occur.
  
 \todo{make sure I'm not missing any langs, C\#...?}
- 
+
 Many mainstream programming languages have undecidable type checking.
-If a language admits a sufficiently powerful macro or preprocessor system that can modify typing, this would make type checking undecidable (this makes the type system of C, C++\footnote{
-  Apparently even the grammar of C++ is undecidable.
-}, Scala, and Rust undecidable).
-Unless type features are considered very carefully, they can often create undecidable type checking (Java generics, C++ templates, Scala implicit parameters\footnote{
-  Without a maximum search depth.
-}\todo{sentence fragments in footnotes} and OCaml modules, make type checking undecidable in those languages).
-Haskell may be the most popular statically typed language with decidable type checking (and even then, popular GHC compiler flags make type checking undecidable).
+If a language admits a sufficiently powerful macro or preprocessor system that can modify typing, this would make type checking undecidable (this makes the type system of C, C++, Scala, and Rust undecidable).
+Unless type features are considered very carefully, they can cause undecidable type checking (Java generics\cite{10.1145/3093333.3009871}, C++ templates\cite{veldhuizen2003}, and OCaml modules\cite{Rossberg1999OCaml}, make type checking undecidable in those languages).
+Haskell may be the most popular statically typed language with decidable type checking (and even then, popular GHC compiler flags, such as the aptly named $\mathtt{UndecidableInstances}$, make type checking undecidable).
 Even the Hindley-Milner type checking algorithm that underlies Haskell and ML, has a worst case complexity that is double exponential, which under normal circumstances would be considered intractable.
  
 In practice these theoretical concerns are irrelevant since programmers are not giving the compiler ``worst case'' code.
@@ -111,7 +110,6 @@ When this happens in a mainstream language, programmers can fix their code, modi
 Programmers in conventional languages are already entrusted with almost unlimited power over their programming environments.
 Programs regularly delete files, read and modify sensitive information, and send emails (some of these are even possible from within the language's macro systems).
 Relatively speaking, undecidable type checking is not a programmer's biggest concern.
-\todo{a little awk}
  
 Most importantly for the system described in this thesis, users are expected to use the elaboration procedure defined in the next Chapter instead of the \bidir{} type checking described here.
 Unlike the \bidir{} described in this section, the elaboration of \ch{3} is technically decidable.

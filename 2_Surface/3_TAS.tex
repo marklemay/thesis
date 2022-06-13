@@ -364,7 +364,7 @@ If $m\Rrightarrow\,m'$ then $m'\Rrightarrow \textbf{max}\left(m\right)$ .
 By induction on the derivation $m\Rrightarrow\,m'$, with the only interesting cases are where a reduction is not taken:
 \begin{casenv}
 \item In the case of \rulename{\Rrightarrow-::}, $m'\Rrightarrow \textbf{max}\left(m\right)$, by \rulename{\Rrightarrow-::-red}.
-\item In the case of \rulename{\Rrightarrow-\mathsf{fun}-app}, $m'\Rrightarrow \textbf{max}\left(m\right)$ by \rulename{\Rrightarrow-\mathsf{fun}-app-red}.
+\item In the case of \rulename{\Rrightarrow-\mathsf{fun}-app}, $m'\Rrightarrow \textbf{max}\left(m\right)$ by \rulename{\Rrightarrow-\mathsf{fun}-app-red}.\ccnote{All other cases follow directly by induction (the confustion my have come from the way I origionally noted the max function)}
 \end{casenv}
 \end{proof}
 
@@ -383,7 +383,7 @@ By the triangle property.
 If $m\Rrightarrow_{\ast}\,n'$, $m\Rrightarrow_{\ast}\,n''$, then there exists $n'''$ such that $n'\Rrightarrow\,n'''$ ,$n''\Rrightarrow\,n'''$.
 \end{thm}
 \begin{proof}
-By repeated application of the diamond property, ``tiling'' the interior region.
+By repeated application of the diamond property, ``tiling'' the interior region.\ccnote{i can'm still trying to find a cleaner way to write this with the word "induction"}
 % % https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZAZgBoAGAXVJADcBDAGwFcYkQQBfU9TXfQigAspAIzU6TVuy48QGbHgJEArKQBMEhizaIO3XooFEAbKWJapu8AHIbsw-2Up1YyzpkH5fJYOSiNd2k9B28jZ2RycyDrMHsvBSc-NSEYzzlE3yIRFTSQhJ9jFADUmm1g-QzCiNdcsqt0xyyUMhM82ztQzKKSQPqPfKrwvxELfoqu6r9XMckByqaeslK5ic4JGCgAc3giUAAzACcIAFskKJAcCCQAkEYsMGsoCGYAI0Y2GgALGHooJDAzEYjBoOHoWEY7Egj1CR1ON1B10QrjuDyeL3enxAPz+AKBIMu4MhemhbC8cLOyMRSDIqJhemeOBwmxA31+-xJBDJcgp52piBEdPRbw+rOx7LxwNBRKhXNhx0pgquSDUQvYzxFWJxHMBUsJENlMPJCpV-LM4txnJhNHu9JAjOZ-2N8MQtOViAA7Da0eqMaK2ZbdQSwQardyDibPfyABzeu0azFi7WS4MysPyl3m90ATjjwsTAZ1+OlofAcudlNzlyRogutvz-otRb1IeJZaNPMjserN1u9d9TJZhcN4ZAvMQtf5oj7PoZEEH-2H6YrSCVNZR-bnmqTEsQQZLbdJGcpt3dog3s-tfq1u-3+sP5c7LvPU9pm6v26Xd9bI+PSBRZ5vpeCaNsme7Fvev4rogqpnoK74gTegYQT+y5PieAE1vBwHXjuyEtmm7ajuOohujWqoIbhX4oYRR7QaIa43BROGfk2KYHlB6E3GRSBemqc4LnhHJEX+E6MYgVaUYJS4ifRsE1jO8bzo6QlQZQnBAA
 % \begin{tikzcd}
 %   &                                                       &                                                       & {} \arrow[rd, Rightarrow] \arrow[ld, Rightarrow] &                                                       &                                                       &                            \\
@@ -426,7 +426,7 @@ m \deqs{rr} \tarrows{rd}[label={[pos=1,inner sep=0,outer sep=0]200:${}_{\ast}$}]
 Next we confirm that type formers are never equated by definitional equality.
 Specifically, $\left(x:N\right)\rightarrow M\cancel{\equiv}\star$.
 If type formers are associated, the entire $\equiv$ relation may degenerate. % it will how we have defined it, it is convievable a more comlicated def eq relation could allow this in the presence of say inconsitent contexts
-Since definitional equality is defined in terms of reduction, it is sufficient to show that $\left(x:N\right)\rightarrow M\cancel{\Rrightarrow}\star$.
+Since definitional equality is defined in terms of reduction, it is sufficient to show that $\left(x:N\right)\rightarrow M\Rrightarrow\left(x:N'\right)\rightarrow M'$.
 We will prove slightly stronger lemmas about reduction that confirms this fact since it will be useful later.
 \todo{why? where is it used}
  
@@ -475,7 +475,7 @@ These lemmas will almost always be justified by induction on typing derivations.
 The following rule is admissible:
 \[
 \frac{\Gamma\tasys n:N}{\Gamma,\Gamma'\tasys n:N}
-\]
+\]\ccnote{I am pervasivy asuming varaibles behave correctly over binding constructs, so I should probly note that up front}
 \end{thm}
 \begin{proof}
 By induction on typing derivations.
@@ -585,17 +585,17 @@ The following rule is admissible:
 By induction on the typing derivation $\Gamma\tasys m:M$, specializing on $m\Rrightarrow m'$:
 \todo{formatting}
 \begin{casenv}
- \item \rulename{ty-::} when \rulename{\Rrightarrow-::}, we must show $\Gamma\tasys m'::M':\,M$ % and $\Gamma\tasys M':\star$
-  from $\Gamma\tasys m\,:\,M$, $\Gamma\tasys M\,:\,\star$, $m\Rrightarrow m'$, and $M\Rrightarrow M'$ .
+ \item \rulename{ty-::} when \rulename{\Rrightarrow-::}, ($m=n:N$, $m'=n':N'$, $M=N$ for some $n$, $N$, $n'$, and $N'$) we must show $\Gamma\tasys n'::N':\,N$ % and $\Gamma\tasys N':\star$
+  from $\Gamma\tasys n\,:\,N$, $\Gamma\tasys N\,:\,\star$, $n\Rrightarrow n'$, and $N\Rrightarrow N'$ .
   \newline
   \begin{tabular}{ll}
-   $\Gamma\tasys M':\star$ & by induction\tabularnewline
-   $\Gamma\tasys m'\,:\,M$ & by induction\tabularnewline
-   $M\equiv M'$ & by $M\Rrightarrow M'$\tabularnewline
-   $\Gamma\tasys m'\,:\,M'$ & by \rulename{ty-conv}\tabularnewline
-   $\Gamma\tasys m'::M':\,M'$ & by \rulename{ty-::}\tabularnewline
-   $M'\equiv M$ & by symmetry of $\equiv$\tabularnewline
-   $\Gamma\tasys m'::M':\,M$ & by \rulename{ty-conv}\tabularnewline
+   $\Gamma\tasys N':\star$ & by induction\tabularnewline
+   $\Gamma\tasys n'\,:\,N$ & by induction\tabularnewline
+   $N\equiv N'$ & by $N\Rrightarrow N'$\tabularnewline
+   $\Gamma\tasys n'\,:\,N'$ & by \rulename{ty-conv}\tabularnewline
+   $\Gamma\tasys n'::N':\,N'$ & by \rulename{ty-::}\tabularnewline
+   $N'\equiv N$ & by symmetry of $\equiv$\tabularnewline
+   $\Gamma\tasys n'::N':\,N$ & by \rulename{ty-conv}\tabularnewline
  \end{tabular}
  \item \rulename{ty-\mathsf{fun}-ty} when \rulename{\Rrightarrow-\mathsf{fun}-ty} can be shown with preservation of contexts
  \item \rulename{ty-\mathsf{fun}-app} when \rulename{\Rrightarrow-\mathsf{fun}-app-red}, we must show
@@ -633,13 +633,13 @@ By induction on the typing derivation $\Gamma\tasys m:M$, specializing on $m\Rri
 \subsection{Progress}
  
 The second key theorem to show in this style of proof is called progress.\todo{awk, it's name is the least interasting thing}
-The progress theorem states: for a well typed term in an empty context, then a further step can be taken or computation is finished.
+The progress theorem states: for a well typed term in an empty context, then a further step can be taken or computation is finished.\ccnote{fix after restructure}
 For non-dependently typed programming languages, these steps are easy to characterize, but for dependent types there are issues.\todo{awk}
 If we characterize computation with the $\Rrightarrow$ relation, the progress lemma holds in a meaningless way since we can always take a reflexive step.
 Thus a less reflexive relation is needed.
 Ideally the relation should also be deterministic and a sub relation of $\Rrightarrow_{*}$.
-We can choose a \cbv{} relation since% this meets all the properties required, and 
-  is a popular execution strategy that reflects the prototype implementation.
+We can choose a \cbv{} relation since that % this meets all the properties required, and 
+  is a popular execution strategy that reflects the prototype implementation.\ccnote{fix after restructure}
  
 \begin{figure}
 \begin{tabular}{lcl}
@@ -701,14 +701,14 @@ Since the language of this chapter is so minimal, we only need to characterize t
  
 \begin{lem} $\mathsf{fun}$-Canonical form (generalized).
 
-If $\tasys v\,:\,P$ and $P\equiv\left(x:N\right)\rightarrow M$ then $v=\mathsf{fun}\,f\,x\Rightarrow m$.
+If $\tasys v\,:\,P$ and $P\equiv\left(x:N\right)\rightarrow M$ then for some m $v=\mathsf{fun}\,f\,x\Rightarrow m$. \ccnote{don't want to quantifie over the bound varibles since that implies a non debroign interpertation}
 \end{lem}
 \begin{proof}
 By induction on the typing derivation,
  
 \begin{casenv}
 \item \rulename{ty-\mathsf{fun}} follows immediately
-\item \rulename{ty-conv} by the equivalence of $\equiv$ and induction
+\item \rulename{ty-conv} by the equivalence\ccnote{keeping this "equivalence" instead of "transitivity" becuase I think you also need to ues symmetry} of $\equiv$ and induction
 \item \rulename{ty-\star}, \rulename{ty-\mathsf{fun}-ty} are impossible, by the stability of $\equiv$
 \item other rules  are impossible, since they do not type values
 \end{casenv}
@@ -766,7 +766,7 @@ The language has type soundness: well typed terms will never ``get stuck'' in th
 
 \begin{thm} Type Soundness.
  
-If $\tasys m\,:\,M$ and $m\rightsquigarrow_\ast m'$ then $m'$ will not get stuck.
+If $\tasys m\,:\,M$ and $m\rightsquigarrow_\ast m'$ then $m'$ will not get stuck.\ccnote{come back to this after I add that section}
 \end{thm}
 \begin{proof}
 This follows by iterating the progress and preservation lemmas.
@@ -889,15 +889,17 @@ This follows by iterating the progress and preservation lemmas.
 This type system is inherently non-local.
 No type annotations are ever required to form a typing derivation.
 That means that a type checking algorithm that attempted to type check every well typed \ac{TAS} term would need to guess the types of intermediate terms.
-For instance,
+For instance, a large function might use its argument different ways in different locations, as in
  
 \begin{align*}
 \lambda f\Rightarrow & \,\\
 ... & f\,1_{c}\,true_{c}\\
-... & f\,0_{c}\,1_{c}
+... & f\,0_{c}\,1_{c}\\
+... & 
 \end{align*}
+\ccnote{edited this to be clearer, but I want to highlight the impracticality that comes from the inherent non-localness of a TAS as distinct from the lack of a "most general" type}
 
-What should be deduced for the type of $f$? One possibility is $f:\left(n:\mathbb{N}\right)\rightarrow n\,\star\,\left(\lambda-\Rightarrow\mathbb{N}_{c}\right)\,\mathbb{B}_{c}\rightarrow...$ .
+What is the type of $f$? One possibility is $f:\left(n:\mathbb{N}\right)\rightarrow n\,\star\,\left(\lambda-\Rightarrow\mathbb{N}_{c}\right)\,\mathbb{B}_{c}\rightarrow...$ .
 But there are many other possibilities.
-Worse, if there is an error, it may be impossible to localize to a specific region of code.
-To make a practical type checker we need to insist that the user include some type annotations.
+Worse, if there is an error, it may be impossible to localize to a specific region of that expression.
+To make a practical type checker the user will need to include some type annotations.
