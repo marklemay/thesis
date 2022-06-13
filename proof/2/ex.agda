@@ -83,3 +83,17 @@ False _ t f = f
 --indBool P t f b = b (P b) t f
 
 
+
+-- Liebnitz Eq
+_~~_ : {X : * } -> X -> X -> *
+_~~_ {X} x x' = (C : (X -> *)) -> C x -> C x'
+
+reflL : {X : * } -> (x : X) -> x ~~ x
+reflL _ = λ _ z → z
+
+
+symL : {X : * } -> (x : X) -> (x' : X) -> x ~~ x' -> x' ~~ x
+symL x x' = λ p C → p (λ xx → (C xx) → C x) (λ xx → xx)
+
+transL : {X : * } -> (x : X) -> (x' : X)  -> (x'' : X) -> x ~~ x' -> x' ~~ x'' -> x ~~ x''
+transL x x' x'' = λ p pp C cx → pp C (p C cx)
