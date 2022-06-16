@@ -3,6 +3,9 @@
 Care must be taken so that typing is still sensible when an expression could have multiple interpretations.
 To do this we construct a new \csys{} to include term level endpoint information that will generalize the cast relation of \ch{3}.
 
+Endpoint judgments are written in the form $\varGamma\vdash a\sqsupseteq a':A$ which means we can interpret $a$ as $a' : A$ in variable context $\varGamma$.
+For instance, $\Nat{} \sim_{\ell}^{\star}\Bool{}\ \sqsupseteq\ \Nat{}:\star$ and $\Nat{} \sim_{\ell}^{\star}\Bool{}\ \sqsupseteq\ \Bool{}:\star$.
+
 \subsection{Function Fragment}
 The rules for non-data terms are listed in \Fref{cast-endpoint-rules}.
 
@@ -99,7 +102,7 @@ The rules for non-data terms are listed in \Fref{cast-endpoint-rules}.
 
 The \rulename{\sqsupseteq-var} and \rulename{\sqsupseteq-\star} rules extend the usual type assignment judgments to endpoints.
 The \rulename{\sqsupseteq-\mathsf{fun}-ty} and \rulename{\sqsupseteq-\mathsf{fun}-app} rules makes sure different endpoints are used in a type consistent way.
-For example, $\left\{ \lambda x.x+1\sim not\right\} \left\{ 1\sim \False{} \right\} \sqsupseteq \True{} ,2$ and $\left\{ 1\sim2\right\} +\left\{ 10\sim3\right\} \sqsupseteq4,5,11,12$.
+For example, $\left(\left(\lambda x.x+1\right)\sim not\right) \left( 1\sim \False{} \right) \sqsupseteq \True{} ,2$ and $\left( 1\sim2\right) +\left( 10\sim3\right) \sqsupseteq4,5,11,12$.
 The $\rulename{\sqsupseteq-::}$ rule allows using a term at a different type if the cast has compatible endpoints.
 The next rules allow endpoints to be extracted out of the left or right of $\sim$, and $\cup$ if they are well formed.\todo{separate into multiple paragraphs?}
 
@@ -130,7 +133,7 @@ Also we can suggestively write two endpoints as an equality with $\approx$.
 As usual, the system needs a suitable definition of $\equiv$.
 We use an equivalence relation that respects reductions and substitutions while ignoring casts.
 Ignoring casts keeps terms from being made distinct by different casts, and prevents reductions from getting stuck for the purpose of equality.
-Note that unlike \ch{3} this means equivalence will not preserve blame and we will need to rely on a more specific reduction relation that preserves both equivalence and blame.
+Note that unlike \ch{3} this means equivalence will not preserve blame information and we will need to rely on a more specific reduction relation that preserves both equivalence and blame.
 \todo{constructing such an equivalence rigorously...}
 
 \subsection{Data Endpoints}

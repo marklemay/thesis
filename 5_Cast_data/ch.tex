@@ -39,7 +39,7 @@ Quantifying over evidence of equality allows blame to be redirected, so if the p
 
 To account for ``unreachable patterns'' that are not stated in the \slang, we can record the proof of inequality for use at runtime.
 Since in the \clang{}, it is possible for a \case{} expression to reduce into one of those ``unreachable'' branches.
-If this happens blame will be reflected back onto a specific problematic assumption of the \scrut{}.
+If this happens blame will be reflected back onto a specific problematic assumption made by the \scrut{}.
 This will involve extending the \clang{} with operations to manipulate equality evidence directly.
 Proofs of inequality will be able to appear in terms.
  
@@ -78,7 +78,7 @@ While univalent type theories are interested in tracking (possibly unique) equal
 Since the goal here is an easy to use language, their approach did not seem applicable.
 % The theory of those systems also
  
-The most relevant work to this Chapter is \cite{10.1145/3495528}, which uses a gradual typing methodology to gradualize a version of the \ac{Cic}.
+The most relevant work to this Chapter is \cite{10.1145/3495528}, which uses a gradual typing methodology to gradualize a version of the \ac{CIC}.
 Their are a number of relevant differences between these works:
 That work needs to support a term level wildcard $?$, where this chapter maintains the surface syntax.
 This Chapter supports fully indexed data, that work only supported parameterized data.

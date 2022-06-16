@@ -4,7 +4,7 @@
 
 To handle elaboration over pattern matching, we will need to extend unification from \ch{4} to accommodate casts (\Fref{cast-data-unification}).
 We will now track not just equational constraints, but also why the constraints hold, and why the types are the same.
-For instance, in the constraint notation $1 \approx_{C}^{L} \True{}$, means we have the constraint $1 = \True{}$ because of $C$ and $\Nat{} = \Bool{}$ because of $L$.
+For instance, in the constraint notation $1 \approx_{C}^{L} \True{}$ means we have the constraint $1 = \True{}$ because of $C$ and $\Nat{} = \Bool{}$ because of $L$.
 The $a \approx_{C}^{L} b$ constraint can be thought of as stating the term $C$ has endpoints $a$, $b$.
 Solutions record the reasoning behind an assignment.
 For instance, $x\coloneqq_{C} 3$ means $x$ will be assigned $3$ because of $C$.
@@ -75,7 +75,7 @@ Without data, elaboration can be extended from \ch{3} by asserting a cast where 
 \]
 
 \todo{this is actually a simplification, since there may be ambient equalities that need to be supported}
-However the situation becomes more complicated with pattern matched data.
+However, the situation becomes more complicated with pattern matched data.
 With the information extracted from unification, terms can be elaborated with blameless casts that mimic the behavior of pattern matching in \ch{4}.
 The information can also be used to redirect blame from ``impossible'' branches.
-However the elaboration procedure also needs to be extended with a scope of assignments to cast into and out of making a formal presentation difficult.
+However, the elaboration procedure also needs to be extended with an additional context of assignments to cast into and out of making a formal presentation difficult.
