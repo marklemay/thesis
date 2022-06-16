@@ -68,15 +68,15 @@ pr : Id Nat n 1;
 pr = refl Nat 1;
 \end{lstlisting}
 
-Will likely give the warning error ``n =?= 1 in Id Nat \uline{n} 1''.
-It will then likely give the runtime error ``0=!=1''.
+Will likely give the warning message ``$\mathtt{n\ =?=\ 1\ in\ Id\ Nat\ \uline{n}\ 1}$ ''.
+It will then likely give the runtime error ``$\mathtt{0=!=1'}$'.
 Since the only information to solve $\mathtt{?}$ is the type \Nat{} and an arbitrary term of type \Nat{} will probably be solved with 0.
 Most users would expect the context to be considered and $n$ to be solved with $1$.
 
 However constraints assigned in this manner can be extremely non-local.
 For instance,
 
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle={\ttfamily}]
 n : Nat;
 n = ?;
 
@@ -94,7 +94,7 @@ pr2 = refl Nat 2;
 And things become even more complicated when solving is interleaved with computation.
 For instance,
 
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle={\ttfamily}]
 n : Nat;
 n = ?;
 

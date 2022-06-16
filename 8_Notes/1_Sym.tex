@@ -27,7 +27,7 @@ This ideal workflow appears in \Fref{notes-workflow}.\todo{in contrast to ch 1}
  
 Adding a testing system to the prototype is more complicated than originally expected, and a good theory of dependently typed testing is incomplete.
  
-Given those caveats, we do have a (practical?) testing procedure and some examples that might inform future theoretical work.
+Given those caveats, we do have a (practical?) testing procedure and some examples that might inform future theoretical work. \ccnote{I don't know why that weird spacing is happening}
  
 \subsection{Observable Blame}
 Since this procedure operates over the \clang{}, we must decide what constitutes a reasonable testing environment
@@ -200,7 +200,7 @@ However there have been other attempts to automatically test functional code tha
  
 \subsubsection{Testing}
  
-Many of the testing strategies for typed functional programming trace their heritage to \textbf{property based} testing in QuickCheck \cite{quickcheck}.
+Many of the testing strategies for typed functional programming trace their heritage to \textbf{property-based} testing in QuickCheck \cite{quickcheck}.
 Property based testing involves writing functions that encode the properties of interest, and then randomly testing those functions.
 It is only natural that some of that research has been extended to dependent types:
 \begin{itemize}
@@ -213,7 +213,7 @@ This is presumably out of reach of novice Coq users.
 \item
 Current work in this area uses coverage guided techniques in \cite{lampropoulos2019coverage} like those in symbolic execution.
 \item
-More recently Benjamin Pierce has used american fuzzy lop, a binary fuzzer, on compiled Coq code as a way to generate counter examples\footnote{\url{https://www.youtube.com/watch?v=dfZ94N0hS4I}}\todo{review this, maybe there's a paper or draft now?}.
+More recently Benjamin Pierce has used American Fuzzy Lop, a binary fuzzer, on compiled Coq code as a way to generate counter examples\footnote{\url{https://www.youtube.com/watch?v=dfZ94N0hS4I}}\todo{review this, maybe there's a paper or draft now?}.
 \end{itemize}
 \item \cite{dybjer2003combining} added QuickCheck style testing to (version 1 of) Agda.
 \end{itemize}
@@ -221,9 +221,9 @@ More recently Benjamin Pierce has used american fuzzy lop, a binary fuzzer, on c
 \subsubsection{Symbolic Execution}
  
 There are likely insights to be gained from the research on symbolic execution, especially work that deals with typed higher order functions.
-Symbolic evaluation is a technique to efficiently extract errors from programs.\todo{make more consistent with Marco's definition}
+Symbolic execution is a technique to efficiently extract errors from programs.\todo{make more consistent with Marco's definition}
 Usually this happens in the context of an imperative language with the assistance of an SMT solver.\todo{acronym}
-Symbolic evaluation can be supplemented with other techniques and an extensive literature exists on the topic.
+Symbolic execution can be supplemented with other techniques and an extensive literature exists on the topic.
  
 The situation described in this section is unusual from the perspective of symbolic execution:
 \begin{itemize}
