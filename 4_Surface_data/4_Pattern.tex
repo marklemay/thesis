@@ -38,7 +38,7 @@ head : (A : *) -> (n : Nat)
   -> Vec A (S n) 
   -> A ;
 head A n v =
-  case v {
+  case v < _ => A > {
   | (Cons _ a _ _) => a
   } ;
 
