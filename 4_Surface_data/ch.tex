@@ -19,7 +19,18 @@ Since our language is intended to be easy to use, user defined data will need to
 
 In this Chapter we will show two different ways to add data to the \slang{} and \bidir{} system.
 The first, a direct eliminator scheme, is meta-theoretically well behaved but cumbersome to use.
-The second is based on pattern matching, and is extremely convenient, though its meta-theory is too difficult for a rigorous exposition here.
+It will peel off exactly one constructor at a time.
+The second is dependent pattern matching (similar to \cite{coquand1992pattern}), and is extremely convenient, though its meta-theory is too difficult for a rigorous exposition here.
+It will allow any number of constructors to be matched simultaneously.
+The direct eliminator scheme is designed to have additional annotations that makes it a special case of dependent pattern matching.
+ 
+\ccnote{
+ It is really hard to get clean citations around data in dependent type systems.
+ everything is muddled, except Martin Lof, some of Coquand and the Zombie papers.
+ I don't know of any account of dependent data that is consistent across papers (this includes CIC).
+ Having already spent a lot of time trying to track down exactly who was doing what in the 80s and 90s, I feel very uncomfortable adding any specific new citations that will probably be misleading.
+ For instance, https://proofassistants.stackexchange.com/questions/1257/what-should-be-cited-for-the-calculus-of-inductive-constructions on just getting a correct citation (or even capitalization) for CIC.
+}
 
 \input{4_Surface_data/2_Def}
 \input{4_Surface_data/3_Direct}
@@ -41,10 +52,10 @@ This data usually covers \Nat{}s (for recursive types) and dependent pairs (for 
 Unified Type Theory (\ac{UTT})\cite{luo1990extended,luo1994computation} is an extension to \ac{ECC} that specifies a scheme to define strictly positive data types by way of a logical framework defined in \ac{MLTT}.
 This scheme generates primitive recursors for schematized data, and does not inherently support pattern matching.
 
-The Calculus of Inductive Constructions (\ac{Cic}) is an extension to the calculus of constructions that includes a system of first class data definitions\todo{cite '93 COq report}.
+The Calculus of Inductive Constructions (\ac{CIC}) is an extension to the calculus of constructions that includes a system of first class data definitions\todo{cite '93 COq report}.
 It evolved form Calculus of Constructions, and seems to have been first presented in the Coq manual, where a formulation is still maintained\footnote{https://coq.github.io/doc/v8.9/refman/language/cic.html}.\todo{proper cite?}
-The meta theory was partially explored \cite{10.1007/BFb0037116} which presented the  Calculus of Constructions with Inductive Definitions (CCID) which is a restricted version of \ac{Cic}.
-A \bidir{} account of \ac{Cic} is given in \cite{lennonbertrand:LIPIcs.ITP.2021.24}, though it uses a different style of \bidir{}ly then discussed here to maintain compatibility with the existing Coq system.
+The meta theory was partially explored \cite{10.1007/BFb0037116} which presented the  Calculus of Constructions with Inductive Definitions (CCID) which is a restricted version of \ac{CIC}.
+A \bidir{} account of \ac{CIC} is given in \cite{lennonbertrand:LIPIcs.ITP.2021.24}, though it uses a different style of \bidir{}ly then discussed here to maintain compatibility with the existing Coq system.
 % https://proofassistants.stackexchange.com/questions/1257/what-should-be-cited-for-the-calculus-of-inductive-constructions
 
 \todo[inline]{CTT, higher inductive types, quotient types}

@@ -4,7 +4,7 @@
 Unfortunately, the direct eliminator style is cumbersome for programmers to deal with.
 For instance, Figure \ref{fig:data-eliminators} shows how $\mathtt{Vec}$ data can be directly eliminated to extract the first element of a non-empty list in the definition of $\mathtt{head'}$.
 The $\mathtt{head'}$ function needs to redirect unreachable vector inputs to a dummy type ($\mathtt{Unit}$) and requires several copies of the same $\mathtt{A}$ variable that are not identified automatically by the eliminator described in the last section.
-The usual solution is to extend \case{} elimination with \textbf{pattern matching}.
+The usual solution is to extend \case{} elimination with \textbf{pattern matching} (similar to \cite{coquand1992pattern})./ccnote{I think I clarified this in the intro}
  
 Pattern matching is much more ergonomic than a direct eliminator \case{}.
 In Figure \ref{fig:data-eliminators}, the $\mathtt{head}$ and $\mathtt{mapVec}$ functions that are defined though pattern matching is simpler and clearer.
@@ -38,7 +38,7 @@ head : (A : *) -> (n : Nat)
   -> Vec A (S n) 
   -> A ;
 head A n v =
-  case v < _ => A > {
+  case v {
   | (Cons _ a _ _) => a
   } ;
 
@@ -72,7 +72,7 @@ sub3 n =
 % Surface data syntax
 Figure \ref{fig:surface-data} shows the extensions to the \slang{} for data and pattern matching.
 Our \case{} expression matches a list of \scruts{}, allowing us to be very precise about the typing of branches.
-Additionally this style allows for syntactic sugar for easy definitions of functions by cases.
+Additionally, this style allows for syntactic sugar for easy definitions of functions by cases.
 The direct eliminator style \case{} of the last section is a special case of pattern matching outlined here.
 \todo{Example of why it was needed}
 

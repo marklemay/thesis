@@ -1,18 +1,23 @@
 \section{Direct Elimination}
 
 How should a program observe data?
-Since a term of a given data type can only be created with one of the constructors from its definition, we can completely handle a data expression if each possible constructor is accounted for.
+Since a value of a given data type can only be created with one of the constructors from its definition, we can completely handle a data expression if each possible constructor is accounted for.
 For instance, \Nat{} has the two constructors $\mathtt{Z}$ and \Suc{} (which holds the preceding number), so the expression $\case{}\,n\,\left\{ |\,\mathtt{Z}\Rightarrow \mathtt{Z}\,|\,\Suc{}\,x\Rightarrow x\right\}$ will extract the proceeding number from $n$ (or $0$ if $n=0$).
 We will call the term being inspected the \textbf{\scrut{}}\footnote{
   Also called a \textbf{discriminee}.
-}, here $n$ is the \scrut{}.
+}.
+Here $n$ is the \scrut{}.
+$|\,\mathtt{Z}\Rightarrow \mathtt{Z}$ and $|\,\Suc{}\,x\Rightarrow x$ are called branches.
+The $\Rightarrow$ indicates that variables (such as $x$) may be bound.
 % In this light, boolean case elimination corresponds to the if-then-else expression found in many mainstream languages.
- 
+
 This \Nat{} elimination is type checkable since we know the intended output type of each branch (\Nat{} in the above example), and can check that they are compatible.
 But in the presence of dependent types the output may not be obvious.
 
+\todo{just make a picture?}
 We will need to extend the syntax of \case{}s to support dependent type checking.
 Specifically, we will need to add a \textbf{motive} annotation that allows the type checker to compute the output type of the branches if they vary in terms of the input.
+These annotations occur between the tehr angle brackets following the scrutinee.
 For instance, the \case{} in the the $\mathtt{rep}$ function in \Fref{data-elim-examples}, has the motive $\mathtt{n'\ :\ Nat\ \Rightarrow\ Vec\ A\ n'}$.
 Each branch is typed knowing what it has observed about the input.
 For instance, in the first branch $\mathtt{Nil\ A}$ :  $\mathtt{Vec\ A\ 0}$.
@@ -41,26 +46,26 @@ mapVec' A n v =
     < A : * => n : Nat => _ : Vec A n 
       => (B : *) -> (A -> B) -> Vec B n 
     >{
-   | _ => _ => (Nil A)          
-     => \ B => \ _ => Nil B
-   | _ => _ => (Cons A a pn pv) 
-     => \ B => \ f => Cons B (f a) pn (mapVec' A pn pv B f)
+   | _ => _ => (Nil A)          => 
+     \ B => \ _ => Nil B
+   | _ => _ => (Cons A a pn pv) => 
+     \ B => \ f => Cons B (f a) pn (mapVec' A pn pv B f)
   };
 
 falses : Vec Bool 3;
 falses = mapVec' Bool 3 trues Bool not;
 -- = [False,False,False]
 \end{lstlisting}
-\caption{Data Examples}
+\caption{Direct Eliminator Scheme Examples}
 \label{fig:data-elim-examples}
 \end{figure}
 
 We may also want to use some values of the type level argument to calculate the motive, and type the branches.
-This will be allowed with additional bindings in the motive and in each branch.
-For example the $\mathtt{mapVec'}$ function in \Fref{data-elim-examples}.
+This will be allowed with additional scrutinees, bindings in the motive, and bindings in each branch.
+For example the $\mathtt{mapVec'}$ function in \Fref{data-elim-examples} has motive $\mathtt{A} :\star\ \Rightarrow\ \mathtt{n} : \Nat{}\ \Rightarrow\ - : \Vect{}\, \mathtt{A}\, \mathtt{n}\ \Rightarrow\ (\mathtt{B} : \star) \rightarrow (\mathtt{A} \rightarrow \mathtt{B}) \rightarrow \Vect{}\, \mathtt{B}\, \mathtt{n}$ .
 In $\mathtt{mapVec'}$ the motive allows the output to vary along with the length argument $n$ that appears in the type position.
 % For this language the \scrut{} list, motive and pattern
-In general, the motive will be treated like the typing annotations in \ch{2}: we will only allow correct motives in a well typed term, motives are not always required, and the motive will be definitionally irrelevant.
+In general, the motive will be treated like the typing annotations in \ch{2}: we will only allow obviously correct motives in a well typed term, motives are not always required, and the motive will be definitionally irrelevant.
 
 This version of data can be given by extending the \slang{} syntax in \ch{2}, as in \Fref{surface-data-min}.
 Data type constructors and data term constructors are presented as function like identifiers (in this syntax they reuse function application to collect arguments).
@@ -201,6 +206,7 @@ loop = selfApply (C selfApply)
 \end{lstlisting}
 
 The $\mathtt{C}$ constructor in the definitions of $\mathtt{Bad}$ has a self reference in a negative position, $(\mathtt{Bad}\rightarrow\underline{\mathtt{Bad}})\rightarrow\mathtt{Bad}$. 
+Because of this, the $\mathtt{loop}$ term above will never reduce to a value. 
 
 Non-strictly positive data definitions can cause non-termination, independent of the two other sources of non-termination already considered (general recursion and \tit{}).
 Dependent type systems usually require a strictness check on data definitions to avoid this possibility.
@@ -213,7 +219,7 @@ Since non-termination is already allowed in the surface \ac{TAS}, we will not re
 
 \subsection{Type Assignment System}
 
-Before the typing rules for data can be considered, first some meta rules must be presented that will allow the simultaneous type-checking of lists and telescopes.
+Before the typing rules for data can be considered, first some rules must be presented that will allow the simultaneous type-checking of lists and telescopes.
 These rules are listed in \ref{fig:surface-data-meta-ty}, and are standard.
 Telescopes are $\mathbf{ok}$ when they extend the context in an $\mathbf{ok}$ way.
 Lists of expressions can be said to have the type of the telescope if every expression in the list type checks successively.
@@ -254,7 +260,7 @@ Data definitions can be added to contexts if all of their constituents are well 
 The rules are listed in Figure \ref{fig:surface-data-ok}.
 The $\rulename{\mathbf{ok}-abs-data}$ rule allows data to be considered abstractly if it is formed with a plausible telescope.
 $\rulename{\mathbf{ok}-data}$ checks a full data definition with an abstract reference to a data definition in context, which allows recursive data definitions such as \Nat{} which needs \Nat{} to be in scope to define the \Suc{} constructor.
-This thesis does not formalize a syntax that adds data to context, though a very simple module system has been implemented in the prototype.
+This thesis does not formalize a module syntax that adds data to context, though a very simple module system has been implemented in the prototype.
 It is taken for granted that any scheme to add well formed data into a type context is fine.
 % This presentation of data definitions largely follows \cite{sjoberg2012irrelevance}. 
 
