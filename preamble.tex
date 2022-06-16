@@ -43,8 +43,11 @@
 \usepackage{graphicx}
 \usepackage{appendix}
 
-% keep text from breaking the margins (TODO add to BU template?)
+% keep text from breaking the margins
 \sloppy
+
+% % keep footnotes from splitting across pages?
+% \interfootnotelinepenalty=10000
 
 % some voodoo from https://tex.stackexchange.com/questions/2651/should-i-use-center-or-centering-for-figures-and-tables
 \makeatletter
@@ -119,7 +122,7 @@
 \newcommand{\ch}[1]{Chapter #1}
 
 
-\newcommand{\ccnote}[1]{\todo{#1}} % responses to Chris's comments that I don't know that I want to completely change
+\newcommand{\ccnote}[1]{\todo[color=blue]{#1}} % responses to Chris's comments that I don't know that I want to completely change
 
 \newcommand{\chp}{Chapter}
 % TODO clickable link, chapter without number
@@ -138,6 +141,7 @@
 \newcommand{\bidir}{bidirectional}
 \newcommand{\Bidir}{Bidirectional}
 \newcommand{\cbv}{call-by-value}
+\newcommand{\Cbv}{Call-by-value}
 \newcommand{\CbV}{Call-by-Value} % for use in Headings
 \newcommand{\whnf}{weak-head-normal-form}
 \newcommand{\MartinL}{Martin-L{\"o}f}

@@ -1,0 +1,77 @@
+\section{\SLang{} Evaluation}
+As a programming language we should have some way to evaluate terms in the \slang{}.
+We can define a conventional \cbv{} system of reductions on top of the syntax already defined.
+\Cbv{} is a popular execution strategy that reflects the prototype implementation.
+It works by selecting some expressions as \textbf{value}s, expressions that have been computed enough;
+ and a \textbf{reduction} relation that will compute terms.
+ 
+Values are characterized by the sub-grammar in \Fref{surface-value-syntax}.
+As usual, functions with any body are values.
+Additionally, the type universe ($\star$) is a value, and function types are values.
+ 
+\begin{figure}
+\begin{tabular}{lcl}
+\multicolumn{3}{l}{values,}\tabularnewline
+v & $\Coloneqq$ & $\star$\tabularnewline
+ & $|$ & $\left(x:M\right)\rightarrow N$\tabularnewline
+ & $|$ & $\mathsf{fun}\,f\,x\Rightarrow m$\tabularnewline
+\end{tabular}\caption{\SLang{} Value Syntax}
+\label{fig:surface-value-syntax}
+\end{figure}
+ 
+For instance, $\mathbb{B}_{c}$  and $true_{c}$ are values. % since the outer most syntax is .
+However, $!_{c}x$ is not a value since it is defined as an application to a variable.
+ 
+A \cbv{} relation is defined in \Fref{surface-reduction-step}.
+The reductions are standard for a \cbv{} lambda calculus, except that type annotations are only removed from values.
+We will write $\rightsquigarrow_{\ast}$ as the transitive reflexive closure of the $\rightsquigarrow$.
+ 
+\begin{figure}
+\[
+\frac{\,}{\left(\mathsf{fun}\,f\,x\Rightarrow m\right)v\rightsquigarrow m\left[f\coloneqq\mathsf{fun}\,f\,x\Rightarrow m,x\coloneqq v\right]}
+\]
+\[
+\frac{m\rightsquigarrow m'}{m\,n\rightsquigarrow m'\,n}
+\]
+\[
+\frac{n\rightsquigarrow n'}{v\,n\rightsquigarrow v\,n'}
+\]
+\[
+\frac{m\rightsquigarrow m'}{m::M\rightsquigarrow m'::M}
+\]
+\[
+\frac{\,}{v::M\rightsquigarrow v}
+\]
+\[
+\frac{\,}{m\rightsquigarrow_{\ast}m}
+\]
+\[
+\frac{m\rightsquigarrow_{\ast}m'\quad m'\rightsquigarrow m''}{m\rightsquigarrow_{\ast}m''}
+\]
+ 
+\caption{\SLang{} \CbV{} Reductions}
+\label{fig:surface-reduction-step}
+\end{figure}
+ 
+For example, the expression $!_{c}\,\vdash true_{c}$ reduces as follows
+\begin{tabular}{ll}
+ & $!_{c}\,\vdash true_{c}$ \tabularnewline
+ $=$ & $ true_{c}\,\mathbb{B}_{c}\,false_{c}\,true_{c}$ \tabularnewline
+ $=$ & $ \left(\lambda-\,then\,-\Rightarrow then\right)\,\mathbb{B}_{c}\,false_{c}\,true_{c}$ \tabularnewline
+ $\rightsquigarrow$ & $ \left(\lambda\,then\,-\Rightarrow then\right)\,false_{c}\,true_{c}$ \tabularnewline
+ $\rightsquigarrow$ & $ \left(\lambda-\Rightarrow false_{c}\right)\,true_{c}$ \tabularnewline
+ $\rightsquigarrow$ & $ false_{c}$ \tabularnewline
+\end{tabular}
+ 
+This system of reductions raises the question, what happens if an expression is not a value but also not cannot be reduced?
+These terms will be called $\textbf{Stuck}$.
+Formally, $m\ \textbf{Stuck}$ if $m$ is not a value and there does not exist $m'$ such that $m \rightsquigarrow m'$. \todo{definition env?}
+For instance, $\star\star\star\star\ \textbf{Stuck}$.
+
+Though the \cbv{} system described here is standard, other systems of reduction are also possible.
+% The advantage of the system here is that it is deterministic.
+We will see a non-deterministic system of reductions in \Fref{surface-reduction}.
+Occasionally examples will be easier to demonstrate using a \whnf{} style of reduction, or with custom reduction rules.
+\todo{weak in the sense that not everything lands on the exact same syntax}
+
+\todo{say the words "small step"?}

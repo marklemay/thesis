@@ -69,7 +69,7 @@ With the architecture proposed here, code will always have the same static and d
 \begin{proof}
 Given an expression of type $q:Unit$ defined in PCF\footnote{
   The system PCF is a simply typed lambda calculus with recursion and a few built in data types.
-  Formal definitions can be found in many textbooks, such as\cite{streicher2006domain}.
+  Formal definitions can be found in many textbooks, such as \cite{streicher2006domain}.
 }, that expression can be encoded into the surface system as $m_q:Unit_{c}$, such that if $q$ reduces to the canonical $Unit$ then $m_q\Rrightarrow_{\ast}\lambda A.\lambda a.a$
 
 $\vdash\star:m_q\,\star\,\star$ type-checks by conversion exactly when $q$ halts.
@@ -94,7 +94,7 @@ A fast growing function can generate a very large index that can be used to chec
 When this kind of computation is lifted to the type level, type checking is computationally infeasible, to say the least.
  
 Decidability of type checking is often used as a proxy for efficiency of type checking.
-However, it may be a poor measure of efficiency of for the kinds of programs and proofs that are likely to occur.
+However, it may be a poor measure of efficiency for the kinds of programs and proofs that are likely to occur.
  
 \todo{make sure I'm not missing any langs, C\#...?}
 

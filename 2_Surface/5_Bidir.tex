@@ -44,7 +44,7 @@ In fact, almost every example in \Fref{surface-examples} has enough annotations 
 \end{itemize}
 This allows typing information to flow from the ``outside in'' for type checking judgments and ``inside out'' for the type inference judgments.
 Check mode can be induced by the programmer with a type annotation.
-When an inference meets a check, a conversion verifies that the types are definitionally equal.\ccnote{keeping this as is since this sentence is talking about bidirectional systems in general, and it is acurate}
+When an inference meets a check, a conversion verifies that the types are definitionally equal.\ccnote{keeping this as is since this sentence is talking about bidirectional systems in general, and it is accurate}
 This has the advantage of precisely limiting where the $\rulename{ty-conv}$ rule can be used, since conversion checking is usually an inefficient part of dependent type checking.
  
 This enforced flow of information results in a system that localizes type errors.
@@ -148,7 +148,7 @@ In \bidir{} systems, \textbf{annotatability}\footnote{
 } is the property that any expression that types in a \ac{TAS} will type in the \bidir{} system with only additional annotations. \todo{does this actually hold?}
 % This property doesn't exactly hold for the \bidir{} system presented here.\todo{it actually might}
 % For instance, $\vdash\left((\lambda x\Rightarrow x)::\left(\mathbb{N}\rightarrow\mathbb{N}::\star\right)\right)$ type checks in the \ac{TAS} system, but no amount of annotations will make it check in the \bidir{} system. % that is incorrect since you can wedge a cast under the cast
-To save space we can instead show that for every well typed \ac{TAS} expression there is an equivelent \bidir{} expression, though annotations may need to be added (or removed). % no need to remove if properly \bidir{}).
+To save space we can instead show that for every well typed \ac{TAS} expression there is an equivalent \bidir{} expression, though annotations may need to be added (or removed). % no need to remove if properly \bidir{}).
 We will call this property \textbf{weak annotatability}.
 \begin{thm} Weak annotatability.
  

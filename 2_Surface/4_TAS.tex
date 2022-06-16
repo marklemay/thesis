@@ -1,18 +1,18 @@
 \section{\SLang{} Type Assignment System}
  
-When is an expression reasonable? The expression $\star\star\star\star$ is allowed by the syntax of the language, but seems dubious.
+When is an expression reasonable?
+The expression $\star\star\star\star$ is allowed by the syntax of the language, but seems dubious.
 %Since $\star$  is not a function,  it has no way of being given an input by application.
-Type systems can disallow bad terms like these, which in turn prevents bad runtime behavior.
+Type systems can disallow $\textbf{Stuck}$ terms like these from ever occurring, which in turn prevents bad runtime behavior.
  
 We will present our type system as a \textbf{type assignment system} (\ac{TAS}).
 Type assignment systems are convenient to study the theory of a dependently typed language because terms do not need to contain information to help type checking, allowing simpler syntax. %type annotations. %and will be easier to work with than other styles of typing that require variables to be annotated.
 % For instance, $\mathsf{fun}\,f\,x\Rightarrow m$ does not require a type be given for $f$ or $a$.
 \todo{church/curry?}
-Practically this means that the type assignment system should\ccnote{keeping as should since you can use the rules as an inefficient procedure} not be used as a type checking algorithm since it may need to ``infer'' an unrealistic amount of information.
-This also means that terms do not necessarily have unique typings.\ccnote{don't think the uniqueness is salient here}
+Practically this means that the type assignment system should\ccnote{keeping as should since you CAN use the rules as an inefficient procedure... but you shouldn't} not be used as a type checking algorithm since it may need to ``infer'' an unrealistic amount of information.
+This also means that terms do not necessarily have unique typings.\ccnote{don't think the MGU is salient here}
 For instance, $\tasys\lambda x\Rightarrow x:\mathbb{N}_{c}\rightarrow\mathbb{N}_{c}$, and $\tasys\lambda x\Rightarrow x:\mathbb{B}_{c}\rightarrow\mathbb{B}_{c}$.
 These issues will be addressed when the more practical, \bidir{} type system is introduced in the next section.
-\todo{move negative stuff later?}
  
 \begin{figure}
 \[
@@ -66,7 +66,7 @@ The most important property of a type system is \textbf{type soundness}\footnote
 }.
 Type soundness is often motivated with the slogan, ``well typed programs don't get stuck''\cite{MILNER1978348}\footnote{
   In Milner's original paper, he used ``go wrong'' instead of ``get stuck''.
-  In that paper he defined "wrong" as a semantic notion that behaves like a runtime type error.
+  In that paper he defined  ``wrong'' as a semantic notion that behaves like a runtime type error.
   % The presentation here can be simplified by only considering "stuck" terms.
 }.
 Given the syntax of the \slang{}, there is potential for a program to ``get stuck'' when an argument is applied to a non-function constructor.
@@ -85,7 +85,7 @@ Type soundness can be shown with a \textbf{progress} and \textbf{preservation}\f
 \todo{TAPL cites Harper as a co-originator of progress-preservation.
   Maybe just email him?  it might be also good to get him for intractability (blum stuff).
   might want to review his book first}
-The preservation theorem shows that typing information is invariant over evaluation.\ccnote{I'm using evaluation since this can apply to a number of computation relations}
+The preservation theorem shows that typing information is invariant over evaluation.\ccnote{I'm using evaluation since this can apply to both computation relations}
 The progress theorem shows that a step of computation for a well typed term in an empty context will not ``get stuck''.
 By iterating these theorems together, it is possible to show that the type system prevents a well typed term from ever reaching a stuck state.
 For a progress and preservation style proof of a dependently typed language, everything hinges on a suitable definition of the $\equiv$ relation.
@@ -236,7 +236,7 @@ Since $\Rrightarrow_{\ast}$ is reflexive.
 % \end{proof}
 \begin{lem} $\Rrightarrow$ is closed under substitutions that parallel reduce.
  
-Where $\sigma$, $\tau$ are a substitutions.
+Where $\sigma$, $\tau$ are substitutions.
 Where $\sigma\Rrightarrow\tau$ means for every $x$, $\sigma\left(x\right)\Rrightarrow\tau\left(x\right)$.
 \todo{awk}
 The following rule is admissible:
@@ -283,7 +283,7 @@ By repeated $\rulename{\Rrightarrow_{\ast}-sub}$ and $\equiv\rulename{-Def}$.
 To prove the transitivity of the $\equiv$ relation, we will first need to prove that \textbf{$\Rrightarrow_{\ast}$ }is \textbf{confluent}.
 A relation $R$ is confluent\footnote{
   Also called \textbf{Church-Rosser}.
-} when, for all $m$, $n$, $n'$, if $mRn$ and $\:mRn'$ then exists exists $n''$ such that $nRn''$ and $n'Rn''$.
+} when, for all $m$, $n$, $n'$, if $mRn$ and $\:mRn'$ then there exists $n''$ such that $nRn''$ and $n'Rn''$.
 If a relation is confluent, in a sense, specific reduction choices don't matter since you can alway rejoin at a future destination.
  
 \begin{figure}
@@ -364,7 +364,7 @@ If $m\Rrightarrow\,m'$ then $m'\Rrightarrow \textbf{max}\left(m\right)$ .
 By induction on the derivation $m\Rrightarrow\,m'$, with the only interesting cases are where a reduction is not taken:
 \begin{casenv}
 \item In the case of \rulename{\Rrightarrow-::}, $m'\Rrightarrow \textbf{max}\left(m\right)$, by \rulename{\Rrightarrow-::-red}.
-\item In the case of \rulename{\Rrightarrow-\mathsf{fun}-app}, $m'\Rrightarrow \textbf{max}\left(m\right)$ by \rulename{\Rrightarrow-\mathsf{fun}-app-red}.\ccnote{All other cases follow directly by induction (the confustion my have come from the way I origionally noted the max function)}
+\item In the case of \rulename{\Rrightarrow-\mathsf{fun}-app}, $m'\Rrightarrow \textbf{max}\left(m\right)$ by \rulename{\Rrightarrow-\mathsf{fun}-app-red}.\ccnote{All other cases follow directly by induction (the confusion may have come from the way I originally noted the max function)}
 \end{casenv}
 \end{proof}
 
@@ -383,7 +383,8 @@ By the triangle property.
 If $m\Rrightarrow_{\ast}\,n'$, $m\Rrightarrow_{\ast}\,n''$, then there exists $n'''$ such that $n'\Rrightarrow\,n'''$ ,$n''\Rrightarrow\,n'''$.
 \end{thm}
 \begin{proof}
-By repeated application of the diamond property, ``tiling'' the interior region.\ccnote{i can'm still trying to find a cleaner way to write this with the word "induction"}
+By induction.
+Intuitively by repeated application of the diamond property, ``tiling'' the interior region.
 % % https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZAZgBoAGAXVJADcBDAGwFcYkQQBfU9TXfQigAspAIzU6TVuy48QGbHgJEArKQBMEhizaIO3XooFEAbKWJapu8AHIbsw-2Up1YyzpkH5fJYOSiNd2k9B28jZ2RycyDrMHsvBSc-NSEYzzlE3yIRFTSQhJ9jFADUmm1g-QzCiNdcsqt0xyyUMhM82ztQzKKSQPqPfKrwvxELfoqu6r9XMckByqaeslK5ic4JGCgAc3giUAAzACcIAFskKJAcCCQAkEYsMGsoCGYAI0Y2GgALGHooJDAzEYjBoOHoWEY7Egj1CR1ON1B10QrjuDyeL3enxAPz+AKBIMu4MhemhbC8cLOyMRSDIqJhemeOBwmxA31+-xJBDJcgp52piBEdPRbw+rOx7LxwNBRKhXNhx0pgquSDUQvYzxFWJxHMBUsJENlMPJCpV-LM4txnJhNHu9JAjOZ-2N8MQtOViAA7Da0eqMaK2ZbdQSwQardyDibPfyABzeu0azFi7WS4MysPyl3m90ATjjwsTAZ1+OlofAcudlNzlyRogutvz-otRb1IeJZaNPMjserN1u9d9TJZhcN4ZAvMQtf5oj7PoZEEH-2H6YrSCVNZR-bnmqTEsQQZLbdJGcpt3dog3s-tfq1u-3+sP5c7LvPU9pm6v26Xd9bI+PSBRZ5vpeCaNsme7Fvev4rogqpnoK74gTegYQT+y5PieAE1vBwHXjuyEtmm7ajuOohujWqoIbhX4oYRR7QaIa43BROGfk2KYHlB6E3GRSBemqc4LnhHJEX+E6MYgVaUYJS4ifRsE1jO8bzo6QlQZQnBAA
 % \begin{tikzcd}
 %   &                                                       &                                                       & {} \arrow[rd, Rightarrow] \arrow[ld, Rightarrow] &                                                       &                                                       &                            \\
@@ -475,7 +476,7 @@ These lemmas will almost always be justified by induction on typing derivations.
 The following rule is admissible:
 \[
 \frac{\Gamma\tasys n:N}{\Gamma,\Gamma'\tasys n:N}
-\]\ccnote{I am pervasivy asuming varaibles behave correctly over binding constructs, so I should probly note that up front}
+\]\ccnote{I am pervasively assuming variables behave correctly over binding constructs, so I should probably note that up front}
 \end{thm}
 \begin{proof}
 By induction on typing derivations.
@@ -631,59 +632,14 @@ By induction on the typing derivation $\Gamma\tasys m:M$, specializing on $m\Rri
 \end{proof}
  
 \subsection{Progress}
- 
+
 The second key theorem to show in this style of proof is called progress.\todo{awk, it's name is the least interasting thing}
-The progress theorem states: for a well typed term in an empty context, then a further step can be taken or computation is finished.\ccnote{fix after restructure}
-For non-dependently typed programming languages, these steps are easy to characterize, but for dependent types there are issues.\todo{awk}
-If we characterize computation with the $\Rrightarrow$ relation, the progress lemma holds in a meaningless way since we can always take a reflexive step.
-Thus a less reflexive relation is needed.
-Ideally the relation should also be deterministic and a sub relation of $\Rrightarrow_{*}$.
-We can choose a \cbv{} relation since that % this meets all the properties required, and 
-  is a popular execution strategy that reflects the prototype implementation.\ccnote{fix after restructure}
- 
-\begin{figure}
-\begin{tabular}{lcl}
-\multicolumn{3}{l}{values,}\tabularnewline
-v & $\Coloneqq$ & $\star$\tabularnewline
- & $|$ & $\left(x:M\right)\rightarrow N$\tabularnewline
- & $|$ & $\mathsf{fun}\,f\,x\Rightarrow m$\tabularnewline
-\end{tabular}\caption{\SLang{} Value Syntax}
-\label{fig:surface-value-syntax}
-\end{figure}
- 
-Values are characterized by the sub-grammar in \Fref{surface-value-syntax}.
-As usual, functions with any body are values.
-Additionally, the type universe ($\star$) is a value, and function types are values.
- 
-\begin{figure}
-\[
-\frac{\,}{\left(\mathsf{fun}\,f\,x\Rightarrow m\right)v\rightsquigarrow m\left[f\coloneqq\mathsf{fun}\,f\,x\Rightarrow m,x\coloneqq v\right]}
-\]
- 
-\[
-\frac{m\rightsquigarrow m'}{m\,n\rightsquigarrow m'\,n}
-\]
- 
-\[
-\frac{n\rightsquigarrow n'}{v\,n\rightsquigarrow v\,n'}
-\]
- 
-\[
-\frac{m\rightsquigarrow m'}{m::M\rightsquigarrow m'::M}
-\]
- 
-\[
-\frac{\,}{v::M\rightsquigarrow v}
-\]
- 
-\caption{\SLang{} \CbV{} Reductions}
-\label{fig:surface-reduction-step}
-\end{figure}
- 
-A \cbv{} relation is defined in \Fref{surface-reduction-step}.
-The reductions are standard for a \cbv{} lambda calculus, except that type annotations are only removed from values.
- 
-\todo{explicitly define stuck}
+The progress theorem states: for a well typed term in an empty context, then a further \cbv\footnote{
+  It is tempting to use $\Rrightarrow$ as the main notion of reduction, since it corresponds to $\equiv$.
+  However, since $\Rrightarrow$ is reflexive, no expression could get stuck.
+} step can be taken or computation is finished.
+% For non-dependently typed programming languages, these steps are easy to characterize, but for dependent types there are issues.\todo{awk}
+
 \begin{fact} $\rightsquigarrow$ implies $\Rrightarrow$.
  
 The following rule is admissible:
@@ -701,14 +657,14 @@ Since the language of this chapter is so minimal, we only need to characterize t
  
 \begin{lem} $\mathsf{fun}$-Canonical form (generalized).
 
-If $\tasys v\,:\,P$ and $P\equiv\left(x:N\right)\rightarrow M$ then for some m $v=\mathsf{fun}\,f\,x\Rightarrow m$. \ccnote{don't want to quantifie over the bound varibles since that implies a non debroign interpertation}
+If $\tasys v\,:\,P$ and $P\equiv\left(x:N\right)\rightarrow M$ then $v=\mathsf{fun}\,f\,x\Rightarrow m$, for some $m$. \ccnote{don't want to quantify over the bound variables since that implies a non de bruijn interpretation}
 \end{lem}
 \begin{proof}
 By induction on the typing derivation,
  
 \begin{casenv}
 \item \rulename{ty-\mathsf{fun}} follows immediately
-\item \rulename{ty-conv} by the equivalence\ccnote{keeping this "equivalence" instead of "transitivity" becuase I think you also need to ues symmetry} of $\equiv$ and induction
+\item \rulename{ty-conv} by the equivalence\ccnote{keeping this "equivalence" instead of "transitivity" because I think you also need to use symmetry} of $\equiv$ and induction
 \item \rulename{ty-\star}, \rulename{ty-\mathsf{fun}-ty} are impossible, by the stability of $\equiv$
 \item other rules  are impossible, since they do not type values
 \end{casenv}
@@ -762,11 +718,11 @@ An interpreter is always free to take any $\Rrightarrow_*$, but if it is unclear
 
 \subsection{Type Soundness}
  
-The language has type soundness: well typed terms will never ``get stuck'' in the \slang{}.
+The \slang{} has type soundness:
 
 \begin{thm} Type Soundness.
  
-If $\tasys m\,:\,M$ and $m\rightsquigarrow_\ast m'$ then $m'$ will not get stuck.\ccnote{come back to this after I add that section}
+If $\tasys m\,:\,M$ and $m\rightsquigarrow_\ast m'$ then $m'$ cannot be $\textbf{Stuck}$.
 \end{thm}
 \begin{proof}
 This follows by iterating the progress and preservation lemmas.
