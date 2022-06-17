@@ -22,7 +22,7 @@ All the meta theory from \ch{2} goes through assuming that all locations are ind
     so that the relation does not discriminate over syntaxes that come from different locations.
   While the $\textbf{max}$ function will map terms into the null location,
     $\textbf{max}\left(\left(x:M_{\ell}\right)\rightarrow N_{\ell'}\right)=\textbf{max}\left(\left(x:\textbf{max}\left(M\right)_{.}\right)\rightarrow \textbf{max}\left(N\right)_{.}\right)$.
-}.\todo{more explanation on this note? why set max up that way?}
+}.\ccnote{I think this is addressed, presumably reductions always ignore a lot of metadata}\todo{more explanation on this note? why set max up that way?}
 We will avoid writing these annotations when they are unneeded (explicitly in \Fref{surface-pre-syntax-loc-abrev}).
 
 \begin{figure}
@@ -58,27 +58,28 @@ $m_{\ell}\,n$ & written & $m_{\ensuremath{}}\,n$ & when & $\ell$ is irrelevant\t
 Functions will elaborate the expected types to their arguments when they are applied.
 % For example,
 \begin{example}
-$f:\mathbb{B}_c \rightarrow\mathbb{B}_c \vdash f_{\ell}7_c \ :\mathbb{B}_c $ elaborates to $f:\mathbb{B}_c \rightarrow\mathbb{B}_c \vdash f\left(7_c ::_{\mathbb{N}_c ,\ell,.Arg}\mathbb{B}_c \right)\ :\mathbb{B}_c $.
+Assuming $f:\mathbb{B}_c \rightarrow\mathbb{B}_c$ then $f_{\ell}7_c \ :\mathbb{B}_c $ elaborates to $f\left(7_c ::_{\mathbb{N}_c ,\ell,.Arg}\mathbb{B}_c \right)\ :\mathbb{B}_c $.
 \end{example}
+% As with \bidir{} type checking we always elaborate relative to a context that carries type information.
  
 \todo{arg is there because f may not be a function type}
  
 As with \bidir{} type checking, variable types will be inferred from the typing environment.
 % For example,
 \begin{example}
-$\vdash(\lambda x\Rightarrow 7_c)::_{\ell}\mathbb{B}_c \rightarrow\mathbb{B}_c$ elaborates to $\vdash(\lambda x\Rightarrow7::_{\mathbb{N}_c,\ell,Bod_x}\mathbb{B}_c )$.
+$(\lambda x\Rightarrow 7_c)::_{\ell}\mathbb{B}_c \rightarrow\mathbb{B}_c$ elaborates to $(\lambda x\Rightarrow7::_{\mathbb{N}_c,\ell,Bod_x}\mathbb{B}_c )$.
 \end{example}
 \todo{these examples aer only precisly correct if the church terms infer their type}
 
 To keep the theory simple, we allow vacuous casts to be created,
 \begin{example}
-$f:\mathbb{N}_c \rightarrow\mathbb{B}_c \rightarrow\mathbb{B}_c \vdash f_{\ell}7_{c\ell'}3_c \ :\mathbb{B}_c $ elaborates to $f:\mathbb{N}_c \rightarrow\mathbb{B}_c \rightarrow\mathbb{B}_c \vdash f\left(7_c ::_{\mathbb{N}_c,\ell,Arg}\mathbb{N}_c \right)\left(3_c ::_{\mathbb{N}_c,\ell',Arg}\mathbb{B}_c \right)\ :\mathbb{B}_c$.
+Assuming $f:\mathbb{N}_c \rightarrow\mathbb{B}_c \rightarrow\mathbb{B}_c$ then $f_{\ell}7_{c\ell'}3_c \ :\mathbb{B}_c $ elaborates to $f\left(7_c ::_{\mathbb{N}_c,\ell,Arg}\mathbb{N}_c \right)\left(3_c ::_{\mathbb{N}_c,\ell',Arg}\mathbb{B}_c \right)\ :\mathbb{B}_c$.
 \end{example}
 
 \todo{dependent type example where cast muddles type}
 
 Unlike in gradual typing, we cannot elaborate arbitrary untyped syntax.
-The underlying type of a cast needs to be known so that a function type can swap its argument type at application.
+The underlying type of a cast needs to be known so that a function type can swap its argument type at application. \todo{this is complicated by chapter 5}
 For instance, $\lambda x\Rightarrow x$ will not elaborate since the intended type is not known.
 Fortunately, our experimental testing suggests that a majority of randomly generated terms can be elaborated, compared to the \slang{} where only a small minority of terms would type check.
 The programmer can make any term elaborate if they annotate the intended type.
@@ -95,9 +96,9 @@ Like the \bidir{} rules, the rules for elaboration are broken into two judgments
 \end{itemize}
 The rules for elaboration are presented in \Fref{elaboration}.
 Elaboration rules are written in a style of \bidir{} type checking, with arrows pointing in the direction information flows.
-However, unlike \bidir{} type checking, when checking an inference in \rulename{\overleftarrow{\textbf{Elab}}-cast}, elaboration adds a cast assertion that the two types are equal.
+However, unlike \bidir{} type checking, when checking a type that was inferred in the \rulename{\overleftarrow{\textbf{Elab}}-cast} rule, elaboration adds a cast assertion that the two types are equal.
 Thus any conversion checking can be suspended until runtime.
-Additionally we will allow the mode to change at the type universe with the \rulename{\overleftarrow{\textbf{Elab}}-conv-\star} rule, to avoid unneeded checks on the type universe.\todo{i belive this rule is no longer needed? but it is convient}
+Additionally we will allow the mode to change at the type universe with the \rulename{\overleftarrow{\textbf{Elab}}-conv-\star} rule, to avoid unneeded checks on the type universe.\todo{i believe this rule is no longer needed? but it is convenient}
 % Without the \rulename{\overleftarrow{\textbf{Elab}}-conv-\star} rule, the \slang{} term $1_c :: \mathbb{N}_c$ could not elaborate becouse runtime checks required to cherck teh well formedness of $\mathbb{N}_c$ would result in a term $\mathbb{N}_c :: \star$.
 As formulated here, the elaboration procedure is terminating.
 
@@ -154,10 +155,8 @@ As formulated here, the elaboration procedure is terminating.
 \label{fig:elaboration}
 \end{figure}
 
-
-
 There are several desirable properties of elaboration that can be shown with the help of an erasure function (defined in \ref{fig:erasure}).
-Erasure is defined over all syntactic forms, removing annotations, locations, and casts.
+Erasure is defined over all syntactic forms, removing annotations, locations, and casts.\ccnote{I think this covers the confusion}
 
 \begin{figure}
 \begin{tabular}{ccc}

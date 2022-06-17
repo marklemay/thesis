@@ -205,7 +205,7 @@ As before, this allows us to prove $\equiv$ is transitive, and therefore $\equiv
 If $a\equiv a'$ and $a'\equiv a''$ implies $a\equiv a''$.
 \end{thm}
 \begin{proof}
-The diamond property implies the confluence of $\Rrightarrow_{\ast}$.
+Follows from the confluence of $\Rrightarrow_{\ast}$.
 \end{proof}
  
 \subsubsection{Stability}
@@ -215,7 +215,7 @@ Similar to \ch{2} we need to prove that equality is stable over type constructor
 $\forall A,B,C.$ $\left(x:A\right)\rightarrow B\Rrightarrow_{\ast}C$ implies $\exists A',B'.C=\left(x:A'\right)\rightarrow B'\land A\Rrightarrow_{\ast}A'\land B\Rrightarrow_{\ast}B'$.
 \end{lem}
 \begin{proof}
-By induction on $\Rrightarrow_{\ast}$.
+By induction on $\Rrightarrow$, which implies the result for $\Rrightarrow_{\ast}$.
 \end{proof}
 
 \begin{cor} Stability of $\rightarrow$ over $\equiv$.
@@ -245,7 +245,7 @@ The following rule is admissible:
 \end{lem}
  
 \begin{proof}
-By induction on cast derivations.
+By induction on the derivations of the \csys{}.
 \end{proof}
 
 \begin{lem} Substitution preserves types.
@@ -257,7 +257,7 @@ The following rule is admissible:
 \]
 \end{lem}
 \begin{proof}
-By induction on cast derivations.
+By induction on the derivations of the \csys{}.
 \end{proof}
 
 As before the notion of definitional equality can be extended to cast contexts. % in \Fref{cast-Context-Equiv}.
@@ -283,7 +283,7 @@ The following rule is admissible:
 \]
 \end{lem}
 \begin{proof}
-By induction over cast derivations.
+By induction over the derivations of the \csys{}.
 \end{proof}
 
 As before we show inversions on the term syntaxes, generalizing the induction hypothesis up to equality when needed.
@@ -295,7 +295,7 @@ As before we show inversions on the term syntaxes, generalizing the induction hy
 \]
 \end{lem}
 \begin{proof}
-by induction on the cast derivations
+By induction on the derivations of the \csys{}.
 \end{proof}
  
 This allows us to conclude the corollary
@@ -330,8 +330,7 @@ Which allows the expected corollary:
  
 We also need a lemma that will invert the typing information out of the cast operator.
 This can be proven directly without generalizing over definitional equality.
- 
-\todo{fun font after}
+
 \begin{lem} $::$-Inversion.
  
 The following rule is admissible:
@@ -350,7 +349,7 @@ By induction on the typing derivations:
 \end{casenv}
 \end{proof}
  
-Note that the derivations of the conclusion of this theorem can alway be made smaller than the derivation from the premise.
+Note that the derivations of the conclusion of this theorem can always be made smaller than the derivation from the premise.
 This allows other proofs to use induction on the output of this lemma while still being well founded.
  
 \begin{thm} $\Rrightarrow$ Preserves types.
@@ -420,6 +419,7 @@ Again this will broadly follow the outline of the \slang{} proof in \ch{2}, with
 Unlike the \slang{}, it is no longer practical to characterize values syntactically.
 Values are specified by judgments in \Fref{cast-val}.
 They are standard except for the \rulename{Val-::}, which states that a type ($\star$ or function type) under a cast is not a value.
+\ccnote{deal with this after restructure}
  
 \begin{figure}
 \[
@@ -446,7 +446,7 @@ a\cancel{=}\left(x:C\right)\rightarrow C'
 \label{fig:cast-val}
 \end{figure}
  
-Small steps are listed in \Fref{cast-step}.
+Small steps are listed in \Fref{cast-step}.\ccnote{deal with this after restructure}
 They are standard for \cbv{} except that casts can distribute over application, and casts can reduce when both types are $\star$.
  
 \begin{figure}
@@ -488,8 +488,8 @@ In addition to small step and values we also specify blame judgments in \Fref{ca
 Blame tracks the information needed to create a good error message and is inspired by the many systems that use blame tracking \cite{10.1145/581478.581484,10.1007/978-3-642-00590-9_1,wadler:LIPIcs:2015:5033}.
 Specifically the judgment \blame{a}{\ell}{o} means that $a$ witnesses a contradiction in the source code at location $\ell$ under the observations $o$.
 With only dependent functions and universes, only inequalities of the form $*\,\cancel{=}\,A\rightarrow B$ can be witnessed.
-The first 2 rules of the blame judgment witness these concrete type inequalities.
-The rest of the blame rules will recursively extract concrete witnesses from larger terms.
+The first two rules of the blame judgment witness these concrete type inequalities.
+The rest of the blame rules recursively extract concrete witnesses from larger terms.
 Limiting the observations to the form $*\,\cancel{=}\,A\rightarrow B$ makes the system in this Chapter simpler than the system in \ch{5} where more observations are possible because of the addition of data.
 % "self evidently correct" since it is clear to only extract inequalities. like step and val? one of several possible contradiction extraction relations
  
@@ -555,7 +555,7 @@ However, canonical function values look different because they must account for 
 
 \begin{lem} $\star$-Canonical forms (generalized).
  
-If $\vdash a\,:\,A$ , $a\,\textbf{Val}$, and $A\equiv\star$ then either
+If $\vdash a\,:\,A$ , $a\,\textbf{Val}$, and $A\equiv\star$ then either.
 
 \textup{$a=\star$ ,}
 
@@ -617,7 +617,7 @@ If $\vdash a:\left(x:C\right)\rightarrow B$ , and $a\,\textbf{Val}$
  
 $a=\mathsf{fun}\,f\,x\Rightarrow b$
  
-or $a=d::_{D,\ell ,o}\left(x:C'\right)\rightarrow B'$, $d\,\textbf{Val}$, $D\,\textbf{Val}$, $C'\equiv C$, $B'\equiv B$
+or $a=d::_{D,\ell ,o}\left(x:C'\right)\rightarrow B'$, $d\,\textbf{Val}$, $D\,\textbf{Val}$, $C'\equiv C$, $B'\equiv B$.
 \end{cor}
  
 This further means if $\vdash a:\left(x:C\right)\rightarrow B$, and $a\,\textbf{Val}$ then $a$ is not a type, $a\cancel{=}\star,a\cancel{=}\left(x:C\right)\rightarrow C'$.
@@ -628,11 +628,11 @@ We can now prove the progress lemma.
  
 If $\vdash a\,:\,A$ then either
  
-$a\,\textbf{Val}$
+$a\,\textbf{Val}$,
  
-there exists $a'$ such that $a\rightsquigarrow a'$
+there exists $a'$ such that $a\rightsquigarrow a'$,
  
-or there exists $\ell$, $o$ such that $\blame{a}{\ell}{o}$
+or there exists $\ell$, $o$ such that $\blame{a}{\ell}{o}$.
 \end{thm}
 \begin{proof}
 As usual this follows form induction on the typing derivation:
@@ -676,7 +676,7 @@ As usual this follows form induction on the typing derivation:
 \todo{revise}
  
 %% cast soundness
-Cast soundness follows from progress and preservation as expected.
+Cast soundness follows from progress and preservation as expected. \ccnote{address after restructure}
  
 % For any $\lozenge\vdash c:C$, $c'$, $c\rightsquigarrow^{*}c'$, if $\textbf{Stuck}\,c'$ then $\textbf{Blame}\:\ell \,o\:c'$, where $\textbf{Stuck}\,c'$ means $c'$ is not a value and $c'$ does not step.
 % This follows by iteration the progress and preservation lemmas.
@@ -688,13 +688,13 @@ Cast soundness follows from progress and preservation as expected.
 \todo{regularity encoding, along with the cast}
  
 Because of the conversion rule and non-termination, cast-checking is undecidable.
-This is fine since the \csys{} only exists to ensure theoretical properties. 
+This is fine since the \csys{} only exists to ensure theoretical properties. \ccnote{I think this is cleared up in the next few sentences}
 Programmers will only use the system through the elaboration procedure described in the next section.
 Every term produced by elaboration will cast check, and the elaboration is decidable. % \footnote{As fomalized here, the assertimplemenation }.
  
-As in the \slang{}, the \clang{} is logically unsound, by design.
+As in the \slang{}\ac{TAS}, the \clang{} is logically unsound, by design.
  
-Just as there are many different flavors of definitional equality that could have been used in \ch{2}, there are also many possible degrees that runtime equality can be enforced.
+Just as there are many different flavors of definitional equality that could have been used in \ch{2}, there are also many possible degrees to which runtime equality can be enforced.
 The \Blame{} relation in \Fref{cast-blame} outlines a minimal checking strategy that supports cast soundness.
 For instance\footnote{
   Assuming the data types of \ch{5}.
@@ -713,5 +713,5 @@ This behavior is consistent with the conjectured partial correctness of logicall
 Unlike static type-checking, these runtime checks have runtime costs.
 Since the language allows nontermination, checks can take forever to resolve at runtime.
 We don't expect this to be a large issue in practice, at least any more than is usual in mainstream languages that allow many other sources of nontermination are possible.
-The implementation avoids casts when it knows that blame is impossible.
-Additionally, we could limit the number of steps allowed in cast normalization and blame slow code and nonterminating.
+The implementation optimizes away casts when it knows that blame is impossible.
+Additionally, we could limit the number of steps allowed in cast normalization and blame slow code.
