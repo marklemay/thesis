@@ -1,0 +1,153 @@
+\section{\CLang{} Evaluation and Blame}
+
+As in \ch{2} we can equip the \slang{} with a \cbv{} reduction system.
+
+Unlike the \slang{}, it is no longer practical to characterize values syntactically.
+Values are specified by judgments in \Fref{cast-val}.
+They are standard except for the \rulename{Val-::}, which states that a type ($\star$ or function type) under a cast is not a value.
+ 
+\begin{figure}
+\[
+\frac{\,}{\star\,\textbf{Val}}
+\rulename{Val-\star}
+\]
+\[
+\frac{\,}{\left(x:A\right)\rightarrow B\,\textbf{Val}}
+\rulename{Val-fun-ty}
+\]
+\[
+\frac{\,}{\mathsf{fun}\,f\,x\Rightarrow b\:\textbf{Val}}
+\rulename{Val-fun}
+\]
+\[
+\frac{\begin{array}{c}
+a\:\textbf{Val}\quad A\:\textbf{Val}\quad B\:\textbf{Val}\\
+a\cancel{=}\star\\
+a\cancel{=}\left(x:C\right)\rightarrow C'
+\end{array}}{a::_{A,\ell, o}B\:\textbf{Val}}
+\rulename{Val-::}
+\]
+\caption{\CLang{} Values}
+\label{fig:cast-val}
+\end{figure}
+
+For example, $(\lambda x\Rightarrow a) ::\star$ is a value while $\star ::\star$ is not a value.
+Values are characterized this way to match reduction, since  $\star ::\star\ \rightsquigarrow\ \star$.
+If the underling term of a cast is a type, such as $A ::_{B}B'$ then the cast will eventually reduce to $A ::_{B}B'\ \rightsquigarrow_{\ast}\ A ::_{\star}\star\ \rightsquigarrow\ A$ if there is no blame.
+If there is blame then the reduction will get stuck around that cast.
+
+\Cbv{} reductions are listed in \Fref{cast-step}.
+They are standard for \cbv{} except that casts can distribute over application in \rulename{\rightsquigarrow-::-app-red}, and casts can reduce when both types are $\star$ in \rulename{\rightsquigarrow-::-\star-red}.
+ 
+\begin{figure}
+\[
+\frac{a\,\textbf{Val}}{\left(\mathsf{fun}\,f\,x\Rightarrow b\right)a\rightsquigarrow b\left[f\coloneqq\mathsf{fun}\,f\,x\Rightarrow b,x\coloneqq a\right]}
+\rulename{\rightsquigarrow-\mathsf{fun}-app-red}
+\]
+\[
+\frac{b\,\textbf{Val}\quad a\,\textbf{Val}}{\begin{array}{c}
+\left(b::_{\left(x:A_{1}\right)\rightarrow B_{1},\ell ,o}\left(x:A_{2}\right)\rightarrow B_{2}\right)a\rightsquigarrow\\
+\left(b\,\left(a::_{A_{2},\ell,o.Arg}A_{1}\right)\right)::_{B_{1}\left[x\coloneqq a::_{A_{2},\ell,o.Arg}A_{1}\right],\ell ,o.Bod_a}B_{2}\left[x\coloneqq a\right]
+\end{array}}
+\rulename{\rightsquigarrow-::-app-red}
+\]
+\[
+\frac{A\,\textbf{Val}}{A::_{\star,\ell ,o}\star\rightsquigarrow A}
+\rulename{\rightsquigarrow-::-\star-red}
+\]
+\[
+\frac{a\rightsquigarrow a'}{a::_{A,\ell ,o}B\rightsquigarrow a'::_{A,\ell ,o}B}
+\rulename{\rightsquigarrow-::-1}
+\]
+\[
+\frac{a\,\textbf{Val}\quad A\rightsquigarrow A'}{a::_{A,\ell ,o}B\rightsquigarrow a::_{A',\ell ,o}B}
+\rulename{\rightsquigarrow-::-2}
+\]
+\[
+\frac{a\,\textbf{Val}\quad A\,\textbf{Val}\quad B\rightsquigarrow B'}{a::_{A,\ell ,o}B\rightsquigarrow a::_{A,\ell ,o}B'}
+\rulename{\rightsquigarrow-::-3}
+\]
+\[
+\frac{b\rightsquigarrow b'}{b\,a\rightsquigarrow b'\,a}
+\rulename{\rightsquigarrow-app-1}
+\]
+\[
+\frac{b\,\textbf{Val}\quad a\rightsquigarrow a'}{b\,a\rightsquigarrow b\,a'}
+\rulename{\rightsquigarrow-app-2}
+\]
+ 
+\caption{\CLang{} \CbV{} Reductions}
+\label{fig:cast-step}
+\end{figure}
+
+As hinted at in the examples, the \rulename{\rightsquigarrow-::-app-red} rule allows an argument to be pushed under a cast between two function types.
+For instance, if $\left(b::_{\left(x:A_{1}\right)\rightarrow B_{1}}\left(x:A_{2}\right)\rightarrow B_{2}\right)a$ is well cast then $b\ :\ \left(x:A_{1}\right)\rightarrow B_{1}$ and $a\ :\ A_{2}$.
+We cannot move $a$ directly under the cast since it may not have the correct type. 
+However, the cast asserts $\left(x:A_{1}\right)\rightarrow B_{1}\ =\ \left(x:A_{2}\right)\rightarrow B_{2}$, so we can assume $A_{1}\ =\ A_{2}$ and use it to construct a new cast for $a::_{A_{2}}A_{1}$.
+Similarly we can perform the substitution $B_{1}[x\coloneqq a::_{A_{2}}A_{1}]$, since $B_{1}$ is expecting a type of $A_{1}$, while the substitution $A_{2}[x\coloneqq a]$ can be performed directly.
+Finally, the location and observation data is accounted for.
+
+The \rulename{\rightsquigarrow-::-\star-red} is the only way to remove a cast in this reduction system.
+This rule is sufficient to keep reductions from getting stuck when there is no blame.
+Since types without blame will have their casts reduced, leaving $\star$ or $\left(x:A\right)\rightarrow B$.
+Which is exactly what is needed so that \rulename{\rightsquigarrow-::-app-red} and \rulename{\rightsquigarrow-::-\star-red} are not blocked.
+
+The definition of $\textbf{Stuck}$ from \ch{2} applies equally well to the \clang{}: $m\ \textbf{Stuck}$ if $m$ is not a value and there does not exist $m'$ such that $m \rightsquigarrow m'$.
+
+%% walk through blame
+In addition to reductions and values we also specify blame judgments in \Fref{cast-blame}.
+Blame tracks the information needed to create a good error message and is inspired by the many systems that use blame tracking \cite{10.1145/581478.581484,10.1007/978-3-642-00590-9_1,wadler:LIPIcs:2015:5033}.
+Specifically the judgment \blame{a}{\ell}{o} means that $a$ witnesses a contradiction in the source code at location $\ell$ under the observations $o$.
+With only dependent functions and universes, only inequalities of the form $*\,\cancel{=}\,A\rightarrow B$ can be witnessed.
+The first two rules of the blame judgment witness these concrete type inequalities.
+The rest of the blame rules recursively extract concrete witnesses from larger terms.
+Limiting the observations to the form $*\,\cancel{=}\,A\rightarrow B$ which makes the system in this Chapter simpler than the system in \ch{5} where more observations are possible because of the addition of data.
+% "self evidently correct" since it is clear to only extract inequalities. like step and val? one of several possible contradiction extraction relations
+ 
+\begin{figure}
+\[
+\frac{\,}{\blame{\left(a::_{\left(x:A\right)\rightarrow B,\ell ,o}\star\right)}{\ell}{o}}
+\]
+\[
+\frac{\,}{\blame{\left(a::_{\star,\ell ,o}\left(x:A\right)\rightarrow B\right)}{\ell}{o}}
+\]
+\[
+\frac{
+ \blame{a}{\ell}{o}
+}{
+ \blame{\left(a::_{A,\ell',o'}B\right)}{\ell}{o}
+}
+\]
+\[
+\frac{
+ \blame{a}{\ell}{o}
+}{
+ \blame{\left(a::_{A,\ell',o'}B\right)}{\ell}{o}
+}
+\]
+\[
+\frac{
+ \blame{B}{\ell}{o}
+}{
+ \blame{\left(a::_{A,\ell',o'}B\right)}{\ell}{o}
+}
+\]
+\[
+\frac{
+ \blame{b}{\ell}{o}
+}{
+ \blame{\left(b\,a\right)}{\ell}{o}
+}
+\]
+\[
+\frac{
+ \blame{a}{\ell}{o}
+}{
+ \blame{\left(b\,a\right)}{\ell}{o}
+}
+\]
+\todo[inline]{name rules}
+\caption{\CLang{} Blame}
+\label{fig:cast-blame}
+\end{figure}
+ 

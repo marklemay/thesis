@@ -6,10 +6,17 @@ In a programming language, type soundness proves some undesirable behaviors are 
 How should this apply to the \clang{}, where bad behaviors are intended to be reachable?
 The \clang{} allows the program to be stuck in a bad state, but requires that when that state is reached we have a good explanation to give the programmer that can blame the original faulty type assumption in their source code.
 Where the slogan for type soundness is ``well typed terms don't get stuck'', the slogan for cast soundness is ``well cast terms don't get stuck without blame''.
+Formally, if $\vdash a\,:\,A$ and $a\rightsquigarrow_\ast a'$ and $a'\,\textbf{Stuck}$ then $\blame{a'}{\ell}{o}$ for some $\ell$ and $o$.
+This will be called \textbf{cast soundness}.
 
-In \ch{2} we proved type soundness for a minimal dependently typed language, with a progress and preservation style proof given a suitable definition of term equivalence.
+In \ch{2} we proved type soundness for a minimal dependently typed language with a progress and preservation style proof given a suitable definition of term equivalence.
 We can extend that proof to support cast soundness with only a few modifications.
  
+The \clang{} supports its own type assignment system, defined in \Fref{cast-tas-rules}\ccnote{you do not need the type constraint on the conversion rule! it turned out easier to do in coq without it}.
+This system ensures that computations will not get stuck without enough information for good runtime error messages.
+Specifically computations will not get stuck without a source location and a witness of inequality.
+The only rule that works differently than the \slang{} is the \rulename{cast-::} rule that allows runtime type assertions.
+
 \begin{figure}
 \[
 \frac{x:A\in \Gamma }{\Gamma \vdash x\,:\,A}
@@ -44,18 +51,10 @@ We can extend that proof to support cast soundness with only a few modifications
 \frac{\Gamma \vdash a:A\quad A\equiv A'}{\Gamma \vdash a:A'}
 \rulename{cast-conv}
 \]
- 
-\todo[inline]{review regularity stuff}
- 
 \caption{\CLang{} Type Assignment Rules}
 \label{fig:cast-tas-rules}
 \end{figure}
- 
-The \clang{} supports its own type assignment system, defined in \Fref{cast-tas-rules}\ccnote{you do not need the type constraint on the conversion rule! it turned out easier to do in coq without it}.
-This system ensures that computations will not get stuck without enough information for good runtime error messages.
-Specifically computations will not get stuck without a source location and a witness of inequality.
-The only rule that works differently than the \slang{} is the \rulename{cast-::} rule that allows runtime type assertions.
- 
+
 As before we need a suitable reduction relation to generate our equivalence relation.
 \Fref{cast-reduction} shows that system of reductions.
 The full rule for function reduction is given in \rulename{\Rrightarrow-\mathsf{fun}-::-red} which makes the behavior from the examples explicit: argument types are swapped as a term is applied under a cast.
@@ -71,7 +70,7 @@ Since observations embed expressions, they must also be given parallel reduction
 \[
 \frac{b\Rrightarrow b'\quad a\Rrightarrow a'\quad A_{1}\Rrightarrow A_{1}'\quad A_{2}\Rrightarrow A_{2}'\quad B_{1}\Rrightarrow B_{1}'\quad B_{2}\Rrightarrow B_{2}'\quad o\Rrightarrow o'}{\begin{array}{c}
 \left(b::_{\left(x:A_{1}\right)\rightarrow B_{1},\ell ,o}\left(x:A_{2}\right)\rightarrow B_{2}\right)a\Rrightarrow\\
-\left(b'\,a'::_{A_{2}',\ell,o.Arg}A_{1}'\right)::_{B_{1}'\left[x\coloneqq a'::_{A_{2}',\ell,o'.Arg}A_{1}'\right],\ell ,o'.Bod_{a'} }B_{2}'\left[x\coloneqq a'\right]
+\left(b'\,\left(a'::_{A_{2}',\ell,o.Arg}A_{1}'\right)\right)::_{B_{1}'\left[x\coloneqq a'::_{A_{2}',\ell,o'.Arg}A_{1}'\right],\ell ,o'.Bod_{a'} }B_{2}'\left[x\coloneqq a'\right]
 \end{array}}
 \rulename{\Rrightarrow-fun-::-red}
 \]
@@ -415,131 +414,7 @@ By induction on the cast derivation $\Gamma \vdash m:M$, specializing on $m\Rrig
 Preservation alone isn't sufficient for a cast sound language.
 We also need to show that there is an evaluation that behaves appropriately in an empty typing context.
 Again this will broadly follow the outline of the \slang{} proof in \ch{2}, with a few substantial changes.
- 
-Unlike the \slang{}, it is no longer practical to characterize values syntactically.
-Values are specified by judgments in \Fref{cast-val}.
-They are standard except for the \rulename{Val-::}, which states that a type ($\star$ or function type) under a cast is not a value.
-\ccnote{deal with this after restructure}
- 
-\begin{figure}
-\[
-\frac{\,}{\star\,\textbf{Val}}
-\rulename{Val-\star}
-\]
-\[
-\frac{\,}{\left(x:A\right)\rightarrow B\,\textbf{Val}}
-\rulename{Val-fun-ty}
-\]
-\[
-\frac{\,}{\mathsf{fun}\,f\,x\Rightarrow b\:\textbf{Val}}
-\rulename{Val-fun}
-\]
-\[
-\frac{\begin{array}{c}
-a\:\textbf{Val}\quad A\:\textbf{Val}\quad B\:\textbf{Val}\\
-a\cancel{=}\star\\
-a\cancel{=}\left(x:C\right)\rightarrow C'
-\end{array}}{a::_{A,\ell, o}B\:\textbf{Val}}
-\rulename{Val-::}
-\]
-\caption{\CLang{} Values}
-\label{fig:cast-val}
-\end{figure}
- 
-Small steps are listed in \Fref{cast-step}.\ccnote{deal with this after restructure}
-They are standard for \cbv{} except that casts can distribute over application, and casts can reduce when both types are $\star$.
- 
-\begin{figure}
-\[
-\frac{a\,\textbf{Val}}{\left(\mathsf{fun}\,f\,x\Rightarrow b\right)a\rightsquigarrow b\left[f\coloneqq\mathsf{fun}\,f\,x\Rightarrow b,x\coloneqq a\right]}
-\]
-\[
-\frac{b\,\textbf{Val}\quad a\,\textbf{Val}}{\begin{array}{c}
-\left(b::_{\left(x:A_{1}\right)\rightarrow B_{1},\ell ,o}\left(x:A_{2}\right)\rightarrow B_{2}\right)a\rightsquigarrow\\
-\left(b\,a::_{A_{2},\ell,o.Arg}A_{1}\right)::_{B_{1}\left[x\coloneqq a::_{A_{2},\ell,o.Arg}A_{1}\right],\ell ,o.Bod_a}B_{2}\left[x\coloneqq a\right]
-\end{array}}
-\]
-\[
-\frac{a\,\textbf{Val}}{a::_{\star,\ell ,o}\star\rightsquigarrow a}
-\]
-\[
-\frac{a\rightsquigarrow a'}{a::_{A,\ell ,o}B\rightsquigarrow a'::_{A,\ell ,o}B}
-\]
-\[
-\frac{a\,\textbf{Val}\quad A\rightsquigarrow A'}{a::_{A,\ell ,o}B\rightsquigarrow a::_{A',\ell ,o}B}
-\]
-\[
-\frac{a\,\textbf{Val}\quad A\,\textbf{Val}\quad B\rightsquigarrow B'}{a::_{A,\ell ,o}B\rightsquigarrow a::_{A,\ell ,o}B'}
-\]
-\[
-\frac{b\rightsquigarrow b'}{b\,a\rightsquigarrow b'\,a}
-\]
-\[
-\frac{b\,\textbf{Val}\quad a\rightsquigarrow a'}{b\,a\rightsquigarrow b\,a'}
-\]
- 
-\todo[inline]{name rules}
-\caption{\CLang{} Small Step}
-\label{fig:cast-step}
-\end{figure}
- 
-%% walk through blame
-In addition to small step and values we also specify blame judgments in \Fref{cast-blame}.
-Blame tracks the information needed to create a good error message and is inspired by the many systems that use blame tracking \cite{10.1145/581478.581484,10.1007/978-3-642-00590-9_1,wadler:LIPIcs:2015:5033}.
-Specifically the judgment \blame{a}{\ell}{o} means that $a$ witnesses a contradiction in the source code at location $\ell$ under the observations $o$.
-With only dependent functions and universes, only inequalities of the form $*\,\cancel{=}\,A\rightarrow B$ can be witnessed.
-The first two rules of the blame judgment witness these concrete type inequalities.
-The rest of the blame rules recursively extract concrete witnesses from larger terms.
-Limiting the observations to the form $*\,\cancel{=}\,A\rightarrow B$ makes the system in this Chapter simpler than the system in \ch{5} where more observations are possible because of the addition of data.
-% "self evidently correct" since it is clear to only extract inequalities. like step and val? one of several possible contradiction extraction relations
- 
-\begin{figure}
-\[
-\frac{\,}{\blame{\left(a::_{\left(x:A\right)\rightarrow B,\ell ,o}\star\right)}{\ell}{o}}
-\]
-\[
-\frac{\,}{\blame{\left(a::_{\star,\ell ,o}\left(x:A\right)\rightarrow B\right)}{\ell}{o}}
-\]
-\[
-\frac{
- \blame{a}{\ell}{o}
-}{
- \blame{\left(a::_{A,\ell',o'}B\right)}{\ell}{o}
-}
-\]
-\[
-\frac{
- \blame{a}{\ell}{o}
-}{
- \blame{\left(a::_{A,\ell',o'}B\right)}{\ell}{o}
-}
-\]
-\[
-\frac{
- \blame{B}{\ell}{o}
-}{
- \blame{\left(a::_{A,\ell',o'}B\right)}{\ell}{o}
-}
-\]
-\[
-\frac{
- \blame{b}{\ell}{o}
-}{
- \blame{\left(b\,a\right)}{\ell}{o}
-}
-\]
-\[
-\frac{
- \blame{a}{\ell}{o}
-}{
- \blame{\left(b\,a\right)}{\ell}{o}
-}
-\]
-\todo[inline]{name rules}
-\caption{\CLang{} Blame}
-\label{fig:cast-blame}
-\end{figure}
- 
+
 As before we have that $\rightsquigarrow$ preserves types.
  
 \begin{fact} $\rightsquigarrow$ preserves types.
@@ -676,8 +551,15 @@ As usual this follows form induction on the typing derivation:
 \todo{revise}
  
 %% cast soundness
-Cast soundness follows from progress and preservation as expected. \ccnote{address after restructure}
+Cast soundness follows from progress and preservation as expected.
  
+\begin{thm} Cast soundness.
+If $\vdash a\,:\,A$ and $a\rightsquigarrow_\ast a'$ and $a'\,\textbf{Stuck}$ then $\blame{a'}{\ell}{o}$ for some $\ell$ and $o$.
+\end{thm}
+\begin{proof}
+This follows by iterating the progress and preservation lemmas.
+\end{proof}
+
 % For any $\lozenge\vdash c:C$, $c'$, $c\rightsquigarrow^{*}c'$, if $\textbf{Stuck}\,c'$ then $\textbf{Blame}\:\ell \,o\:c'$, where $\textbf{Stuck}\,c'$ means $c'$ is not a value and $c'$ does not step.
 % This follows by iteration the progress and preservation lemmas.
  
@@ -687,12 +569,12 @@ Cast soundness follows from progress and preservation as expected. \ccnote{addre
  
 \todo{regularity encoding, along with the cast}
  
-Because of the conversion rule and non-termination, cast-checking is undecidable.
+Because of the conversion rule and non-termination, checking in the \csys{} is undecidable.
 This is fine since the \csys{} only exists to ensure theoretical properties. \ccnote{I think this is cleared up in the next few sentences}
 Programmers will only use the system through the elaboration procedure described in the next section.
 Every term produced by elaboration will cast check, and the elaboration is decidable. % \footnote{As fomalized here, the assertimplemenation }.
  
-As in the \slang{}\ac{TAS}, the \clang{} is logically unsound, by design.
+As in the \slang{} \ac{TAS}, the \clang{} is logically unsound by design.
  
 Just as there are many different flavors of definitional equality that could have been used in \ch{2}, there are also many possible degrees to which runtime equality can be enforced.
 The \Blame{} relation in \Fref{cast-blame} outlines a minimal checking strategy that supports cast soundness.
@@ -712,6 +594,6 @@ This behavior is consistent with the conjectured partial correctness of logicall
  
 Unlike static type-checking, these runtime checks have runtime costs.
 Since the language allows nontermination, checks can take forever to resolve at runtime.
-We don't expect this to be a large issue in practice, at least any more than is usual in mainstream languages that allow many other sources of nontermination are possible.
+We don't expect this to be a large issue in practice, at least any more than is usual in mainstream languages that allow many other sources of non termination.
 The implementation optimizes away casts when it knows that blame is impossible.
 Additionally, we could limit the number of steps allowed in cast normalization and blame slow code.

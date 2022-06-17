@@ -32,10 +32,9 @@ While ``obviously'' $1+x=x+1$, in the \slang{}, definitional equality does not a
  
 This Chapter will handle the issue of definitional equalities by avoiding them.
 The system will optimistically assume equalities implied by the programmer and deal with incorrect equalities at runtime in a principled way.
-This will be done with the \textbf{\csys{}} described in this Chapter.\todo{prehaps too expansive a view of the cast system}
-The system defined in this chapter is composed of:
+This will be done with the two systems described in this Chapter:
 \begin{itemize}
-\item The \textbf{\clang{}}, a dependently typed language with embedded runtime checks that have evaluation behavior.
+\item The \textbf{\clang{}}, a dependently typed language with embedded  checks that have evaluation behavior.
 \item The \textbf{elaboration procedure} that transforms appropriate untyped surface syntax into a well cast expressions.
 \todo{as a picture}
 \end{itemize}
@@ -123,7 +122,7 @@ $.$ & written &  & when & $.$ could be inferred \tabularnewline
 Unlike the annotations in \ch{2}, casts cannot simply be erased. 
 How does the cast construct interact with the existing constructs?
 Casts should not block reduction when there is no problem.
-Casts should also not prevent terms from checking in the \csys{}.\todo{CAS? checking implies a prodecure? type checking?}.
+Casts should also not prevent terms from checking in the \csys{}.\todo{CAS? checking implies a prodecure? type checking?}
 There are three combinations of syntax that could cause a term to be stuck in reduction or block checking in the \csys{}:
 \todo{padding}
 
@@ -188,7 +187,7 @@ But for this Chapter the theory will be easier with a single syntax form the bot
 Despite this we will use these reductions in some examples for a cleaner presentation with the notation $\rightsquigarrow_{=}$ when we erase an exact cast. % , and $\rightsquigarrow_{\equiv}$ when we erase a deffinitionally equivelent cast.
 
 \input{3_Cast/2_Examples}
-\todo{reduction, values, blame}
+\input{3_Cast/3_Eval}
 \input{3_Cast/4_Cast_Sys}
 \input{3_Cast/5_Elab}
 \input{3_Cast/6_Warnings}
