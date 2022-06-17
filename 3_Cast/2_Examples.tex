@@ -6,8 +6,8 @@ We can re-examine some of the example terms from \ch{2}, but this time using cas
 \subsection{Higher Order Functions}
  
 %% walkthrough
-Higher order functions are dealt with by distributing function casts around applications.
-If an application happens to\ccnote{I think "to" is right here? as in "we apply 3 to the addition function"} a cast of function type, the argument and body casts are separated and the arguments are swapped.
+Higher order functions are dealt with by distributing casts around applications.
+If a cast of function type is applied, the argument and body casts are separated and the arguments are swapped.
 For instance:
 \begin{align*}
 \, & \left(\left(\lambda x\Rightarrow x\,\&\,x\right)::_{\mathbb{B}_c \rightarrow\mathbb{B}_c , \ell}\mathbb{N}_c \rightarrow\mathbb{N}_c \right) 7_c\\
@@ -94,7 +94,7 @@ Multiple reductions are sometimes grouped together with multiple $\rightsquigarr
 \end{sidewaysfigure}
 
 The term reduces to $tt_{c}::_{Unit_{c}}\perp_{c}$, but has not yet ``gotten stuck''.
-Applying \ccnote{Do you apply a function to an argument or do you apply an argument to a function?} any type will uncover the error, so we can inspect the term with $\star$.
+Applying the term to any input will uncover the error, so we can inspect the term with $\star$.
 These reductions are listed in \Fref{cast-ex-tf-2}.
 
 \begin{figure}
