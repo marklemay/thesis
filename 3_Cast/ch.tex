@@ -31,14 +31,17 @@ Unfortunately, the following will not type check in the \slang{},
 While ``obviously'' $1+x=x+1$, in the \slang{}, definitional equality does not associate these two terms, $1_{c}+_{c}x\cancel{\equiv}x+_{c}1_{c}$.\todo{unroll the definitions?}
  
 This Chapter will handle the issue of definitional equalities by avoiding them.
-The system will optimistically assume equalities implied by the programer and deal with incorrect equalities at runtime in a principled way.
+The system will optimistically assume equalities implied by the programmer and deal with incorrect equalities at runtime in a principled way.
 This will be done with the \textbf{\csys{}} described in this Chapter.\todo{prehaps too expansive a view of the cast system}
-The \csys{} is comprised of:
+The system defined in this chapter is composed of:
 \begin{itemize}
 \item The \textbf{\clang{}}, a dependently typed language with embedded runtime checks that have evaluation behavior.
-\item The \textbf{elaboration procedure} that transforms appropriate untyped surface syntax into a well cast terms.
+\item The \textbf{elaboration procedure} that transforms appropriate untyped surface syntax into a well cast expressions.
 \todo{as a picture}
 \end{itemize}
+
+The \clang{}'s type system will be called the \textbf{\csys{}} to distinguish it from the two type systemd already introduced in \ch{2}.
+Similarly expressions that type in the \csys{} will be called \textbf{well cast}.
  
 The presentation in this Chapter mirrors \ch{2}.
 The \csys{} plays the role of the type assignment system, while the elaboration procedure corresponds with the \bidir{} system.
@@ -46,7 +49,8 @@ The \csys{} plays the role of the type assignment system, while the elaboration 
 We show that a novel form of type soundness holds, that we call \textbf{cast soundness}.
 Instead of ``well typed terms don't get stuck'', we prove ``well cast terms don't get stuck without blame''.
  
-By construction, blame will carry the necessary information to construct a reasonable runtime error message.
+\textbf{Blame} will carry the necessary information to construct a reasonable runtime error message.
+It is related to the similarly named notion from contract and monitor systems. % and will be formally defined in \Fref{cast-blame}.
 Several desirable properties, modeled on the gradual guarantee of gradual types, relate the \csys{} elaboration and the \bidir{} system of \ch{2}.
 
 \section{\CLang{}}
@@ -89,7 +93,7 @@ The \clang{} can assume type equalities on top of terms, $A=B$, with a cast, $a:
 \item The type of the underlying $a$ term $A$.
 \item The expected type of the term $B$.
 \end{itemize}
-Every time there is a definitional mismatch between the type inferred from a term and the type expected from the usage, the elaboration procedure will produce a cast.
+Every time there is a mismatch between the type inferred from a term and the type expected from the usage, the elaboration procedure will produce a cast.
  
 Observations allow indexing into terms to pinpoint errors.
 For instance, if we want to highlight the $C$ sub expression in $\left(x:A\right)\rightarrow\left(y:\left(x:B\right)\rightarrow\underline{C}\right)\rightarrow D$ we can use the observation $Bod_{x}.Arg.Bod_{y}$.
@@ -97,7 +101,7 @@ In general, the $C$ may specifically depend on $x$ and $y$ so they are tracked a
 For instance, given the type $\left(X:\star\right)\rightarrow X$ we might want to point out $A$ when $X=A\rightarrow B$ resulting in the type $\left(X:\star\right)\rightarrow\left(\underline{A}\rightarrow B\right)$.
 The observation would then read $Bod_{A\rightarrow B}.Arg$, recording the specific type argument that produces a body that can be inspected.
  
-Locations and observations will be used to form blame and produce the runtime error message users will see if their assumptions are wrong.
+Locations and observations will be used to form blame and produce the runtime error message users will see if their assumptions are wrong.\ccnote{note sure how to address your note here: to answer your question, it will work, but I think that is already asserted}
  
 In addition to the abbreviations from \ch{2}, some new abbreviations for the \clang{} are listed in \Fref{cast-pre-syntax-abrev}.
 
@@ -119,8 +123,8 @@ $.$ & written &  & when & $.$ could be inferred \tabularnewline
 Unlike the annotations in \ch{2}, casts cannot simply be erased. 
 How does the cast construct interact with the existing constructs?
 Casts should not block reduction when there is no problem.
-Casts should also not get in the way of cast checking\todo{CAS? checking implies a prodecure? type checking?}.
-There are three combinations of syntax that could cause a term to be stuck in reduction or block cast checking:
+Casts should also not prevent terms from checking in the \csys{}.\todo{CAS? checking implies a prodecure? type checking?}.
+There are three combinations of syntax that could cause a term to be stuck in reduction or block checking in the \csys{}:
 \todo{padding}
 
 \begin{tabular}{lll}
@@ -128,13 +132,13 @@ $\star::B$ & universe under cast & will it ``type check'' as a type?\tabularnewl
 $\left(\left(x:A\right)\rightarrow B\right)::C$ & function type under cast & will it ``type check'' as a type?\tabularnewline
 $\left(b::C\right)a$ & application to a cast & will it block reduction?\tabularnewline
 \end{tabular}
+\ccnote{I think "to" is correct heresince the the cast is in the function position}
 
-When possible, obvious casts should reduce away, freeing up the underlying term for further reduction and type checking.
-\Fref{cast-aprox-red} shows approximately how these reductions should be carried out.
+When possible, obvious casts should reduce away, freeing up the underlying term for further reduction and checking.
+\Fref{cast-aprox-red}\ccnote{you are asking good questions on the figure, but it is only an approximate presentation, so those will be answered later} shows approximately how these reductions should be carried out.
 The most interesting case is when a cast confirms that the applied term is a function, but with potentially different input and output types.
-Then we use the function type syntax to determine a reasonable cast over the argument, and maintain the appropriate cast over the resulting computation\footnote{
-  This operation is similar to the way higher order contracts invert the polarity of blame for the arguments of higher order functions \cite{10.1145/581478.581484} and also found in gradual type systems, such as \cite{10.1007/978-3-642-00590-9_1}.
-}\todo{perhaps just more to prior work?}.
+Then we use the function type syntax to determine a reasonable cast over the argument, and maintain the appropriate cast over the resulting computation.
+This operation is similar to the way higher order contracts invert the polarity of blame for the arguments of higher order functions \cite{10.1145/581478.581484} and also found in gradual type systems, such as \cite{10.1007/978-3-642-00590-9_1}.
 
 \begin{sidewaysfigure}
 \begin{tabular}{ccccc}
@@ -144,7 +148,7 @@ $\star::_{\ell,o}B$ & \Blame{} & $\ell,o$ & when  & $B$ cannot be $\star$ \tabul
 $\left(\left(x:A\right)\rightarrow B\right)::\star$ & $\rightsquigarrow$ & $\left(x:A\right)\rightarrow B$ &  & \tabularnewline
 $\left(\left(x:A\right)\rightarrow B\right)::C$ & $\rightsquigarrow$ & $\left(\left(x:A\right)\rightarrow B\right)::C'$ & when  & $C\rightsquigarrow C'$\tabularnewline
 $\left(\left(x:A\right)\rightarrow B\right)::_{\ell,o}C$ & \Blame{} & $\ell,o$ & when  & $C$ cannot be $\star$ \tabularnewline
-$\left(b::_{\left(x:A'\right)\rightarrow B'}\left(x:A\right)\rightarrow B\right)a$ & $\rightsquigarrow$ & $\left(b\,\left(a::A'\right)\right)::_{B'\left[x\coloneqq a::A'\right]}B\left[x\coloneqq A\right]$ &  & \tabularnewline
+$\left(b::_{\left(x:A'\right)\rightarrow B'}\left(x:A\right)\rightarrow B\right)a$ & $\rightsquigarrow$ & $\left(b\,\left(a::_{A} A'\right)\right)::_{B'\left[x\coloneqq a::_{A} A'\right]}B\left[x\coloneqq A\right]$ &  & \tabularnewline
 $\left(b::C\right)a$ & $\rightsquigarrow$ & $\left(b::C'\right)a$ & when  & $C\rightsquigarrow C'$\tabularnewline
 $\left(b::_{\ell,o}C\right)a$ & \Blame{} & $\ell,o$ & when  & $C$ cannot be $\left(x:A\right)\rightarrow B$ \tabularnewline
 \end{tabular}
@@ -154,7 +158,7 @@ $\left(b::_{\ell,o}C\right)a$ & \Blame{} & $\ell,o$ & when  & $C$ cannot be $\le
 \end{sidewaysfigure}
 
 Sometimes casts are correct in blocking reductions, such as when a cast asserts an impossible equality.
-When a term reaches this state a separate blame relation will extract the runtime error from the term.
+When a term reaches this state a separate blame judgment will extract the runtime error from the term.
 Type universes live in the type universe, so any cast that contradicts this should be blamed.
 Similarly for function types.
 Terms that take input must be functions, so any cast that contradicts this should blame the source location.
@@ -162,7 +166,7 @@ Terms that take input must be functions, so any cast that contradicts this shoul
 \todo{awk}
 
 Note that the system outlined here leaves open many possible strategies of reduction and blame.
-One of the subtle innovations of this system is to completely separate blame from reduction.
+One of the subtle innovations of this system is to completely separate blame from reduction.\ccnote{question about implementation: inequalities that get into a type position can still causes blame, there is a bit of flexibility for how this can handled that gets addressed later in this chapter}
 This sidesteps many of the complexities of having a reduction relevant $\mathtt{abort}$ term in a dependent type theory \cite{sjoberg2012irrelevance,pedrot2018failure}.
 As far as reduction is concerned, bad terms simply ``get stuck'' as it might on a variable from a nonempty typing context.
 % So reduction behaves  the reduction behavior is well behaved.
@@ -173,17 +177,18 @@ But one can imagine more sophisticated ways to extract blame from terms or more 
 Some some particularly tempting reductions are
 
 \begin{tabular}{ccccc}
-$a::_{C}C$ & $\rightsquigarrow_{=}$ & $a$ &  & \tabularnewline
-$a::_{C'}C$ & $\rightsquigarrow_{\equiv}$ & $a$ & when & $C'\equiv C$\tabularnewline
+$a::_{C}C$ & $\rightsquigarrow$ & $a$ &  & \tabularnewline
+$a::_{C'}C$ & $\rightsquigarrow$ & $a$ & when & $C'\equiv C$\tabularnewline
 \end{tabular}
 
 However these ignore the possibility that a source of blame may be hiding within the cast syntax ($C$, $C'$).\todo{example?}
-In \ch{6} we will separate the syntax casts from the assertions equalities they can contain, making reductions like the above reasonable.
+In \ch{6} we will separate the syntax casts from the equality assertions they can contain, making reductions like the above reasonable.
 But for this Chapter the theory will be easier with a single syntax form the both casts and asserts.
 % These rules also seem to complicate the meta theory.
-Despite this we will use these reductions in some examples for a cleaner presentation.
+Despite this we will use these reductions in some examples for a cleaner presentation with the notation $\rightsquigarrow_{=}$ when we erase an exact cast. % , and $\rightsquigarrow_{\equiv}$ when we erase a deffinitionally equivelent cast.
 
 \input{3_Cast/2_Examples}
+\todo{reduction, values, blame}
 \input{3_Cast/3_Cast_Sys}
 \input{3_Cast/4_Elab}
 \input{3_Cast/5_Warnings}

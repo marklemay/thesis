@@ -51,7 +51,7 @@ We can extend that proof to support cast soundness with only a few modifications
 \label{fig:cast-tas-rules}
 \end{figure}
  
-The \clang{} supports its own type assignment system, defined in \Fref{cast-tas-rules}.
+The \clang{} supports its own type assignment system, defined in \Fref{cast-tas-rules}\ccnote{you do not need the type constraint on the conversion rule! it turned out easier to do in coq without it}.
 This system ensures that computations will not get stuck without enough information for good runtime error messages.
 Specifically computations will not get stuck without a source location and a witness of inequality.
 The only rule that works differently than the \slang{} is the \rulename{cast-::} rule that allows runtime type assertions.
@@ -131,7 +131,7 @@ Since observations embed expressions, they must also be given parallel reduction
 \subsection{Definitional Equality}
  
 As in \ch{2}, we will define a suitable notion of definitional equality to derive the other properties of the system.
-While it may seem counterintuitive to define a definitional equality in a system that is intended to avoid definitional equality, this is fine since programmers will never interact directly with cast checking.
+While it may seem counterintuitive to define a definitional equality in a system that is intended to avoid definitional equality, this is fine since programmers will never interact directly with the \csys.
 Programmers will only interact with elaboration, and elaboration will only result in well cast terms.
 The \csys{} only exists to give theoretical assurances.
  
@@ -168,6 +168,7 @@ $\textbf{max}($ & $o.Bod_a$ & $)=$ & $\textbf{max}\left(o\right).Bod_{\textbf{ma
 \caption{The $\textbf{max}$ Function}
 \label{fig:cast-sys-max}
 \end{sidewaysfigure}
+\ccnote{review the notes on this figure.}
 
 The expected lemas hold.
  

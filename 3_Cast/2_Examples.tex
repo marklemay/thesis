@@ -1,13 +1,13 @@
 \section{Examples}
 % \ch{2} has presented enough 
-We can re-examine some of the example terms from \ch{2}, but this time with equality assumptions.
+We can re-examine some of the example terms from \ch{2}, but this time using casts that contain non standard equality assumptions.
 \todo{more intro?}
  
 \subsection{Higher Order Functions}
  
 %% walkthrough
 Higher order functions are dealt with by distributing function casts around applications.
-If an application happens to a cast of function type, the argument and body cast is separated and the argument cast is swapped.
+If an application happens to\ccnote{I think "to" is right here? as in "we apply 3 to the addition function"} a cast of function type, the argument and body casts are separated and the arguments are swapped.
 For instance:
 \begin{align*}
 \, & \left(\left(\lambda x\Rightarrow x\,\&\,x\right)::_{\mathbb{B}_c \rightarrow\mathbb{B}_c , \ell}\mathbb{N}_c \rightarrow\mathbb{N}_c \right) 7_c\\
@@ -55,9 +55,9 @@ But the program can still be run, the reductions are presented in \Fref{cast-ex-
   % \makecell[l]{Void, ``empty'' type,\\ logical false}
 & $\left(\lambda pr\Rightarrow pr\,toLogic\ tt_{c}\right)\left(refl_{true_{c}:\mathbb{B}_{c}}::_{true_{c}\doteq_{\mathbb{B}_{c}}true_{c}}true_{c}\doteq_{\mathbb{B}_{c}}false_{c}\right)$\tabularnewline
 $\rightsquigarrow$ & $\left(refl_{true_{c}:\mathbb{B}_{c}}::_{true_{c}\doteq_{\mathbb{B}_{c}}true_{c}}true_{c}\doteq_{\mathbb{B}_{c}}false_{c}\right)\,toLogic\ tt_{c}$\tabularnewline
-\makecell[l]{$true_{c}\doteq_{\mathbb{B}_{c}}false_{c}\coloneqq$\\
+\makecell[l]{$true_{c}\doteq_{\mathbb{B}_{c}}false_{c}$ expands to\\
   $\ \ \left(C:\left(\mathbb{B}_{c}\rightarrow\star\right)\right)\rightarrow C\,true_{c}\rightarrow C\,false_{c}$} & $\left(refl_{true_{c}:\mathbb{B}_{c}}::_{true_{c}\doteq_{\mathbb{B}_{c}}true_{c}}\left(C:\left(\mathbb{B}_{c}\rightarrow\star\right)\right)\rightarrow C\,true_{c}\rightarrow C\,false_{c}\right)\,toLogic\ tt_{c}$\tabularnewline
-\makecell[l]{$true_{c}\doteq_{\mathbb{B}_{c}}true_{c}\coloneqq$\\
+\makecell[l]{$true_{c}\doteq_{\mathbb{B}_{c}}true_{c}$ expands to\\
   $\ \ \left(C:\left(\mathbb{B}_{c}\rightarrow\star\right)\right)\rightarrow C\,true_{c}\rightarrow C\,true_{c}$} & 
   \makecell[l]{$\left(refl_{true_{c}:\mathbb{B}_{c}}::_{\left(C:\left(\mathbb{B}_{c}\rightarrow\star\right)\right)\rightarrow C\,true_{c}\rightarrow C\,true_{c}}\left(C:\left(\mathbb{B}_{c}\rightarrow\star\right)\right)\rightarrow C\,true_{c}\rightarrow C\,false_{c}\right)$\\
   $\ \ toLogic\ tt_{c}$}\tabularnewline
@@ -68,7 +68,7 @@ $\ \ tt_{c}$}\tabularnewline
 $\rightsquigarrow\rightsquigarrow_{=}$ & $\left(refl_{true_{c}:\mathbb{B}_{c}}\ toLogic\ tt_{c}\right)::_{toLogic\ true_{c}}toLogic\ false_{c}$
 \tabularnewline
 
-$refl_{true_{c}:\mathbb{B}_{c}}\coloneqq\lambda-\,cx\Rightarrow cx$ & 
+$refl_{true_{c}:\mathbb{B}_{c}}$ expands to $\lambda-\,cx\Rightarrow cx$ & 
   $\left( \left(\lambda-\,cx\Rightarrow cx \right) \ toLogic\ tt_{c}\right)::_{toLogic\ true_{c}}toLogic\ false_{c}$\tabularnewline
 $\rightsquigarrow\rightsquigarrow$ & $tt_{c}::_{toLogic\ true_{c}}toLogic\ false_{c}$\tabularnewline
 
@@ -86,9 +86,19 @@ $\rightsquigarrow\rightsquigarrow\rightsquigarrow$ & $tt_{c}::_{Unit_{c}}false_{
 $false_{c}\coloneqq\lambda-\,-\,y\Rightarrow y$ & $tt_{c}::_{Unit_{c}}\left(\lambda-\,-\,y \Rightarrow y\right)\,\star\,Unit_{c}\,\perp_{c}$\tabularnewline
 
 $\rightsquigarrow\rightsquigarrow\rightsquigarrow$ & $tt_{c}::_{Unit_{c}}\perp_{c}$\tabularnewline
+\end{tabular}
+Multiple reductions are sometimes grouped together with multiple $\rightsquigarrow\rightsquigarrow...$, vacuous casts are ignored with $\rightsquigarrow_{=}$.
+\todo[inline]{review, also offset left of table?}
+\caption{true=false}
+\label{fig:cast-ex-tf}
+\end{sidewaysfigure}
 
-\multicolumn{2}{l}{Applying $\star$ to this term will discover an error.}\tabularnewline
+The term reduces to $tt_{c}::_{Unit_{c}}\perp_{c}$, but has not yet ``gotten stuck''.
+Applying \ccnote{Do you apply a function to an argument or do you apply an argument to a function?} any type will uncover the error, so we can inspect the term with $\star$.
+These reductions are listed in \Fref{cast-ex-tf-2}.
 
+\begin{figure}
+\begin{tabular}{ll}
 & $\left(tt_{c}::_{Unit_{c}}\perp_{c}\right)\star$\tabularnewline
 $\perp_{c}\coloneqq\left(X:\star\right)\rightarrow X$ & $\left( tt_{c}::_{Unit_{c}}\left(X:\star\right)\rightarrow X\right)  \star$\tabularnewline
 
@@ -96,18 +106,12 @@ $Unit_{c}\coloneqq\left(X:\star\right)\rightarrow X\rightarrow X$ & $\left( tt_{
 
 $\rightsquigarrow_{=}$ & $\left(tt_{c}\star\right)::_{\star\rightarrow\star}\star$\tabularnewline
 Blame! & $\left(tt_{c}\star\right)::_{\star\underline{\rightarrow}\star}\underline{\star}$\tabularnewline
-
 \end{tabular}
-\todo[inline]{review, also offset left of table?}
-\caption{true=false}
-\label{fig:cast-ex-tf}
-\end{sidewaysfigure}
- 
+\caption{true=false cont.}
+\label{fig:cast-ex-tf-2}
+\end{figure}
 
-The term reduces to $tt_{c}::_{Unit_{c}}\perp_{c}$, but has not yet ``gotten stuck''.
-Applying any type will uncover the error, so we can inspect the term with $\star$.
-
-If \Fref{cast-ex-tf} explicitly tracked the location and observation information an error message could be generated:
+If we explicitly tracked the location and observation information an error message could be generated:
  
 $\left(C:\left(\mathbb{B}_{c}\rightarrow\star\right)\right)\rightarrow C\,true_{c}\rightarrow\underline{C\,true_{c}}
 \neq
