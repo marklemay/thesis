@@ -96,8 +96,8 @@ An alternative approach to dependent types is found in \textbf{refinement type s
  
 Refinement type systems restrict type dependency, possibly to specific base types such as $\mathtt{int}$ or $\mathtt{bool}$.
 Under this restriction, it is straightforward to check type level equalities and additional properties hold at runtime.
- 
-One approach which explores this is \textbf{hybrid type checking} \cite{10.1145/1111037.1111059,knowles2008compositional,10.1145/1667048.1667051} which performs ``static analysis where possible, ... dynamic checks where necessary''.
+
+One approach which explores this is \textbf{hybrid type checking} \cite{10.1145/1111037.1111059,10.1145/1481848.1481853,10.1145/1667048.1667051} which performs ``static analysis where possible, ... dynamic checks where necessary''.
 % This is a very similar goal to what has been proposed in this Chapter.
 However, there are several differences in that work: they have a simply typed system, static warnings for programmers are not considered, and type checking can reject "clearly ill-typed programs".
 For the system defined in this thesis there is no clear boundary between clearly ill-typed programs and subtly ill-typed programs, so we treat all potential inequalities uniformly with a static warning and a runtime check.
