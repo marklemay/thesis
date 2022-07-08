@@ -47,15 +47,15 @@ Send to people for review
 * Chapter 6.1, Fuzzing person 
 
 ## After Defence
-* Else corrections
-* double check hotcrp for any follow up feedback that should be incorperated into the final thesis
 
 last last batch of paperwork https://www.bu.edu/cas/academics/phd-and-mfa-academics/graduation-information/
 * Exit survey
 
 post defence paperwork
+* http://www.bu.edu/cas/academics/phd-and-mfa-academics/graduation-information/candidate-contact-information-form-for-phd-and-mfa-students/
 * PhD Contact Information Form http://www.bu.edu/cas/academics/phd-and-mfa-academics/graduation-information/candidate-contact-information-form-for-phd-and-mfa-students/
 * BU Doctoral Exit Survey, Survey of Earned Doctorates
+* Attribution CC BY this repo
 
 Fun drinks owed to proof readers:
 * Ramsay
