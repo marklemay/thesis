@@ -395,8 +395,8 @@ By induction on the cast derivation $\Gamma \vdash m:M$, specializing on $m\Rrig
      $\Gamma \vdash b':\left(x:A_{1}\right)\rightarrow B_{1}$ & \makecell[l]{by induction with \\ $\Gamma \vdash b:\left(x:A_{1}\right)\rightarrow B_{1}$} \tabularnewline
      $\Gamma \vdash b':\left(x:A_{1}'\right)\rightarrow B_{1}'$ & by \rulename{cast-conv}\tabularnewline
      $\Gamma \vdash b'\ ac:B_{1}'\left[x\coloneqq ac\right]$ & by \rulename{cast-fun-app}\tabularnewline
-     $\Gamma \vdash B_{1}'\left[x\coloneqq ac\right]:\star$ & by substitution preservation\tabularnewline
-     $\Gamma \vdash B_{2}'\left[x\coloneqq a'\right]:\star$ & by substitution preservation\tabularnewline
+     $\Gamma \vdash B_{1}'\left[x\coloneqq ac\right]:\star$ & by subst. preservation\tabularnewline
+     $\Gamma \vdash B_{2}'\left[x\coloneqq a'\right]:\star$ & by subst. preservation\tabularnewline
      % \makecell[l]{$\Gamma \vdash$ \\ $\left(b'\ ac\right)::_{B_{1}'\left[x\coloneqq ac\right],\ell ,o'.Bod_{a'}}B_{2}'\left[x\coloneqq a'\right]$} & by \rulename{cast-::} \tabularnewline
      \end{tabular}
      Which allows us to conclude $\Gamma \vdash\left(b'\ ac\right)::_{B_{1}'\left[x\coloneqq ac\right],\ell ,o'.Bod_{a'}}B_{2}'\left[x\coloneqq a'\right]$ by \rulename{cast-::}.

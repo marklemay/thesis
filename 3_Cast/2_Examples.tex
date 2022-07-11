@@ -52,7 +52,6 @@ But the program can still be run, the reductions are presented in \Fref{cast-ex-
 
 \begin{sidewaysfigure}
 \begin{tabular}{ll}
-  % \makecell[l]{Void, ``empty'' type,\\ logical false}
 & $\left(\lambda pr\Rightarrow pr\,toLogic\ tt_{c}\right)\left(refl_{true_{c}:\mathbb{B}_{c}}::_{true_{c}\doteq_{\mathbb{B}_{c}}true_{c}}true_{c}\doteq_{\mathbb{B}_{c}}false_{c}\right)$\tabularnewline
 $\rightsquigarrow$ & $\left(refl_{true_{c}:\mathbb{B}_{c}}::_{true_{c}\doteq_{\mathbb{B}_{c}}true_{c}}true_{c}\doteq_{\mathbb{B}_{c}}false_{c}\right)\,toLogic\ tt_{c}$\tabularnewline
 \makecell[l]{$true_{c}\doteq_{\mathbb{B}_{c}}false_{c}$ expands to\\
@@ -62,8 +61,7 @@ $\rightsquigarrow$ & $\left(refl_{true_{c}:\mathbb{B}_{c}}::_{true_{c}\doteq_{\m
   \makecell[l]{$\left(refl_{true_{c}:\mathbb{B}_{c}}::_{\left(C:\left(\mathbb{B}_{c}\rightarrow\star\right)\right)\rightarrow C\,true_{c}\rightarrow C\,true_{c}}\left(C:\left(\mathbb{B}_{c}\rightarrow\star\right)\right)\rightarrow C\,true_{c}\rightarrow C\,false_{c}\right)$\\
   $\ \ toLogic\ tt_{c}$}\tabularnewline
 
-$\rightsquigarrow\rightsquigarrow_{=}$ & \makecell[l]{$\left(\left(refl_{true_{c}:\mathbb{B}_{c}} toLogic\right)::_{toLogic\ true_{c}\rightarrow toLogic\ true_{c}}toLogic\ true_{c}\rightarrow toLogic\ false_{c}\right)$\\
-$\ \ tt_{c}$}\tabularnewline
+$\rightsquigarrow\rightsquigarrow_{=}$ & \makecell[l]{$(\left(refl_{true_{c}:\mathbb{B}_{c}} toLogic\right)$\\$\ \ ::_{toLogic\ true_{c}\rightarrow toLogic\ true_{c}}toLogic\ true_{c}\rightarrow toLogic\ false_{c})\ tt_{c}$}\tabularnewline
 
 $\rightsquigarrow\rightsquigarrow_{=}$ & $\left(refl_{true_{c}:\mathbb{B}_{c}}\ toLogic\ tt_{c}\right)::_{toLogic\ true_{c}}toLogic\ false_{c}$
 \tabularnewline

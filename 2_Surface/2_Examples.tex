@@ -157,14 +157,14 @@ Note that such functions are not possible in the Calculus of Constructions.\ccno
 \subsection{Inequalities}
 
 Large eliminations can be used to prove inequalities that can be hard or impossible to express in other minimal dependent type theories. % such as the Calculus of Constructions.
-For instance, 
+For instance,\newline
 
-\begin{tabular}{lcll}
+\begin{tabular}{lclc}
   $\lambda pr\Rightarrow pr\,\left(\lambda x\Rightarrow x\right)\,\perp_{c}$ & : & $\lnot_{c}(\star\doteq_{\star}\perp_{c})$ & \makecell{The type universe is distinct\\ from Logical False}\tabularnewline
-  $\lambda pr\Rightarrow pr\,\left(\lambda x\Rightarrow x\right)\,tt_{c}$ & : & $\lnot_{c}(Unit_{c}\doteq_{\star}\perp_{c})$ &  \makecell{Logical True is distinct\\ from Logical False}\tabularnewline
+  $\lambda pr\Rightarrow pr\,\left(\lambda x\Rightarrow x\right)\,tt_{c}$ & : & $\lnot_{c}(Unit_{c}\doteq_{\star}\perp_{c})$ & \makecell{Logical True is distinct\\ from Logical False}\tabularnewline
   $\lambda pr\Rightarrow pr\,toLogic\,tt_{c}$ & : & $\lnot (true_{c}\doteq_{\mathbb{B}_{c}}false_{c})$ &  \makecell{Boolean true and false\\ are distinct}\tabularnewline
   $\lambda pr\Rightarrow pr\,isPos\,tt_{c}$ & : & $\lnot (1_{c}\doteq_{\mathbb{N}_{c}}0_{c})$ & 1 and 0 are distinct\tabularnewline
-\end{tabular}
+\end{tabular}\newline
   
 \todo[inline]{1st not sensible in CC}
 

@@ -102,12 +102,8 @@ For instance, the expression,
 \end{itemize}
 When patterns are used in the \case{} construct, the appropriate branch will reduce with the correct bindings in scope.
 Therefore the expression 
-
-% $\case{} \,Cons\,\mathbb{B}\,true\,\left(S\left(S\left(S\left(Z\right)\right)\right)\right)\,\left(Cons\,\mathbb{B}\,false\,\left(S\left(S\left(Z\right)\right)\right)\,y'\right)\left\{ Cons\,-\,x\,-\,\left(Cons\,-\,y\,-\,-\right)\Rightarrow x\&y\right\} $
-$\case{}\,\Cons{}\,\Bool{}\,\True{}\,3\,\left(\Cons{}\,\Bool{}\,\False{}\,2\,y'\right)
- \left\{ \Cons{}\,-\,x\,-\,\left(\Cons{}\,-\,y\,-\,-\right)\Rightarrow x\&y\right\} $
-
-reduces to \False{}.
+  $\case{}\,\Cons{}\,\Bool{}\,\True{}\,3\,\left(\Cons{}\,\Bool{}\,\False{}\,2\,y'\right)$ $\left\{ \Cons{}\,-\,x\,-\,\left(\Cons{}\,-\,y\,-\,-\right)\Rightarrow x\&y\right\} $
+  reduces to \False{}.
 
 The explicit rules for pattern matching are listed in Figure \ref{fig:surface-data-match}, where $\sigma$ will hold a possibly empty set of assignments.
 
