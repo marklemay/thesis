@@ -1,7 +1,7 @@
 # Mark Lemay's Thesis
 [![Build LaTeX document](https://github.com/marklemay/thesis/actions/workflows/build-thesis.yml/badge.svg)](https://github.com/marklemay/thesis/actions/workflows/build-thesis.yml)
  
-[Latest draft](https://github.com/marklemay/thesis/releases/download/thesis/thesis.pdf)
+[Latest pdf](https://github.com/marklemay/thesis/releases/download/thesis/thesis.pdf)
 
 ## Defense
 
@@ -9,35 +9,15 @@
 
 Successfully defended May 24th. 
 I am interested in doing an encore presentation that I could record, contact me if you are interested.
-
-## How to Review
-Printed draft chapters are in the draft folder by my desk.
-Ask me if you would like a pdf with custom formatting (for instance single spaced, editing notes included), or your own printed copy.
-### Overall
-* Where are you first confused?
-* Where do you first get bored?
-* What is 1 thing you would like an example of?
-* how much new jargon should I introduce
-  * name the programming language? `dDyamic`? `dTest`?
-  * better name for the `surface language` and `cast language`?
-  * `gradual correctness`?
-* prior work is complete and well represented
-* proofs are correct
-* formalisms are well motivated
-### Specifically
-* Chapter 1
-  * should be readable by a general audience
-* Chapter 2
-  * formalisms are "standard"
  
 ## compile pdf
-get bibliography and fully build BU style pdf with
+Get bibliography and fully build BU style pdf with
 ```
 git submodule foreach git pull origin master
 latexmk thesis.tex -pdf
 ```
  
-build draft pdf, with margin notes and single spaced lines
+Build draft pdf, with margin notes and single spaced lines
 ```
 git submodule foreach git pull origin master
 latexmk draft.tex -pdf
@@ -50,7 +30,3 @@ latexmk draft.tex -pdf
   * https://github.com/marklemay/dDynamic
   * https://github.com/marklemay/dtest-coq2
   * https://github.com/qcfu-bu/dtest-coq
-
-
-## Admin
-* https://docs.google.com/spreadsheets/d/19Mxe4p4qDgGDf7lBmWTGsI0m9lmP4FuxVyHD_kRM7-g/edit#gid=0
