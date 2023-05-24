@@ -1,0 +1,58 @@
+\documentclass[11pt,twoside]{report} % Double-sided printing
+
+\usepackage[disable]{todonotes}
+
+\setlength {\marginparwidth }{2cm}
+
+\input{preamble.tex}
+
+\def\bibfont{\footnotesize}
+
+\begin{document}
+
+% \onehalfspacing
+\setstretch{1.2}
+
+% front matter
+\include{0_Prelim/prelim-preferred-format}
+\cleardoublepage
+
+\include{1_Intro/ch}
+\cleardoublepage
+
+\setcounter{chapter}{1}
+\include{2_Surface/ch}
+\cleardoublepage
+
+\setcounter{chapter}{2}
+\include{3_Cast/ch}
+\cleardoublepage
+
+\setcounter{chapter}{3}
+\include{4_Surface_data/ch}
+\cleardoublepage
+
+\setcounter{chapter}{4}
+\include{5_Cast_data/ch}
+\cleardoublepage
+
+\setcounter{chapter}{5}
+\include{8_Notes/ch}
+\cleardoublepage
+
+\setcounter{chapter}{6}
+\include{9_Con/ch}
+\cleardoublepage
+
+% test citation \cite{10.1007/1-4020-8141-3_34}
+
+% Bibliography
+\newpage
+\singlespace 
+\addcontentsline{toc}{chapter}{Bibliography}
+\todo[inline]{greek text being lowercased in bib?}
+\bibliographystyle{alpha} %can get away with alpha style citations?
+\bibliography{bibliography/dtest}
+\cleardoublepage
+
+\end{document}
