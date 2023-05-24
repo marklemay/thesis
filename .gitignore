@@ -48,3 +48,9 @@ abstract.synctex.gz
 **/*.agda~
 **/*.agdai
 **/#*.agda#
+thesis-preferred-format.bbl
+thesis-preferred-format.blg
+thesis-preferred-format.lof
+thesis-preferred-format.pdf
+thesis-preferred-format.tex
+thesis-preferred-format.toc

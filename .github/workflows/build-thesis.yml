@@ -27,10 +27,15 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Compile LaTeX document
+      - name: Compile BU formatted thesis 
         uses: xu-cheng/latex-action@v2
         with:
           root_file: thesis.tex
+
+      - name: Compile Mark formatted thesis 
+        uses: xu-cheng/latex-action@v2
+        with:
+          root_file: tree.tex
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
@@ -39,6 +44,6 @@ jobs:
           tag_name : thesis
           prerelease : true
 #           draft: true
-          files: thesis.pdf
+          files: thesis.pdf, thesis-preferred-format.pdf
 
 # see https://dev.to/mrturkmen/latex-with-github-actions-4580

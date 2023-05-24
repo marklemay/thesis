@@ -17,6 +17,12 @@ git submodule foreach git pull origin master
 latexmk thesis.tex -pdf
 ```
  
+Build thesis with my preferred formating
+```
+git submodule foreach git pull origin master
+latexmk thesis-preferred-format.tex -pdf
+```
+
 Build draft pdf, with margin notes and single spaced lines
 ```
 git submodule foreach git pull origin master
