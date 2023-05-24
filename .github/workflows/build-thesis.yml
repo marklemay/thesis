@@ -35,7 +35,7 @@ jobs:
       - name: Compile Mark formatted thesis 
         uses: xu-cheng/latex-action@v2
         with:
-          root_file: tree.tex
+          root_file: thesis-preferred-format.tex
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
