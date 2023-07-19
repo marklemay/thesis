@@ -1,7 +1,8 @@
-# Mark Lemay's Thesis
+# Mark Lemay's Thesis: A Dependently Typed Programming Language With Dynamic Equality
 [![Build LaTeX document](https://github.com/marklemay/thesis/actions/workflows/build-thesis.yml/badge.svg)](https://github.com/marklemay/thesis/actions/workflows/build-thesis.yml)
  
-[Latest pdf](https://github.com/marklemay/thesis/releases/download/thesis/thesis.pdf)
+[Latest pdf](https://github.com/marklemay/thesis/releases/download/thesis/thesis.pdf) [proquest](https://www.proquest.com/docview/2835809556) [open.bu](https://open.bu.edu/handle/2144/46440)
+
 
 ## Defense
 
