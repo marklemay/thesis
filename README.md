@@ -8,8 +8,10 @@
 
 [slides](https://docs.google.com/presentation/d/1Wu5-xCrxIq7K_Z7SwQQCLUdGMcU2h0LRNY-4iHMU-uo/edit?usp=sharing)
 
-Successfully defended May 24th. 
-I am interested in doing an encore presentation that I could record, contact me if you are interested.
+Successfully defended May 24th.
+
+A pesentation covering similar info was given at 
+[TyDe2023](https://www.youtube.com/watch?v=nRnK365y9ac&list=PLyrlk8Xaylp4YYkJKQZ8gO9RK8GCqmFzk&index=5&ab_channel=ACMSIGPLAN).
  
 ## compile pdf
 Get bibliography and fully build BU style pdf with
