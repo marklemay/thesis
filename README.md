@@ -33,9 +33,10 @@ latexmk draft.tex -pdf
 ```
 
 ## Related
-* https://github.com/marklemay/boston-university-thesis-template
-* https://github.com/marklemay/thesis-proposal
-* https://icfp21.sigplan.org/details/TyDe-2021/1/Gradual-Correctness-a-Dynamically-Bidirectional-Full-Spectrum-Dependent-Type-Theory-
-  * https://github.com/marklemay/dDynamic
-  * https://github.com/marklemay/dtest-coq2
-  * https://github.com/qcfu-bu/dtest-coq
+* https://github.com/marklemay/dDynamic
+* https://dl.acm.org/doi/10.1145/3609027.3609407
+* https://github.com/marklemay/dtest-coq2
+* https://github.com/qcfu-bu/dtest-coq
+* BU admin
+  * https://github.com/marklemay/boston-university-thesis-template
+  * https://github.com/marklemay/thesis-proposal
